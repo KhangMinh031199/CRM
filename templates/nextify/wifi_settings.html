@@ -1,0 +1,712 @@
+{% extends 'nextify/wifi.html' %}
+{% block menu_wifi %}
+    <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select" />
+    <li class="c-menu__item has-submenu">
+
+        <a class="c-menu__link"
+           data-toggle="collapse"
+           href="#splash-submenu"
+           aria-expanded="true" aria-controls="sidebar-submenu">
+            <i class="fa fa-trophy u-mr-xsmall"></i>{{ gettext("Trang_chao") }}
+        </a>
+        <ul class="c-sidebar__submenu collapse"
+            id="splash-submenu" style="padding-left:20px">
+            {% for shop_mer in shop_in_mer %}
+                <li><a class="c-menu__link"
+                       href="/wifi/{{ shop_mer._id }}">{{ shop_mer.name }}</a>
+                </li>
+            {% endfor %}
+
+        </ul>
+
+    </li>
+    <li class="c-menu__item has-submenu is-open">
+
+        <a class="c-menu__link" data-toggle="collapse" href="#sidebar-submenu"
+           aria-expanded="true" aria-controls="sidebar-submenu">
+            <i class="fa fa-caret-square-o-down u-mr-xsmall"></i>{{ gettext("Cau_hinh") }}
+        </a>
+        <ul class="c-sidebar__submenu collapse show"
+            id="sidebar-submenu" style="padding-left:20px">
+            {% for shop_mer in shop_in_mer %}
+                <li><a class="c-menu__link  {% if shop_select._id|string ==
+                shop_mer._id|string %}is-active{% endif %}"
+                       href="/wifi_settings/{{ shop_mer._id }}">{{ shop_mer.name }}</a>
+                </li>
+            {% endfor %}
+
+        </ul>
+
+    </li>
+    <li class="c-menu__item has-submenu">
+
+        <a class="c-menu__link" data-toggle="collapse"
+           href="#location-submenu" aria-expanded="true"
+           aria-controls="sidebar-submenu">
+            <i class="fa fa-location-arrow u-mr-xsmall"></i>{{ gettext("Dia_diem") }}
+        </a>
+        <ul class="c-sidebar__submenu collapse"
+            id="location-submenu"
+            style="padding-left:20px">
+            {% for shop_mer in shop_in_mer %}
+                <li><a class="c-menu__link"
+                       href="/locations/{{ shop_mer._id }}">{{ shop_mer.name }}</a>
+                </li>
+            {% endfor %}
+
+        </ul>
+
+    </li>
+    <li class="c-menu__item">
+        <a class="c-menu__link" href="/devices_shop">
+            <i class="c-menu__icon fa fa-bullhorn"></i>{{ gettext("Thiet_bi") }}
+        </a>
+    </li>
+{% endblock %}
+{% block wifi_main %}
+    <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select" />
+    <div class="card u-p-medium">
+        <div class="row u-justify-center">
+            <div class="col-md-7">
+                <div class="u-mt-large u-text-center">
+                    <h4 class="u-mb-xsmall">{{ shop_select.name }}</h4>
+                    <p class="u-text-mute u-mb-large"></p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="c-tabs">
+
+                    <ul class="c-tabs__list nav nav-tabs"
+                        id="myTab" role="tablist">
+                        <li class="c-tabs__item"><a
+                                class="c-tabs__link active show"
+                                id="nav-home-tab" data-toggle="tab"
+                                href="#nav-home" role="tab"
+                                aria-controls="nav-home"
+                                aria-selected="true">{{ gettext("Cau_hinh_chung") }}</a></li>
+
+                        <li class="c-tabs__item"><a
+                                class="c-tabs__link"
+                                id="nav-profile-tab"
+                                data-toggle="tab"
+                                href="#nav-profile" role="tab"
+                                aria-controls="nav-profile"
+                                aria-selected="false">{{ gettext("Cau_hinh_dang_ky") }}
+                        </a></li>
+                        <li class="c-tabs__item"><a
+                                class="c-tabs__link"
+                                id="nav-remarketing-tab"
+                                data-toggle="tab"
+                                href="#nav-remarketing" role="tab"
+                                aria-controls="nav-remarketing"
+                                aria-selected="false">{{ gettext("Remarketing") }}
+                        </a>
+                        </li>
+{#                        <li class="c-tabs__item"><a#}
+{#                                class="c-tabs__link"#}
+{#                                id="nav-social-tab"#}
+{#                                data-toggle="tab"#}
+{#                                href="#nav-social" role="tab"#}
+{#                                aria-controls="nav-social"#}
+{#                                aria-selected="false">Social Event#}
+{#                        </a>#}
+{#                        </li>#}
+                        <li class="c-tabs__item"><a
+                                class="c-tabs__link"
+                                id="nav-preview-tab"
+                                data-toggle="tab"
+                                href="#nav-preview" role="tab"
+                                aria-controls="nav-preview"
+                                aria-selected="false">{{ gettext("Xem_truoc") }}
+                        </a>
+                        </li>
+                    </ul>
+
+                    <div class="c-tabs__content tab-content"
+                         id="nav-tabContent">
+                        <div class="c-tabs__pane active show" id="nav-home"
+                             role="tabpanel" aria-labelledby="nav-home-tab">
+                            <form method="POST"
+                                  action="/wifi_settings/{{ shop_id_select }}"
+                                  enctype="multipart/form-data" id="home">
+                             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                <div class="row u-mb-medium">
+
+                                    <div class="col-lg-12">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+
+                                                <div class="c-field u-mb-small">
+                                                    <label class="c-field__label">Logo:</label>
+                                                    {% if shop_select.logo %}
+                                                    <img class="c-avatar--small"
+                                                         id="view_logo"
+                                                         src="//files.nextify.vn/{{ shop_select.logo }}"
+                                                         srcset="//files.nextify.vn/{{ shop_select.logo}},
+                                                                //files.nextify.vn/{{ shop_select.logo}},
+                                                                //files.nextify.vn/{{ shop_select.logo}}"
+                                                         sizes="(min-width: 1024px) 1280px, 100vw">
+                                                        <b><p class="u-text-mute u-text-uppercase u-mb-small">{{ gettext("Kich_thuoc_goi_y:_720_px_×_720_px") }}</p></b>
+                                                    {% endif %}
+
+                                                    <input type="file"
+                                                           id="logo"
+                                                           name="logo"
+                                                           class="c-btn c-btn--info">
+                                                </div>
+                                                <div class="c-field u-mb-small">
+                                                    <label class="c-field__label">{{ gettext("Hinh_nen") }}:</label>
+                                                         {% if shop_select.background %}
+                                                    <img class="c-avatar--small"
+                                                         id="view_background"
+                                                         src="//files.nextify.vn/{{ shop_select.background }}"
+                        srcset="//files.nextify.vn/{{ shop_select.background}},
+                                //files.nextify.vn/{{ shop_select.background}},
+                                //files.nextify.vn/{{ shop_select.background}}"
+                                                         sizes="(min-width: 1024px) 1280px, 100vw">
+                                                        <b><p class="u-text-mute u-text-uppercase u-mb-small">{{ gettext("Kich_thuoc_goi_y:_1,280_px_×_720_px") }}</p></b>
+                                                    {% endif %}
+                                                    <input type="file"
+                                                           class="c-btn c-btn--info"
+                                                           id="background"
+                                                           name="background">
+                                                </div>
+                                                <div class="c-field u-mb-small">
+                                                    <label class="c-field__label"
+                                                           for="facebook-page">Link
+                                                        Facebook Page:</label>
+                                                    <input type="text"
+                                                           class="c-input"
+                                                           id="facebook-page"
+                                                           name="facebook_page"
+                                                           value="{{ shop_select.facebook_page }}"
+                                                           placeholder="//www.facebook.com/nextify">
+                                                </div>
+                                                <div class="c-field u-mb-small">
+                                                    <label class="c-field__label"
+                                                           for="auto_popup">{{ gettext("Mo_link_sau_khi_dang_nhap") }}:</label>
+                                                    <input type="text"
+                                                           class="c-input"
+                                                           id="auto_popup"
+                                                           name="auto_popup"
+                                                           value="{{ shop_select.auto_popup }}"
+                                                           placeholder="//www.facebook.com/nextify">
+                                                </div>
+                                                <div class="c-choice c-choice--checkbox">
+                                                    <p class="u-text-mute
+                                                    u-mb-small">{{ gettext("Cau_hinh_nut_ket_noi_trang_chao") }}:</p>
+                                                <textarea class="c-input"
+                                                          id="connect_button"
+                                                          name="connect_button"
+                                                          rows="2">
+                                                          {% if shop_select.connect_button and shop_select.connect_button|length > 1 %}
+                                                            {{ shop_select.connect_button }}
+                                                        {% else %}
+                                                        Kết nối
+                                                    {% endif %}
+                                                    </textarea>
+                                            </div>
+                                                <div class="c-field u-mb-small">
+                                                    <label class="c-field__label" style="display:inline-block; padding-right: 20px;">
+                                                      {{ gettext("Bo_qua_dang_ky") }}
+                                                    </label>
+
+                                                   <div class="c-switch {% if
+                                                   shop_select.ignore_register and shop_select.ignore_register|lower == "true" %} is-active{% endif %}">
+                                                    <input class="c-switch__input"
+                                                           id="switch_ignore_register"
+                                                           type="checkbox"
+                                                           name="ignore_register"
+                                                           {% if shop_select.ignore_register and shop_select.ignore_register|lower == "true" %}checked{% endif %}>
+                                                </div>
+
+                                              </div>
+                                               <div class="c-field u-mb-small">
+                                                    <label class="c-field__label" style="display:inline-block; padding-right: 20px;">
+                                                      {{ gettext("Yeu_cau_nhap_ma_truy_cap_WIFI") }}
+                                                    </label>
+                                                    <div class="c-switch {% if
+                                                   shop_select.wifi_access_code and shop_select.wifi_access_code|lower == "true" %} is-active{% endif %}">
+                                                    <input class="c-switch__input"
+                                                           id="switch_wifi_access_code"
+                                                           type="checkbox"
+                                                           name="wifi_access_code"
+                                                           {% if shop_select.wifi_access_code and shop_select.wifi_access_code|lower == "true" %}checked{% endif %}>
+                                                </div>
+                                               </div>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="c-field"
+                                             style="padding:20px">
+                                            <button class="c-btn c-btn--info u-float-right"
+                                                    type="submit">{{ gettext("Cap_nhat") }}
+                                            </button>
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="c-tabs__pane" id="nav-profile"
+                             role="tabpanel"
+                             aria-labelledby="nav-profile-tab">
+                            <div class="row">
+                                <div class="col-sm-6 col-md-3 u-mb-medium">
+                                    <p class="u-text-mute u-text-uppercase
+                                u-mb-small"></p>
+
+                                </div>
+                                <div class="col-sm-6 col-md-3 u-mb-medium">
+                                    <p class="u-text-mute u-text-uppercase
+                                u-mb-small"></p>
+
+                                </div>
+
+                            </div>
+                            <form method="POST"
+                                  id="login_form_settings"
+                                  action="/login_form_settings/{{ shop_id_select }}"
+                                  enctype="multipart/form-data">
+                                  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-3 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox1"
+                                                   name="phone_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.phone  and login_form.phone|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox1">{{ gettext("So_dien_thoai") }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch {% if login_form.phone_require and
+                                            login_form.phone_require|lower
+                                            == "true" %}is-active{% endif %}">
+                                            <label class="c-choice__label"
+                                                   for="switch1" style="padding-left: 10px; font-size: 15px;">{{ gettext("bat_buoc") }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch1"
+                                                       type="checkbox"
+                                                       name="phone_require"
+                                                       {% if login_form.phone_require and
+                                            login_form.phone_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-3 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox2"
+                                                   name="email_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.email  and login_form.email|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox2">Email</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch {% if
+                                        login_form.email_require and
+                                        login_form.email_require|lower ==
+                                        "true" %}is-active{% endif %}">
+                                        <label class="c-choice__label"
+                                                   for="switch1" style="padding-left: 10px; font-size: 15px;">{{ gettext("bat_buoc") }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch1"
+                                                       type="checkbox"
+                                                       name="email_require"
+                                                       {% if login_form.email_require and login_form.email_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-3 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox3"
+                                                   name="name_visible"
+                                                   type="checkbox" {% if login_form
+                                           .name and login_form.name|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox3">{{ gettext("Ten") }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch{% if login_form
+                                        .name_require and login_form
+                                        .name_require|lower == "true" %}
+                                        is-active{% endif %}">
+                                        <label class="c-choice__label"
+                                                   for="switch1" style="padding-left: 10px; font-size: 15px;">{{ gettext("bat_buoc") }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch1"
+                                                       type="checkbox"
+                                                       name="name_require"
+                                                       {% if login_form.name_require and login_form.name_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-3 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox4"
+                                                   name="birthday_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.birthday  and login_form.birthday|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox4">{{ gettext("Sinh_nhat") }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch{% if login_form
+                                        .birthday_require and login_form.birthday_require|lower == "true" %} is-active{% endif %}">
+                                        <label class="c-choice__label"
+                                                   for="switch1" style="padding-left: 10px; font-size: 15px;">{{ gettext("bat_buoc") }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch1"
+                                                       type="checkbox"
+                                                       name="birthday_require"
+                                                       {% if login_form.birthday_require and login_form.birthday_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-3 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox5"
+                                                   name="year_birthday_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.year_birthday  and login_form.year_birthday|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox5">{{ gettext("Nam_sinh") }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch{% if login_form
+                                        .year_birthday_require and
+                                        login_form
+                                        .year_birthday_require|lower ==
+                                        "true" %} is-active{% endif %}">
+                                        <label class="c-choice__label"
+                                                   for="switch1" style="padding-left: 10px; font-size: 15px;">{{ gettext("bat_buoc") }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch1"
+                                                       type="checkbox"
+                                                       name="year_birthday_require"
+                                                       {% if login_form.year_birthday_require and login_form.year_birthday_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-3 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox6"
+                                                   name="gender_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.gender  and login_form.gender|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox6">{{ gettext("Gioi_tinh") }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch {% if
+                                            login_form
+                                        .gender_require and login_form
+                                        .gender_require|lower == "true" %}
+                                         is-active{% endif %}">
+                                         <label class="c-choice__label"
+                                                   for="switch1" style="padding-left: 10px; font-size: 15px;">{{ gettext("bat_buoc") }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch1"
+                                                       type="checkbox"
+                                                       name="gender_require"
+                                                       {% if login_form.gender_require and login_form.gender_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="row"> -->
+                                    <!-- <div class="col-sm-6 col-md-3 u-mb-medium"> -->
+                                        <div class="c-choice c-choice--checkbox">
+                                                        <p class="u-text-mute u-text-uppercase
+                                                        u-mb-small">{{ gettext("Cau_hinh_loi_chao") }}</p>
+                                                    <textarea class="c-input"
+                                                              id="welcome_text"
+                                                              name="welcome_text"
+                                                              rows="6">
+                                                              {% if login_form.welcome_text|length > 1 %}
+                                                                {{ login_form.welcome_text }}
+                                                            {% else %}
+                                                            {{ gettext("Dang_ky_khach_hang_than_thiet_de_nhan_cac_uu_dai_hap_dan") }} <br/>
+                                                            {{ gettext("Get_connected_with_FREE_WIFI") }}
+                                                        {% endif %}
+                                                        </textarea>
+                                        </div>
+                                         <div class="c-choice c-choice--checkbox">
+                                                        <p class="u-text-mute u-text-uppercase
+                                                        u-mb-small">{{ gettext("Cau_hinh_loi_moi_nhap_sinh_nhat") }}</p>
+                                                    <textarea class="c-input"
+                                                              id="birthday_text"
+                                                              name="birthday_text"
+                                                              rows="6">
+                                                              {% if login_form.birthday_text|length > 1 %}
+                                                                {{ login_form.birthday_text }}
+                                                            {% else %}
+                                                            {{ gettext("Dung_quen_nhap_ngay_sinh_de_nhan_qua_tu_chung_toi_nhe") }}
+                                                        {% endif %}
+                                                        </textarea>
+                                        </div>
+                                        <div class="c-choice c-choice--checkbox">
+                                                <p class="u-text-mute u-text-uppercase
+                                                u-mb-small">{{ gettext("Cau_hinh_nut_ket_noi") }}</p>
+                                            <textarea class="c-input"
+                                                      id="welcome_button"
+                                                      name="welcome_button"
+                                                      rows="2">
+                                                      {% if login_form.welcome_button and login_form.welcome_button|length > 1 %}
+                                                        {{ login_form.welcome_button }}
+                                                    {% else %}
+                                                    {{ gettext("Dang_ky_&_Ket_noi") }}
+                                                {% endif %}
+                                                </textarea>
+                                        </div>
+                                    <!-- </div> -->
+                                <!-- </div>    -->
+                            </form>
+                                <div class="row">
+                                    <div class="c-field" style="padding:20px">
+                                        <button class="c-btn c-btn--info
+                                        u-float-right" id="login_setting_btn">{{ gettext("Cap_nhat") }}
+                                        </button>
+                                    </div>
+                                </div>
+
+                        </div>
+                        <div class="c-tabs__pane" id="nav-remarketing"
+                             role="tabpanel"
+                             aria-labelledby="nav-remarketing-tab">
+                            <form method="POST"
+                                  action="/wifi_settings_remarketing/{{ shop_id_select }}"
+                                  enctype="multipart/form-data">
+                                  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                <div class="row u-mb-medium">
+                                    <div class="col-lg-12">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="c-field u-mb-small">
+                                                    <label class="c-field__label"
+                                                           for="page_id">Page
+                                                        ID:</label>
+                                                    <input type="text"
+                                                           class="c-input"
+                                                           id="page_id"
+                                                           name="page_id"
+                                                           value="{{ shop_select.page_id }}">
+                                                </div>
+                                                <div class="c-field u-mb-small">
+                                                    <label class="c-field__label"
+                                                           for="page_id">Pixel
+                                                        ID:</label>
+                                                    <input type="text"
+                                                           class="c-input"
+                                                           id="facebook_pixel_id"
+                                                           name="facebook_pixel_id"
+                                                           value="{{ shop_select.facebook_pixel_id }}">
+                                                </div>
+                                                <div class="c-field u-mb-small">
+                                                    <label class="c-field__label"
+                                                           for="pixel_code">Pixel
+                                                        Code:</label>
+                                                    <textarea class="c-input"
+                                                              id="pixel_code"
+                                                              name="facebook_pixel_code"
+                                                              rows="6">{{ shop_select.facebook_pixel_code }}</textarea>
+                                                </div>
+                                                <div class="c-field u-mb-small">
+                                                    <label
+                                                            class="c-field__label"
+                                                            for="pixel_code">Google
+                                                        Remarketing
+                                                        Code:</label>
+                                                    <textarea class="c-input"
+                                                              id="google_pixel_code"
+                                                              name="google_pixel_code"
+                                                              rows="6">{{ shop_select.google_pixel_code }}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="c-field"
+                                                 style="padding:20px">
+                                                <button class="c-btn c-btn--info u-float-right"
+                                                        type="submit">{{ gettext("Cap_nhat") }}
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+{#                      <div class="c-tabs__pane" id="nav-social"#}
+{#                             role="tabpanel"#}
+{#                             aria-labelledby="nav-social-tab">#}
+{#                          <form method="POST"#}
+{#                                  action="/social_marketing/{{ shop_id_select }}"#}
+{#                                  enctype="multipart/form-data">#}
+{#                                <div class="row u-mb-medium">#}
+{#                                    <div class="col-lg-12">#}
+{#                                        <div class="row">#}
+{#                                            <div class="col-sm-6 col-md-3 u-mb-medium">#}
+{#                                                <div class="c-field u-mb-small">#}
+{#                                                    <div class="c-choice c-choice--checkbox">#}
+{#                                                        <input class="c-choice__input"#}
+{#                                                               id="social_off"#}
+{#                                                               name="social"#}
+{#                                                               value="off"#}
+{#                                                               type="checkbox">#}
+{#                                                        <label class="c-choice__label"#}
+{#                                                               for="social_off">{{ gettext("Tat") }}</label>#}
+{#                                                    </div>#}
+{#                                                </div>#}
+{#                                                <div class="c-field#}
+{#                                                u-mb-small">#}
+{#                                                     <div class="c-choice c-choice--checkbox">#}
+{#                                                        <input class="c-choice__input"#}
+{#                                                               id="social_share_fb"#}
+{#                                                               value="share_fb"#}
+{#                                                               name="social"#}
+{#                                                               type="checkbox">#}
+{#                                                        <label class="c-choice__label"#}
+{#                                                               for="social_share_fb">{{ gettext("Chia_se_Facebook") }}</label>#}
+{#                                                    </div>#}
+{#                                                </div>#}
+{#                                                <div class="c-field#}
+{#                                                u-mb-small">#}
+{#                                                    <div class="c-choice c-choice--checkbox">#}
+{#                                                    <input class="c-choice__input"#}
+{#                                                           id="social_check_in_fb"#}
+{#                                                           value="check_in_fb"#}
+{#                                                           name="social"#}
+{#                                                           type="checkbox">#}
+{#                                                    <label class="c-choice__label"#}
+{#                                                           for="social_check_in_fb">Checkin Facebook</label>#}
+{#                                                    </div>#}
+{#                                                </div>#}
+{##}
+{##}
+{#                                                <div class="c-field"#}
+{#                                                 style="padding:20px">#}
+{#                                                    <button class="c-btn c-btn--info u-float-right"#}
+{#                                                            type="submit">{{ gettext("Cap_nhat") }}#}
+{#                                                    </button>#}
+{#                                                </div>#}
+{#                                            </div>#}
+{##}
+{#                                       </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                          </form>#}
+{##}
+{#                      </div>#}
+                        <div class="c-tabs__pane" id="nav-preview"
+                        role="tabpanel"
+                        aria-labelledby="nav-preview-tab">
+                        <div class="col-lg-6">
+
+                            <div id="preview"></div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{{ url_for('static', filename='v2/assets/js/biomp.js') }}"></script>
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('#locations_selects').select2({
+                dropdownAutoWidth: true
+            });
+
+            var shop_id_select = $("#shop_id_select").val();
+            var url_preview = '/preview/'+ shop_id_select + '/register';
+
+
+
+            $('#login_form_settings_alert').hide();
+
+            function readURL(input, input_view) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    var view_id = '#' + input_view;
+                    reader.onload = function (e) {
+                        $(view_id).attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $("#logo").change(function () {
+                readURL(this, 'view_logo');
+            });
+            $("#background").change(function () {
+                readURL(this, 'view_background');
+            });
+
+            $("#login_setting_btn").click(function (e) {
+                var action = $('#login_form_settings').attr('action');
+                $.ajax({
+                    type: "POST",
+                    url: action,
+                    data: $("#login_form_settings").serialize(), // serializes the form's elements.
+                    success: function (data) {
+                        swal('{{ gettext("Cap_nhat_thanh_cong") }}', " ", "success");
+                        window.location.href = ("/wifi_settings/%s", shop_id_select);
+                    }                    
+                });
+                e.preventDefault();
+            });
+
+
+        });
+    </script>
+
+
+{% endblock %}

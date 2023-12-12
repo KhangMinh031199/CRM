@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Nextify | The Next Generation of Loyalty</title>
+    <meta name="description" content="The Next Generation of Loyalty">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="/static/nextify/apple-touch-icon.png">
+    <!-- Libs CSS -->
+    <link rel="stylesheet" href="/static/nextify/css/feather/feather.min.css">
+    <link rel="stylesheet" href="/static/nextify/css/dash_kit_theme.min.css" id="stylesheetLight">
+
+    <style>body {
+        display: none;
+    }</style>
+
+</head>
+
+<body class="d-flex align-items-center bg-auth border-top border-top-2 border-primary" style="display: block;">
+
+<!-- CONTENT
+================================================== -->
+<div class="container">
+    <div class="row align-items-center">
+        <div class="col-12 col-md-6 offset-xl-2 offset-md-1 order-md-2 mb-5 mb-md-0">
+
+            <!-- Image -->
+            <div class="text-center">
+                <img src="/static/images/happiness.svg" alt="..."
+                     class="img-fluid">
+            </div>
+
+        </div>
+        <div class="col-12 col-md-5 col-xl-4 order-md-1 my-5">
+            <h1 class="display-4 text-center mb-3">
+                {% if 'viettel.vn' in request.url %}
+                    <img alt="" src="/static/nextify/img/logo_viettel2.png"/>
+                {% elif 'crmx' in request.url %}
+                    <img alt="" src="/static/nextify/img/crmx.jpg" style="width: 150px"/>
+                {% else %}
+                    <img alt="" src="/static/nextify/img/logo.png"/>
+                {% endif %}
+            </h1>
+
+            <!-- Subheading -->
+            <p class="text-muted text-center mb-5">
+                {% if 'crmx' in request.url %}
+                    Better eXperience for Wi-Fi
+                {% else %}
+                    The next generation of loyalty
+                {% endif %}
+            </p>
+            <form id="new_user" action="/register
+                {% if ref_code %}{% if ref_code|length > 0 %}?refcode={{ ref_code }}{% endif %}{% endif %}"
+                  accept-charset="UTF-8" method="post">
+             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                {% if error %}
+
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ gettext("Thong_tin_dang_nhap_khong_dung,_vui_long_thu_lai.") }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+
+                {% endif %}
+                <div class="form-group">
+                    <label for="name">{{ gettext("Ten_doanh_nghiep") }}</label>
+                    <input type="text" id="name"
+                           name="name"
+                           class="form-control"
+                           placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="phone">{{ gettext("So_dien_thoai") }}</label>
+                    <input type="phone" name="phone" id="phone"
+                           class="form-control"
+                           placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email"
+                           class="form-control"
+                           placeholder="connect@gmail.com">
+                </div>
+                <div class="form-group">
+                    <label
+                            for="password">{{ gettext("Password") }}</label>
+                    <input type="password" id="password"
+                           name="password"
+                           class="form-control"
+                           placeholder="">
+                </div>
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="6LcpAnEUAAAAAK7BBktmXRvVt2f3Gk8hqSLiINT6"></div>
+                </div>
+
+                {% if sale %}
+                    <input type="hidden" value="{{ sale._id }}" name="sale_id"/>
+                {% endif %}
+
+                <button class="btn btn-lg btn-block btn-primary mb-3" type="submit">
+                    {{ gettext("Dang_ky_ngay") }}
+                </button>
+
+            </form>
+            <!-- Link -->
+            <div class="text-center">
+                <small class="text-muted text-center">
+                    {{ gettext("Ban_da_co_tai_khoan?") }} <a href="/login">{{ gettext("Dang_nhap") }}</a>.
+                </small>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+<script  nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $("#new_user").click(function () {
+            $("#new_user").submit();
+
+        });
+    });
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="c-toolbar u-mb-medium">
+        <h3 class="c-toolbar__title has-divider">{{ gettext("Tin_tuc") }}</h3>
+        <h5 class="c-toolbar__meta u-mr-auto">{{ gettext("Tin_khuyen_mai,_hot_deal,_su_kien...") }}</h5>
+        <div class="c-field c-field--inline has-icon-right u-hidden-down@tablet">
+            <div class="c-search-form__section">
+                <a href="/app/blogs/news/add">
+                    <button class="c-btn c-btn--success u-ml-small">{{ gettext("Them_moi") }}
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+            <div class="row">
+
+            <div class="col-lg-12">
+                <div class="c-card u-p-medium">
+                    <div class="row u-m-small">
+                        {% for item in news %}
+                            <div class="col-sm-6 col-md-4">
+
+                                <div class="c-project-card u-mb-medium">
+                                    <img src="//files.nextify.vn/{{ item.photo }}" alt="About the image">
+
+                                    <div class="c-project-card__content">
+                                        <div class="c-project-card__head">
+                                            <h4
+                                                    class="c-project-card__title">{% if item.title %}
+                                                {{ item.title }}
+                                            {% endif %}</h4>
+{#                                            <p class="c-project-card__info">Gourmet | Last Update: 29 Dec 2017</p>#}
+                                        </div>
+
+
+                                        <div class="c-project-card__meta">
+                                             <div class="c-choice c-choice--checkbox">
+                                    <input class="c-choice__input"
+                                           type="checkbox"
+                                                name="active"
+                                           id="active" item_id={{ item._id }} {% if item.is_priority == 'true' %}checked{% endif %}>
+                                    <label class="c-choice__label"
+                                           for="active">{{ gettext("Uu_tien") }}</label>
+                                </div>
+                                         <a href="/app/blogs/news/{{ item._id }}"
+                                           class="c-btn c-btn--warning
+                                           c-event__btn">{{ gettext("Chi_tiet") }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        {% endfor %}
+                        </div>
+                    {%if pagination %}
+                   <nav class="c-pagination u-justify-center">
+
+                        {{ pagination.links }}
+                    </nav>
+                {%endif%}
+
+                </div>
+            </div>
+            </div>
+
+    </div>
+
+
+{% endblock %}
+{%block js%}
+ <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $('.c-choice__input').click(function() {
+            var returnVal = confirm('{{ gettext("Ban_co_chac_chan?") }}');
+            if (returnVal){
+                var checked = $(this).is(":checked");
+                var item_id  = $(this).attr("item_id");
+                $.get( "/app/blogs/news/" + item_id + "/update_priority", { is_priority: checked } );
+            }
+        });
+    });
+</script>
+
+{%endblock%}

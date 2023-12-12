@@ -1,0 +1,116 @@
+{% if not total_rating %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert" style="font-size: 20;">
+  KHÔNG CÓ ĐÁNH GIÁ NÀO!
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">×</span>
+  </button>
+</div>
+{% endif %}
+{% for survey in survey_result %}
+    <div class="card ">
+      <div class="customer-review">
+        <div class="rating-container">
+          <div class="header">
+            <!-- <div class="avatar avatar-lg">
+              {% if survey.avatar and survey.avatar|length > 0 %}
+              <img class="avatar-img rounded-circle" src="{{ survey.avatar.replace('http:', 'https:') }}" />
+              {% else %}
+              <img class="avatar-img rounded-circle" src="/static/v2/assets/img/medium-default-avatar.png">
+              {% endif %}
+            </div>
+            <div class="user-and-time">
+              <div class="user">{% if survey.name %} {{ survey.name }} {% endif %}</div>
+              <div>{% if survey.email %} {{ survey.email }} {% endif %}</div>
+              <div>{% if survey.phone %} {{ survey.phone }} {% endif %}</div>
+              <div class="review-time">{{ survey.time }}</div>
+              <div class="review-time">{{ survey.human_time }}</div>
+            </div> -->
+            <div class="rating">
+              {% if survey.answers == '1' %}
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == '2' %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == '3' %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == '4' %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == '5' %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == '6' %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == '7' %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == '8' %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == '9' %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == '10' %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% else %}
+
+              {% endif %}
+            </div>
+          </div>
+
+        </div>
+        <div class="customer-container">
+          <div class="customer-stats">
+            <div class="customer-stat">Nhận xét:</div>
+            <div class="review-content">
+              <span class="dimmed">{{ survey.comment }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    <input type="hidden" value="{{ is_merchant }}" id="select_merchant">
+    <input type="hidden" value="{{ is_shop }}" id="select_shop">
+    <input type="hidden" value="{{ total_rating }}" id="total">
+    <input type="hidden" value="{{ current_page }}" id="current_page">
+    <input type="hidden" value="{{ shop_id }}" id="shop_id">

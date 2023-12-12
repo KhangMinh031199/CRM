@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+       {% if 'viettel.vn' in request.url %}
+        <title>Viettel | vmarketing</title>
+    {% else %}
+        <title>Nextify | The Next Generation of Loyalty</title>
+    {% endif %}
+    <meta name="description" content="The Next Generation of Loyalty">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="/static/nextify/apple-touch-icon.png">
+    <link rel="shortcut icon" href="/static/nextify/favicon.ico"
+          type="image/x-icon">
+    <!-- Libs CSS -->
+    <link rel="stylesheet" href="/static/nextify/css/feather/feather.min.css">
+    <link rel="stylesheet" href="/static/nextify/css/dash_kit_theme.min.css" id="stylesheetLight">
+
+    <style>body {
+        display: none;
+    }</style>
+
+</head>
+
+<body class="d-flex align-items-center bg-auth border-top border-top-2 border-primary" style="display: block;">
+
+<!-- CONTENT
+================================================== -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-5 col-xl-4 my-5">
+
+            <!-- Heading -->
+            {% if 'crmx.com.vn' in request.url %}
+            <h1 class="display-5 text-center mb-3">
+                CRMX
+            </h1>
+            <p class="text-muted text-center mb-5">
+                Better eXperience for Wi-Fi
+            </p>
+                {% else %}
+                {% if 'viettel.vn' in request.url %}
+            <h1 class="display-5 text-center mb-3">
+                Viettel
+            </h1>
+            {%else%}
+            <h1 class="display-4 text-center mb-3">
+                Nextify
+            </h1>
+            {% endif %}
+            <!-- Subheading -->
+            <p class="text-muted text-center mb-5">
+                {{ gettext("Tao_code_truy_cap_WIFI") }}
+            </p>
+            {% endif %}
+
+            <!-- Form -->
+            <form id="gen_code" action="/{{ merchant_id }}/wificode" method="post" enctype="multipart/form-data">
+ <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                <!-- Email address -->
+                <div class="form-group">
+                    <label for="location">{{ gettext("Dia_diem") }}</label>
+                    <select class="form-control" data-toggle="select"
+                            name="location"
+                            id="location"
+                            required="">
+                        {% for loc in shops %}
+                            <option value="{{ loc._id }}">{{ loc.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                </div>
+                <div class="form-group">
+                    <label for="profile">{{ gettext("Profiles") }}</label>
+                    <select class="form-control" data-toggle="select"
+                            name="profile"
+                            id="profile"
+                            required="">
+                        {% for pro in profiles %}
+                            <option value="{{ pro._id }}">{{ pro.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                </div>
+                <div class="form-group">
+                    <label for="phone">{{ gettext("So_dien_thoai") }}</label>
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder=""
+                           value="{% if phone %}{{ phone }}{% endif %}">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder=""
+                           value="{% if email %}{{ email }}{% endif %}">
+                </div>
+                {% if wifi_code %}
+                    <div class="form-group">
+
+                    <div class="display-2 mb-0">{{ wifi_code }}</div>
+                    <a href="#" class="btn btn-success hidden-print" id="print-button"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> Print</a>
+
+                    </div>
+                {% endif %}
+
+
+                <button class="btn btn-lg btn-block btn-primary mb-3" type="submit">
+                    {{ gettext("Tao_Code") }}
+                </button>
+
+            </form>
+
+        </div>
+    </div> <!-- / .row -->
+</div>
+{% if profile %}
+    <input type="hidden" value="{{ profile }}" id="ex_profile"/>
+{% endif %}
+
+{% if location %}
+    <input type="hidden" value="{{ location }}" id="ex_location"/>
+{% endif %}
+
+
+<script type="text/javascript" src="/static/wifi_portal/js/jquery-3.3.1.min.js"></script>
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        if ($("#ex_profile").length > 0) {
+            $("#profile").val($("#ex_profile").val());
+            $('#profile').trigger('change');
+        }
+        if ($("#ex_location").length > 0) {
+            $("#location").val($("#ex_location").val());
+            $('#location').trigger('change');
+        }
+        $('#print-button').on('click', function() {
+              window.print();
+              return false; // why false?
+            });
+
+
+    })
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+body {
+    background-color: #1d1d1d;
+}
+
+#background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    width: 100%;
+    background: -moz-linear-gradient(top,rgba(29,29,29,0.8) 0,rgba(29,29,29,1) 100%);
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,rgba(29,29,29,0.8)),color-stop(100%,rgba(29,29,29,1)));
+    background: -webkit-linear-gradient(top,rgba(29,29,29,0.8) 0,rgba(29,29,29,1) 100%);
+    background: -o-linear-gradient(top,rgba(29,29,29,0.8) 0,rgba(29,29,29,1) 100%);
+    background: -ms-linear-gradient(top,rgba(29,29,29,0.8) 0,rgba(29,29,29,1) 100%);
+    background: linear-gradient(to bottom,rgba(29,29,29,0.8) 0,rgba(29,29,29,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#801d1d1d',endColorstr='#1d1d1d',GradientType=0)
+}
+
+#background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: -2;
+    display: block;
+    width: 100%;
+}
+
+#background-overlay, #background-image {
+    min-height: 600px
+}

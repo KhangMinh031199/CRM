@@ -1,0 +1,496 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="container-fluid">
+        <div class="row u-mb-large">
+            <div class="col-lg-12">
+                <div class="card u-p-medium">
+                    <div class="row u-justify-center">
+                        <div class="col-lg-6">
+                            <div class="u-mt-large u-text-center">
+                                <h2 class="u-mb-xsmall">{{ merchant.slug }}</h2>
+                                <p class="u-text-mute u-mb-large"></p>
+                            </div>
+                            <form method="POST" action="/info"
+                                  enctype="multipart/form-data">
+                             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                {% if error %}
+                                    <div class="alert alert-danger">
+                                        {{ error | safe }}
+                                    </div>
+                                {% endif %} {% if message %}
+                                <div class="alert alert-success">
+                                    {{ message | safe }}
+                                </div>
+                            {% endif %}
+                                <input type="hidden"
+                                       value="{{ merchant._id }}"
+                                       name="merchant_id"/>
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="avatar">Ảnh đại diện:</label>
+                                    <img id="preview"
+                                         src="{% if merchant.avatar %}//files.nextify.vn/{{ merchant.avatar }}{% else %}https://i.ibb.co/xHhG6rT/no-profile-image.png{% endif %}"
+                                         style="display: block; margin-left: auto; margin-right: auto; border-radius:50%; width: 180px; height: 180px;">
+                                    <script nonce="{{ csp_nonce() }}" type="text/javascript">
+                                        function readURL(input) {
+                                            if (input.files && input.files[0]) {
+                                                var reader = new FileReader();
+
+                                                reader.onload = function (e) {
+                                                    $('#preview')
+                                                        .attr('src', e.target.result);
+                                                };
+
+                                                reader.readAsDataURL(input.files[0]);
+                                            }
+                                        }
+                                    </script>
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <input class="c-input" accept="image/*" type="file" name="avatar"
+                                           onchange="readURL(this)">
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="name">Tên:</label>
+                                    <input type="text"
+                                           class="c-input"
+                                           id="name" name="name"
+                                           value="{{ merchant.name }}"
+                                           readonly>
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="url_access">Đường dẫn truy
+                                        cập:</label>
+                                    <input type="text" id="url_access"
+                                           class="c-input"
+                                           value="https://crm.nextify.vn/{{ merchant.slug }}"
+                                           readonly/>
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="email">Email:</label>
+                                    <input type="email"
+                                           class="c-input"
+                                           id="email" name="email"
+                                           value="{{ merchant.email }}">
+                                </div>
+
+                                <div class="c-field u-mb-small">
+                                    {% with messages = get_flashed_messages() %}
+                                        {% if messages %}
+                                            {% for message in messages %}
+                                                <small style="color: #fa5d31"><i>{{ message }}</i></small>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endwith %}
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="brand_name">Brandname SMS</label>
+                                    {% if merchant.brand_name and merchant.brand_name|length > 1 %}
+                                        {% if alias_status %}
+                                            {% if alias_status == 8 %}
+                                                <input type="text" class="c-input" id="brand_name" name="brand_name"
+                                                       value="{{ merchant.brand_name }}" readonly/>
+                                            {% elif alias_status in [1,2,3] %}
+                                                <div class="new-notification-bar fail" style="color: #fa5d31">
+                                                    Brandname đang chờ duyệt.
+                                                    <a href="#" data-target="#details" data-toggle="modal">
+                                                                    <span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                                                          style="float:right;"
+                                                                          aria-label="Thông tin chi tiết">
+                                                                    <i class="fa fa-eye"></i>
+                                                                </span>
+                                                    </a>
+                                                </div>
+                                            {% elif alias_status == 5 %}
+                                                <div class="new-notification-bar fail" style="color: #ff0000">
+                                                    Brandname chưa được đăng ký, vui lòng liên hệ Support.
+                                                    <span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                                          style="float:right;"
+                                                          aria-label="Thông tin chi tiết">
+                                                                <i class="fa fa-eye"></i>
+                                                            </span>
+                                                </div>
+                                            {% endif %}
+                                        {% else %}
+                                            <input type="text" class="c-input" id="brand_name" name="brand_name"
+                                                   value="{{ merchant.brand_name }}" readonly/>
+
+                                        {% endif %}
+
+                                    {% else %}
+                                        <!-- <input type="text" class="c-input" id="brand_name" name="brand_name" value="{{ merchant.brand_name }}"  readonly/> -->
+                                        <a href="#" data-target="#add_brand_name" aria-haspopup="true"
+                                           aria-expanded="false"
+                                           data-toggle="modal" style="float:left;">
+                                            <button type="button" class="c-btn c-btn--info" style="margin-left: 0px">
+                                                Đăng ký Brandname
+                                            </button>
+                                        </a>
+                                        <br/>
+
+                                    {% endif %}
+                                </div>
+
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="name">Gói sản phẩm:</label>
+                                    <input type="text"
+                                           class="c-input"
+                                           value="{% if package %}{{ package.name }}{% endif %}"
+                                           readonly/>
+                                </div>
+
+                                <div class="c-field u-mb-small">
+                                    <button id="save_info" type="submit"
+                                            class="c-btn c-btn--info u-float-right">
+                                        Lưu thông tin
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row u-mb-large">
+            <div class="col-lg-12">
+                <div class="card u-p-medium">
+                    <div class="row u-justify-center">
+                        <div class="col-lg-6">
+                            <div class="u-mt-large u-text-center">
+                                <h2 class="u-mb-xsmall">Cấu hình gửi Email</h2>
+                                <p class="u-text-mute u-mb-large"></p>
+                            </div>
+                            <form method="POST" action="/info_email" enctype="multipart/form-data">
+                             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="c-choice c-choice--radio">
+                                            <input class="c-choice__input" id="checkbox_mail_nextify" name="mail_box"
+                                                   type="radio" value="mail_nextify">
+                                            <label class="c-choice__label" for="checkbox_mail_nextify">Nextify
+                                                Mail</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="c-choice c-choice--radio">
+                                            <input class="c-choice__input" id="checkbox_gmail" name="mail_box"
+                                                   type="radio" value="gmail">
+                                            <label class="c-choice__label" for="checkbox_gmail">Gmail</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="c-choice c-choice--radio">
+                                            <input class="c-choice__input" id="checkbox_mail_khac" name="mail_box"
+                                                   type="radio" value="mail_khac">
+                                            <label class="c-choice__label" for="checkbox_mail_khac">Khác</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" id="mail_nexify">
+                                    Gửi từ NEXTIFY: &nbsp;&nbsp;
+                                    <span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                          aria-label="Sử dụng hòm thư mặc định của NEXTIFY.">
+                                        <i class="fa fa-question"></i>
+                                    </span>
+                                    <br/><br/>
+                                    <div class="c-field u-mb-small">
+                                        <label class="c-field__label">Email gửi: </label>
+                                        <input type="text" class="c-input" value="merchant@nextify.vn"
+                                               name="mail_nexify"
+                                               disabled/>
+                                    </div>
+                                </div>
+                                <div class="row" id="mail_gmail" style="display: none">
+                                    Gửi từ GMAIL:&nbsp;&nbsp;
+                                    <span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                          aria-label="Sử dụng thử gmail của bạn.">
+                                        <i class="fa fa-question"></i>
+                                    </span>
+                                    <br/><br/>
+                                    <div class="c-field u-mb-small">
+                                        <label class="c-field__label">Email gửi: </label>
+                                        <input type="text" class="c-input" value="{% if mail_settings.mail_server|string() == "smtp.gmail.com"|string() %}{{ mail_settings.mail_name }}{% endif %}"
+                                               name="name_gmail"/>
+                                    </div>
+                                    <div class="c-field u-mb-small">
+                                        <label class="c-field__label">Mật khẩu: </label>
+                                        <input type="password" class="c-input" value="{% if mail_settings.mail_server|string() == "smtp.gmail.com"|string() %}{{ mail_settings.mail_pass }}{% endif %}"
+                                               name="pass_gmail"/>
+                                    </div>
+                                </div>
+                                <div class="row" id="mail_smtp" style="display: none">
+                                    Gửi từ Email khác:&nbsp;&nbsp;
+                                    <span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                          aria-label="Sử dụng mail server của bạn.">
+                                        <i class="fa fa-question"></i>
+                                    </span>
+                                    <br/><br/>
+                                    <div class="c-field u-mb-small">
+                                        <label class="c-field__label">Email gửi: </label>
+                                        <input type="text" class="c-input" value="{% if (mail_settings.mail_server|string() != "smtp.nextify.vn"|string()) and (mail_settings.mail_server|string() != "smtp.gmail.com"|string()) %}{{ mail_settings.mail_name }}{% endif %}"
+                                               name="smtp_email"/>
+                                    </div>
+                                    <div class="c-field u-mb-small">
+                                        <label class="c-field__label">Tài khoản: </label>
+                                        <input type="text" class="c-input" value="{% if (mail_settings.mail_server|string() != "smtp.nextify.vn"|string()) and (mail_settings.mail_server|string() != "smtp.gmail.com"|string()) %}{{ mail_settings.mail_user }}{% endif %}"
+                                               name="smtp_user"/>
+                                    </div>
+                                    <div class="c-field u-mb-small">
+                                        <label class="c-field__label">Mật khẩu: </label>
+                                        <input type="password" class="c-input" value="{% if (mail_settings.mail_server|string() != "smtp.nextify.vn"|string()) and (mail_settings.mail_server|string() != "smtp.gmail.com"|string()) %}{{ mail_settings.mail_pass }}{% endif %}"
+                                               name="smtp_pass"/>
+                                    </div>
+                                    <div class="c-field u-mb-small">
+                                        <label class="c-field__label">SMTP Server: </label>
+                                        <input type="text" class="c-input" value="{% if (mail_settings.mail_server|string() != "smtp.nextify.vn"|string()) and (mail_settings.mail_server|string() != "smtp.gmail.com"|string()) %}{{ mail_settings.mail_server }}{% endif %}"
+                                               name="smtp_server"/>
+                                    </div>
+                                    <div class="c-field u-mb-small">
+                                        <label class="c-field__label">Port: </label>
+                                        <input type="text" class="c-input" value="{% if (mail_settings.mail_server|string() != "smtp.nextify.vn"|string()) and (mail_settings.mail_server|string() != "smtp.gmail.com"|string()) %}{{ mail_settings.mail_port }}{% endif %}"
+                                               name="smtp_port"/>
+                                    </div>
+                                    <div class="c-field u-mb-small">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   type="checkbox"
+                                                   name="checkbox_ssl"
+                                                   id="checkbox_ssl"
+                                                   {% if mail_settings.mail_server %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox_ssl">Sử dụng SSL</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 u-float-right">
+                                        <button type="submit"
+                                                class="c-btn c-btn--info u-float-right">
+                                            Lưu thông tin
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="c-modal c-modal--xlarge modal fade"
+         id="add_brand_name"
+         tabindex="-1" role="dialog"
+         aria-labelledby="userDetailModal"
+         data-backdrop="static">
+        <div class="c-modal__dialog modal-dialog"
+             role="document">
+            <div class="c-modal__content modal-content">
+                <div class="c-modal__header">
+                    <h3 class="c-modal__title">Đăng ký SMS Brandname</h3>
+                    <span class="c-modal__close" data-dismiss="modal"
+                          aria-label="Close">
+                                      <i class="fa fa-close"></i>
+                                  </span>
+                </div>
+
+                <div class="c-modal__body">
+
+                    <div class="row u-justify-center">
+                        <div class="col-md-7">
+                            <div class="u-mt-medium
+                                               u-text-center"></div>
+                            <form id="fr_register_brandname">
+                             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label">Tên thương hiệu: </label>
+                                    <input type="text"
+                                           class="c-input"
+                                           style="margin-top:10px;font-size: 16px;"
+                                           name="brand_name"
+                                           id="register_brandname_name"
+                                           placeholder="Tên thương hiệu" />
+                                </div>
+                                <div class="c-field u-mb-small">
+
+                                    <label class="c-field__label">Nhóm thương hiệu: </label>
+                                    <div class="c-search-form__section">
+
+                                            <div class="c-choice c-choice--checkbox">
+                                                <input class="c-choice__input" id="checkbox1"
+                                                       name="category" value="1" type="checkbox"
+                                                       {% if '1' in merchant.category %}checked{% endif %}>
+                                                <label class="c-choice__label"
+                                                       for="checkbox1">Bất động sản</label>
+                                            </div>
+
+                                            <div class="c-choice c-choice--checkbox">
+                                                <input class="c-choice__input" id="checkbox2"
+                                                       name="category" value="2" type="checkbox"
+                                                       {% if '2' in merchant.category %}checked{% endif %}>
+                                                <label class="c-choice__label"
+                                                       for="checkbox2">Tuyển sinh, tuyển dụng (3_UD)</label>
+                                            </div>
+
+                                            <div class="c-choice c-choice--checkbox">
+                                                <input class="c-choice__input" id="checkbox3"
+                                                       name="category"
+                                                       value="6" type="checkbox"
+                                                       {% if '6' in merchant.category %}checked{% endif %}>
+                                                <label class="c-choice__label" for="checkbox3">Lĩnh vực khác</label>
+                                            </div>
+                                            <div class="c-choice c-choice--checkbox">
+                                                <input class="c-choice__input" id="checkbox4"
+                                                       name="category"
+                                                       value="7" type="checkbox"
+                                                       {% if '7' in merchant.category %}checked{% endif %}>
+                                                <label class="c-choice__label" for="checkbox4">Nhóm MP_QC</label>
+                                            </div>
+                                            <div class="c-choice c-choice--checkbox">
+                                                <input class="c-choice__input" id="checkbox5"
+                                                       name="category"
+                                                       value="8" type="checkbox"
+                                                       {% if '8' in merchant.category %}checked{% endif %}>
+                                                <label class="c-choice__label" for="checkbox5">Thời trang, ăn uống...
+                                                    (4_UD)</label>
+                                            </div>
+                                            <div class="c-choice c-choice--checkbox">
+                                                <input class="c-choice__input" id="checkbox6"
+                                                       name="category"
+                                                       value="9" type="checkbox"
+                                                       {% if '9' in merchant.category %}checked{% endif %}>
+                                                <label class="c-choice__label" for="checkbox6">Nhóm HCC</label>
+                                            </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label">Nhà mạng: </label>
+                                    <div class="c-choice c-choice--checkbox">
+                                        <input class="c-choice__input" id="checkbox_viettel"
+                                               name="telco" value="viettel" type="checkbox"
+                                        >
+                                        <label class="c-choice__label"
+                                               for="checkbox_viettel">Viettel</label>
+                                    </div>
+                                    <div class="c-choice c-choice--checkbox">
+                                        <input class="c-choice__input" id="checkbox_mobiphone"
+                                               name="telco" value="mobiphone" type="checkbox"
+                                        >
+                                        <label class="c-choice__label"
+                                               for="checkbox_mobiphone">Mobiphone</label>
+                                    </div>
+                                    <div class="c-choice c-choice--checkbox">
+                                        <input class="c-choice__input" id="checkbox_vinaphone"
+                                               name="telco" value="vinaphone" type="checkbox"
+                                        >
+                                        <label class="c-choice__label"
+                                               for="checkbox_vinaphone">Vinaphone</label>
+                                    </div>
+                                    <div class="c-choice c-choice--checkbox">
+                                        <input class="c-choice__input" id="checkbox_vietnammobile"
+                                               name="telco" value="vietnammobile" type="checkbox"
+                                        >
+                                        <label class="c-choice__label"
+                                               for="checkbox_vietnammobile">Vietnam Mobile</label>
+                                    </div>
+                                    <div class="c-choice c-choice--checkbox">
+                                        <input class="c-choice__input" id="checkbox_gmobile"
+                                               name="telco" value="gmobile" type="checkbox"
+                                        >
+                                        <label class="c-choice__label"
+                                               for="checkbox_gmobile">Gmobile</label>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 u-float-right">
+                            <button type="submit"
+                                    class="c-btn c-btn--info u-float-right"
+                                    id="register_brandname">
+                                Đăng ký SMS Brandname
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block js %}
+
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            if ("{{ mail_settings.mail_server }}" == "smtp.nextify.vn") {
+                $("#checkbox_mail_nextify").attr('checked', 'checked');
+                $("#mail_nexify").show();
+                $("#mail_gmail").hide();
+                $("#mail_smtp").hide();
+            }
+            if ("{{ mail_settings.mail_server }}" == "smtp.gmail.com") {
+                $("#checkbox_gmail").attr('checked', 'checked');
+                $("#mail_nexify").hide();
+                $("#mail_gmail").show();
+                $("#mail_smtp").hide();
+            }
+            if ("{{ mail_settings.mail_server }}" != "smtp.nextify.vn" && "{{ mail_settings.mail_server }}" != "smtp.gmail.com") {
+                $("#checkbox_mail_khac").attr('checked', 'checked');
+                $("#mail_nexify").hide();
+                $("#mail_gmail").hide();
+                $("#mail_smtp").show();
+            }
+            $("#checkbox_mail_nextify").on('click', function () {
+                $("#mail_nexify").show();
+                $("#mail_gmail").hide();
+                $("#mail_smtp").hide();
+            });
+            $("#checkbox_gmail").on('click', function () {
+                $("#mail_nexify").hide();
+                $("#mail_gmail").show();
+                $("#mail_smtp").hide();
+            });
+            $("#checkbox_mail_khac").on('click', function () {
+                $("#mail_nexify").hide();
+                $("#mail_gmail").hide();
+                $("#mail_smtp").show();
+            });
+            if ($("#ex_brand_name").length > 0) {
+                $("#brand_name").val($("#ex_brand_name").val());
+            }
+            $("#register_brandname").on('click', function () {
+                $.ajax({
+                        url: "/info_brand_name",
+                        type: "POST",
+                        data: $("#fr_register_brandname").serialize(),
+                        success: function(data){
+                            var returnedData = JSON.parse(data);
+                            var results = returnedData['results'];
+                            if (results.toString() == 'false'){
+                                var message = returnedData['message'];
+                                swal(
+                                  '',
+                                  message,
+                                  'error'
+                                )
+                            }
+                        },
+                        error: function(error){
+
+                        }
+                    });
+            });
+
+
+        });
+    </script>
+{% endblock %}

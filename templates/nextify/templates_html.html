@@ -1,0 +1,97 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="container-fluid">
+    <div class="header">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                        Templates
+                    </h6>
+
+                    <!-- Title -->
+                    <h1 class="header-title">
+                        {{ merchant.name }}
+                    </h1>
+
+
+                </div>
+              
+
+
+            </div> <!-- / .row -->
+            <div class="row align-items-center">
+                <div class="col">
+
+                    <!-- Nav -->
+                    <ul class="nav nav-tabs nav-overflow header-tabs">
+                        <li class="nav-item">
+                            <a href="/settings" class="nav-link active">
+                                {{ gettext('Templates_Wifi_Ads') }}
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a href="/accounts" class="nav-link">
+                                {{ gettext('Templates_Email') }}
+                            </a>
+                        </li> -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="col">
+
+                </div>
+                <div class="col-auto">
+                    <a href="/templates_html/add" class="btn btn-danger">
+                        {{ gettext('Tao_moi') }}
+                    </a>
+                </div>
+            </div>
+            <div class="card-body" id="email_templates">
+                <div class="row">
+                    {% for temp in temps %}
+                    <div class="col-12 col-xl-4">
+                        <div class="card align-items-center" style="border:none;">
+                            <div id='view_{{ temp._id }}'>
+
+                            </div>
+                            <div class="card-footer">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title mb-2 name"><a href="/templates_html/{{ temp._id }}"
+                                                class="interestContent">{{temp.name_temp }}</a></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        $(document).ready(function () {
+                            var url_pre = '/preview_template/{{ merchant_id }}/{{ temp._id}}'
+                            $("#view_{{ temp._id }}").empty();
+                            bioMp(document.getElementById('view_{{ temp._id }}'), {
+                                url: url_pre,
+                                view: 'front',
+                                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                height: 618,
+                                width: 308
+                            });
+                        });
+                    </script>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="{{ merchant_id }}" id="merchant_id" />
+</div>
+
+{% endblock %}
+{% block js %}
+<script src="/static/nextify/js/jquery.bootpag.min.js"></script>
+{% endblock %}

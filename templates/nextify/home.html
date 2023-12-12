@@ -1,0 +1,1467 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8">
+
+                <!-- Header -->
+                <div class="header mt-md-5">
+                    <div class="header-body">
+
+                
+                        <h1 class="header-title display-4">
+                           Chào mừng, {{merchant.name}}!
+                        </h1>
+
+                    </div>
+                </div>
+
+            
+            </div>
+        </div>
+    <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8">
+                <div class="card">
+              
+              <div class="card-body">
+
+                <!-- List -->
+                <ul class="list-group list-group-lg list-group-flush list my-n4">
+                  {% if merchant._id|package_merchant == "Brand" %}
+                  <li class="list-group-item" >
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#!" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-hard-drive h1"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/devices_shop">Thêm thiết bị WIFI vào địa điểm</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                         Tích hợp dịch vụ vào thiết bị WIFI của bạn và thêm thiết bị vào địa điểm muốn sử dụng.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/devices_shop" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#!" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-wifi"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/hotspot">Cấu hình trang chào WIFI</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Cài đặt trang chào WIFI cho các nhóm khách hàng của bạn. Đừng quên tham khảo các kịch bản mẫu đã được đề xuất.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/hotspot" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item" style="opacity: 0.2;">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-grid"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="#">Kết nối Zalo OA và Facebook Chatbot</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Kết nối với Zalo OA và Facebook Chatbot của bạn để dồng bộ dữ liệu khách hàng gửi tin chăm sóc qua Zalo và Chatbot.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+
+                        <a href="#" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item" style="opacity: 0.2;">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-users"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="#">Xem danh sách khách hàng</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Xem danh sách khách hàng đã xây dựng được qua WIFI.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="#" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+
+                    </div>
+                  </li>
+                  <li class="list-group-item" style="opacity: 0.2;">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-mail"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="#">Kết nối SMS và Email</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Kết nối SMS Brandname và Email để gửi tin chăm sóc khách hàng qua SMS và Email.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+
+                          <a href="#" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item" style="opacity: 0.2;">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-shopping-bag"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="#">Kết nối POS</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                         Kết nối với phần mềm POS để đồng bộ dữ liệu khách hàng và xây dựng chương trình khách hàng thân thiết.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <a href="#" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item" style="opacity: 0.2;">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-zap"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="#">Cài đặt kịch bản chăm sóc tự động</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                         Cấu hình kịch bản gửi tin chăm sóc khách hàng tự động đa kênh.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <a href="#" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item" style="opacity: 0.2;">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-pie-chart"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="#">Báo cáo và phân tích dữ liệu</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Xem báo cáo và phân tích dữ liệu truy cập của khách hàng tại địa điểm để thực hiện chiến dịch chăm sóc và marketing hiệu quả.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="#" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  {% elif merchant._id|package_merchant == "Acquire" %}
+                  <li class="list-group-item" >
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#!" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-hard-drive h1"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/devices_shop">Thêm thiết bị WIFI vào địa điểm</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                         Tích hợp dịch vụ vào thiết bị WIFI của bạn và thêm thiết bị vào địa điểm muốn sử dụng.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/devices_shop" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#!" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-wifi"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/hotspot">Cấu hình trang chào WIFI</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Cài đặt trang chào WIFI cho các nhóm khách hàng của bạn. Đừng quên tham khảo các kịch bản mẫu đã được đề xuất.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/hotspot" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/apps" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-grid"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/apps">Kết nối Zalo OA và Facebook Chatbot</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Kết nối với Zalo OA và Facebook Chatbot của bạn để dồng bộ dữ liệu khách hàng gửi tin chăm sóc qua Zalo và Chatbot.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+
+                        <a href="/apps" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/customers" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-users"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/customers">Xem danh sách khách hàng</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Xem danh sách khách hàng đã xây dựng được qua WIFI.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/customers" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+
+                    </div>
+                  </li>
+                  <li class="list-group-item" style="opacity: 0.2;">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-mail"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="#">Kết nối SMS và Email</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Kết nối SMS Brandname và Email để gửi tin chăm sóc khách hàng qua SMS và Email.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+
+                          <a href="#" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/apps" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-shopping-bag"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/apps">Kết nối POS</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                         Kết nối với phần mềm POS để đồng bộ dữ liệu khách hàng và xây dựng chương trình khách hàng thân thiết.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <a href="/apps" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item" style="opacity: 0.2;">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-zap"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="#">Cài đặt kịch bản chăm sóc tự động</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                         Cấu hình kịch bản gửi tin chăm sóc khách hàng tự động đa kênh.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <a href="#" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/merchant_reports" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-pie-chart"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/merchant_reports">Báo cáo và phân tích dữ liệu</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Xem báo cáo và phân tích dữ liệu truy cập của khách hàng tại địa điểm để thực hiện chiến dịch chăm sóc và marketing hiệu quả.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/merchant_reports" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  {% elif merchant._id|package_merchant == "Growth" %}
+                  <li class="list-group-item" >
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#!" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-hard-drive h1"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/devices_shop">Thêm thiết bị WIFI vào địa điểm</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                         Tích hợp dịch vụ vào thiết bị WIFI của bạn và thêm thiết bị vào địa điểm muốn sử dụng.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/devices_shop" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#!" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-wifi"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/hotspot">Cấu hình trang chào WIFI</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Cài đặt trang chào WIFI cho các nhóm khách hàng của bạn. Đừng quên tham khảo các kịch bản mẫu đã được đề xuất.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/hotspot" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/apps" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-grid"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/apps">Kết nối Zalo OA và Facebook Chatbot</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Kết nối với Zalo OA và Facebook Chatbot của bạn để dồng bộ dữ liệu khách hàng gửi tin chăm sóc qua Zalo và Chatbot.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+
+                        <a href="/apps" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/customers" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-users"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/customers">Xem danh sách khách hàng</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Xem danh sách khách hàng đã xây dựng được qua WIFI.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/customers" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+
+                    </div>
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/apps" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-mail"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/apps">Kết nối SMS và Email</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Kết nối SMS Brandname và Email để gửi tin chăm sóc khách hàng qua SMS và Email.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+
+                          <a href="/apps" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/apps" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-shopping-bag"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/apps">Kết nối POS</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                         Kết nối với phần mềm POS để đồng bộ dữ liệu khách hàng và xây dựng chương trình khách hàng thân thiết.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <a href="/apps" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/marketing_automation" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-zap"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/marketing_automation">Cài đặt kịch bản chăm sóc tự động</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                         Cấu hình kịch bản gửi tin chăm sóc khách hàng tự động đa kênh.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <a href="/marketing_automation" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/merchant_reports" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-pie-chart"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/merchant_reports">Báo cáo và phân tích dữ liệu</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Xem báo cáo và phân tích dữ liệu truy cập của khách hàng tại địa điểm để thực hiện chiến dịch chăm sóc và marketing hiệu quả.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/merchant_reports" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  {% elif merchant._id|package_merchant == "Basic"%}
+                  <li class="list-group-item" >
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#!" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-hard-drive h1"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/devices_shop">Thêm thiết bị WIFI vào địa điểm</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                         Tích hợp dịch vụ vào thiết bị WIFI của bạn và thêm thiết bị vào địa điểm muốn sử dụng.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/devices_shop" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#!" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-wifi"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/hotspot">Cấu hình trang chào WIFI</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Cài đặt trang chào WIFI cho các nhóm khách hàng của bạn. Đừng quên tham khảo các kịch bản mẫu đã được đề xuất.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/hotspot" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item" style="opacity: 0.2;">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-grid"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="#">Kết nối Zalo OA và Facebook Chatbot</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Kết nối với Zalo OA và Facebook Chatbot của bạn để dồng bộ dữ liệu khách hàng gửi tin chăm sóc qua Zalo và Chatbot.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+
+                        <a href="#" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/customers" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-users"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/customers">Xem danh sách khách hàng</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Xem danh sách khách hàng đã xây dựng được qua WIFI.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/customers" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+
+                    </div>
+                  </li>
+                  <li class="list-group-item" style="opacity: 0.2;">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-mail"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="#">Kết nối SMS và Email</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Kết nối SMS Brandname và Email để gửi tin chăm sóc khách hàng qua SMS và Email.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+
+                          <a href="#" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item" style="opacity: 0.2;">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-shopping-bag"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="#">Kết nối POS</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                         Kết nối với phần mềm POS để đồng bộ dữ liệu khách hàng và xây dựng chương trình khách hàng thân thiết.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <a href="#" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item" style="opacity: 0.2;">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-zap"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="#">Cài đặt kịch bản chăm sóc tự động</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                         Cấu hình kịch bản gửi tin chăm sóc khách hàng tự động đa kênh.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <a href="#" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item" style="opacity: 0.2;">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-pie-chart"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="#">Báo cáo và phân tích dữ liệu</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Xem báo cáo và phân tích dữ liệu truy cập của khách hàng tại địa điểm để thực hiện chiến dịch chăm sóc và marketing hiệu quả.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="#" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  {% else %}
+                  <li class="list-group-item" >
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#!" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-hard-drive h1"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/devices_shop">Thêm thiết bị WIFI vào địa điểm</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                         Tích hợp dịch vụ vào thiết bị WIFI của bạn và thêm thiết bị vào địa điểm muốn sử dụng.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/devices_shop" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                    
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#!" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-wifi"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/hotspot">Cấu hình trang chào WIFI</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Cài đặt trang chào WIFI cho các nhóm khách hàng của bạn. Đừng quên tham khảo các kịch bản mẫu đã được đề xuất.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/hotspot" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                    
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/apps" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-grid"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/apps">Kết nối Zalo OA và Facebook Chatbot</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Kết nối với Zalo OA và Facebook Chatbot của bạn để dồng bộ dữ liệu khách hàng gửi tin chăm sóc qua Zalo và Chatbot.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+
+                        <a href="/apps" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/customers" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-users"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/customers">Xem danh sách khách hàng</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Xem danh sách khách hàng đã xây dựng được qua WIFI.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/customers" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+
+                    </div>
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/apps" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-mail"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/apps">Kết nối SMS và Email</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Kết nối SMS Brandname và Email để gửi tin chăm sóc khách hàng qua SMS và Email.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+
+                          <a href="/apps" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/apps" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-shopping-bag"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/apps">Kết nối POS</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                         Kết nối với phần mềm POS để đồng bộ dữ liệu khách hàng và xây dựng chương trình khách hàng thân thiết.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <a href="/apps" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/marketing_automation" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-zap"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/marketing_automation">Cài đặt kịch bản chăm sóc tự động</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                         Cấu hình kịch bản gửi tin chăm sóc khách hàng tự động đa kênh.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <a href="/marketing_automation" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+                      </div>
+                      
+                    </div> 
+                  </li>
+
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="/merchant_reports" class="avatar avatar-lg">
+                          <span class="avatar-title rounded bg-white text-secondary">
+                            <span class="fe fe-pie-chart"></span>
+                          </span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="/merchant_reports">Báo cáo và phân tích dữ liệu</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Xem báo cáo và phân tích dữ liệu truy cập của khách hàng tại địa điểm để thực hiện chiến dịch chăm sóc và marketing hiệu quả.
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <a href="/merchant_reports" class="avatar avatar-lg d-none d-md-inline-block text-center justify-content-center">
+                            <i class="fe fe-arrow-right fa-lg mt-4"></i>
+                        </a>
+
+                      </div>
+                      
+                    </div> 
+                  </li>
+                  {% endif %}
+                  </ul>
+
+              </div>
+            </div>
+            </div>
+    </div>
+    </div>
+{% endblock %}

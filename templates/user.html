@@ -1,0 +1,410 @@
+{% extends "v2/base.html" %} {% block right_content %}
+<input type="hidden" id="user_curr" value="{{ user.phone }}">
+<div class="row">
+    <form method="POST" action="{% if user %}/user/{{ user.phone }}{% else %}add{% endif %}">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+          <div class="panel panel-white">
+            <div class="panel-heading clearfix" style="height:auto;">
+                <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                        {%if user%}
+                        <h3 class="panel-title" style="font-weight: 600;font-size: 30px;">{%if user.name and user.name|length >0 %}{{user.name}}{%else%}{{user.phone}}{%endif%}</h3>
+                        <a href="#" class="btn btn-primary"
+                                id="sync_user_detail">Đồng bộ POS</a>
+                          <input type="hidden" value="{{ user.phone }}"
+                                 id="user_phone"/>
+                        {%else%}
+                        <h3 class="panel-title" style="font-weight: 600;font-size: 30px;">Thêm khách hàng</h3>
+                        {%endif%}
+                    </div>
+                    <div class="col-md-6 col-xs-12 pull-right" style="text-align:center">
+                        <div class="col-md-3 col-xs-3" style="text-align:center">
+                            <p>Thiết bị</p>
+                            <p style="color: #30b19b;font-weight: 600;font-size: 20px;">{{ user.client_mac | length }}</p>
+                        </div>
+                        <div class="col-md-3 col-xs-3" style="text-align:center">
+                            <p>Lượt đến</p>
+                            <p style="color: #30b19b;font-weight: 600;font-size: 20px;">{{visit_count }}</p>
+                        </div>
+                        <div class="col-md-6 col-xs-6" style="text-align:center">
+                            <p>Lần cuối</p>
+                            <p style="color: #30b19b;font-weight: 600;font-size: 20px;">{{last_visit_str }}</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="panel-body" style="zoom: 1;">
+                <div class="row">
+                    <div class="col-md-6">
+
+
+                        {% if error %}
+                        <div class="alert alert-danger">
+                            {{ error | safe }}
+                        </div>
+                        {% endif %} {% if message %}
+                        <div class="alert alert-success">
+                            {{ message | safe }}
+                        </div>
+                        {% endif %} {% if user.avatar and user.avatar|length > 0 %}
+                        <div class="form-group">
+                            <p class="help-block">
+                                <img src="{{ user.avatar }}" width="240">
+                            </p>
+                        </div>
+                        {% endif %}
+                        <div class="form-group">
+                            <label for="name">Tên khách hàng:</label>
+                            <input type="text" class="form-control form-input" id="name" name="name" {% if user.name %}value="{{ user.name }}" {% else %}autofocus{% endif %}>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Số điện thoại:</label>
+                            <input type="tel" maxlength="15" class="form-control form-input" id="phone" name="phone" value="{{ user.phone }}" {% if user %}readonly{% endif %}>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Email:</label>
+                            <input type="text" maxlength="15" class="form-control form-input" name="email" value="{{ user.email }}" />
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Hạng thành viên:</label>
+                            <input type="tel" maxlength="15" class="form-control form-input" value="{{ rank }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="visits">Sinh nhật:</label> {% if birthday and birthday|length > 0 %}
+                            <input type="hidden" value="{{ birthday }}" id="ex_birthday" /> {% endif %}
+                            <input type="text" class="form-control form-input" name='birthday' id="birthday" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="visits">Giới tính:</label> {% if user.gender %}
+                            <input type="hidden" class="form-control form-input" id="curr_gender" value="{{ user.gender }}" /> {% endif %}
+                            <select class="form-control" id="gender" name="gender" style="width: 100%">
+                                <option value="0">Chưa xác định</option>
+                                <option value="1">Nam</option>
+                                <option value="2">Nữ</option>
+                            </select>
+                        </div>
+                     {% if user_login and user_login.roles in
+                            ['1','3', '4'] %}
+                          <div class="form-group">
+                            <label>Phân loại</label>
+                           <select class="form-control"
+                                   name="tags" id="tags_input" multiple="multiple">
+                             {% for tag in tags %}
+                               <option value="{{ tag._id }}">{{ tag.name
+                                 }}</option>
+                             {% endfor %}
+
+                            </select>
+                          <input type="hidden" id="select_tags"
+                                 name="real_tags"/>
+                          <input type="hidden" name="source_tags" id="source_tags" value="{{
+                            source_tags }}"/>
+                          </div>
+                            {% endif %}
+
+
+                    </div>
+                    <div class="col-md-6">
+                        {% if user %}
+                            <div class="form-group">
+                            <label>Invite Code</label>
+                            <input type="text" class="form-control form-input" value="{{ user.invite_code }}" readonly/>
+                        </div>
+                        <div class="form-group">
+                            <label for="visits">Chi tiêu:</label>
+                            <input type="text" class="form-control form-input" value="{{ total_sales_shop|format_price }}" readonly/>
+                        </div>
+                        <div class="form-group">
+                            <label for="visits">Chi tiêu HQ:</label>
+                            <input type="text" class="form-control form-input" value="{{ total_sales|format_price }}" readonly/>
+                        </div>
+                        {% if user_login and user_login.roles in ['1','3','6'] %}
+                        <div class="form-group">
+                            <label for="points">Điểm:</label>
+                            <input type="text" name="points" id="points" class="form-control form-input" value="{{ points }}" />
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <label for="points">Điểm:</label>
+                            <input type="text" id="points" class="form-control form-input" value="{{ points }}" readonly/>
+                        </div>
+                        {% endif %}
+                        <div class="form-group">
+                            <label for="visits">Tiền trong ví:</label>
+                            <input type="text" class="form-control form-input" value="{{ credit_amount|format_price }}" readonly/>
+                        </div>
+
+                           <div class="form-group">
+                            <label for="devices">Danh sách thiết bị:</label>
+                            <table class="table table-striped table-bordered">
+                              <thead>
+                                <tr>
+                                    <th style="width:10%">Mã thiết bị</th>
+
+                                </tr>
+                            </thead>
+                              <tbody>
+                                {% for client in  user.client_mac%}
+                                  <tr>
+
+                                  <td>{{ client }}</td>
+                                  </tr>
+
+                              {% endfor %}
+                              </tbody>
+                            </table>
+                        </div>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+
+
+                </div>
+                <hr>
+                <div class="btn-toolbar pull-right">
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-info btn-fill pull-right">Lưu thông tin</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+<div class="row">
+<div class="panel panel-white">
+        <div class="panel-body">
+  {%if user%}
+                          <div class="col-md-6">
+    <h4 class="title">Lịch sử đến</h4>
+                    {% line_chart logs_data_visit%}
+                          </div>
+                         <div class="col-md-6">
+    <h4 class="title">Lịch sử tiêu dùng</h4>
+ <div id="logs_credit"></div>
+                          </div>
+
+    {%endif%}
+        </div>
+</div>
+</div>
+<div class="row">
+    <div class="panel panel-white">
+        <div class="panel-body">
+            <div class="row">
+                {% if user %}
+
+                <div class="col-md-4">
+            <div class="header">
+              <h4 class="title">Mã coupons</h4>
+            </div>
+            <center>
+              <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                  <th style="width:10%">Redeem</th>
+                  <th class="col-md-3">Mã</th>
+                  <th class="col-md-3">Tạo lúc</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for coupon in coupon_codes %}
+                  <tr>
+                    <td><input type="radio" name="coupon_code"
+                               value="{{ coupon.coupon }}"></td>
+                    <td>{{ coupon.coupon }}</td>
+                    <td>{{ coupon.create_str }}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </center>
+          </div>
+              <div class="col-md-4">
+            <div class="header">
+              <h4 class="title">Lịch sử đến</h4>
+            </div>
+            <div id="logs_visits"></div>
+            <center>
+              <ul class="pager">
+                <li class="previous_sales">
+                  <a href="#">&larr; Mới hơn</a>
+                </li>
+                <li class="next_sales">
+                  <a href="#">Cũ hơn &rarr;</a>
+                </li>
+
+              </ul>
+            </center>
+          </div>
+          <div class="col-md-4">
+            <div class="header">
+              <h4 class="title">Lịch sử mua hàng</h4>
+            </div>
+            <div id="logs_sales"></div>
+            <center>
+              <ul class="pager">
+                <li class="previous_sales">
+                  <a href="#">&larr; Mới hơn</a>
+                </li>
+                <li class="next_sales">
+                  <a href="#">Cũ hơn &rarr;</a>
+                </li>
+
+              </ul>
+            </center>
+          </div>
+
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %} {% block js %}
+ <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function() {
+      $('#customers').click();
+        if ($("#ex_birthday").length > 0) {
+            var from_date_arr = $("#ex_birthday").val();
+            flatpickr("#birthday", {
+                enableTime: false,
+                defaultDate: from_date_arr,
+                dateFormat: "d-m"
+            });
+        } else {
+            flatpickr("#birthday", {
+                enableTime: false,
+                dateFormat: "d-m"
+            });
+        }
+        if ($("#curr_gender").length > 0) {
+            $("#gender").val($("#curr_gender").val());
+        }
+
+        $('#tags_input').select2();
+        $('#tags_input').on("change", function (e) {
+            if($('#tags_input').val()){
+              $('#select_tags').val($('#tags_input').val().toString());
+            }else{
+              $('#select_tags').val("");
+            }
+
+
+      });
+
+      {% if source_tags %}
+        var source_tags = $("#source_tags").val();
+        var data_soure_tags = JSON.parse(source_tags.replace(/\'/g, '"'));
+
+        $("#tags_input").val(data_soure_tags);
+        $('#tags_input').trigger('change');
+      {% endif %}
+    })
+</script>
+
+{% if user %}
+ <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function() {
+        var user_phone = $("#user_curr").val();
+        var url_sales = "/user/" + user_phone.toString() + "/sales";
+        var url_visits = "/user/" + user_phone.toString() + "/visits";
+        var url_credit = "/user/" + user_phone.toString() + "/credit";
+        $.ajax({
+            url: url_sales,
+            success: function(data) {
+                $("#logs_sales").empty();
+                $("#logs_sales").append(data);
+            }
+        });
+        $.ajax({
+            url: url_visits,
+            success: function(data) {
+                $("#logs_visits").empty();
+                $("#logs_visits").append(data);
+            }
+        });
+        $.ajax({
+            url: url_credit,
+            success: function(data) {
+                $("#logs_credit").empty();
+                $("#logs_credit").append(data);
+            }
+        });
+
+        $(".previous_sales").click(function() {
+            var page = parseInt($("#sales_page").val()) - 1;
+            var url_sales = url_sales + "?page=" + page;
+            $.ajax({
+                url: url_sales,
+                success: function(data) {
+                    $("#logs_sales").empty();
+                    $("#logs_sales").append(data);
+                }
+            });
+        });
+        $(".next_sales").click(function() {
+            var page = parseInt($("#sales_page").val()) + 1;
+            var url_sales = url_sales + "?page=" + page;
+            $.ajax({
+                url: url_sales,
+                success: function(data) {
+                    $("#logs_sales").empty();
+                    $("#logs_sales").append(data);
+                }
+            });
+
+        });
+        $(".previous_visit").click(function() {
+            var page = parseInt($("#logs_page").val()) - 1;
+            var url_visits = url_visits + "?page=" + page;
+            $.ajax({
+                url: url_visits,
+                success: function(data) {
+                    $("#logs_visits").empty();
+                    $("#logs_visits").append(data);
+                }
+            });
+        });
+        $(".next_visit").click(function() {
+            var page = parseInt($("#logs_page").val()) + 1;
+            var url_visits = url_visits + "?page=" + page;
+            $.ajax({
+                url: url_visits,
+                success: function(data) {
+                    $("#logs_visits").empty();
+                    $("#logs_visits").append(data);
+                }
+            });
+
+        });
+
+        $("#sync_user_detail").click(function() {
+          var user_phone = $("#user_phone").val();
+          var url_sync = "/sync_user_detail_pos?user_phone=" + user_phone;
+          $.ajax({
+              url: url_sync,
+              success: function (data) {
+                var json = $.parseJSON(data);
+                if (json.result) {
+                  alert('Tài khoản đang được đồng bộ sang POS.');
+                } else {
+                  alert('Hệ thống chưa kết nối đến POS. Vui lòng liên hệ kỹ ' +
+                    'thuật.');
+                }
+              }});
+        });
+
+
+    })
+</script>
+
+{% endif %} {% endblock %}

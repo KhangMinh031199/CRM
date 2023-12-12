@@ -1,0 +1,29 @@
+FROM python:2.7 AS builder
+RUN apt update && apt install gcc libpq-dev libxml2-dev libxslt1-dev unixodbc-dev unixodbc -y
+COPY requirements.txt .
+RUN pip install --user -r requirements.txt
+# install dependencies to the local user directory (eg. /root/.local)
+#RUN pip install --user -r requirements2.txt
+RUN pip install --user typing==3.6.4
+RUN pip install --user zipp==1.1.1
+RUN pip install --user uwsgi
+RUN pip install --user gevent
+# second unnamed stage
+FROM ubuntu:latest
+RUN apt update -y && apt install -y python2.7 curl libpq-dev python-dev gcc
+RUN apt install libxml2 -y
+WORKDIR /code
+
+# copy only the dependencies installation from the 1st stage image
+COPY --from=builder /root/.local /root/.local
+COPY . .
+
+# update PATH environment variable
+ENV PATH=/root/.local:$PATH
+
+RUN ln -s /usr/bin/python /usr/local/bin/python
+RUN /root/.local/bin/pybabel compile -d translations .
+RUN /root/.local/bin/pybabel update -i translations.pot -d translations
+
+#ENTRYPOINT [ "bash", "entrypoint.sh" ]
+CMD [ "python", "new_cms.py" ]

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+   {% if 'viettel.vn' in request.url %}
+        <title>Viettel | vmarketing</title>
+        {% include 'nextify/viettel_meta_tags.html' %}
+        {% elif 'crmx' in request.url %}
+        <title>CRMX | Better eXperience fo Wi-Fi</title>
+         {% include 'nextify/crmx_meta_tags.html' %}
+    {% else %}
+        <title>Nextify | The Next Generation of Loyalty</title>
+         {% include 'nextify/nextify_meta_tags.html' %}
+    {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Libs CSS -->
+     <link rel="stylesheet" href="/static/nextify/css/feather/feather.min.css">
+    <link rel="stylesheet" href="/static/nextify/css/dash_kit_theme.min.css" id="stylesheetLight">
+  <style  nonce="{{ csp_nonce() }}">body { display: none; }</style>
+
+  </head>
+
+<body  class="d-flex align-items-center bg-auth border-top border-top-2 border-primary" >
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12  u-p-zero">
+                       <div class="card">
+                           <div class="card-header">
+                               <h4 class="c-project-card__title">{{ router_item.name }}</h4>
+                               <p class="c-project-card__info">{{ router_item.router_type }} | {{ router_item.update_at|human_time }}</p>
+                           </div>
+                           <div class="card-body">
+                               {{ router_item.guide|safe}}
+                           </div>
+
+                       </div>
+
+
+                    </div>
+
+            </div>
+        </div>
+
+
+
+
+
+        <script type="text/javascript" src="/static/wifi_portal/js/jquery-3.3.1.min.js"></script>
+
+
+  </body>
+</html>

@@ -1,0 +1,202 @@
+<div class="c-table-responsive@desktop">
+    <table class="c-table c-table--zebra u-mb-small" id="datatable2">
+        <thead class="c-table__head">
+        <tr class="c-table__row">
+            <th class="c-table__cell c-table__cell--head">Tên</th>
+            <th class="c-table__cell c-table__cell--head">Số điện thoại</th>
+            <th class="c-table__cell c-table__cell--head">Email</th>
+            <!-- <th class="c-table__cell c-table__cell--head">Zalo</th> -->
+            <th class="c-table__cell c-table__cell--head">Lượt đến</th>
+            <th class="c-table__cell c-table__cell--head">Lần cuối</th>
+            <th class="c-table__cell c-table__cell--head">
+                <a href="#"><i class="fa fa-cloud-download"></i> Tải files</a>
+            </th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+        {% for cus in customers %}
+            <tr class="c-table__row">
+                <td class="c-table__cell">{{ cus.name }}
+                    <!-- <small class="u-block u-text-mute">Airbnb</small> -->
+                </td>
+
+                <td class="c-table__cell">{{ cus.phone }}
+                    <!-- <small class="u-block u-text-mute">in 3 months</small> -->
+                </td>
+
+                <td class="c-table__cell">{% if cus.email | string != 'None' %}
+                    {{ cus.email }}{% endif %}
+                    <!-- <small class="u-block u-text-mute">in 3 months</small> -->
+                </td>
+
+                <!-- <td class="c-table__cell">
+                            {% if cus.zalo %}
+                            <img src="/static/images/logo-zalo-vector.png" width="25" height="auto" /> {% endif %}
+                    </td> -->
+
+                <td class="c-table__cell">
+                    {{ cus.visit_count }}
+                </td>
+                <td class="c-table__cell">
+                    {{ cus.timestamp_str }}
+                </td>
+
+                <td class="c-table__cell u-text-right">
+                    <div class="c-dropdown dropdown">
+                        <button class="c-btn c-btn c-btn--success"
+                                aria-haspopup="true" aria-expanded="false"
+                                data-toggle="modal"
+                                data-target="#{{ cus._id }}_viewModal">Chi tiết
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            <div class="c-modal c-modal--xlarge modal fade"
+                 id="{{ cus._id }}_viewModal"
+                 tabindex="-1" role="dialog" aria-labelledby="onBoardModal"
+                 data-backdrop="static">
+                <div class="c-modal__dialog modal-dialog" role="document">
+                    <div class="c-modal__content modal-content">
+                        <a class="c-modal__close c-modal__close--absolute u-text-mute u-opacity-medium"
+                           data-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-close"></i>
+                        </a>
+
+                        <div class="c-modal__body">
+
+                            <div class="row u-justify-center">
+                                <div class="col-md-7">
+                                    <div class="u-mt-medium u-text-center">
+                                        <div class="c-avatar c-avatar--large u-mb-small u-inline-flex">
+                                            {% if cus.avatar and cus.avatar|length > 0 %}
+
+                                                <img class="c-avatar__img"
+                                                     src="{{ cus.avatar }}">
+                                            {% else %}
+                                                <img class="c-avatar__img"
+                                                     src="/static/v2/assets/img/medium-default-avatar.png">
+                                            {% endif %}
+                                        </div>
+
+                                        <h3 class="u-h5">
+                                            {% if cus.name and cus.name|length >0 %}
+                                                {{ cus.name }}{% else %}
+                                                {{ cus.phone }}{% endif %}</h3>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row u-justify-center">
+
+
+                                <div class="col-md-4 u-text-center">
+                                    <h4 class="u-pt-small
+                                      u-color-primary">{{ cus.visit_count }}</h4>
+                                    <h4 class="u-text-mute u-text-xsmall
+                                       u-pb-small u-text-uppercase">Lượt đến</h4>
+                                </div>
+                                <div class="col-md-4 u-text-center">
+                                    <h4 class="u-pt-small
+                                      u-color-primary">{{ cus.timestamp_str }}</h4>
+                                    <h4 class="u-text-mute u-text-xsmall
+                                     u-pb-small u-text-uppercase">Lần cuối</h4>
+                                </div>
+                                <div class="col-md-4 u-text-center">
+                                    <h4 class="u-pt-small
+                                      u-color-primary">{{ cus.client_mac |
+                                      length }}</h4>
+                                    <h4 class="u-text-mute u-text-xsmall u-pb-small u-text-uppercase">
+                                        Thiết bị</h4>
+                                </div>
+
+                            </div>
+                            <div class="row u-justify-center">
+                                <div class="col-md-6 u-text-center">
+                                    <dl class="u-flex u-pv-small u-border-bottom">
+                                        <dt class="u-width-50">Số điện thoại
+                                        </dt>
+                                        <dd>{{ cus.phone }}</dd>
+                                    </dl>
+                                    <dl class="u-flex u-pv-small u-border-bottom">
+                                        <dt class="u-width-50">Email</dt>
+                                        <dd>{% if cus.email or cus.email|string !='NONE' or cus.email|string !='None'%}{{ cus.email }}{% else %}N/A{% endif %}</dd>
+                                    </dl>
+                                    <dl class="u-flex u-pv-small u-border-bottom">
+                                        <dt class="u-width-50">Sinh nhật</dt>
+                                        <dd>{% if cus.birthday and
+                                        cus.birthday|length > 0%}{{ cus.birthday }}{% else %}N/A{% endif %}</dd>
+                                    </dl>
+                                    <dl class="u-flex u-pv-small u-border-bottom">
+                                        <dt class="u-width-50">Giới tính</dt>
+                                        <dd>{% if cus.gender %}{%if cus.gender == '2' %}Nữ {% elif  cus.gender == '1' %} Nam{% else %}N/A{% endif%}{% endif %}</dd>
+                                    </dl>
+
+                                </div>
+                                <div class="col-md-6 u-text-center">
+                                    <dl class="u-flex u-pv-small u-border-bottom">
+                                        <dt class="u-width-50">Hạng</dt>
+                                        <dd>{% if cus.rank and cus.rank|length > 0 %}{{ cus.rank }}{% else %}N/A{% endif %}</dd>
+                                    </dl>
+                                    <dl class="u-flex u-pv-small u-border-bottom">
+                                        <dt class="u-width-50">Chi tiêu</dt>
+                                        <dd>{{ cus.total_sales_shop|format_price }}</dd>
+                                    </dl>
+                                    <dl class="u-flex u-pv-small u-border-bottom">
+                                        <dt class="u-width-50">Điểm</dt>
+                                        <dd>{{ cus.points }}</dd>
+                                    </dl>
+                                    <dl class="u-flex u-pv-small u-border-bottom">
+                                        <dt class="u-width-50">Social</dt>
+                                        <dd></dd>
+                                    </dl>
+
+                                </div>
+                            </div>
+                            <div class="row u-justify-center">
+                                <div class="col-md-7">
+                                    <div class="u-mt-medium u-text-center">
+
+
+                                        <h3 class="u-h5">Tags</h3>
+
+
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="u-mt-medium u-text-center">
+                                            {% if cus.user_tags_details|length> 0 %}
+                                                {% for tag in cus.user_tags_details%}
+                                                  <span class="c-badge
+                                                  c-badge--small c-badge--{{
+                                                          ['success','warning','info']|random}}">
+                                                      {{tag.name}}
+                                                  </span>
+                                                {% endfor %}
+                                              {% else %}
+                                              <p>N/A</p>
+                                              {% endif %}
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <footer class="c-modal__footer u-justify-center">
+                            <a class="c-btn c-btn--green"
+                               href="/user/{{ cus._id }}">Chi tiết</a>
+                        </footer>
+                    </div>
+
+                </div>
+            </div>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+

@@ -1,0 +1,119 @@
+{% extends 'nextify/base.html' %}
+
+{% block main_content %}
+
+    <div class="container ">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card u-p-medium">
+                    <div class="row u-justify-center">
+                        <div class="col-md-8">
+                            <div class="u-mt-large u-text-center">
+                                <h2 class="u-mb-xsmall">{{ gettext('Marketing_&_Cham_soc_khach_hang') }}</h2>
+                                <p class="u-text-mute u-mb-large"></p>
+                            </div>
+                            <div class="row u-p-medium">
+                                <div class="col-sm-6 col-lg-6">
+                                    <a href="/marketing_automation" style="text-decoration: none;">
+                                    <div class="c-state">
+                                        <h3 class="c-state__title"></h3>
+                                        <h4 class="c-state__number">{{ gettext('Cham_soc_tu_dong') }}</h4>
+                                        <p class="c-state__status">{{ gettext('Thiet_lap_cham_soc_khach_hang_tu_dong_sms,_email,_zalo...') }}
+                                        </p>
+                                        <span class="c-state__indicator">
+                            <i class="fa fa-arrow-circle-o-right"></i>
+                                 </span>
+                                    </div><!-- // c-state -->
+                                    </a>
+                                </div>
+
+                                <div class="col-sm-6 col-lg-6">
+                                     <a href="/marketing_campaign" style="text-decoration: none;">
+                                    <div class="c-state c-state--success">
+                                        <h3 class="c-state__title"></h3>
+                                        <h4 class="c-state__number">{{ gettext('Chien_dich') }}</h4>
+                                        <p class="c-state__status">{{ gettext('Thiet_lap_chien_dich_quang_cao_sms,_email,_zalo...') }}</p>
+                                        <span class="c-state__indicator">
+                            <i class="fa fa-arrow-circle-o-right"></i>
+                        </span>
+                                    </div><!-- // c-state -->
+                                     </a>
+                                </div>
+                            </div>
+
+                            <div class="row u-p-medium">
+
+                                <div class="col-sm-6 col-lg-6">
+                                    <a href="/coupons" style="text-decoration: none;">
+                                         <div class="c-state c-state--warning">
+                                            <h3 class="c-state__title"></h3>
+                                            <h4 class="c-state__number">
+                                                Coupons</h4>
+                                            <p class="c-state__status">{{ gettext('Quan_ly_ma_giam_gia,_qua_tang') }}</p>
+                                            <span class="c-state__indicator">
+                                                <i class="fa fa-arrow-circle-o-right"></i>
+                                            </span>
+                                        </div>
+                                    </a>
+
+                                </div>
+                                 <div class="col-sm-6 col-lg-6">
+                                    <a href="/loyalty/wallet" style="text-decoration: none;">
+                                         <div class="c-state c-state--warning">
+                                            <h3 class="c-state__title"></h3>
+                                            <h4 class="c-state__number">
+                                                Ví</h4>
+                                            <p class="c-state__status">{{ gettext('Quan_ly_chuong_trinh_vi_tich_tien') }}</p>
+                                            <span class="c-state__indicator">
+                                                <i class="fa fa-arrow-circle-o-right"></i>
+                                            </span>
+                                        </div>
+                                    </a>
+
+                                </div>
+
+{#                                <div class="col-sm-6 col-lg-6">#}
+{#                                    <div class="c-state c-state--danger">#}
+{#                                        <h3 class="c-state__title"></h3>#}
+{#                                        <h4 class="c-state__number">#}
+{#                                            Loyalty</h4>#}
+{#                                        <p class="c-state__status">Thiết#}
+{#                                            lập chương trình khách hàng#}
+{#                                            thân thiết</p>#}
+{#                                        <span class="c-state__indicator">#}
+{#                            <i class="fa fa-arrow-circle-o-right"></i>#}
+{#                        </span>#}
+{#                                    </div><!-- // c-state -->#}
+{#                                </div>#}
+                            </div>
+                             <div class="row u-p-medium">
+
+{#                                <div class="col-sm-6 col-lg-6">#}
+{#                                    <a href="/loyalty/wallet" style="text-decoration: none;">#}
+{#                                         <div class="c-state c-state--warning">#}
+{#                                            <h3 class="c-state__title"></h3>#}
+{#                                            <h4 class="c-state__number">#}
+{#                                                Ví</h4>#}
+{#                                            <p class="c-state__status">Quản lý#}
+{#                                                chương trình ví tích tiền</p>#}
+{#                                            <span class="c-state__indicator">#}
+{#                                                <i class="fa fa-arrow-circle-o-right"></i>#}
+{#                                            </span>#}
+{#                                        </div>#}
+{#                                    </a>#}
+{##}
+{#                                </div>#}
+                             </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+{% block js %}
+{% endblock %}

@@ -1,0 +1,238 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8">
+
+                <!-- Header -->
+                <div class="header mt-md-5">
+                    <div class="header-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Pretitle -->
+                                <h6 class="header-pretitle">
+                                    Email OTP
+                                </h6>
+
+                                <!-- Title -->
+                                <h1 class="header-title">
+                                    Khách hàng
+                                </h1>
+
+
+                            </div>
+                            <div class="col-lg-3">
+                                <select class="form-control" style="width: 100%;" id="shop_in_mer">
+                                    <option value="all">Tất cả</option>
+                                    {% for shop_mer in shop_in_mer %}
+                                        <option value="{{ shop_mer._id }}" {% if loc_id|string == shop_mer._id|string %}selected{% endif %}>{{ shop_mer.name }}</option>
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+                        </div> <!-- / .row -->
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-md-12">
+
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="contactsListPane" role="tabpanel"
+                                 aria-labelledby="contactsListTab">
+
+                                <!-- Card -->
+                                <div class="card"
+                                     data-list="{&quot;valueNames&quot;: [&quot;item-name&quot;, &quot;item-title&quot;, &quot;item-email&quot;, &quot;item-phone&quot;, &quot;item-score&quot;, &quot;item-company&quot;], &quot;page&quot;: 10, &quot;pagination&quot;: {&quot;paginationClass&quot;: &quot;list-pagination&quot;}}"
+                                     id="contactsList">
+                                    <div class="card-header">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+
+                                                <!-- Form -->
+                                                <form>
+                                                    <div class="input-group input-group-flush input-group-merge input-group-reverse">
+                                                        <input class="form-control list-search" type="search"
+                                                               placeholder="Search" id='search_email'>
+                                                       
+                                                    </div>
+                                                </form>
+
+                                            </div>
+
+
+                                        </div> <!-- / .row -->
+                                    </div>
+                                    <div id='list_data'>
+                                        <div class="table-responsive">                                       
+                                            <table class="table table-sm table-hover table-nowrap card-table">
+                                                <thead>
+                                                <tr>
+
+                                                    <th>
+                                                        <a class="list-sort text-muted" data-sort="item-name"
+                                                        href="#">Tên</a>
+                                                    </th>
+                                                    <th>
+                                                        <a class="list-sort text-muted" data-sort="item-email" href="#">Email</a>
+                                                    </th>
+                                                    <th>
+                                                        <a class="list-sort text-muted" data-sort="item-verify" href="#">Verify</a>
+                                                    </th>
+                                                    <th>
+                                                        <a class="list-sort text-muted" data-sort="item-result" href="#">Đã gửi</a>
+                                                    </th>
+                                                    <th>
+                                                        <a class="list-sort text-muted" data-sort="item-time" href="#">Thời
+                                                            gian</a>
+                                                    </th>
+                                                    <th>
+                                                        <a class="list-sort text-muted" data-sort="item-resend" href="#">Gửi lại</a>
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody class="list fs-base">
+                                                {% for log in logs %}
+                                                <tr>
+                                                    <td>
+
+                                                        <span class="item-name text-reset" href="">{{ log.name }}</span>
+
+                                                    </td>
+
+                                                    <td>
+
+                                                        <!-- Email -->
+                                                        <span class="item-email text-reset" href="">{{ log.reception }}</span>
+
+                                                    </td>
+
+                                                    <td>
+
+                                                        <!-- Badge -->
+                                                        <span class="item-score badge bg-danger-soft">{{ log.verify_email }}</span>
+
+                                                    </td>
+                                                    <td>
+
+                                                        <!-- Badge -->
+                                                        <span class="item-score badge bg-danger-soft">{{ log.result }}</span>
+
+                                                    </td>
+                                                    <td>
+                                                        <!-- Link -->
+                                                        <span class="item-score badge bg-danger-soft"
+                                                        >{{ log.when|human_time }}</span>
+
+                                                    </td>
+                                                    <td>
+                                                        <a class="item-score badge bg-danger-soft resend-email" log_id="{{ log._id }}" href="#" >Gửi lại</a>
+
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                            
+                                        </div>
+                                        <div class="card-footer">
+
+                                            <ul class="pagination justify-content-center">
+                                                {% if pagination %}
+                                                {{ pagination.links }}
+                                                {% endif %}
+                                            </ul>
+                                            
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                          
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+
+    <script nonce="{{ csp_nonce() }}">
+
+        $(document).ready(function () {
+            $('#shop_in_mer').select2({
+                dropdownAutoWidth: true
+            });
+            $('#shop_in_mer').on("change", function (e) {
+                var shop_id = $('#shop_in_mer').val();
+                var url = "/email_otp?loc_id=" + shop_id;
+                $(location).attr('href', url);
+            });
+
+            $(document).on("click", '.resend-email', function(event) {
+                var log_id = $(this).attr('log_id')      
+                var url_submit = '/resend_verify_email/'+ log_id   
+                $.ajax({
+                    url: url_submit,
+                    type: 'GET',
+
+                    success: function (response) {
+                        var returnedData = JSON.parse(response);
+                        if ('error' in returnedData) {
+                            swal(returnedData['error'], " ", "error");
+                            return false;
+                        }
+                        else {
+                            swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+                            location.reload();
+                        }
+
+                    },
+                    error: function (xhr, desc, err) {
+                        swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+                    }
+                });
+                return false;
+
+            });
+
+            $("#search_email").keypress(function (event) {
+                var keycode = event.keyCode || event.which;
+                if (keycode == '13') {
+                    if ($("#search_email").val().length > 2) {
+                        var shop_id = $('#shop_in_mer').val();
+                        var data = {'text_query': $("#search_email").val(),
+                                    'shop_id_select': shop_id};
+                        $('#list_data').hide();
+                        $.ajax({
+                            url: "/search_email",
+                            type: 'POST',
+                            data: data,
+                            success: function (data) {
+                                $("#list_data").empty();
+                                $("#list_data").append(data);
+                                $('#list_data').show();
+                            }
+                        });
+                        return false;
+
+                    } else {
+                        swal(ngettext("Ban_can_nhap_thong_tin_lon_hon_2_ky_tu"), " ",
+                            "info")
+                    }
+                    return false;
+                }
+
+            });
+    
+        })
+    </script>
+
+{% endblock %}

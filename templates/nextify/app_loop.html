@@ -1,0 +1,201 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">
+            {{ gettext("Ung_dung") }}
+          </h6>
+
+          <!-- Title -->
+          <h1 class="header-title">
+            {{ gettext("LOOP") }}
+          </h1>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <h1 class="header-title">
+            {{ gettext("Cau_hinh") }}
+          </h1>
+        </div>
+        <div class="card-body">
+
+
+            <form id="loop_connect" method="post" action="/save_setting_loop">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+              <div class="form-group">
+                <label>Access Token</label>
+                <input type="text" id="access_token_loop" name="access_token_loop" class="form-control"
+                  placeholder="access token..." {% if access_token %} value="{{ access_token }}" {% elif token %} value="{{ token }}" {% else %} value=""
+                  {% endif %}>
+              </div>
+
+              <div class="form-group">
+                <label>Merchant App ID</label>
+                <input type="text" id="merchant_id_app" name="merchant_id_app" class="form-control"
+                  placeholder="merchant app id..." {% if merchant_id_app %} value="{{ merchant_id_app }}" {% endif %}>
+
+              </div>
+
+              <div class="form-group row">
+                  <div class="col-2">
+                    <span>{{ gettext("Kich_hoat") }}</span>
+                  </div>
+                  <div class="col-auto">
+                    <div class="custom-control custom-switch {% if status == 'True' %}is-active{% endif %}">
+                      <input class="custom-control-input" name="status" id="status" type="checkbox"
+                        {% if status =="True" %}checked="checked" {% endif %}>
+                        <label class="custom-control-label"
+                        for="status"></label>
+                    </div>
+                </div>
+              </div>
+            </form>
+
+
+        </div>
+        <div class="card-footer">
+            <div class="col-6" style="float:right">
+              <button class="btn btn-lg btn-block btn-primary" id="save_info_API">
+                {{ gettext("Luu_thong_tin") }}
+              </button>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <h1 class="header-title">
+            {{ gettext("Thiet_lap_ID_dia_diem") }}
+          </h1>
+        </div>
+        <form id="save_id_location" method="post" action="/apps/loop?shop_id={{ shop_select._id }}">
+        <div class="card-body">
+
+
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+              <div class="form-group">
+                <select id="redirect_shop_select" class="browser-default custom-select">
+                  {% if shop_select._id %}
+                  <option disabled selected>{{ shop_select.name }}</option>
+                  {% else %}
+                  <option disabled selected>{{ gettext("Chon_dia_diem") }}</option>
+                  {% endif %}
+                  {% for shop in shop_in_mer %}
+                  <option value="{{ shop._id }}">{{ shop.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="form-group">
+                <input type="text" id="id_loc" name="id_loc" class="form-control" placeholder=' {{ gettext("ID_dia_diem") }}'
+                  value="{{ shop_select.pos_id }}">
+              </div>
+
+
+
+        </div>
+        </form>
+         <div class="card-footer">
+              <button class="btn btn-lg btn-block btn-primary" id="save_id_loc">
+                {{ gettext("Luu_thong_tin") }}
+              </button>
+            </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script nonce="{{ csp_nonce() }}">
+
+  $(document).ready(function () {
+    $("#redirect_shop_select").select2();
+    $('#redirect_shop_select').on('change.select2', function (e) {
+      var shop_id = $(this).val();
+      var url = "/apps/loop" + "?shop_id=" + shop_id;
+      location.replace(url);
+    });
+
+    $("#save_id_loc").click(function (e) {
+      $.ajax({
+        url: $("#save_id_location").attr("action"),
+        type: $("#save_id_location").attr("method"),
+        data: $("#save_id_location").serialize(),
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ('error' in returnedData) {
+            swal(returnedData['error'], "", "error");
+            return false;
+          }
+          else {
+            swal('{{ gettext("Thao_tac_thanh_cong") }}', " ", "success");
+            location.reload();
+          }
+        },
+        error: function (xhr, desc, err) {
+          swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+        }
+      })
+    });
+
+    $("#save_info_API").click(function () {
+      var access_token = $("#access_token_loop").val();
+      var merchant_id_app = $("#merchant_id_app").val();
+      var status = $("#status").val();
+      if (access_token.length == 0) {
+        swal('access_token {{ gettext("khong_duoc_de_trong") }}', " ", "error");
+        return false;
+      };
+      if (merchant_id_app.length == 0) {
+        swal('merchant_id_app {{ gettext("khong_duoc_de_trong") }}', " ", "error");
+        return false;
+      }
+      $.ajax({
+        url: $("#loop_connect").attr("action"),
+        type: $("#loop_connect").attr("method"),
+        data: $("#loop_connect").serialize(),
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ('error' in returnedData) {
+            swal(returnedData['error'], " ", "error");
+            return false;
+          }
+          else {
+            swal('{{ gettext("Thao_tac_thanh_cong") }}', " ", "success");
+            location.reload();
+          }
+        },
+        error: function (xhr, desc, err) {
+          swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+        }
+      });
+      return false;
+    })
+  });
+</script>
+
+{% endblock %}
+{% block js %}
+{% endblock %}

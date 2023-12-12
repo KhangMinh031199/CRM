@@ -1,0 +1,194 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">
+            {{ gettext("Ung_dung") }}
+          </h6>
+
+          <!-- Title -->
+          <h1 class="header-title">
+            WOAY
+          </h1>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row align-items-center">
+    <div class="col-12 col-md-4 offset-xl-1 offset-md-1 order-md-2 mb-5 mb-md-0">
+
+      <!-- Image -->
+      <div class="text-center">
+        <img src="/static/nextify/img/happiness.svg" alt="..." class="img-fluid">
+      </div>
+
+    </div>
+
+    <div class="col-12 col-md-5 col-xl-6 order-md-1 my-5">
+      <div class="card u-p-medium">
+        <div class="row u-justify-center" style="margin-bottom: 20px;">
+          <h1 class="header-title ml-3">
+            {{ gettext("Cau_hinh") }}
+          </h1>
+        </div>
+        <hr>
+        <div class="row u-justify-center">
+          <div class="col-12">
+            <!-- Heading -->
+
+            <!-- Form -->
+            {% if shop_select._id %}
+            <form id="ipos_connect_{{ shop_select._id }}" method="POST" action="/apps/woay/{{ shop_select._id }}">
+              {% else %}
+              <form id="ipos_connect" method="post" action="">
+                {% endif %}
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+                <!-- Email address -->
+                
+                <div class="form-group">
+                  <label class="c-field__label">Link Woay:</label>
+                  <input type="text" class="form-control" autofocus
+                    value="{% if shop_select.link_woay and  shop_select.link_woay|length > 0 %}{{shop_select.link_woay }}{% endif %}"
+                    name="link_woay" />
+
+                </div>
+                <div class="form-group">
+                  <select id="redirect_shop_select" class="browser-default custom-select">
+                    {% if shop_select._id %}
+                    <option disabled selected>{{ shop_select.name }}</option>
+                    {% else %}
+                    <option disabled selected>{{ gettext("Chon_dia_diem") }}</option>
+                    {% endif %}
+                    {% for shop in shop_in_mer %}
+                    <option value="{{ shop._id }}">{{ shop.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="c-field__label">Shop Id Woay:</label>
+                  <input type="text" class="form-control"
+                    value="{% if shop_select.shop_id_woay and  shop_select.shop_id_woay|length > 0 %}{{shop_select.shop_id_woay }}{% endif %}"
+                    name="shop_id_woay" />
+
+                </div>
+
+              </form>
+
+              <div class="col-9" style="float:right">
+                <button class="btn btn-lg btn-block btn-primary" {% if shop_select._id %}
+                  id="save_info_API_{{ shop_select._id }}" {% else %} id="save_info_API" {% endif %}>
+                  {{ gettext("Luu_thong_tin") }}
+
+                </button>
+              </div>
+
+          </div>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+</div>
+</div> <!-- / .container -->
+{% if shop_select._id %}
+<script nonce="{{ csp_nonce() }}">
+
+  $(document).ready(function () {
+
+    $("#redirect_shop_select").select2();
+    $('#redirect_shop_select').on('change.select2', function (e) {
+
+      var shop_id = $(this).val();
+      var url = "/apps/woay/" + shop_id;
+      location.replace(url);
+    })
+
+    $("#save_info_API_{{ shop_select._id }}").click(function () {
+      $.ajax({
+        url: $("#ipos_connect_{{ shop_select._id }}").attr("action"),
+        type: $("#ipos_connect_{{ shop_select._id }}").attr("method"),
+        data: $("#ipos_connect_{{ shop_select._id }}").serialize(),
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ('error' in returnedData) {
+            swal(returnedData['error'], " ", "error");
+            return false;
+          }
+          else {
+            swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+            location.reload();
+          }
+
+        },
+        error: function (xhr, desc, err) {
+          swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+
+
+
+        }
+      });
+
+      return false;
+    })
+
+  });
+</script>
+{% else %}
+
+<script nonce="{{ csp_nonce() }}">
+  $(document).ready(function () {
+    $("#redirect_shop_select").select2();
+    $('#redirect_shop_select').on('change.select2', function (e) {
+
+      var shop_id = $(this).val();
+      var url = "/apps/woay/" + shop_id;
+      location.replace(url);
+
+    })
+
+    $("#save_info_API").click(function () {
+      $.ajax({
+        url: $("#ipos_connect").attr("action"),
+        type: $("#ipos_connect").attr("method"),
+        data: $("#ipos_connect").serialize(),
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ('error' in returnedData) {
+            swal(returnedData['error'], " ", "error");
+            return false;
+          }
+          else {
+            swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+            location.reload();
+          }
+
+        },
+        error: function (xhr, desc, err) {
+          swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+
+
+
+        }
+      });
+
+      return false;
+    })
+
+  });
+</script>
+{% endif %}
+
+{% endblock %}
+{% block js %}
+{% endblock %}

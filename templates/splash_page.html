@@ -1,0 +1,169 @@
+{% extends "v2/base.html" %}
+{% block right_content %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-white">
+        <div class="panel-heading clearfix">
+          <div class="btn-toolbar">
+            <div class="btn-group pull-right">
+              <a href="/splash_page/add">
+                <button class="btn btn-info btn-fill pull-right">{{ gettext("Tao_moi") }}
+                </button>
+              </a>
+              {% if is_HQ and merchant_id %}
+                <a href="/splash_page/{{ merchant_id }}/merchant">
+                  <button class="btn btn-info btn-fill pull-right"
+                          style="margin-right: 10px;">{{ gettext("Ap_dung_chuoi") }}
+                  </button>
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6" id="list_page">
+      {% for page in pages %}
+        <a href="#" page_id="{{ page._id }}" class="faq-link">
+          <div id="{{ page._id }}" class="panel panel-green">
+            <div class="panel-body">
+              <h2 class="no-m m-b-md">{{ page.title }}</h2>
+              {% if page.type_page == 'default' %}
+                <p>{{ gettext("Trang_chao_mac_dinh") }}</p>
+              {% elif page.type_page == 'loyal' %}
+                <p>{{ gettext("Khach_hang_than_thiet") }}</p>
+                <p>Lượt đến từ {{ page.loyal_count }}
+                  đến {{ page.loyal_count_max }} </p>
+              {% elif page.type_page == 'birthday' %}
+                <p>{{ gettext("Chuc_mung_sinh_nhat") }}</p>
+              {% elif page.type_page == 'promotion' %}
+                <p>{{ gettext("Khuyen_mai_chung") }} </p>
+                <p>Từ ngày {{ page.date_from }} {{ gettext("den_ngay") }} {{ page.date_to }} </p>
+              {% endif %}
+            </div>
+          </div>
+        </a>
+        <div class="panel-body">
+           {% if page.type_page == 'default' %}
+        <a href="/splash_page/cards" class="btn btn-info m-b-xs" style="float: right;">{{ gettext("Cai_dat") }}</a>
+        {% else %}
+             <div style="float: right;">
+              <input page_id="{{ page._id }}" type="checkbox"  {% if page.active %}checked{% endif %} />
+          <a href="/splash_page/{{ page._id }}" class="btn btn-info m-b-xs"  style="float: right;">{{ gettext("Cai_dat") }}</a>
+             </div>
+
+        {% endif %}
+        </div>
+
+      {% endfor %}
+
+    </div>
+    <div class="col-md-6">
+      <input type="hidden" id="page_select" value="{{ page_select._id }}"/>
+      <div id="preview"></div>
+    </div>
+
+  </div>
+
+  {#                <div class="row list-group panel-body">#}
+  {#                    {% for page in pages %}#}
+  {#                        <div class="item  col-xs-12 col-lg-4">#}
+  {#                            <div class="thumbnail">#}
+  {#                                {% if page.type_page == 'default' %}#}
+  {#                                <img class="group list-group-image img-responsive center-block centered-and-cropped" style="width: 100%;height: 300px"#}
+  {#                                     data-src="//files.nextify.vn/{{ cards[0].photo }}" alt=""/>#}
+  {#                                {% else %}#}
+  {#                                    <img class="group list-group-image img-responsive center-block centered-and-cropped" style="width: 100%;height: 300px"#}
+  {#                                     data-src="//files.nextify.vn/{{ page.photo }}" alt=""/>#}
+  {#                                {% endif %}#}
+  {#                                <div class="caption">#}
+  {#                                    <h4 class="group inner list-group-item-heading">{{ page.title }}</h4>#}
+  {#                                    <p class="group inner list-group-item-text"></p>#}
+  {#                                    <div class="row">#}
+  {#                                {% if page.type_page != 'default' %}#}
+  {#                                        <div class="col-xs-12 col-md-6">#}
+  {#                                            <p class="lead">Kích hoạt <input page_id="{{ page._id }}" type="checkbox" style="margin-top:10px"{% if page.active %}checked{% endif %} /></p>#}
+  {#                                        </div>#}
+  {#                                    {% endif %}#}
+  {##}
+  {#                                        <div class="col-xs-12 col-md-6 pull-right">#}
+  {#                                            {% if page.type_page == 'default' %}#}
+  {#                                            <a class="btn btn-info pull-right" href="/splash_page/cards">Cài#}
+  {#                                                đặt</a>#}
+  {#                                            {% else %}#}
+  {#                                             <a class="btn btn-info pull-right" href="/splash_page/{{ page._id }}">Cài#}
+  {#                                                đặt</a>#}
+  {#                                            {% endif %}#}
+  {##}
+  {#                                        </div>#}
+  {#                                    </div>#}
+  {#                                </div>#}
+  {#                            </div>#}
+  {#                        </div>#}
+  {#                    {% endfor %}#}
+  {##}
+  {#                </div>#}
+
+
+
+
+{% endblock %}
+
+{% block js %}
+   <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+      $('#page_select').click();
+      var page_select = $('#page_select').val();
+      $("#list_page .panel").each(function () {
+        $(this).addClass("panel-green");
+      });
+      $("#" + page_select).addClass("panel-blue");
+      var url_preview = '/splash_page/preview/' + page_select;
+      bioMp(document.getElementById('preview'), {
+        url: url_preview,
+        view: 'front',
+        image: '/static/images/iphone_simulator/img_preview_mobile.svg'
+      });
+
+      $('.faq-link').click(function (event) {
+        event.preventDefault();
+        var page_id = $(this).attr('page_id');
+        $("#list_page .panel").each(function () {
+           $(this).removeClass("panel-blue");
+          $(this).addClass("panel-green");
+        });
+        $("#" + page_id).addClass("panel-blue");
+        var url_preview = '/splash_page/preview/' + page_id;
+        $("#preview").empty();
+        bioMp(document.getElementById('preview'), {
+          url: url_preview,
+          view: 'front',
+          image: '/static/images/iphone_simulator/img_preview_mobile.svg'
+        });
+      });
+
+      var myLazyLoad = new LazyLoad();
+      $('#list').click(function (event) {
+        event.preventDefault();
+        $('#products .item').addClass('list-group-item');
+      });
+      $('#grid').click(function (event) {
+        event.preventDefault();
+        $('#products .item').removeClass('list-group-item');
+        $('#products .item').addClass('grid-group-item');
+      });
+      $(':checkbox').change(function () {
+        var page_id = $(this).attr('page_id');
+        var active = 0;
+        if ($(this).is(':checked')) {
+          active = 1;
+        }
+        var url = '/splash_page/active?card_id=' + page_id + '&active=' + active;
+        $(location).attr('href', url);
+
+      });
+    });
+  </script>
+{% endblock %}

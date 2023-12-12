@@ -1,0 +1,119 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="container-fluid">
+
+
+        <div class="row u-mb-large justify-content-center">
+              <div class="col-12 col-md-10 col-xl-8 justify-content-center">
+                  <div class="header mt-md-5">
+                    <div class="header-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Pretitle -->
+                                <h6 class="header-pretitle">
+                                    Email
+                                </h6>
+
+                                <!-- Title -->
+                                <h1 class="header-title">
+                                    {{ gettext("Mau_Email_Marketing") }}
+                                </h1>
+
+                            </div>
+                            <div class="col-auto">
+                        <a href="/email_templates/sample" id="save_email_html" class="btn btn-primary  mb-2">
+                            <i class="fa fa-plus"></i> {{ gettext("Them_moi") }}
+                        </a>
+                    </div>
+                        </div> <!-- / .row -->
+
+                    </div>
+                </div>
+
+              </div>
+
+            {% if total_email > 0 %}
+                <div class="col-12 col-md-10 col-xl-8 justify-content-center">
+                    <div class="card">
+                        <div class="table-responsive">
+                            <table class="table table-sm card-table">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        {{ gettext("Loai") }} Email
+                                    </th>
+                                    <th>
+                                    </th>
+                                    <th>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for email in list_email_templates %}
+                                    <tr>
+                                        <td>
+                                            <span class="name">{{ email.name }}</span>
+                                        </td>
+                                        <td>
+                                            <a aria-haspopup="true"
+                                               aria-expanded="false" href="/email_templates/{{ email._id }}"><span
+                                                    class="name">{{ gettext("Chinh_sua") }}</span></a>
+                                        </td>
+                                        <td>
+                                            <a href="/email_templates/{{ email._id }}/remove"><span
+                                                    class="name">{{ gettext("Xoa") }}</span></a>
+                                        </td>
+                                        <td>
+                                            <a href="/email_templates/{{ email._id }}/preview" target="_blank"><span
+                                                    class="name">{{ gettext("Xem_truoc") }}</span></a>
+                                        </td>
+                                    </tr>
+
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <nav class="c-pagination u-justify-center">
+                            {% if pagination %}
+                                {{ pagination.links }}
+                            {% endif %}
+                        </nav>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 col-md-10 col-xl-8 justify-content-center"
+                     style="text-align: center;margin-bottom: 30px; margin-top: 30px">
+                    <!-- Image -->
+                    <img src="/static/nextify/img/happiness.png" alt="..." class="img-fluid mt-n5 mb-4"
+                         style="max-width: 272px;">
+                    <!-- Title -->
+                    <h2>
+                        {{ gettext("Ban_chua_co_mau_Email_nao._Bat_dau_tao_mau_Email_ngay.") }}
+                    </h2>
+                    <a href="/email_templates/sample" class="btn btn-primary">
+                        {{ gettext("Tao_mau_Email") }}
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="/static/js/jquery.hotkeys.js"></script>
+    <script src="/static/js/popper.min.js"></script>
+    <script src="/static/js/embed.js"></script>
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,545 @@
+<style>
+    .card .details-bar-charts .gender-device-left-bars {
+        float: left;
+        width: 45%;
+    }
+
+    .fill-bar-2-group-data {
+        margin: 20px 0;
+    }
+
+    .fill-bar-2-title {
+        height: 20px;
+        line-height: 20px;
+        font-size: 14px;
+    }
+
+    .fill-bar-2 {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        background-color:
+            #ededed;
+        height: 12px;
+        border-radius: 6px;
+    }
+
+    .fill-bar-2 .bar-content {
+        font-size: 12px;
+        text-align: right;
+        height: 12px;
+        border-radius: 6px;
+        line-height: 12px;
+        overflow: hidden;
+        min-width: 12px;
+    }
+
+    .fill-bar-2:hover .tip {
+        visibility: visible;
+    }
+
+    .fill-bar-2-title-section {
+        float: left;
+    }
+
+    .fill-bar-2-title-percentage {
+        float: right;
+    }
+
+    .stat-label {
+        color:
+            #444;
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .normal-stat .stat-label {
+        color:
+            #000;
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 20px;
+        text-align: left;
+    }
+
+    .walk-stat .stat-value {
+        margin: 20px;
+        color:
+            #444;
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 58px;
+        padding-bottom: 4px;
+    }
+
+    .normal-stat .stat-value {
+        color:
+            #000;
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        font-size: 14px;
+        line-height: 20px;
+        padding-bottom: 4px;
+        text-align: right;
+    }
+
+    .stat-divider {
+        background-color:
+            #ededed;
+        height: 1px;
+        margin: 24px 0;
+    }
+
+    .normal-stat {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .preview-link {
+        color: #3232c8;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        margin-bottom: 16px;
+    }
+
+    .tip {
+        visibility: hidden;
+    }
+</style>
+<div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                        {{ gettext("Thong_tin_chi_tiet_chien_dich") }}
+                    </h6>
+                    <!-- Title -->
+                    <h1 class="header-title">
+                        {{ gettext("Chien_dich:") }}
+                        {% if campaign_info.title %}
+                        {{ campaign_info.title|cut_name_post }}
+                        {% elif campaign_info.body_name %}
+                        {{ campaign_info.body_name|cut_name_post }}
+                        {% else %}
+                        {{ campaign_info.name|cut_name_post }}
+                        {% endif %}
+                    </h1>
+                    <span>
+                        <span style="font-size: 1.15rem;"><strong>{{ gettext("Tao_luc:") }} </strong></span>{{ campaign_info.create_time }}
+                    </span>
+                    <br>
+                    <span>
+                        <span style="font-size: 1.15rem;"><strong>{{ gettext("Hoan_thanh:") }} </strong></span>{{ campaign_info.completed_time }}
+                    </span>
+                </div>
+                <div class="col-auto">
+                    <a href="/advertising" class="btn btn-flat d-block d-md-inline-block mb-4"
+                        style="position: relative;bottom: -28px;">
+                        <i class="fa fa-close"></i>{{ gettext("Dong_lai") }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-xl-12 mb-5 mb-xl-0">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <div class="row align-items-center">
+                        <div class="tabs-unstyled-tabs">
+                            <div id="walk_throughs" class="tabs-unstyled-tab">
+                                <div class="tabs-unstyled-tab-name">
+                                    <span>{{ gettext("Luot_den_thuc") }}</span>
+                                </div>
+                            </div>
+                            <div id="add_impressions" class="tabs-unstyled-tab">
+                                <div class="tabs-unstyled-tab-name">
+                                    <span>{{ gettext("Luot_xem") }}</span>
+                                </div>
+                            </div>
+                            <div id="enga" class="tabs-unstyled-tab">
+                                <div class="tabs-unstyled-tab-name">
+                                    <span>{{ gettext("Tuong_tac") }}</span>
+                                </div>
+                            </div>
+                            <div id="clicks" class="tabs-unstyled-tab">
+                                <div class="tabs-unstyled-tab-name">
+                                    <span>Clicks</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="walk_add_click_load" class="loader1" style="display: none;"></div>
+                <div class="time-series-details-big-number" id="walk_add_click_total">
+                    <span>0</span></div>
+                <div class="ncex-divider"></div>
+                <div class="card-body">
+                    <div class="chart">
+                        <canvas id="walk_add_click" class="chart-canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12 mb-5 mb-xl-0">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <div class="row align-items-center">
+                        <div class="tabs-unstyled-tabs">
+                            <div id="analysis" class="tabs-unstyled-tab active">
+                                <div class="tabs-unstyled-tab-name">
+                                    <span>{{ gettext("Phan_tich") }}</span>
+                                </div>
+                            </div>
+                            <div id="platform" class="tabs-unstyled-tab">
+                                <div class="tabs-unstyled-tab-name">
+                                    <span>{{ gettext("Nen_tang") }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div id="data_imps">
+                        <div class="gender-left-bars" style="float: left; width: 45%;">
+                            <div class="card-body">
+                                <strong><span>{{ gettext("Gioi_tinh") }}</span></strong>
+                                <div class="fill-bar-graph">
+                                    {% for data_info in campaign_info_number.impressions.gender %}
+                                    <div class="fill-bar-2-group-data">
+                                        <div class="fill-bar-2-title">
+                                            <div class="fill-bar-2-title-section"><span
+                                                    class="fill-bar-2-title-label">{{ data_info.gender|convert_gender }}</span></div>
+                                            <span class="fill-bar-2-title-percentage">{{ data_info.percent }} %</span>
+                                        </div>
+
+                                        <div class="fill-bar-2">
+                                            <div class="bar-content value "
+                                                style="background-color: rgb(50, 50, 200); flex: {{ data_info.percent|divison_percent }} 1 0%;">
+                                            </div>
+                                            <span class="tip">{{ data_info.value }}</span>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+
+                            <div class="card-body">
+                                <strong><span>{{ gettext("Thiet_bi") }}</span></strong>
+                                <div class="fill-bar-graph">
+                                    {% for data_info in campaign_info_number.impressions.device %}
+                                    <div class="fill-bar-2-group-data">
+                                        <div class="fill-bar-2-title">
+                                            <div class="fill-bar-2-title-section"><span
+                                                    class="fill-bar-2-title-label">{{ data_info.device }}</span></div>
+                                            <span class="fill-bar-2-title-percentage">{{ data_info.percent }} %</span>
+                                        </div>
+                                        <div class="fill-bar-2">
+                                            <div class="bar-content value "
+                                                style="background-color: rgb(50, 50, 200); flex: {{ data_info.percent|divison_percent }} 1 0%;">
+                                            </div>
+                                            <span class="tip">{{ data_info.value }}</span>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="age-right-bars" style="float: right; width: 45%;">
+                            <div class="gender-left-bars">
+                                <div class="card-body">
+                                    <strong><span>{{ gettext("Tuoi") }}</span></strong>
+                                    {% for data_info in campaign_info_number.impressions.age|sort_list_age %}
+                                    <div class="fill-bar-graph">
+                                        <div class="fill-bar-2-group-data">
+                                            <div class="fill-bar-2-title">
+                                                <div class="fill-bar-2-title-section"><span
+                                                        class="fill-bar-2-title-label">{{ data_info.age }}</span></div>
+                                                <span class="fill-bar-2-title-percentage">{{ data_info.percent  }}
+                                                    %</span>
+                                            </div>
+                                            <div class="fill-bar-2">
+                                                <div class="bar-content value "
+                                                    style="background-color: rgb(50, 50, 200); flex: {{ data_info.percent|divison_percent }} 1 0%;">
+                                                </div>
+                                                <span class="tip">{{ data_info.value }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!----1111111-->
+                    <div id="data_clicks" style="display: none;">
+                        <div class="gender-left-bars" style="float: left; width: 45%;">
+                            <div class="card-body">
+                                <strong><span>{{ gettext("Gioi_tinh") }}</span></strong>
+                                <div class="fill-bar-graph">
+                                    {% for data_info in campaign_info_number.clicks.gender %}
+                                    <div class="fill-bar-2-group-data">
+                                        <div class="fill-bar-2-title">
+                                            <div class="fill-bar-2-title-section"><span
+                                                    class="fill-bar-2-title-label">{{ data_info.gender|convert_gender }}</span></div>
+                                            <span class="fill-bar-2-title-percentage">{{ data_info.percent  }} %</span>
+                                        </div>
+                                        <div class="fill-bar-2">
+                                            <div class="bar-content value "
+                                                style="background-color: rgb(50, 50, 200); flex: {{ data_info.percent|divison_percent }} 1 0%;">
+                                            </div>
+                                            <span class="tip">{{ data_info.value }}</span>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+
+                            <div class="card-body">
+                                <strong><span>{{ gettext("Thiet_bi") }}</span></strong>
+                                <div class="fill-bar-graph">
+                                    {% for data_info in campaign_info_number.clicks.device %}
+                                    <div class="fill-bar-2-group-data">
+                                        <div class="fill-bar-2-title">
+                                            <div class="fill-bar-2-title-section"><span
+                                                    class="fill-bar-2-title-label">{{ data_info.device }}</span></div>
+                                            <span class="fill-bar-2-title-percentage">{{ data_info.percent  }} %</span>
+                                        </div>
+                                        <div class="fill-bar-2">
+                                            <div class="bar-content value "
+                                                style="background-color: rgb(50, 50, 200); flex: {{ data_info.percent|divison_percent }} 1 0%;">
+                                            </div>
+                                            <span class="tip">{{ data_info.value }}</span>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="age-right-bars" style="float: right; width: 45%;">
+                            <div class="gender-left-bars">
+                                <div class="card-body">
+                                    <strong><span>{{ gettext("Tuoi") }}</span></strong>
+                                    {% for data_info in campaign_info_number.clicks.age|sort_list_age %}
+                                    <div class="fill-bar-graph">
+                                        <div class="fill-bar-2-group-data">
+                                            <div class="fill-bar-2-title">
+                                                <div class="fill-bar-2-title-section"><span
+                                                        class="fill-bar-2-title-label">{{ data_info.age }}</span></div>
+                                                <span class="fill-bar-2-title-percentage">{{ data_info.percent  }}
+                                                    %</span>
+                                            </div>
+                                            <div class="fill-bar-2">
+                                                <div class="bar-content value "
+                                                    style="background-color: rgb(50, 50, 200); flex: {{ data_info.percent|divison_percent }} 1 0%;">
+                                                </div>
+                                                <span class="tip">{{ data_info.value }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="data_enga" style="display: none;">
+                        <div class="gender-left-bars" style="float: left; width: 45%;">
+                            <div class="card-body">
+                                <strong><span>{{ gettext("Gioi_tinh") }}</span></strong>
+                                <div class="fill-bar-graph">
+                                    {% for data_info in campaign_info_number.post_engagement.gender %}
+                                    <div class="fill-bar-2-group-data">
+                                        <div class="fill-bar-2-title">
+                                            <div class="fill-bar-2-title-section"><span
+                                                    class="fill-bar-2-title-label">{{ data_info.gender|convert_gender }}</span></div>
+                                            <span class="fill-bar-2-title-percentage">{{ data_info.percent  }} %</span>
+                                        </div>
+                                        <div class="fill-bar-2">
+                                            <div class="bar-content value "
+                                                style="background-color: rgb(50, 50, 200); flex: {{ data_info.percent|divison_percent }} 1 0%;">
+                                            </div>
+                                            <span class="tip">{{ data_info.value }}</span>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+
+                            <div class="card-body">
+                                <strong><span>{{ gettext("Thiet_bi") }}</span></strong>
+                                <div class="fill-bar-graph">
+                                    {% for data_info in campaign_info_number.post_engagement.device %}
+                                    <div class="fill-bar-2-group-data">
+                                        <div class="fill-bar-2-title">
+                                            <div class="fill-bar-2-title-section"><span
+                                                    class="fill-bar-2-title-label">{{ data_info.device }}</span></div>
+                                            <span class="fill-bar-2-title-percentage">{{ data_info.percent  }} %</span>
+                                        </div>
+                                        <div class="fill-bar-2">
+                                            <div class="bar-content value "
+                                                style="background-color: rgb(50, 50, 200); flex: {{ data_info.percent|divison_percent }} 1 0%;">
+                                            </div>
+                                            <span class="tip">{{ data_info.value }}</span>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="age-right-bars" style="float: right; width: 45%;">
+                            <div class="gender-left-bars">
+                                <div class="card-body">
+                                    <strong><span>{{ gettext("Tuoi") }}</span></strong>
+                                    {% for data_info in campaign_info_number.post_engagement.age|sort_list_age %}
+                                    <div class="fill-bar-graph">
+                                        <div class="fill-bar-2-group-data">
+                                            <div class="fill-bar-2-title">
+                                                <div class="fill-bar-2-title-section"><span
+                                                        class="fill-bar-2-title-label">{{ data_info.age }}</span></div>
+                                                <span class="fill-bar-2-title-percentage">{{ data_info.percent  }}
+                                                    %</span>
+                                            </div>
+                                            <div class="fill-bar-2">
+                                                <div class="bar-content value "
+                                                    style="background-color: rgb(50, 50, 200); flex: {{ data_info.percent|divison_percent }} 1 0%;">
+                                                </div>
+                                                <span class="tip">{{ data_info.value }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!----222222-->
+
+                </div>
+                <div id="platform_detail" style="display: none;">
+                    <div class="gender-left-bars" style="float: left; width: 45%;">
+                        <div class="card-body">
+                            <strong><span>Facebook</span></strong>
+                            <div style="position: absolute; right: 57%;">
+                                <a target="_blank" class="preview-link"
+                                    href="{{ campaign_info.permalink_url }}">{{ gettext("Xem_bai_dang") }}</a>
+                            </div>
+                            <div class="walk-stat">
+                                <div class="stat-value"><span>115</span></div>
+                                <div class="stat-label"><span>{{ gettext("Luot_den_thuc") }}</span></div>
+                            </div>
+                            <div class="stat-divider"></div>
+                            <div class="normal-stat">
+                                <div class="stat-label"><span>{{ gettext("Luot_xem") }}</span></div>
+                                <div class="stat-value"><span>{{ campaign_info_number.impressions.facebook }}</span>
+                                </div>
+                            </div>
+                            <div class="normal-stat">
+                                <div class="stat-label"><span>CTR</span></div>
+                                <div class="stat-value"><span>{{ campaign_info_number.ctr.facebook|round_float }}</span>
+                                </div>
+                            </div>
+                            <div class="normal-stat">
+                                <div class="stat-label"><span>{{ gettext("Frequency") }}</span></div>
+                                <div class="stat-value">
+                                    <span>{{ campaign_info_number.frequency.facebook|round_float }}</span></div>
+                            </div>
+                            <div class="normal-stat">
+                                <div class="stat-label"><span>{{ gettext("Tuong_tac") }}</span></div>
+                                <div class="stat-value"><span>{{ campaign_info_number.post_engagement.facebook }}</span>
+                                </div>
+                            </div>
+                            <div class="normal-stat">
+                                <div class="stat-label"><span>Clicks</span></div>
+                                <div class="stat-value"><span>{{ campaign_info_number.clicks.facebook }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="age-right-bars" style="float: right; width: 45%;">
+                        <div class="gender-left-bars">
+                            <div class="card-body">
+                                <strong><span>Instagram</span></strong>
+
+                                <div class="walk-stat">
+                                    <div class="stat-value"><span>55</span></div>
+                                    <div class="stat-label"><span>{{ gettext("Luot_den_thuc") }}</span></div>
+                                </div>
+                                <div class="stat-divider"></div>
+                                <div class="normal-stat">
+                                    <div class="stat-label"><span>{{ gettext("Luot_xem") }}</span></div>
+                                    <div class="stat-value">
+                                        <span>{{ campaign_info_number.impressions.instagram }}</span></div>
+                                </div>
+                                <div class="normal-stat">
+                                    <div class="stat-label"><span>CTR</span></div>
+                                    <div class="stat-value">
+                                        <span>{{ campaign_info_number.ctr.instagram|round_float }}</span></div>
+                                </div>
+                                <div class="normal-stat">
+                                    <div class="stat-label"><span>Frequency</span></div>
+                                    <div class="stat-value">
+                                        <span>{{ campaign_info_number.frequency.instagram|round_float }}</span></div>
+                                </div>
+                                <div class="normal-stat">
+                                    <div class="stat-label"><span>{{ gettext("Tuong_tac") }}</span></div>
+                                    <div class="stat-value">
+                                        <span>{{ campaign_info_number.post_engagement.instagram }}</span></div>
+                                </div>
+                                <div class="normal-stat">
+                                    <div class="stat-label"><span>Clicks</span></div>
+                                    <div class="stat-value"><span>{{ campaign_info_number.clicks.instagram }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="" id="merchant_id">
+<input type="hidden" value="{{ campaign_info.id }}" id="campaign_id">
+<input type="hidden" value="{{ campaign_info_number.clicks.total }}" id="clicks_total_detail">
+<input type="hidden" value="{{ campaign_info_number.impressions.total }}" id="impressions_total_detail">
+<input type="hidden" value="{{ campaign_info_number.post_engagement.total }}" id="post_engagement_total_detail">
+<input type="hidden" value="{{ campaign_info_detail }}" id="campaign_info_detail">
+{% block js %}
+
+<script src="{{ url_for('static', filename='nextify/js/advertising.js') }}"></script>
+{% endblock %}

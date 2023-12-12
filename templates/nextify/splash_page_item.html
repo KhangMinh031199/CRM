@@ -1,0 +1,308 @@
+{% extends 'nextify/wifi.html' %}
+
+{% block main_content %}
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            {{ gettext("Trang_chao") }}
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                           <a href="/wifi/{{ shop_id_select }}">{{ shop_select.name }}</a>
+                        </h1>
+
+                    </div>
+                    <div class="col-auto">
+
+
+                    </div>
+                </div> <!-- / .row -->
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="{{ page_id }}" id="page_id"/>
+    <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select" />
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+
+                <div class="card u-p-medium">
+                    <div class="row">
+                        <div class="col-lg-6">
+
+
+
+                            {% if error %}
+                                <div class="alert alert-danger">
+                                    {{ error | safe }}
+                                </div>
+                            {% endif %}
+                            {% if message %}
+                                <div class="alert alert-success">
+                                    {{ message | safe }}
+                                </div>
+                            {% endif %}
+
+                            <form method="POST"
+                                  action="/splash_page/{{ shop_id_select}}/item/{{ page_id }}"
+                                  enctype="multipart/form-data">
+                             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label"
+                                           for="photo">{{ gettext("Anh") }}: <p class="u-text-mute u-text-uppercase u-mb-small" style="display: inline-block;">({{ gettext("Kich_thuoc_goi_y_750_px_×_1330_px") }}) </p></label>
+                                    {% if card.photo %}
+                                        <p class="help-block">
+                                            <img src="https://files.nextify.vn/{{ card.photo }}"
+                                                 width="200">
+                                        </p>
+                                    {% endif %}
+                                    <input type="file" class="c-input"
+                                           id="photo" name="photo"
+                                           {% if not card.photo %}required{% endif %}>
+                                </div>
+
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="title">{{ gettext("Tieu_de") }}:</label>
+                                    <input type="text" maxlength="200"
+                                           class="c-input"
+                                           id="title"
+                                           name="title" value="{% if card.title %}{{ card.title }}{% endif %}"
+                                           placeholder='({{ gettext("Khong_bat_buoc") }})'>
+                                </div>
+
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label"
+                                           for="content">{{ gettext("Noi_dung") }}:</label>
+                                    <textarea class="c-input"
+                                              id="content" name="content"
+                                              rows="6"
+                                              maxlength="1000"
+                                              placeholder='({{ gettext("Khong_bat_buoc") }})'>{% if card.content %}
+                                        {{ card.content }}{% endif %}</textarea>
+                                </div>
+                                {% if card.type_page %}
+                                    <input type="hidden" id="type_exist"
+                                           class="c-input"
+                                           value="{{ card.type_page }}"/>
+                                {% endif %}
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label">{{ gettext("Loai_trang_chao") }}:</label>
+                                    <select class="c-select" id="auto_mar"
+                                            name="auto_mar">
+                                        <option value="promotion">{{ gettext("Su_kien_&_khuyen_mai_chung") }}
+                                        </option>
+                                        <option value="loyal">{{ gettext("Theo_luot_den_cua_khach") }}
+                                        </option>
+                                        <option value="birthday">{{ gettext("Chuc_mung_sinh_nhat") }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="c-field u-mb-small" id="loyal_box">
+                                <div class="row" style="margin-left: 0px">
+                                <label class="c-field__label">{{ gettext("Luot_den_tinh_theo") }}:</label>
+                                <div class="col-md-6">
+                                    <div class="c-choice c-choice--radio">
+                                        <input class="c-choice__input"
+                                               type="radio"
+                                               name="visits_by"
+                                               id="return_visit_by_merchant"
+                                               value="merchant"
+                                               {% if card.visits_by %}{% if
+                                            card.visits_by =='merchant' %}checked
+                                               {% endif %}{% endif %}>
+                                        <label class="c-choice__label" for="return_visit_by_merchant">{{ gettext("Theo_chuoi") }}</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="c-choice c-choice--radio">
+                                        <input class="c-choice__input"
+                                               type="radio"
+                                               name="visits_by"
+                                               id="return_visit_by_shop"
+                                               value="shop"
+                                                {% if card.visits_by %}
+                                               {% if card.visits_by == 'shop' %}checked
+                                               {% endif %}{% endif %}>
+                                        <label class="c-choice__label" for="return_visit_by_shop">{{ gettext("Theo_dia_diem") }}</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                                    <label class="c-field__label">{{ gettext("So_lan_tu") }}: </label>
+                                    <input type="text" class="c-input"
+                                           value="
+                                                   {% if card.loyal_count %}{{ card.loyal_count }}{% endif %}"
+                                           name="loyal_count"/>
+                                    <label class="c-field__label">
+                                        đến: </label>
+                                    <input type="text" class="c-input"
+                                           value="
+                                                   {% if card.loyal_count_max %}{{ card.loyal_count_max }}{% endif %}"
+                                           name="loyal_count_max"/>
+
+                                </div>
+                                <div id="date_range">
+                                    {% if card.date_from %}
+                                        <input type="hidden"
+                                               class="c-input"
+                                               value="{{ card.date_from }}"
+                                               id="ex_date_from"/>
+                                    {% endif %}
+                                    <div class="c-field u-mb-small">
+                                        <label class="c-fie ld__label"
+                                               for="date_from">{{ gettext("Ngay_bat_dau") }}:</label>
+                                        <input type="text"
+                                               class="c-input"
+                                               id="date_from" name="date_from"
+                                               value=""/>
+                                    </div>
+                                    <div class="c-field u-mb-small">
+                                        {% if card.date_to %}
+                                            <input type="hidden"
+                                                   value="{{ card.date_to }}"
+                                                   id="ex_date_to"/>
+                                        {% endif %}
+                                        <label class="c-field__label"
+                                               for="date_to">{{ gettext("Ngay_ket_thuc") }}:</label>
+                                        <input type="text"
+                                               class="c-input"
+                                               id="date_to" name="date_to"/>
+                                    </div>
+
+                                </div>
+                                   <div class="c-choice c-choice--checkbox">
+                                 <input class="c-choice__input"
+                                        type="checkbox"
+                                           name="active"
+                                           id="active"
+                                           {% if card.active %}checked{% endif %}>
+                                    <label class="c-choice__label"
+                                           for="active">{{ gettext("Kich_hoat") }}</label>
+                                </div>
+
+                                <div class="btn-toolbar pull-right">
+                                    <div class="btn-group">
+                                        <button type="submit"
+                                                class="c-btn c-btn--info u-float-right">
+                                            {{ gettext("Luu_thong_tin") }}
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <div class="col-lg-6">
+
+                            <div id="preview"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+{% endblock %}
+{% block js %}
+     <script src="{{ url_for('static', filename='v2/assets/js/biomp.js') }}"></script>
+    <script  nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+               $('textarea').each(function () {
+          $(this).val($(this).val().trim());
+        }
+      );
+      $('input').each(function () {
+          $(this).val($(this).val().trim());
+        }
+      );
+            var page_id = $("#page_id").val();
+            var shop_id_select = $("#shop_id_select").val();
+            var d = new Date();
+            var strDate = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+            if ($("#ex_date_from").length > 0 && $("#ex_date_from").val()
+                    .length > 0 && $("#ex_date_from").val() != 'None') {
+                flatpickr("#date_from", {
+                    enableTime: false,
+                    defaultDate: $("#ex_date_from").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#date_from", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+
+                });
+            }
+            if ($("#ex_date_to").length > 0 && $("#ex_date_to").val()
+                    .length > 0 && $("#ex_date_to").val() != 'None') {
+                flatpickr("#date_to", {
+                    enableTime: false,
+                    defaultDate: $("#ex_date_to").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#date_to", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+
+                });
+            }
+
+
+            $("#loyal_box").hide();
+            $("#date_range").show();
+
+            $("#auto_mar").change(function () {
+                var status = this.value;
+                if (status == 'loyal') {
+                    $("#loyal_box").show();
+                    $("#date_range").hide();
+                } else if (status == 'promotion') {
+                    $("#date_range").show();
+                    $("#loyal_box").hide();
+                }
+                else {
+                    $("#loyal_box").hide();
+                    $("#date_range").hide();
+                }
+            });
+
+            if ($("#type_exist").length > 0) {
+                $("#auto_mar").val($("#type_exist").val());
+                $("#auto_mar").trigger('change');
+                if ($("#type_exist").val() == 'loyal') {
+                    $("#loyal_box").show();
+                    $("#date_range").hide();
+                } else if ($("#type_exist").val() == 'promotion') {
+                    $("#date_range").show();
+                    $("#loyal_box").hide();
+                }
+                else {
+                    $("#loyal_box").hide();
+                    $("#date_range").hide();
+                }
+            }
+            var url_preview = '/splash_page/'+shop_id_select+'/preview/' + page_id;
+            $("#preview").empty();
+            bioMp(document.getElementById('preview'), {
+                url: url_preview,
+                view: 'front',
+                image: '/static/images/iphone_simulator/img_preview_mobile.svg'
+            });
+        });
+
+
+    </script>
+
+
+
+{% endblock %}

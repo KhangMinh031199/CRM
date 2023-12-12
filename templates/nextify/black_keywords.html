@@ -1,0 +1,33 @@
+
+{% extends 'nextify/base.html' %}
+{% block body %}
+<head>
+    <meta charset="UTF-8">
+    <style type="text/css">
+        .example{
+            margin: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="example">
+        <div class="container">
+            <div class="row">
+                <h2>{{ gettext("Danh_sach_cac_tu_cam:") }}</h2>
+            <div class="table-responsive">    
+                <table cellpadding="13" class="c-table c-table--zebra u-mb-small">
+                    <tbody>
+                        {% for word in list_black_key %}
+                        <tr class="active">                            
+                            <td class="c-table__cell">{{ word }}</td>
+                         </tr>
+                       {% endfor %}
+                    </tbody>
+                </table>
+             </div>   
+            </div>
+        </div>
+ 
+    </div>
+</body>
+{% endblock %}

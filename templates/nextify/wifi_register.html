@@ -1,0 +1,332 @@
+{% extends 'nextify/base.html' %}
+
+{% block main_content %}
+<div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            {{ gettext("Trang_dang_ky") }}
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                            {{ shop_select.name }}
+                        </h1>
+
+                    </div>
+                     <div class="col-auto">
+                    <select class="c-select"
+                        style="width: 100%;" id="shop_in_mer">
+                    <option value="all">{{ gettext("Tat_ca_dia_diem") }}</option>
+                    {% for shop_mer in shop_in_mer %}
+                        <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                    {% endfor %}
+
+                    </select>
+              </div>
+
+                </div> <!-- / .row -->
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 col-xl-6">
+       <div class="card">
+                    <div class="card-body">
+                        <form method="POST"
+       id="login_form_settings" action="/login_form_settings/{{ shop_id_select }}"
+                                    enctype="multipart/form-data">
+                         <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <p class="u-text-mute u-text-uppercase
+                                                        u-mb-small">{{ gettext("Thong_tin_dang_ky") }}</p>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox1"
+                                                   name="phone_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.phone  and login_form.phone|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox1">{{ gettext("So_dien_thoai") }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch {% if login_form.phone_require and
+                                            login_form.phone_require|lower
+                                            == "true" %}is-active{% endif %}">
+                                                <label class="c-choice__label"
+                                                       for="switch1" style="padding-left: 10px; font-size: 15px;">{{ gettext("bat_buoc") }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch1"
+                                                       type="checkbox"
+                                                       name="phone_require"
+                                                       {% if login_form.phone_require and
+                                            login_form.phone_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox2"
+                                                   name="email_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.email  and login_form.email|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox2">Email</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch {% if
+                                        login_form.email_require and
+                                        login_form.email_require|lower ==
+                                        "true" %}is-active{% endif %}">
+                                                <label class="c-choice__label"
+                                                       for="switch1" style="padding-left: 10px; font-size: 15px;">{{ gettext("bat_buoc") }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch1"
+                                                       type="checkbox"
+                                                       name="email_require"
+                                                       {% if login_form.email_require and login_form.email_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox3"
+                                                   name="name_visible"
+                                                   type="checkbox" {% if login_form
+                                           .name and login_form.name|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox3">{{ gettext("Ten") }}</label>
+                                        </div>
+                                    </div>
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch{% if login_form
+                                        .name_require and login_form
+                                        .name_require|lower == "true" %}
+                                        is-active{% endif %}">
+                                                <label class="c-choice__label"
+                                                       for="switch1" style="padding-left: 10px; font-size: 15px;">{{ gettext("bat_buoc") }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch1"
+                                                       type="checkbox"
+                                                       name="name_require"
+                                                       {% if login_form.name_require and login_form.name_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox4"
+                                                   name="birthday_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.birthday  and login_form.birthday|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox4">{{ gettext("Sinh_nhat") }}</label>
+                                        </div>
+                                    </div>
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch{% if login_form
+                                        .birthday_require and login_form.birthday_require|lower == "true" %} is-active{% endif %}">
+                                                <label class="c-choice__label"
+                                                       for="switch1" style="padding-left: 10px; font-size: 15px;">{{ gettext("bat_buoc") }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch1"
+                                                       type="checkbox"
+                                                       name="birthday_require"
+                                                       {% if login_form.birthday_require and login_form.birthday_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox5"
+                                                   name="year_birthday_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.year_birthday  and login_form.year_birthday|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox5">{{ gettext("Nam_sinh") }}</label>
+                                        </div>
+                                    </div>
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch{% if login_form
+                                        .year_birthday_require and
+                                        login_form
+                                        .year_birthday_require|lower ==
+                                        "true" %} is-active{% endif %}">
+                                                <label class="c-choice__label"
+                                                       for="switch1" style="padding-left: 10px; font-size: 15px;">{{ gettext("bat_buoc") }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch1"
+                                                       type="checkbox"
+                                                       name="year_birthday_require"
+                                                       {% if login_form.year_birthday_require and login_form.year_birthday_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox6"
+                                                   name="gender_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.gender  and login_form.gender|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox6">{{ gettext("Gioi_tinh") }}</label>
+                                        </div>
+                                    </div>
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch {% if
+                                            login_form
+                                        .gender_require and login_form
+                                        .gender_require|lower == "true" %}
+                                         is-active{% endif %}">
+                                                <label class="c-choice__label"
+                                                       for="switch1" style="padding-left: 10px; font-size: 15px;">{{ gettext("bat_buoc") }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch1"
+                                                       type="checkbox"
+                                                       name="gender_require"
+                                                       {% if login_form.gender_require and login_form.gender_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="c-choice c-choice--checkbox">
+                                    <p class="u-text-mute u-text-uppercase
+                                                        u-mb-small">{{ gettext("Cau_hinh_loi_chao") }}</p>
+                                    <textarea class="c-input"
+                                              id="welcome_text"
+                                              name="welcome_text"
+                                              rows="6">
+                                                              {% if login_form.welcome_text|length > 1 %}
+                                                                  {{ login_form.welcome_text }}
+                                                              {% else %}
+                                                                  {{ gettext("Dang_ky_khach_hang_than_thiet_de_nhan_cac_uu_dai_hap_dan") }} <br/>
+                                                                  {{ gettext("Get_connected_with_FREE_WIFI") }}
+                                                              {% endif %}
+                                                        </textarea>
+                                </div>
+                                <div class="c-choice c-choice--checkbox">
+                                    <p class="u-text-mute u-text-uppercase
+                                                        u-mb-small">{{ gettext("Cau_hinh_loi_moi_nhap_sinh_nhat") }}</p>
+                                    <textarea class="c-input"
+                                              id="birthday_text"
+                                              name="birthday_text"
+                                              rows="6">
+                                                              {% if login_form.birthday_text|length > 1 %}
+                                                                  {{ login_form.birthday_text }}
+                                                              {% else %}
+                                                                  {{ gettext("Dung_quen_nhap_ngay_sinh_de_nhan_qua_tu_chung_toi_nhe") }}
+                                                              {% endif %}
+                                                        </textarea>
+                                </div>
+                                <div class="c-choice c-choice--checkbox">
+                                    <p class="u-text-mute u-text-uppercase
+                                                u-mb-small">{{ gettext("Cau_hinh_nut_ket_noi") }}</p>
+                                    <textarea class="c-input"
+                                              id="welcome_button"
+                                              name="welcome_button"
+                                              rows="2">
+                                                      {% if login_form.welcome_button and login_form.welcome_button|length > 1 %}
+                                                          {{ login_form.welcome_button }}
+                                                      {% else %}
+                                                          {{ gettext("Dang_ky_&_Ket_noi") }}
+                                                      {% endif %}
+                                                </textarea>
+                                </div>
+
+                            </form>
+
+                                <div class="c-field" style="padding:20px">
+                                    <button class="c-btn c-btn--info
+                                        u-float-right" id="login_setting_btn">{{ gettext("Cap_nhat") }}
+                                    </button>
+                                </div>
+
+                    </div>
+       </div>
+    </div>
+
+
+                            <div class="col-12 col-xl-6">
+
+ <div id="preview" style="height: 318px; width: 108px"></div>
+
+                            </div>
+ </div>
+                 </div>
+
+
+     <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+{% endblock %}
+{% block js %}
+    <script src="{{ url_for('static', filename='v2/assets/js/biomp.js') }}"></script>
+ <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+              $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            var shop_id_select = $("#shop_id_select").val();
+            var url_preview = '/preview/' + shop_id_select + '/register';
+
+            $("#preview").empty();
+            bioMp(document.getElementById('preview'), {
+                url: url_preview,
+                view: 'front',
+                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                    height:318,
+                    width: 108
+            });
+              $("#login_setting_btn").click(function (e) {
+            var action = $('#login_form_settings').attr('action');
+            $.ajax({
+                type: "POST",
+                url: action,
+                data: $("#login_form_settings").serialize(), // serializes the form's elements.
+                success: function (data) {
+                    swal('{{ gettext("Cap_nhat_thanh_cong") }}', " ", "success");
+                    var url_redirect = "/splash_page/"+ shop_id_select +"/hotspot/register";
+                    window.location.href = url_redirect;
+                }
+            });
+            e.preventDefault();
+        });
+
+        });
+
+        </script>
+
+{% endblock %}

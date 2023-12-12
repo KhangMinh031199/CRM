@@ -1,0 +1,992 @@
+{% extends 'nextify/base.html' %}
+{% block header_page %}Cấu hình chăm sóc tự động{% endblock %}
+{% block main_content %}
+
+    <div class="container-fluid">
+        <div class="row u-mb-large">
+             <div class="col-lg-12" style="display: flex; justify-content: flex-end">
+                        <div class="c-field c-field--inline has-icon-right u-hidden-down@tablet" style="margin: 9px;top: 8px;display:inline-block">
+            <div class="c-search-form__section">
+                <input type="hidden" value="{{ shop_id_select }}"
+                       id="current_shops"/>
+                <select class="c-select"
+                        style="width: 100%;" id="locations_selects">
+                    <option value="all">Cấu hình chăm sóc chuỗi</option>
+                    {% for shop_mer in shop_in_mer %}
+                        <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                    {% endfor %}
+
+                </select>
+            </div>
+        </div>
+            </div>
+
+
+        </div>
+        <div class="row u-mb-large">
+            <div class="col-lg-12">
+
+                    <div class="c-table-responsive@desktop">
+                        <table class="c-table">
+
+                            <thead class="c-table__head c-table__head--slim">
+                            <tr class="c-table__row">
+                                <th class="c-table__cell
+                                    c-table__cell--head">Tập khách hàng
+                                </th>
+                                <th class="c-table__cell"></th>
+                                <th class="c-table__cell
+                                    c-table__cell--head">SMS
+                                </th>
+                                <th class="c-table__cell
+                                    c-table__cell--head">Email
+                                </th>
+                                <th class="c-table__cell
+                                    c-table__cell--head">Zalo
+                                </th>
+
+                                <th class="c-table__cell
+                                    c-table__cell--head">Cấu hình
+                                </th>
+
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="c-table__row">
+                                <td class="c-table__cell c-table__cell--img o-media">
+
+                                    <div class="o-media__body">
+                                        Khách đến lần đầu
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                 <span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                       aria-label="Khách lần đầu ghé thăm địa điểm, hệ thống tự gửi tin nhắn chào mừng sau 3 phút.">
+                                     <i class="fa fa-question"></i>
+                                 </span>
+
+                                </td>
+
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.welcome %}{% if merchant.sms.welcome.active %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_sms_welcome">
+                                        <input class="c-switch__input"
+                                               name="active_welcome"
+                                               id="quick_active_welcome"
+                                               type="checkbox"
+                                               {% if merchant.sms.welcome %}{% if merchant.sms.welcome.active %}checked="checked"
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.welcome %}{% if merchant.sms.welcome.mail %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_mail_welcome">
+                                        <input class="c-switch__input"
+                                               name="mail_welcome"
+                                               id="quick_mail_welcome"
+                                               type="checkbox"
+                                               {% if merchant.sms.welcome %}{% if merchant.sms.welcome.mail %}checked="checked"
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.welcome %}{% if merchant.sms.welcome.zalo %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_zalo_welcome">
+                                        <input type="checkbox"
+                                               name="zalo_welcome"
+                                               id="quick_zalo_welcome"
+                                               class="c-switch__input"
+                                               {% if merchant.sms.welcome %}{% if merchant.sms.welcome.zalo %}checked="checked"
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+
+{#                                <td class="c-table__cell">#}
+{#                                    <div class="c-switch#}
+{##}
+{#                                            {% if merchant.sms.welcome %}{% if merchant.sms.welcome.enable %}is-active#}
+{#                                        {% endif %}{% endif %}"#}
+{#                                         id="switch_enable_welcome">#}
+{#                                        <input id="quick_enable_welcome"#}
+{#                                               type="checkbox"#}
+{#                                               class="c-switch__input"#}
+{#                                               {% if merchant.sms.welcome %}{% if merchant.sms.welcome.enable %}checked="checked"#}
+{#                                               {% endif %}{% endif %}/>#}
+{#                                    </div>#}
+{#                                </td>#}
+
+                                <td class="c-table__cell">
+                                    <a href="#" data-target="#first_time"
+                                       data-toggle="modal">
+                                        <span class="c-badge c-badge--info"><i
+                                                class="fa fa-pencil"></i></span>
+                                    </a>
+                                </td>
+
+{#                                <td class="c-table__cell">#}
+{#                                    <a href="#" data-target="#email_template"#}
+{#                                       data-toggle="modal">#}
+{#                                        <span class="c-badge c-badge--info"><i#}
+{#                                                class="fa fa-envelope-o"></i></span>#}
+{#                                    </a>#}
+{#                                </td>#}
+                            </tr>
+                            <tr class="c-table__row">
+                                <td class="c-table__cell c-table__cell--img o-media">
+
+                                    <div class="o-media__body">
+                                        Khách quay lại
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                          aria-label="Khách quay lại địa điểm, tuỳ chọn số lần quay lại, tin nhắn tự động gửi sau khi khách đăng nhập WIFI.">
+                                        <i class="fa fa-question"></i>
+                                    </span>
+                                </td>
+
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.return %}{% if merchant.sms.return.active %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_sms_return">
+                                        <input type="checkbox"
+                                               class="c-switch__input"
+                                               name="active_returning"
+                                               id="quick_active_return"
+                                               {% if merchant.sms.return %}{% if merchant.sms.return.active %}checked
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.return %}{% if merchant.sms.return.mail %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_mail_return">
+                                        <input class="c-switch__input"
+                                               name="mail_return"
+                                               id="quick_mail_return"
+                                               type="checkbox"
+                                               {% if merchant.sms.return %}{% if merchant.sms.return.mail %}checked="checked"
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.return %}{% if merchant.sms.return.zalo %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_zalo_return">
+                                        <input type="checkbox"
+                                               class="c-switch__input"
+                                               name="zalo_return"
+                                               id="quick_zalo_return"
+                                               {% if merchant.sms.return %}{% if merchant.sms.return.zalo %}checked
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+
+{#                                <td class="c-table__cell">#}
+{#                                    <div class="c-switch#}
+{##}
+{#                                            {% if merchant.sms.return %}{% if merchant.sms.return.enable %}is-active#}
+{#                                        {% endif %}{% endif %}"#}
+{#                                         id="switch_enable_return">#}
+{#                                        <input type="checkbox"#}
+{#                                               class="c-switch__input"#}
+{#                                               name="enable_return"#}
+{#                                               id="quick_enable_return"#}
+{#                                               {% if merchant.sms.return %}{% if merchant.sms.return.enable %}checked#}
+{#                                               {% endif %}{% endif %}>#}
+{#                                    </div>#}
+{#                                </td>#}
+
+                                <td class="c-table__cell">
+                                    <a href="#" data-target="#return"
+                                       data-toggle="modal">
+                                        <span class="c-badge c-badge--info">
+                                            <i class="fa fa-pencil"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr class="c-table__row">
+                                <td class="c-table__cell c-table__cell--img o-media">
+
+                                    <div class="o-media__body">
+                                        Khách thân thiết
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                          aria-label="Khách hàng có số lượt đến từ X -> Y lần trong 31 ngày gần nhất.">
+                                        <i class="fa fa-question"></i>
+                                    </span>
+                                </td>
+
+
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.loyal %}{% if merchant.sms.loyal.active %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_sms_loyal">
+                                        <input type="checkbox"
+                                               class="c-switch__input"
+                                               name="active_regular_cus"
+                                               id="quick_active_loyal"
+                                               {% if merchant.sms.loyal %}{% if merchant.sms.loyal.active %}checked
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.loyal %}{% if merchant.sms.loyal.mail %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_mail_loyal">
+                                        <input type="checkbox"
+                                               class="c-switch__input"
+                                               name="mail_loyal"
+                                               id="quick_mail_loyal"
+                                               {% if merchant.sms.loyal %}{% if merchant.sms.loyal.mail %}checked
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.loyal %}{% if merchant.sms.loyal.zalo %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_zalo_loyal">
+                                        <input type="checkbox"
+                                               class="c-switch__input"
+                                               name="zalo_loyal"
+                                               id="quick_zalo_loyal"
+                                               {% if merchant.sms.loyal %}{% if merchant.sms.loyal.zalo %}checked
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+
+{#                                <td class="c-table__cell">#}
+{#                                    <div class="c-switch#}
+{##}
+{#                                            {% if merchant.sms.loyal %}{% if merchant.sms.loyal.enable %}is-active#}
+{#                                        {% endif %}{% endif %}"#}
+{#                                         id="switch_enable_loyal">#}
+{#                                        <input type="checkbox"#}
+{#                                               class="c-switch__input"#}
+{#                                               name="enable_loyal"#}
+{#                                               id="quick_enable_loyal"#}
+{#                                               {% if merchant.sms.loyal %}{% if merchant.sms.loyal.enable %}checked#}
+{#                                               {% endif %}{% endif %}>#}
+{#                                    </div>#}
+{#                                </td>#}
+
+                                <td class="c-table__cell">
+                                    <a href="#" data-target="#loyal"
+                                       data-toggle="modal">
+                                        <span class="c-badge c-badge--info">
+                                            <i class="fa fa-pencil"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr class="c-table__row">
+                                <td class="c-table__cell c-table__cell--img o-media">
+
+                                    <div class="o-media__body">
+                                        Khách lâu chưa quay lại
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                          aria-label="Khách hàng đã  X ngày chưa quay lại địa điếm, hệ thống tự động tìm và gửi để mời khách quay lại.">
+                                        <i class="fa fa-question"></i>
+                                    </span>
+                                </td>
+
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.lost %}{% if merchant.sms.lost.active %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_sms_lost">
+                                        <input type="checkbox"
+                                               class="c-switch__input"
+                                               id="quick_active_lost"
+                                               {% if merchant.sms.lost %}{% if merchant.sms.lost.active %}checked
+                                               {% endif %}{% endif %}/>
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.lost %}{% if merchant.sms.lost.mail %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_mail_lost">
+                                        <input type="checkbox"
+                                               class="c-switch__input"
+                                               id="quick_mail_lost"
+                                               {% if merchant.sms.lost %}{% if merchant.sms.lost.mail %}checked
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.lost %}{% if merchant.sms.lost.zalo %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_zalo_lost">
+                                        <input type="checkbox"
+                                               class="c-switch__input"
+                                               id="quick_zalo_lost"
+                                               {% if merchant.sms.lost %}{% if merchant.sms.lost.zalo %}checked
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+
+{#                                <td class="c-table__cell">#}
+{#                                    <div class="c-switch#}
+{##}
+{#                                            {% if merchant.sms.lost %}{% if merchant.sms.lost.enable %}is-active#}
+{#                                        {% endif %}{% endif %}"#}
+{#                                         id="switch_enable_lost">#}
+{#                                        <input type="checkbox"#}
+{#                                               name="enable_lost"#}
+{#                                               id="quick_enable_lost"#}
+{#                                               class="c-switch__input"#}
+{#                                               {% if merchant.sms.lost %}{% if merchant.sms.lost.enable %}checked#}
+{#                                               {% endif %}{% endif %}>#}
+{#                                    </div>#}
+{#                                </td>#}
+
+                                <td class="c-table__cell">
+                                    <a href="#" data-target="#lost_customers"
+                                       data-toggle="modal">
+                                        <span class="c-badge c-badge--info">
+                                            <i class="fa fa-pencil"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr class="c-table__row">
+                                <td class="c-table__cell c-table__cell--img o-media">
+
+                                    <div class="o-media__body">
+                                        Chúc mừng sinh nhật
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                          aria-label="Tin nhắn chúc mừng sinh nhật khi khách đến địa điểm vào ngày sinh nhật, tuỳ chọn tự động nhắc trước sinh nhật X ngày.">
+                                        <i class="fa fa-question"></i>
+                                    </span>
+                                </td>
+
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.happy_birthday %}{% if merchant.sms.happy_birthday.active %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_sms_birthday">
+                                        <input type="checkbox"
+                                               class="c-switch__input"
+                                               name="active_birthday"
+                                               id="quick_active_birthday"
+                                               {% if merchant.sms.happy_birthday %}{% if merchant.sms.happy_birthday.active %}checked
+                                               {% endif %}{% endif %}/>
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.happy_birthday %}{% if merchant.sms.happy_birthday.mail %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_mail_birthday">
+                                        <input type="checkbox"
+                                               class="c-switch__input"
+                                               name="mail_happy_birthday"
+                                               id="quick_mail_birthday"
+                                               {% if merchant.sms.happy_birthday %}{% if merchant.sms.happy_birthday.mail %}checked
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.happy_birthday %}{% if merchant.sms.happy_birthday.zalo %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_zalo_birthday">
+                                        <input type="checkbox"
+                                               class="c-switch__input"
+                                               name="zalo_happy_birthday"
+                                               id="quick_zalo_birthday"
+                                               {% if merchant.sms.happy_birthday %}{% if merchant.sms.happy_birthday.zalo %}checked
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+
+{#                                <td class="c-table__cell">#}
+{#                                    <div class="c-switch#}
+{##}
+{#                                            {% if merchant.sms.happy_birthday %}{% if merchant.sms.happy_birthday.enable %}is-active#}
+{#                                        {% endif %}{% endif %}"#}
+{#                                         id="switch_enable_birthday">#}
+{#                                        <input type="checkbox"#}
+{#                                               class="c-switch__input"#}
+{#                                               name="enable_birthday"#}
+{#                                               id="quick_enable_birthday"#}
+{#                                               {% if  merchant.sms.happy_birthday %}{% if  merchant.sms.happy_birthday.enable %}checked#}
+{#                                               {% endif %}{% endif %}>#}
+{#                                    </div>#}
+{#                                </td>#}
+
+                                <td class="c-table__cell">
+                                    <a href="#" data-target="#birthday"
+                                       data-toggle="modal">
+                                        <span class="c-badge c-badge--info">
+                                            <i class="fa fa-pencil"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr class="c-table__row">
+                                <td class="c-table__cell c-table__cell--img o-media">
+
+                                    <div class="o-media__body">
+                                        Khuyến mãi chung
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                          aria-label="Các chương trình khuyến mãi chung đang có, gửi tới tất cả khách hàng sau khi kết nối WIFI trong 3 phút.">
+                                        <i class="fa fa-question"></i>
+                                    </span>
+                                </td>
+
+
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.announcement %}{% if merchant.sms.announcement.active %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_sms_announ">
+                                        <input type="checkbox"
+                                               name="active_announ"
+                                               class="c-switch__input"
+                                               id="quick_active_announ"
+                                               {% if merchant.sms.announcement %}{% if merchant.sms.announcement.active %}checked
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.announcement %}{% if merchant.sms.announcement.mail %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_mail_announ">
+                                        <input type="checkbox"
+                                               name="mail_announcement"
+                                               id="quick_mail_announ"
+                                               class="c-switch__input"
+                                               {% if merchant.sms.announcement %}{% if merchant.sms.announcement.mail %}checked
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.announcement %}{% if merchant.sms.announcement.zalo %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_zalo_announ">
+                                        <input type="checkbox"
+                                               name="zalo_announcement"
+                                               id="quick_zalo_announ"
+                                               class="c-switch__input"
+                                               {% if merchant.sms.announcement %}{% if merchant.sms.announcement.zalo %}checked
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+
+{#                                <td class="c-table__cell">#}
+{#                                    <div class="c-switch#}
+{##}
+{#                                            {% if merchant.sms.announcement %}{% if merchant.sms.announcement.enable %}is-active#}
+{#                                        {% endif %}{% endif %}"#}
+{#                                         id="switch_enable_announ">#}
+{#                                        <input type="checkbox"#}
+{#                                               name="enable_announ"#}
+{#                                               class="c-switch__input"#}
+{#                                               id="quick_enable_announ"#}
+{#                                               {% if  merchant.sms.announcement %}{% if  merchant.sms.announcement.enable %}checked#}
+{#                                               {% endif %}{% endif %}>#}
+{#                                    </div>#}
+{#                                </td>#}
+
+                                <td class="c-table__cell">
+                                    <a href="#" data-target="#anoun"
+                                       data-toggle="modal">
+                                        <span class="c-badge c-badge--info">
+                                            <i class="fa fa-pencil"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr class="c-table__row">
+                                <td class="c-table__cell c-table__cell--img o-media">
+
+                                    <div class="o-media__body">
+                                        Cảm ơn & Khảo sát
+                                </td>
+                                <td class="c-table__cell">
+                                 <span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                       aria-label="Gửi lời cảm ơn và khảo
+                                       sát tới khách hàng sau khi ghé
+                                        thăm.">
+                                     <i class="fa fa-question"></i>
+                                 </span>
+
+                                </td>
+
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+                                        {% if merchant.sms.thank_you %}{% if
+                                        merchant.sms.thank_you.active %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_sms_welcome">
+                                        <input class="c-switch__input"
+                                               name="active_welcome"
+                                               id="quick_active_welcome"
+                                               type="checkbox"
+                                               {% if merchant.sms.thank_you %}{% if merchant.sms.thank_you.active %}checked="checked"
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.thank_you %}{% if merchant.sms.thank_you.mail %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_mail_thank_you">
+                                        <input class="c-switch__input"
+                                               name="mail_thank_you"
+                                               id="quick_mail_thank_you"
+                                               type="checkbox"
+                                               {% if merchant.sms.thank_you %}{% if merchant.sms.thank_you.mail %}checked="checked"
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+                                <td class="c-table__cell">
+                                    <div class="c-switch
+
+                                            {% if merchant.sms.thank_you %}{% if merchant.sms.thank_you.zalo %}is-active
+                                        {% endif %}{% endif %}"
+                                         id="switch_zalo_thank_you">
+                                        <input type="checkbox"
+                                               name="zalo_thank_you"
+                                               id="quick_zalo_thank_you"
+                                               class="c-switch__input"
+                                               {% if merchant.sms.thank_you %}{% if merchant.sms.thank_you.zalo %}checked="checked"
+                                               {% endif %}{% endif %}>
+                                    </div>
+                                </td>
+
+{#                                <td class="c-table__cell">#}
+{#                                    <div class="c-switch#}
+{##}
+{#                                            {% if merchant.sms.thank_you %}{% if merchant.sms.thank_you.enable %}is-active#}
+{#                                        {% endif %}{% endif %}"#}
+{#                                         id="switch_enable_thank_you">#}
+{#                                        <input id="quick_enable_thank_you"#}
+{#                                               type="checkbox"#}
+{#                                               class="c-switch__input"#}
+{#                                               {% if merchant.sms.thank_you %}{% if merchant.sms.thank_you.enable %}checked="checked"#}
+{#                                               {% endif %}{% endif %}/>#}
+{#                                    </div>#}
+{#                                </td>#}
+
+                                <td class="c-table__cell">
+                                    <a href="#" data-target="#thank_you"
+                                       data-toggle="modal">
+                                        <span class="c-badge c-badge--info"><i
+                                                class="fa fa-pencil"></i></span>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+
+    <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+
+    $("#switch_sms_welcome").click(function () {
+        $("#welcome_form input[name=active_welcome]").prop('checked', $("#quick_active_welcome").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#welcome_form").attr('action'),
+            data: $('#welcome_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_sms_thank_you").click(function () {
+        $("#thank_you_form input[name=active_thank_you]").prop('checked', $("#quick_active_thank_you").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#thank_you_form").attr('action'),
+            data: $('#thank_you_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_sms_return").click(function () {
+        $("#return_form input[name=active_returning]").prop('checked', $("#quick_active_return").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#return_form").attr('action'),
+            data: $('#return_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_sms_loyal").click(function () {
+        $("#loyal_form input[name=active_regular_cus]").prop('checked', $("#quick_active_loyal").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#loyal_form").attr('action'),
+            data: $('#loyal_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_sms_lost").click(function () {
+        $("#lost_form input[name=active_one_month]").prop('checked', $("#quick_active_lost").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#lost_form").attr('action'),
+            data: $('#lost_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_sms_birthday").click(function () {
+        $("#birthday_form input[name=active_birthday]").prop
+        ('checked', $
+        ("#quick_active_birthday").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#birthday_form").attr('action'),
+            data: $('#birthday_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_sms_announ").click(function () {
+        $("#anoun_form input[name=active_announ]").prop('checked', $("#quick_active_announ").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#anoun_form").attr('action'),
+            data: $('#anoun_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+
+    $("#switch_enable_welcome").click(function () {
+        $("#welcome_form input[name=enable_welcome]").prop('checked', $("#quick_enable_welcome").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#welcome_form").attr('action'),
+            data: $('#welcome_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+     $("#switch_enable_thank_you").click(function () {
+        $("#thank_you_form input[name=enable_thank_you]").prop('checked', $("#quick_enable_thank_you").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#thank_you_form").attr('action'),
+            data: $('#thank_you_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_enable_return").click(function () {
+        $("#return_form input[name=enable_return]").prop('checked', $("#quick_enable_return").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#return_form").attr('action'),
+            data: $('#return_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_enable_loyal").click(function () {
+        $("#loyal_form input[name=enable_loyal]").prop('checked', $("#quick_enable_loyal").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#loyal_form").attr('action'),
+            data: $('#loyal_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_enable_lost").click(function () {
+        $("#lost_form input[name=enable_lost]").prop('checked', $("#quick_enable_lost").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#lost_form").attr('action'),
+            data: $('#lost_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_enable_birthday").click(function () {
+        $("#birthday_form input[name=enable_birthday]").prop
+        ('checked', $
+        ("#quick_enable_birthday").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#birthday_form").attr('action'),
+            data: $('#birthday_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_enable_announ").click(function () {
+        $("#anoun_form input[name=enable_announ]").prop('checked', $("#quick_enable_announ").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#anoun_form").attr('action'),
+            data: $('#anoun_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+
+    $("#switch_zalo_welcome").click(function () {
+        $("#welcome_form input[name=zalo_welcome]").prop('checked', $("#quick_zalo_welcome").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#welcome_form").attr('action'),
+            data: $('#welcome_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_zalo_thank_you").click(function () {
+        $("#thank_you_form input[name=zalo_thank_you]").prop('checked', $("#quick_zalo_thank_you").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#thank_you_form").attr('action'),
+            data: $('#thank_you_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_zalo_return").click(function () {
+        $("#return_form input[name=zalo_return]").prop('checked', $("#quick_zalo_return").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#return_form").attr('action'),
+            data: $('#return_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_zalo_loyal").click(function () {
+        $("#loyal_form input[name=zalo_loyal]").prop('checked', $("#quick_zalo_loyal").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#loyal_form").attr('action'),
+            data: $('#loyal_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_zalo_lost").click(function () {
+        $("#lost_form input[name=zalo_lost]").prop('checked', $("#quick_zalo_lost").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#lost_form").attr('action'),
+            data: $('#lost_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_zalo_birthday").click(function () {
+        $("#birthday_form input[name=zalo_happy_birthday]").prop
+        ('checked', $
+        ("#quick_zalo_birthday").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#birthday_form").attr('action'),
+            data: $('#birthday_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_zalo_announ").click(function () {
+        $("#anoun_form input[name=zalo_announcement]").prop('checked', $("#quick_zalo_announ").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#anoun_form").attr('action'),
+            data: $('#anoun_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+
+    $("#switch_mail_welcome").click(function () {
+        $("#welcome_form input[name=mail_welcome]").prop('checked', $("#quick_mail_welcome").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#welcome_form").attr('action'),
+            data: $('#welcome_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+     $("#switch_mail_thank_you").click(function () {
+        $("#thank_you_form input[name=mail_thank_you]").prop('checked', $("#quick_mail_thank_you").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#thank_you_form").attr('action'),
+            data: $('#thank_you_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_mail_return").click(function () {
+        $("#return_form input[name=mail_return]").prop('checked', $("#quick_mail_return").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#return_form").attr('action'),
+            data: $('#return_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_mail_loyal").click(function () {
+        $("#loyal_form input[name=mail_loyal]").prop('checked', $("#quick_mail_loyal").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#loyal_form").attr('action'),
+            data: $('#loyal_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_mail_lost").click(function () {
+        $("#lost_form input[name=mail_lost]").prop('checked', $("#quick_mail_lost").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#lost_form").attr('action'),
+            data: $('#lost_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_mail_birthday").click(function () {
+        $("#birthday_form input[name=mail_happy_birthday]").prop('checked', $("#quick_mail_birthday").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#birthday_form").attr('action'),
+            data: $('#birthday_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+    $("#switch_mail_announ").click(function () {
+        $("#anoun_form input[name=mail_announcement]").prop('checked', $("#quick_mail_announ").is(":checked"));
+        $.ajax({
+            type: 'post',
+            url: $("#anoun_form").attr('action'),
+            data: $('#anoun_form').serialize(),
+            success: function () {
+                swal("Cập nhật thành công", " ", "success")
+
+            }
+        });
+    });
+
+
+
+});       
+    </script>
+{% endblock %}

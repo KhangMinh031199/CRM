@@ -1,0 +1,479 @@
+{% extends 'nextify/base.html' %}
+
+{% block body %}
+
+<div class="container-fluid">
+
+
+    <div class="row justify-content-center mt-5 py-5">
+        <div class="col-12 col-lg-10 col-xl-8">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8 col-xl-6 text-center">
+
+                    <!-- Title -->
+                    <h1 class="mb-3">
+                        Thiết lập kết nối kênh
+                    </h1>
+
+                    <!-- Subtitle -->
+                    <p class="mb-5 text-muted">
+                        Thiết lập kết nối kênh tương tác với khách hàng, nếu bạn chưa muốn cấu hình có thể chọn Bỏ qua.
+                    </p>
+
+                </div>
+            </div>
+            <form method="POST" enctype="multipart/form-data" id="save_chanel" action="/welcome/init_automation/{{ shop_id_select }}"> 
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <h2 class="mb-2">
+                Zalo OA <span class="badge badge-soft-primary ml-1 mt-n1">Hướng dẫn</span>
+              </h2>
+            
+            <div class="card card-body mt-5">
+                
+               
+                    <div class="form-group">
+                        <label >Zalo OA ID </label>
+                        <input type="text" class="form-control"  name="zalo_oa_id" />
+        
+                      </div>
+                      <div class="form-group">
+                        <label >Zalo App ID </label>
+                        <input type="text" class="form-control" name="zalo_app_id" />
+        
+        
+                      </div>
+                      <div class="form-group">
+                        <label >Zalo App Secret </label>
+                        <input type="text" class="form-control" name="zalo_app_secret_key" />
+        
+        
+                      </div>
+                      <div class="form-group">
+                        <label >Zalo Accesstoken <i class="fe fe-help-circle"></i>
+                          {% if shop_select.zalo_app_id and shop_select.zalo_app_id|length > 0 %}
+                          <a href="https://oauth.zaloapp.com/v3/oa/permission?app_id={{shop_select.zalo_app_id }}&redirect_uri=https://api.nextify.vn/callback_uri"
+                            target="_blank"><span class="badge badge-soft-primary ml-1 mt-n1">Lấy Accesstoken</span> </a>
+                          {% endif %}
+        
+                        </label>
+        
+                        <input type="text" class="form-control" name="zalo_access_token" />
+                      </div>
+              
+            </div>
+            <hr class="my-5">
+            <h2 class="mb-2">
+                Facebook Page <span class="badge badge-soft-primary ml-1 mt-n1">Hướng dẫn</span>
+              </h2>
+            
+            <div class="card mt-5">
+               
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Facebook Page <a href="https://www.facebook.com/v6.0/dialog/oauth?client_id=611214335939430&redirect_uri={{ request.host_url.replace('http', 'https') }}/fb_auth&state={{ request.host_url }},{{ shop_select._id }}&scope=public_profile,email,manage_pages,pages_messaging,ads_read,ads_management">
+                           <span class="badge badge-soft-primary ml-1 mt-n1"><i class="fa fa-facebook-f"></i> {{ gettext("Chon_Page") }}</span>
+                        </a>
+                    </label>
+                        <input type="text" class="form-control" id="facebook_page" name="facebook_page"  value="{% if shop_select and shop_select.facebook_page|string != 'None' %}{{ shop_select.facebook_page|default('', true) }}{% endif %}" placeholder="https://facebook.com/your_page">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="page_id">Facebook Page ID</label>
+                        <input type="text" class="form-control"
+                            id="id_page" name="id_page"
+                            value="{% if shop_select and shop_select.id_page|string != 'None' %}{{ shop_select.id_page }}{% endif %}">
+                    </div>
+                <div class="form-group">
+                        <label for="page_id">Facebook Page Accesstoken</label>
+                        <input type="text" class="form-control"
+                            id="access_token_page" name="access_token_page"
+                            value="{% if shop_select and shop_select.access_token_page|string != 'None' %}{{ shop_select.access_token_page }}{% endif %}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="page_id">Facebook Pixel ID</label>
+                        <input type="text" class="form-control"
+                            id="facebook_pixel_id" name="facebook_pixel_id"
+                            value="{% if shop_select and shop_select.facebook_pixel_id|string != 'None' %}{{ shop_select.facebook_pixel_id }}{% endif %}">
+                    </div>
+                    <div class="form-group">
+                        <label for="pixel_code">Facebook Pixel Code</label>
+                        <textarea class="form-control" id="pixel_code"
+                            name="facebook_pixel_code" rows="6">{% if shop_select and shop_select.facebook_pixel_code|string != 'None' %}{{ shop_select.facebook_pixel_code }}{% endif %}</textarea>
+                    </div>
+
+                </div>
+            </div>
+         
+        
+            <hr class="my-5">
+            <h2 class="mb-2">
+                Email <span class="badge badge-soft-primary ml-1 mt-n1">Hướng dẫn</span>
+              </h2>
+            <div class="card mt-5">
+                
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="c-choice c-choice--radio">
+                                <input class="c-choice__input" id="checkbox_mail_nextify" name="mail_box" type="radio"
+                                    value="mail_gun" checked>
+                                <label  for="checkbox_mail_nextify">
+                                    MailGun
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="c-choice c-choice--radio">
+                                <input class="c-choice__input" id="checkbox_mail_sendgrid" name="mail_box" type="radio"
+                                    value="sendgrid">
+                                <label  for="checkbox_mail_sendgrid">
+                                    SendGrid
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="c-choice c-choice--radio">
+                                <input class="c-choice__input" id="checkbox_mail_khac" name="mail_box" type="radio"
+                                    value="mail_khac">
+                                <label  for="checkbox_mail_khac">{{ gettext("Khac") }}</label>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="mt-4" id="mail_nexify">
+                        <input type="hidden" class="form-control" value="nextify" name="mail_partner" />
+                        <div class="form-group">
+                            <label>Mailgun Domain:</label>
+                            <input class="form-control" type="text" name="mail_domain">
+                        </div>
+                        <div class="form-group">
+                            <label>Mailgun API KEY:</label>
+                            <input class="form-control" type="text" name="mail_api_key" >
+                        </div>
+                        <div class="form-group">
+                            <label>Mailgun API URL:</label>
+                            <input class="form-control" type="text" name="mail_api_url" >
+                        </div>
+
+                    </div>
+
+                    <div class="mt-4" id="mail_sendgrid" style="display: none">
+
+                        <input type="hidden" class="form-control" value="nextify" name="mail_partner" />
+                        <div class="form-group">
+                            <label>From Email:</label>
+                            <input class="form-control" type="text" name="from_email" >
+                        </div>
+                        <div class="form-group">
+                            <label>API KEY:</label>
+                            <input class="form-control" type="text" name="api_key">
+                        </div>
+
+                    </div>
+
+                    <div id="mail_smtp" class="mt-4" style="display: none">
+
+                        <div class="form-group">
+                            <label>Email {{ gettext("gui") }}: </label>
+                            <input type="text" class="form-control"  name="smtp_email" />
+                        </div>
+                        <div class="form-group">
+                            <label>{{ gettext("Tai_khoan") }}: </label>
+                            <input type="text" class="form-control" name="smtp_user" />
+                        </div>
+                        <div class="form-group">
+                            <label>{{ gettext("Mat_khau") }}; </label>
+                            <input type="password" class="form-control" name="smtp_pass" />
+                        </div>
+                        <div class="form-group">
+                            <label>SMTP Server: </label>
+                            <input type="text" class="form-control" name="smtp_server" />
+                        </div>
+                        <div class="form-group">
+                            <label>Port: </label>
+                            <input type="text" class="form-control" name="smtp_port" />
+                        </div>
+                        <div class="form-group">
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" type="checkbox" name="checkbox_ssl" id="checkbox_ssl" >
+                                <label for="checkbox_ssl">{{ gettext("Su_dung_SSL") }}</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+            <hr class="my-5">
+            <h2 class="mb-2">
+                SMS Brandname <span class="badge badge-soft-primary ml-1 mt-n1">Hướng dẫn</span>
+              </h2>
+            <div class="card mt-5">
+            
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="notes">{{ gettext("SMS_Provider") }}:</label>
+                                <select class="form-control" name="sms_provider" id="sms_provider">
+                                    <option value="" selected>{{ gettext("Chon_SMS_Provider") }}</option>
+                                    <option value="VIETTEL">VIETTEL</option>
+                                    <option value="FPT">FPT</option>
+                                    <option value="MOBIFONE">MOBIFONE</option>
+                                    <option value="BLUESEA">BLUESEA</option>
+                                    <option value="VHAT">VHAT</option>
+                                    <option value="INCOM">INCOM</option>
+                                    <option value="VINAPHONE">VINAPHONE</option>
+                                    <option value="VIETGUY">VIETGUY</option>
+                                </select>
+                            </div>
+                            <div id="incom_div" >
+                                <div id="" class="form-group">
+                                    <label for="notes">SMS Type:</label>
+                                    <select class="form-control" name="sms_type_incom" id="sms_type_incom">
+                                        <option value="" selected>{{ gettext("Chon_SMS_Type") }}</option>
+                                        <option value="0">{{ gettext("SMS_phat_sinh_tu_dich_vu,_khong_tinh_tien_khach_hang") }}
+                                        </option>
+                                        <option value="1">{{ gettext("Co_tru_tien_cua_khach_hang") }}</option>
+
+                                    </select>
+                                </div>
+                                <div id="" class="form-group">
+                                    <label for="notes">USERNAME:</label>
+                                    <input type="text" class="form-control" name="username_incom"
+                                           id="username_incom"/>
+                                </div>
+                                <div id="" class="form-group">
+                                    <label for="notes">PASSWORD:</label>
+                                    <input type="text" class="form-control" name="password_incom"
+                                           id="password_incom" />
+                                </div>
+                                <div id="" class="form-group">
+                                    <label for="notes">COMMAND CODE:</label>
+                                    <input type="text" class="form-control" name="command_code_incom"
+                                           id="command_code_incom"
+                                           />
+                                </div>
+                                <div id="" class="form-group">
+                                    <label for="notes">PREFIX ID:</label>
+                                    <input type="text" class="form-control" name="prefix_id_incom"
+                                           id="prefix_id_incom"/>
+                                </div>
+                            </div>
+                            <div id="other_incom_div"
+                                 {% if merchant.sms_provider == "INCOM" %}style="display: none;"{% endif %}>
+                                <div id="sms_type_" class="form-group">
+                                    <label for="notes">{{ gettext("SMS_Type") }}:</label>
+                                    <select class="form-control" name="sms_type" id="sms_type">
+                                        <option value="" selected>{{ gettext("Chon_SMS_Type") }}</option>
+                                        <option value="1">BrandName {{ gettext("quang_cao") }}</option>
+                                        <option value="2">BrandName {{ gettext("cham_soc_khach_hang") }}</option>
+                                        <option value="8">{{ gettext("Tin_nhan_tu_dau_so_co_dinh") }}</option>
+                                    </select>
+                                </div>
+                                <div id="api_key_" class="form-group">
+                                    <label for="notes">API KEY:</label>
+                                    <input type="text" class="form-control" name="api_key_vhat" id="api_key_vhat"/>
+                                </div>
+                                <div id="secret_key_" class="form-group">
+                                    <label for="notes">SECRET KEY:</label>
+                                    <input type="text" class="form-control" name="secret_key_vhat"
+                                           id="secret_key_vhat" />
+                                </div>
+                                <div id="user_sms_" class="form-group">
+                                    <label for="notes">User SMS:</label>
+                                    <input type="text" class="form-control" name="user_sms" id="user_sms"/>
+                                </div>
+                                <div id="pass_sms_" class="form-group">
+                                    <label for="notes">Password SMS:</label>
+                                    <input type="text" class="form-control" name="pass_sms" id="pass_sms"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="notes">SMS Brandname:</label>
+                                    <input type="text" class="form-control" name="brand_name" id="brand_name"/>
+                                </div>
+
+                            </div>
+
+                            <div id="setting_branchname_vinaphone"
+                                 style="display: none;">
+                                
+                                <div class="form-group">
+                                    <label for="notes">Label Id:</label>
+                                    <input type="text" class="form-control" name="vina_label_id" id="vina_label_id"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="notes">{{ gettext("Ma_hop_dong") }}:</label>
+                                    <input type="text" class="form-control" name="vina_contract_id" id="vina_contract_id"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="notes">Agent Id:</label>
+                                    <input type="text" class="form-control" name="vina_agent_id" id="vina_agent_id"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="notes">Api User:</label>
+                                    <input type="text" class="form-control" name="vina_api_user" id="vina_api_user"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="notes">Api Password:</label>
+                                    <input type="text" class="form-control" name="vina_api_pass" id="vina_api_pass"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="notes">Api URL:</label>
+                                    <input type="text" class="form-control" name="vina_api_url" id="vina_api_url"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="notes">{{ gettext("Ten_dang_nhap") }}:</label>
+                                    <input type="text" class="form-control" name="vina_user_name" id="vina_user_name"/>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </form>
+            <div class="row align-items-center">
+                <div class="col-auto">
+
+                    <!-- Button -->
+
+
+                </div>
+                <div class="col text-center">
+                    <a class="btn btn-lg btn-danger" id="save_init_chanel">Tiếp tục</a>
+                </div>
+
+                <div class="col-auto">
+
+                    <!-- Button -->
+                    <a class="#" href="/" >Bỏ qua</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+        $('input').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+        $("#incom_div").hide();
+        $("#other_incom_div").hide();
+        $("#setting_branchname_vinaphone").hide();
+       
+        $("#checkbox_mail_nextify").on('click', function () {
+            $("#mail_nexify").show();
+            $("#mail_smtp").hide();
+            $("#mail_sendgrid").hide();
+        });
+      
+        $("#checkbox_mail_khac").on('click', function () {
+            $("#mail_nexify").hide();
+            $("#mail_smtp").show();
+            $("#mail_sendgrid").hide();
+        });
+
+        $("#checkbox_mail_sendgrid").on('click', function () {
+            $("#mail_nexify").hide();
+            $("#mail_smtp").hide();
+            $("#mail_sendgrid").show();
+        });
+        if ($("#sms_provider").val() == "VHAT") {
+            $("#api_key_").show();
+            $("#secret_key_").show();
+            $("#sms_type_").show();
+            $("#user_sms_").hide();
+            $("#pass_sms_").hide();
+            $("#quota_").hide();
+        } else {
+            $("#api_key_").hide();
+            $("#secret_key_").hide();
+            $("#sms_type_").hide();
+        }
+        $('#sms_provider').on('change', function (e) {
+            var sms_provider_select = $("#sms_provider").val();
+
+            if (sms_provider_select == "INCOM") {
+                $("#incom_div").show();
+                $("#other_incom_div").hide();
+                $("#setting_branchname_vinaphone").hide();
+            } else if(sms_provider_select == "VINAPHONE"){
+                $("#incom_div").hide();
+                $("#other_incom_div").hide();
+                $("#setting_branchname_vinaphone").show();
+            }
+             else {
+                $("#incom_div").hide();
+                $("#other_incom_div").show();
+                $("#setting_branchname_vinaphone").hide();
+            }
+            ;
+            
+            if (sms_provider_select == "VHAT") {
+                $("#api_key_").show();
+                $("#api_key_vhat").val('');
+                $("#secret_key_").show();
+                $("#secret_key_vhat").val('');
+                $("#user_sms_").hide();
+                $("#pass_sms_").hide();
+                $("#quota_").hide();
+                $("#brand_name_").show();
+                $("#brand_name").val('');
+                $("#sms_type_").show();
+                $("#sms_type").val('');
+            } else {
+                $("#api_key_").hide();
+                $("#secret_key_").hide();
+                $("#user_sms").val('');
+                $("#pass_sms").val('');
+                $("#brand_name").val('');
+                $("#quota").val('');
+                $("#user_sms_").show();
+                $("#pass_sms_").show();
+                $("#quota_").show();
+                $("#sms_type_").hide();
+            }
+        });
+        $("#save_init_chanel").click(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: $("#save_chanel").attr('action'),
+                    data: $("#save_chanel").serialize(),
+                    success: function (response) {
+                        var returnedData = JSON.parse(response);
+                        if ('error' in returnedData) {
+
+                            swal(returnedData['error'], " ", "error");
+                        } else {
+                            location.href = '/'
+
+                        }
+
+                    }});
+
+            });
+    });
+</script>
+{% endblock %}

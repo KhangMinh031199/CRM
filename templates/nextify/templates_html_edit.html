@@ -1,0 +1,942 @@
+{% extends 'nextify/base.html' %}
+
+
+{% block body %}
+<style>
+    .pt-100 {
+        padding-top: 100px;
+    }
+
+    .pb-100 {
+        padding-bottom: 100px;
+    }
+
+    .section-title {
+        margin-bottom: 60px;
+    }
+
+    .section-title p {
+        color: #777;
+        font-size: 16px;
+    }
+
+    .section-title h4 {
+        text-transform: capitalize;
+        font-size: 40px;
+        position: relative;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .section-title h4:before {
+        position: absolute;
+        content: "";
+        width: 60px;
+        height: 2px;
+        background-color: #ff3636;
+        bottom: 0;
+        left: 50%;
+        margin-left: -30px;
+    }
+
+    .section-title h4:after {
+        position: absolute;
+        background-color: #ff3636;
+        content: "";
+        width: 10px;
+        height: 10px;
+        bottom: -4px;
+        left: 50%;
+        margin-left: -5px;
+        border-radius: 50%;
+    }
+
+    .fill-bar {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        height: 24px;
+        border-radius: 2px;
+        overflow-x: hidden;
+        background-color: #ededed;
+    }
+
+    .fill-bar:hover {
+        background-color: blue;
+        color: white;
+    }
+
+    .fill-bar-graph-circle {
+        width: 8px;
+        height: 8px;
+        border-radius: 8px;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+    .radio {
+
+        display: block;
+        position: relative;
+        padding-left: 30px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none
+    }
+
+    /* Hide the browser's default radio button */
+    .radio input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    /* Create a custom radio button */
+    .checkround {
+
+        position: absolute;
+        top: 6px;
+        left: 0;
+        height: 20px;
+        width: 20px;
+        background-color: #fff;
+        border-color: #eb7425ed;
+        border-style: solid;
+        border-width: 2px;
+        border-radius: 50%;
+    }
+
+
+    /* When the radio button is checked, add a blue background */
+    .radio input:checked~.checkround {
+        background-color: #fff;
+    }
+
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+    .checkround:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the indicator (dot/circle) when checked */
+    .radio input:checked~.checkround:after {
+        display: block;
+    }
+
+    /* Style the indicator (dot/circle) */
+    .radio .checkround:after {
+        left: 2px;
+        top: 2px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #eb7425ed;
+    }
+
+    .pagination>.active>a,
+    .pagination>.active>a:focus,
+    .pagination>.active>a:hover,
+    .pagination>.active>span,
+    .pagination>.active>span:focus,
+    .pagination>.active>span:hover {
+        z-index: 3;
+        color: #fff;
+        cursor: default;
+        background-color: #77afe0;
+        border-color: #77afe0;
+    }
+
+    .table td,
+    .table th {
+        vertical-align: middle;
+    }
+
+    .table td,
+    .table th {
+        padding: .7375rem;
+    }
+
+    .text-middle {
+        display: flex;
+        justify-content: right;
+        align-items: center;
+    }
+
+    .pd-t-15 {
+        padding-top: 15px;
+    }
+
+    .box {
+        border-left: 1px solid #edf2f9;
+    }
+
+    .mgl0-mgr0 {
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+
+
+    .btn-primary:hover {
+        border-color: unset;
+    }
+
+    .btn-primary {
+        border-color: unset;
+    }
+
+    .c-choice {
+        margin: 0px;
+    }
+
+    label {
+        margin-bottom: 0px
+    }
+
+    .card {
+        border-radius: unset;
+    }
+
+    .loader_filter,
+    .loader_filter:before,
+    .loader_filter:after {
+        background: #ffffff;
+        -webkit-animation: load1 1s infinite ease-in-out;
+        animation: load1 1s infinite ease-in-out;
+        width: 1em;
+        height: 4em;
+    }
+
+    .loader_filter {
+        color: #f57a33;
+        text-indent: -9999em;
+        margin: 88px auto;
+        position: relative;
+        font-size: 20px;
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-animation-delay: -0.16s;
+        animation-delay: -0.16s;
+    }
+
+    .loader_filter:before,
+    .loader_filter:after {
+        position: absolute;
+        top: 0;
+        content: '';
+    }
+
+    .loader_filter:before {
+        left: -1.5em;
+        -webkit-animation-delay: -0.32s;
+        animation-delay: -0.32s;
+    }
+
+    .loader_filter:after {
+        left: 1.5em;
+    }
+
+    .modal-card .card-body {
+        max-height: none;
+        overflow-y: none;
+    }
+
+    @-webkit-keyframes load1 {
+
+        0%,
+        80%,
+        100% {
+            box-shadow: 0 0;
+            height: 4em;
+        }
+
+        40% {
+            box-shadow: 0 -2em;
+            height: 5em;
+        }
+    }
+
+    @keyframes load1 {
+
+        0%,
+        80%,
+        100% {
+            box-shadow: 0 0;
+            height: 4em;
+        }
+
+        40% {
+            box-shadow: 0 -2em;
+            height: 5em;
+        }
+    }
+
+    .display11:hover #display1 {
+        display: block;
+    }
+
+    .display11 #display1 {
+        display: none;
+    }
+</style>
+
+
+<input type="hidden" id="design" name="design" {% if temp.design %} value="{{ temp.design }}" {% endif %}>
+<input type="hidden" id="email_content" name="email_content" >
+<input type="hidden" id="temp_id" name="temp_id" {% if temp._id %} value="{{ temp._id }}" {% else %}value="add"{% endif %}>
+
+
+
+<div class="container-fluid">
+
+    <div class="row u-mb-large justify-content-center">
+        <div class="col-12 col-md-12 col-xl-12 justify-content-center">
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-end">
+
+                        <div class="col-auto">
+                            <a href="/templates_html" class="btn btn-lg btn-dark">
+                                {{ gettext("Dong_lai") }}
+                            </a>
+                        </div>
+                        <div class="col md-8">
+                            <input id="name_temp" type="text" class="form-control form-control-flush form-control-auto"
+                                placeholder='{{ gettext("Nhap_ten_template_...") }}' autofocus style="
+                                    padding: 20px;
+                                    margin: 0px;
+                                    font-size: 20px;" {% if temp.name_temp %} value="{{ temp.name_temp }}" {% endif %}>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-outline-primary d-block d-md-inline-block" id="view"
+                                data-target="#view_modal" data-toggle="modal" href="#">Xem trước</button>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-lg btn-danger" id="save_temp">{{ gettext("Luu")
+                                }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="steps">
+                <div id="step_1">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="header-body text-center" style="border-bottom:0px">
+                                <!-- Title -->
+                                <h1 class="header-title">
+                                    {{ gettext("Thiet_lap_noi_dung") }}
+                                </h1>
+                            </div>
+                            <hr>
+                            <form class="mt-1">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+                                <div class="form-group">
+                                    <div id="editor-container" style="width: 100%; height: 900px"></div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div aria-hidden="true" class="modal fade" id="view_modal" role="dialog" role="document" tabindex="-1"
+                style="display: none;">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Xem trước</h3>
+
+                            <a aria-label="Close" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">×</span>
+                            </a>
+                        </div>
+
+                        <div class="modal-body" id="modal_body">
+                            <div class="row justify-content-center">
+                                <div class="col"
+                                    style="justify-content: center; display: flex; align-items: center; height: 100%">
+                                    <div id="view_modal_body"></div>
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+
+<script src="/static/nextify/js/jquery.bootpag.min.js"></script>
+
+<script nonce="{{ csp_nonce() }}">
+
+    $(document).ready(function () {
+        var temp_id = $('#temp_id').val();
+
+        unlayer.init({ id: 'editor-container',
+        locale: 'vi-VN',
+                            translations: {
+                                'vi-VN': {
+                                    "buttons.add_column": "Thêm cột",
+                                    "buttons.add_content": "Thêm nội dung",
+                                    "buttons.add_display_condition": "Thêm điều kiện hiển thị",
+                                    "buttons.add_field": "Thêm trường",
+                                    "buttons.add_new_field": "Thêm trường mới",
+                                    "buttons.add_new_item": "Thêm ",
+                                    "buttons.add_row": "Thêm dòng",
+                                    "buttons.add_text": "Thêm văn bản",
+                                    "buttons.apply": "Áp dụng",
+                                    "buttons.apply_effects": "Áp dụng hiệu ứng",
+                                    "buttons.back": "Quay lại",
+                                    "buttons.background": "Màu nền",
+                                    "buttons.cancel": "Hủy",
+                                    "buttons.change": "Thay đổi",
+                                    "buttons.change_image": "Thay hình ảnh",
+                                    "buttons.close": "Đóng",
+                                    "buttons.comment": "Bình luận",
+                                    "buttons.corners": "Bo viền",
+                                    "buttons.crop": "Cắt",
+                                    "buttons.delete": "Xóa",
+                                    "buttons.deselect": "Hủy lựa chọn",
+                                    "buttons.desktop": "Máy tính",
+                                    "buttons.done": "Hoàn thành",
+                                    "buttons.draw": "Vẽ",
+                                    "buttons.drawing": "Đang vẽ",
+                                    "buttons.duplicate": "Nhân bản",
+                                    "buttons.duplication_disabled_usage_limit": "Bạn không thể tạo bản sao do có giới hạn sử dụng",
+                                    "buttons.edit": "Chỉnh sửa",
+                                    "buttons.filter": "Bộ lọc",
+                                    "buttons.frame": "Khung",
+                                    "buttons.history": "Lịch sử",
+                                    "buttons.merge": "Gộp",
+                                    "buttons.mobile": "Điện thoại",
+                                    "buttons.more_options": "Thêm tùy chọn",
+                                    "buttons.open": "Mở",
+                                    "buttons.remove_column": "Xóa cột",
+                                    "buttons.reset": "Đặt lại",
+                                    "buttons.reset_value": "Đặt lại Giá trị",
+                                    "buttons.resize": "Đổi kích thước",
+                                    "buttons.save": "Lưu",
+                                    "buttons.select": "Chọn",
+                                    "buttons.shape": "Hình",
+                                    "buttons.shapes": "Hình",
+                                    "buttons.show_fewer_options": "Ẩn các tùy chọn thêm",
+                                    "buttons.show_more_options": "Tùy chọn thêm",
+                                    "buttons.sticker": "Nhãn dán",
+                                    "buttons.stickers": "Nhãn dán",
+                                    "buttons.tablet": "Máy tính bảng",
+                                    "buttons.transform": "Xoay",
+                                    "buttons.update_field": "Cập nhật",
+                                    "buttons.upload": "Tải lên",
+                                    "buttons.upload_image": "Tải lên hình ảnh",
+                                    "buttons.zoom": "Zoom",
+                                    "collaboration.add_comment": "Thêm bình luận",
+                                    "collaboration.empty.subtitle": "Chủ đề của bạn ở đây",
+                                    "collaboration.empty.title": "Cộng tác nhóm trở nên dễ dàng!",
+                                    "collaboration.empty_filtered.subtitle": "phù hợp với bộ lọc của bạn",
+                                    "collaboration.empty_filtered.title": "Không tìm thấy chủ đề",
+                                    "collaboration.exit_mode": "Đóng bình luận",
+                                    "collaboration.filters.all": "Tất cả",
+                                    "collaboration.filters.only_yours": "Chỉ của bạn",
+                                    "collaboration.filters.resolved": "Đã giải quyết",
+                                    "collaboration.follow_docs_to_setup": "Làm theo tài liệu để thiết lập cộng tác nhóm",
+                                    "collaboration.leave_repply": "Để lại câu trả lời",
+                                    "collaboration.login_to_collaborate": "Bạn cần đăng nhập để có thể cộng tác",
+                                    "collaboration.panel.threads": "Chủ đề",
+                                    "collaboration.replies.n": "{n} câu trả lời",
+                                    "collaboration.replies.none": "Không có câu trả lời",
+                                    "collaboration.resolve": "Giải quyết",
+                                    "collaboration.resolved": "Đã giải quyết",
+                                    "collaboration.types.feedback": "Phản hồi",
+                                    "collaboration.types.idea": "Ý kiến",
+                                    "collaboration.types.question": "Câu hỏi",
+                                    "collaboration.types.urgent": "Khẩn cấp",
+                                    "colors.black": "Đen",
+                                    "colors.ruby": "Ruby",
+                                    "colors.white": "Trắng",
+                                    "content_tools.button": "Nút",
+                                    "content_tools.columns": "Cột",
+                                    "content_tools.divider": "Vạch ngăn",
+                                    "content_tools.form": "Form",
+                                    "content_tools.heading": "Tiêu đề",
+                                    "content_tools.html": "HTML",
+                                    "content_tools.image": "Hình ảnh",
+                                    "content_tools.menu": "Danh mục",
+                                    "content_tools.social": "Social",
+                                    "content_tools.text": "Văn bản",
+                                    "content_tools.timer": "Timer",
+                                    "content_tools.video": "Video",
+                                    "editor.action_type.label": "Loại hành động",
+                                    "editor.align.label": "Căn lề",
+                                    "editor.alignment.label": "Căn lề",
+                                    "editor.all_sides.label": "Áp dụng cho tất cả",
+                                    "editor.alternate_text.label": "Văn bản thay thế",
+                                    "editor.anchor.section_already_exists": "Đã tồn tại một mục khác trên trang trùng tên này",
+                                    "editor.background_color.label": "Màu nền",
+                                    "editor.background_image.center": "Giữa",
+                                    "editor.background_image.cover_mode": "Chế độ hiển thị",
+                                    "editor.background_image.full_width": "Chiều rộng tối đa",
+                                    "editor.background_image.label": "Ảnh nền",
+                                    "editor.background_image.repeat": "Lặp lại",
+                                    "editor.border.dashed": "Gạch ngang",
+                                    "editor.border.dotted": "Chấm",
+                                    "editor.border.label": "Khung viền",
+                                    "editor.border.solid": "Nét liền",
+                                    "editor.bottom.label": "Dưới",
+                                    "editor.bottom_left.label": "Góc trái bên dưới",
+                                    "editor.bottom_right.label": "Góc phải bên dưới",
+                                    "editor.button_link.label": "Nút liên kết",
+                                    "editor.color.label": "Màu chữ",
+                                    "editor.colors.label": "Màu",
+                                    "editor.columns_background.label": "Màu cột",
+                                    "editor.container_padding.label": "Phần bao nội dung",
+                                    "editor.content_alignment.label": "Căn lề",
+                                    "editor.content_background_color.label": "Màu nền nội dung",
+                                    "editor.content_width.label": "Chiều rộng",
+                                    "editor.digits_color.label": "Màu số",
+                                    "editor.digits_font.label": "Font số",
+                                    "editor.digits_font_size.label": "Kích thước số",
+                                    "editor.do_not_stack_on_mobile.label": "Không đè lên trên điện thoại",
+                                    "editor.end_time.label": "Thời gian kết thúc",
+                                    "editor.fields.label": "Các trường",
+                                    "editor.font_family.label": "Font chữ",
+                                    "editor.font_size.label": "Cỡ chữ",
+                                    "editor.form.custom": "Tùy chỉnh",
+                                    "editor.form.method": "Method",
+                                    "editor.form_alignment.label": "Căn lề",
+                                    "editor.form_width.label": "Chiều rộng",
+                                    "editor.full_width.label": "Chiều rộng tối đa",
+                                    "editor.heading_type.label": "Kiểu tiêu đề",
+                                    "editor.height.label": "Chiều cao",
+                                    "editor.hide_on_desktop.label": "Ẩn trên máy tính",
+                                    "editor.hide_on_mobile.label": "Ẩn trên điện thoại",
+                                    "editor.hover_background.label": "Màu nền khi di chuột",
+                                    "editor.hover_color.label": "Mà khi di chuột",
+                                    "editor.hover_text.label": "Màu văn bản khi di chuột",
+                                    "editor.hover_underline.label": "Gạch chân khi di chuột",
+                                    "editor.icon_spacing.label": "Khoảng cách Icon",
+                                    "editor.icon_type.label": "Loại Icon",
+                                    "editor.image.added_drawing": "Đã thêm: bản vẽ",
+                                    "editor.image.added_frame": "Đã thêm: khung",
+                                    "editor.image.added_overlay_image": "Đã thêm: lớp phủ",
+                                    "editor.image.added_shape": "Đã thêm: hình",
+                                    "editor.image.added_sticker": "Đã thêm: nhãn dán",
+                                    "editor.image.added_text": "Đã thêm: văn bản",
+                                    "editor.image.applied_crop": "Đã áp dụng: Cắt ảnh",
+                                    "editor.image.applied_filter": "Đã áp dụng: bộ lọc",
+                                    "editor.image.applied_resize": "Đã áp dụng: thay đổi kích thước",
+                                    "editor.image.applied_rounded_corners": "Đã áp dụng: bo tròn góc",
+                                    "editor.image.applied_transform": "Đã áp dụng: xoay ảnh",
+                                    "editor.image.auto": "Tự động",
+                                    "editor.image.auto_width": "Chiều rộng tự động",
+                                    "editor.image.auto_width_switch_off": "Tắt chiều rộng tự động để thay đổi kích thước hình ảnh theo cách thủ công",
+                                    "editor.image.brush_color": "Màu bút",
+                                    "editor.image.brush_size": "Kích thước bút",
+                                    "editor.image.brush_type": "Kiểu bút",
+                                    "editor.image.canvas_background": "Nền Canvas",
+                                    "editor.image.changed_background": "Đã đổi: nền",
+                                    "editor.image.changed_background_image": "Đã đổi: Hình nền",
+                                    "editor.image.changed_style": "Đã đổi: giao diện",
+                                    "editor.image.drop_upload": "Kéo thả hình ảnh hoặc chọn một tệp tin",
+                                    "editor.image.full_width_mobile": "Chiều rộng đầy đủ trên điện thoại",
+                                    "editor.image.image_options": "Cài đặt hình ảnh",
+                                    "editor.image.image_url": "URL Hình ảnh",
+                                    "editor.image.initial": "Khởi tạo",
+                                    "editor.image.label": "Hình ảnh",
+                                    "editor.image.loaded_state": "Đã tải: trạng thái",
+                                    "editor.image.maintain_aspect_ratio": "Duy trì tỷ lệ khung hình",
+                                    "editor.image.main_image": "Hình ảnh chính",
+                                    "editor.image.objects_merged": "Đối tượng: đã gộp",
+                                    "editor.image.offset_x": "Offset X",
+                                    "editor.image.offset_y": "Offset Y",
+                                    "editor.image.outline_width": "Chiều rộng viền",
+                                    "editor.image.uploading": "Đang tải lên",
+                                    "editor.image.upload_error": "Đã xảy ra lỗi khi tải lên hình ảnh. Hãy chắc chắn rằng ảnh của bạn có dung lượng nhỏ hơn 10 MB.",
+                                    "editor.image.use_percentages": "Sử dụng phần trăm",
+                                    "editor.image_link.label": "Đường dẫn ảnh",
+                                    "editor.inherit_body_styles.label": "Giao diện mặc định",
+                                    "editor.labels.web": "Web",
+                                    "editor.labels_color.label": "Màu nhãn",
+                                    "editor.labels_font.label": "Font nhãn",
+                                    "editor.labels_font_size.label": "Kích thước nhãn",
+                                    "editor.layout.label": "Bố cục",
+                                    "editor.left.label": "Trái",
+                                    "editor.line.label": "Dòng",
+                                    "editor.line_height.label": "Chiều cao giữa các dòng",
+                                    "editor.link.body": "Thân",
+                                    "editor.link.call_phone": "Gọi điện",
+                                    "editor.link.mailto": "Gửi mail đến",
+                                    "editor.link.new_tab": "Mở tab mới",
+                                    "editor.link.no_page_sections_found": "Không tìm thấy mục trên trang nào",
+                                    "editor.link.onclick_unsupported": "Không hỗ trợ nhấp vào",
+                                    "editor.link.open_website": "Mở trang Web",
+                                    "editor.link.page_section": "Đi tới Mục trên trang",
+                                    "editor.link.phone": "Điện thoại",
+                                    "editor.link.same_tab": "Tab hiện tại",
+                                    "editor.link.send_email": "Gửi Email",
+                                    "editor.link.send_sms": "Gửi SMS",
+                                    "editor.link.subject": "Chủ đề",
+                                    "editor.link.target": "Đích đến",
+                                    "editor.link.url": "URL",
+                                    "editor.link_color.label": "Màu đường dẫn",
+                                    "editor.margin.label": "Khoảng cách lề",
+                                    "editor.mobile.description": "Bạn hiện đang chỉnh sửa cho thiết bị Di động. Chuyển sang Máy tính để các tùy chỉnh hiển thị chính xác.",
+                                    "editor.offline_mode_is_enabled": "Chế độ ngoại tuyến được bật",
+                                    "editor.padding.label": "Khoảng trống giữa nội dung",
+                                    "editor.placeholder.text": "Chưa có nội dung, hãy kéo các khối tại tab bên phải",
+                                    "editor.placeholder.text.left": "Không có nội dung ở đây. Hãy kéo nội dung từ bên trái.",
+                                    "editor.play_icon_color.label": "Màu Icon Phát",
+                                    "editor.play_icon_size.label": "Kích thước Icon Phát",
+                                    "editor.play_icon_type.label": "Kiểu Icon Phát",
+                                    "editor.preheader_text.description": "Tiêu đề trước là văn bản tóm tắt ngắn sau dòng chủ đề khi xem email từ hộp thư đến.",
+                                    "editor.preheader_text.label": "Văn bản đầu trang",
+                                    "editor.right.label": "Phải",
+                                    "editor.rounded_border.label": "Bo góc",
+                                    "editor.section_name.description": "Tên mục được sử dụng để liên kết trong một trang. Nó giống như một điểm tựa cho các nút hoặc liên kết.",
+                                    "editor.section_name.label": "Tên mục",
+                                    "editor.separator.label": "Dấu phân cách",
+                                    "editor.social_links.label": "Mạng xã hội",
+                                    "editor.space_between_fields.label": "Khoảng cách giữa các trường",
+                                    "editor.submit_action.label": "Hành động submit",
+                                    "editor.text.label": "Văn bản",
+                                    "editor.text_align.label": "Căn chỉnh văn bản",
+                                    "editor.text_color.label": "Màu chữ",
+                                    "editor.top.label": "Trên",
+                                    "editor.top_left.label": "Góc trái bên trên",
+                                    "editor.top_right.label": "Góc phải bên trên",
+                                    "editor.underline.label": "Gạch chân",
+                                    "editor.video.arrow_only": "Chỉ gồm mũi tên",
+                                    "editor.video.video_camera": "Video Camera",
+                                    "editor.video_url.description": "Thêm URL YouTube hoặc Vimeo để tự động tạo hình ảnh xem trước. Hình ảnh sẽ liên kết đến URL được cung cấp.",
+                                    "editor.video_url.label": "URL Video",
+                                    "editor.width.label": "Chiều rộng",
+                                    "editors_panel.title.content": "Nội dung",
+                                    "editors_panel.title.contents": "Nội dung",
+                                    "editors_panel.title.rows": "Dòng",
+                                    "fields.birthday": "Sinh nhật",
+                                    "fields.company": "Công ty",
+                                    "fields.name": "Tên",
+                                    "fields.phone_number": "Số điện thoại",
+                                    "fields.website": "Website",
+                                    "fields.zip_code": "Zip Code",
+                                    "inbox_preview.design_updated": "Thiết kế đã được cập nhật sau lần tạo bản xem trước cuối cùng của bạn",
+                                    "labels.align_text": "Căn chỉnh văn bản",
+                                    "labels.blur": "Làm mờ",
+                                    "labels.category": "Danh mục",
+                                    "labels.color_picker": "Chọn màu",
+                                    "labels.comments": "Bình luận",
+                                    "labels.desktop_preview": "Xem trước trên máy tính",
+                                    "labels.device_override": "Thiết bị này đang ghi đè các giá trị",
+                                    "labels.display_conditions": "Điều kiện hiển thị",
+                                    "labels.editor": "Trình chỉnh sửa",
+                                    "labels.font": "Font",
+                                    "labels.format_text": "Định dạng văn bản",
+                                    "labels.google_fonts": "Google Fonts",
+                                    "labels.gradient": "Gradient",
+                                    "labels.hide": "Ẩn",
+                                    "labels.horizontal": "Ngang",
+                                    "labels.language": "Ngôn ngữ",
+                                    "labels.loading": "Đang tải",
+                                    "labels.loading_images": "Đang tải hình ảnh",
+                                    "labels.load_more": "Xem thêm",
+                                    "labels.menu.links": "Liên kết bảng chọn",
+                                    "labels.merge_tags": "Gộp nhãn",
+                                    "labels.mobile_preview": "Xem trước trên điện thoại",
+                                    "labels.new": "Mới",
+                                    "labels.no_images": "Không có hình ảnh",
+                                    "labels.no_results": "Không có kết quả",
+                                    "labels.objects": "Đối tượng",
+                                    "labels.outline": "Viền ngoài",
+                                    "labels.page": "Trang",
+                                    "labels.radius": "Bo viền",
+                                    "labels.redo": "Khôi phục",
+                                    "labels.safe_search": "Tìm kiếm an toàn",
+                                    "labels.search": "Tìm kiếm",
+                                    "labels.search_images": "Tìm kiếm hàng triệu hình ảnh",
+                                    "labels.section": "Mục",
+                                    "labels.shadow": "Đổ bóng",
+                                    "labels.size": "Kích thước",
+                                    "labels.something_went_wrong": "Đã xảy ra sự cố",
+                                    "labels.special_links": "Liên kết đặc biệt",
+                                    "labels.stock_photos_by": "Bản quyền thuộc về Unsplash, Pexels, Pixabay.",
+                                    "labels.stock_photos_license": "All images licensed under Creative Commons Zero.",
+                                    "labels.stop": "Dừng lại",
+                                    "labels.tags": "Nhãn",
+                                    "labels.texture": "Texture",
+                                    "labels.text_style": "Kiểu chữ",
+                                    "labels.timezone": "Timezone",
+                                    "labels.undo": "Hoàn tác",
+                                    "labels.vertical": "Dọc",
+                                    "modals.category.invalid": "Tên danh mục không hợp lệ",
+                                    "modals.category.placeholder": "Tên danh mục",
+                                    "modals.delete.columns": "Bạn sẽ mất một số cột. Bạn có chắc chắn?",
+                                    "modals.delete.confirmation": "Bạn có chắc chắn muốn xóa, hành động này không thể hoàn tác?",
+                                    "modals.delete.title": "Xóa",
+                                    "modals.display_conditions.title": "Chọn điều kiện hiển thị",
+                                    "modals.preview.inbox_preview.button.generate_previews": "Tạo bản xem trước",
+                                    "modals.preview.inbox_preview.label": "Xem trước Hộp thư đến",
+                                    "modals.preview.inbox_preview.label.generating_again": "Tạo lại",
+                                    "modals.preview.inbox_preview.label.generating_previews": "Đang tạo bản xem trước",
+                                    "modals.preview.inbox_preview.text.generate_previews": "Hãy kiểm tra mẫu của bạn trông như thế nào trong hộp thư đến của các thiết bị và dịch vụ email khác nhau.",
+                                    "modals.preview.title": "Xem trước",
+                                    "modals.save_block.title": "Save Block",
+                                    "modals.tags.description": "Thẻ được sử dụng để tìm kiếm. Các thẻ sẽ được phân cách bởi dấu phẩy.",
+                                    "modals.tags.placeholder": "tag1, tag2",
+                                    "option_groups.action.title": "Hành động",
+                                    "option_groups.all.title": "Tất cả",
+                                    "option_groups.blank.title": "Trống",
+                                    "option_groups.button.title": "Nút",
+                                    "option_groups.button_options.title": "Tùy chọn về Nút",
+                                    "option_groups.colors.title": "Màu sắc",
+                                    "option_groups.columns.title": "Cột",
+                                    "option_groups.column_number.title": "Cột {number}",
+                                    "option_groups.column_properties.title": "Thuộc tính cột",
+                                    "option_groups.countdown.title": "Đếm ngược",
+                                    "option_groups.default.title": "Cài đặt chung",
+                                    "option_groups.display_condition.title": "Điều kiện hiển thị",
+                                    "option_groups.email_settings.title": "Cài đặt Email",
+                                    "option_groups.fields.title": "Trường",
+                                    "option_groups.form.title": "Form",
+                                    "option_groups.html.title": "HTML",
+                                    "option_groups.icons.title": "Icons",
+                                    "option_groups.image.title": "Hình ảnh",
+                                    "option_groups.labels.title": "Nhãn",
+                                    "option_groups.last_saved.title": "Đã lưu lại",
+                                    "option_groups.layout.title": "Bố cục",
+                                    "option_groups.line.title": "Hàng",
+                                    "option_groups.link.title": "Đường dẫn",
+                                    "option_groups.links.title": "Đường dẫn",
+                                    "option_groups.menu_items.title": "Mục lục",
+                                    "option_groups.mobile.title": "Điện thoại",
+                                    "option_groups.responsive_design.title": "Tùy chỉnh trên thiết bị",
+                                    "option_groups.row_properties.title": "Thuộc tính dòng",
+                                    "option_groups.size.title": "Kích thước",
+                                    "option_groups.spacing.title": "Khoảng cách",
+                                    "option_groups.styles.title": "Giao diện",
+                                    "option_groups.text.title": "Văn bản",
+                                    "shapes.circle": "Hình tròn",
+                                    "shapes.rectangle": "Hình tam giác",
+                                    "shapes.round": "Hình vuông bo góc",
+                                    "shapes.square": "Hình vuông",
+                                    "sizes.large": "Lớn",
+                                    "sizes.largest": "Rất lớn",
+                                    "sizes.medium": "Vừa",
+                                    "sizes.small": "Nhỏ",
+                                    "sizes.smallest": "Rất nhỏ",
+                                    "tabs.audit.empty.description": "Kiểm kê là nơi bạn có thể thấy mọi vấn đề trong thiết kế và nội dung của mình.",
+                                    "tabs.audit.empty.subtitle": "Ổn cả rồi!",
+                                    "tabs.audit.empty.title": "HIện không có vấn đề gì",
+                                    "tabs.audit.missing_image_src": "Còn thiếu URL ảnh",
+                                    "tabs.audit.missing_title": "Còn thiếu tiêu đề kiểm kê",
+                                    "tabs.audit.missing_tool_name": "Không tìm thấy tên công cụ",
+                                    "tabs.audit.rules.button.empty_links.description": "Nếu thiếu liên kết, các nút sẽ không hoạt động khi người dùng bấm vào nó. Hãy thêm liên kết cho các nút sau.",
+                                    "tabs.audit.rules.button.empty_links.title": "Liên kết cho nút đang trống",
+                                    "tabs.audit.rules.image.alt_text.description": "Nếu thiếu văn bản thay thế, những người dùng phần mềm đọc màn hình không thể tiếp cận thông tin của hình ảnh. Hãy viết một văn bản thay thế cho những ảnh sau.",
+                                    "tabs.audit.rules.image.alt_text.title": "Còn thiếu văn bản thay thế",
+                                    "tabs.audit.rules.image.url.description": "Nếu thiếu URL ảnh, những hình ảnh sau sẽ không hiện lên được. Hãy đăng một ảnh cho những ảnh sau.",
+                                    "tabs.audit.rules.image.url.title": "Còn thiếu hình ảnh",
+                                    "tabs.audit.rules.menu.empty_links.description": "Nếu thiếu liên kết, bảng chọn sẽ không hoạt động khi người dùng bấm vào nó. Hãy thêm liên kết cho bảng chọn sau.",
+                                    "tabs.audit.rules.menu.empty_links.title": "Liên kết cho bảng chọn đang trống",
+                                    "tabs.audit.take_me_to_fix": "Đưa tôi tới sửa",
+                                    "tools.form.field_label": "Nhãn",
+                                    "tools.form.field_name": "Tên trường",
+                                    "tools.form.field_type": "Loại trường",
+                                    "tools.form.field_value": "Giá trị",
+                                    "tools.form.new_field": "Thêm trường",
+                                    "tools.form.options_one_per_line": "Options (One Per Line)",
+                                    "tools.form.placeholder_text": "Placeholder",
+                                    "tools.form.required_field": "Bắt buộc",
+                                    "tools.form.show_label": "Hiển thị nhãn",
+                                    "tools.form.update_field": "Cập nhật trường",
+                                    "tools.social.click_icons_to_add": "Click vào icon muốn thêm",
+                                    "tools.tabs.audit": "Kiểm kê",
+                                    "tools.tabs.blocks": "Khối",
+                                    "tools.tabs.body": "Thân trang",
+                                    "tools.tabs.content": "Nội dung",
+                                    "tools.tabs.images": "Hình ảnh",
+                                    "tools.tabs.row": "Dòng",
+                                    "tools.tabs.uploads": "Tải lên",
+                                    "tools.text.personalize": "Cá nhân hóa",
+                                    "tools.tooltip.drag_on_canvas": "Kéo trên nền vẽ canvas",
+                                    "tools.tooltip.got_it": "Đã hiểu"
+                                }
+                            } });
+        var design = $("#design").val();
+        if (design && design.length > 0) {
+
+            var ex_design = JSON.parse(design);
+            unlayer.loadDesign(ex_design);
+
+        } else {
+
+            var design = {
+                "body": {
+                    "rows": [{
+                        "cells": [1],
+                        "columns": [{
+                            "contents": [{
+                                "type": "image",
+                                "values": {
+                                    "maxWidth": "100%",
+                                    "src": {
+                                        "url": "https://files.nextify.vn/2/24466a634656",
+                                        "width": 266,
+                                        "height": 62
+                                    },
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "selectable": true,
+                                    "action": {
+                                        "url": "",
+                                        "target": ""
+                                    },
+                                    "altText": "Image",
+                                    "fullWidth": false,
+                                    "textAlign": "center"
+                                }
+                            }]
+                        }],
+                        "values": {
+                            "backgroundColor": "rgba(255,255,255,0)",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": false,
+                                "cover": false
+                            },
+                            "columnsBackgroundColor": "rgba(255,255,255,0)",
+                            "selectable": true,
+                            "draggable": true,
+                            "deletable": true
+                        }
+                    }, {
+                        "cells": [1],
+                        "columns": [{
+                            "contents": [{
+                                "type": "text",
+                                "values": {
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "color": "#000",
+                                    "textAlign": "center",
+                                    "lineHeight": "100%",
+                                    "text": "<div><span style=\"color: #e63757; font-family: Pacifico, cursive; font-size: 24px; text-align: center; line-height: 69.6px;\">&nbsp;Merry Christmas</span></div>"
+                                }
+                        
+                            }]
+                        }],
+                        "values": {
+                            "backgroundColor": "rgba(255,255,255,0)",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": false,
+                                "cover": false
+                            },
+                            "columnsBackgroundColor": "rgba(255,255,255,0)",
+                            "selectable": true,
+                            "draggable": true,
+                            "deletable": true
+                        }
+
+                    
+                    }],
+                    "values": {
+                        "backgroundColor": "#ffffff",
+                        "backgroundImage": {
+                            "url": "",
+                            "fullWidth": true,
+                            "repeat": false,
+                            "center": true,
+                            "cover": false
+                        },
+                        "contentWidth": "600px",
+                        "fontFamily": {
+                            "label": "Montserrat",
+                            "value": "'Montserrat',sans-serif",
+                            "type": "google",
+                            "weights": "400,700"
+                        }
+                    }
+                }
+            
+            };
+
+        unlayer.loadDesign(design);
+        }
+
+        $("#view").click(function () {
+            unlayer.exportHtml(function (data) {
+                var json = data.design; // design json
+                var html = data.html; // final html
+                var url = ""
+                $("#design").val(JSON.stringify(json));
+                $("#email_content").val(html);
+                bioMp(document.getElementById('view_modal_body'), {
+                    url: url,
+                    view: 'front',
+                    image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                    height: 618,
+                    width: 308
+                });
+            });
+
+        })
+
+        $("#save_temp").click(function () {
+            unlayer.exportHtml(function (data) {
+                var json_design = data.design;
+                var email_content = data.html; // final html
+                var name_temp = $("#name_temp").val();
+                if( name_temp.length == 0){
+                    swal('{{ gettext("Chua_dat_ten_temp") }}', '', 'error');
+                    return false;
+                }
+                data_save = {
+                    'name_temp' : name_temp,
+                    'email_content': email_content,
+                    'design' : JSON.stringify(json_design)
+                }
+                $.ajax({
+                    url: "/templates_html/" + temp_id,
+                    data: data_save,
+                    type: "POST",
+                    success: function (data) {
+                        swal('{{ gettext("Thanh_cong") }}', '', 'success');
+                        var url = "/templates_html" 
+                        location.href = url;
+                    },
+                    error: function () {
+                        swal('{{ gettext("Co_loi_xay_ra_xin_thu_lai_sau") }}', '', 'error');
+                        return false;
+                    }
+                });
+            });
+            
+
+
+        })
+
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,29 @@
+<tbody class="list">
+    {% for cus in customers %}
+    <tr>
+        <td style="width: 50px">
+            <a href="#" class="avatar">
+                {% if cus.user.avatar and cus.user.avatar|length > 0 %}
+                <img class="avatar-img rounded-circle" src="{{ cus.user.avatar.replace('http:', 'https:') }}" />
+                {% else %}
+                {%set avatar = cus.user|human_avatar%}
+                <img class="avatar-img rounded-circle" src="{{ avatar }}" />
+                {% endif %}
+            </a>
+        </td>
+        <td class="orders-product">
+            <div class="contact">
+                {% if is_email %}
+                    {{ cus.user.email }}
+                {% endif %}
+                {% if is_sms %}
+                    {{ cus.user.phone }}
+                {% endif %}
+                {% if is_zalo %}
+                    {{ cus.user.phone }}
+                {% endif %}
+            </div>
+        </td>
+    </tr>
+    {%endfor%}
+</tbody>

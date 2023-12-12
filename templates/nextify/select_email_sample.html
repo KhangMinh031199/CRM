@@ -1,0 +1,112 @@
+{% extends 'nextify/base.html' %}
+
+{% block main_content %}
+
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            Email
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                            {{ gettext("Mau_Email_gui_khach_hang") }}
+                        </h1>
+
+                    </div>
+                    <div class="col-auto">
+
+{#                        <a href="#" id="save_email_html" class="btn btn-primary  mb-2">#}
+{#                            <i class="fa fa-plus"></i> Thêm mới#}
+{#                        </a>#}
+                    </div>
+
+                </div> <!-- / .row -->
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+
+        <div class="row u-mb-large justify-content-center">
+        <div class="col-12 col-md-10 col-xl-8 justify-content-center" style="text-align: center;margin-bottom: 30px; margin-top: 30px">
+
+                    <!-- Image -->
+                    <img src="/static/nextify/img/happiness.png" alt="..." class="img-fluid mt-n5 mb-4" style="max-width: 272px;">
+
+                    <!-- Title -->
+                    <h2>
+                      {{ gettext("Chon_mau_Email_tu_cac_mau_san_co_duoi_day,_sau_do_tiep_tuc_de_tao_loai_email_rieng_cua_ban") }}.
+                    </h2>
+
+                    <!-- Content -->
+                    <p class="text-muted">
+                      {{ gettext("Cac_mau_tuy_chon_duoi_day_deu_mien_phi,_chung_toi_luon_cap_nhat_mau_Email_moi_nhat_hang_tuan._Neu_ban_muon_su_dung_mau_email_rieng,_vui_long_xem_huong_dan_Import_Email_hoac_lien_he_ho_tro") }}.
+                    </p>
+
+
+
+                  </div>
+            <div class="col-lg-12">
+                <div class="row listAlias">
+
+                    {% for email_sampe in list_email_templates %}
+                    <div class="col-12 col-md-6 col-xl-4">
+
+                        <!-- Card -->
+                        <div class="card">
+                            <a href="/email_templates/{{ email_sampe._id }}/add">
+                                <img src="//files.nextify.vn/{{ email_sampe.thumb }}" alt="..." class="card-img-top" style="height: 450px">
+                            </a>
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col">
+
+                                        <!-- Title -->
+                                        <h4 class="card-title mb-2 name">
+                                            <a href="/email_templates/{{ email_sampe._id }}/add">{{ email_sampe.name }}</a>
+                                        </h4>
+
+                                        <!-- Subtitle -->
+                                        <p class="card-text small text-muted">
+                                            {{ gettext("Cap_nhat") }} {{ email_sampe.when|human_time }}
+                                        </p>
+
+                                    </div>
+
+                                </div>
+                                <hr>
+                                <div class="row" style="float: right">
+                                    <div class="col-auto">
+                                             <a href="/email_templates/{{ email_sampe._id }}/add" class="btn btn-primary  mb-2">
+                                                <i class="fa fa-send"></i> {{ gettext("Chon_mau_nay") }}
+                                            </a>
+                                    </div>
+                                </div>
+                                <!-- / .row -->
+
+
+                            </div> <!-- / .card-body -->
+                        </div>
+
+                    </div>
+
+                        {% endfor %}
+
+                </div>
+
+                    <nav class="c-pagination u-justify-center">
+                        {% if pagination %}
+                            {{ pagination.links }}
+                        {% endif %}
+                    </nav>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

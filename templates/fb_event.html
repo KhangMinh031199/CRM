@@ -1,0 +1,23 @@
+{% extends "welcome.html"%}
+{% block container %} 
+<input type="hidden" id="facebook_page" value="{{shop.facebook_page}}"/>
+<form id="facebook_form" style="display: none" action="/fb_register" method="POST">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+    <input type="hidden" id="user_id" name="user_id" value="{{ user_id }}" />
+    <input type="hidden" id="email" name="email" />
+    <input type="hidden" id="birthday" name="birthday" />
+    <input type="hidden" id="fb_id" name="fb_id" />
+    <input type="hidden" id="name" name="name" />
+    <input type="hidden" id="age_range" name="age_range" />
+    <input type="hidden" id="home_town" name="home_town" />
+    <input type="hidden" id="relationship_status" name="relationship_status" />
+    <input type="hidden" id="gender" name="gender" />
+</form>
+ {% endblock %}
+
+{% block welcome_script %} 
+
+{% if event_type == "share" %}
+<script type="text/javascript" src="/static/scripts/share_fb.js"></script> {% elif event_type=="check_in" %}
+<script type="text/javascript" src="/static/scripts/check_in_fb.js"></script> {% elif event_type == "connect" %}
+<script type="text/javascript" src="/static/scripts/connect_fb_event.js"></script> {% endif %} {% endblock %}

@@ -1,0 +1,183 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">
+            {{ gettext("Ung_dung") }}
+          </h6>
+
+          <!-- Title -->
+          <h1 class="header-title">
+            ZaloPay
+          </h1>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row align-items-center">
+    <div class="col-12 col-md-4 offset-xl-1 offset-md-1 order-md-2 mb-5 mb-md-0">
+
+      <!-- Image -->
+      <div class="text-center">
+        <img src="/static/nextify/img/happiness.svg" alt="..." class="img-fluid">
+      </div>
+
+    </div>
+
+    <div class="col-12 col-md-5 col-xl-6 order-md-1 my-5">
+      <div class="card u-p-medium">
+        <div class="row u-justify-center" style="margin-bottom: 20px;">
+          <h1 class="header-title ml-3">
+            {{ gettext("Dang_ky_ZaloPay") }}
+          </h1>
+        </div>
+        <hr>
+        <div class="row u-justify-center">
+          <div class="col-12">
+            <!-- Heading -->
+
+            <!-- Form -->
+            <form id="synch_anvui" method="POST" action="/apps/zalo_pay">
+
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+              <!-- Email address -->
+
+              <div class="form-group">
+                <label class="c-field__label"><span>{{ gettext("Ten_doanh_nghiep") }}:</span> (<span>
+                    <font color="red">*</font>
+                  </span> {{ gettext("bat_buoc") }}) </label>
+                <input type="text" class="form-control" id="company_name"
+                  value="{% if check_app and check_app.setting and check_app.setting.company_name_zalo_pay|length > 0 %}{{ check_app.setting.company_name_zalo_pay }}{% endif %}"
+                  name="company_name" />
+
+              </div>
+              <div class="form-group">
+                <label class="c-field__label"><span>{{ gettext("Thuong_hieu") }}:</span> (<span>
+                    <font color="red">*</font>
+                  </span> {{ gettext("bat_buoc") }}) </label>
+                <input type="text" class="form-control" id="brand_name"
+                  value="{% if check_app and check_app.setting and check_app.setting.brand_name_zalo_pay|length > 0 %}{{ check_app.setting.brand_name_zalo_pay}}{% endif %}"
+                  name="brand_name" />
+
+              </div>
+              <div class="form-group">
+                <label class="c-field__label"><span>{{ gettext("Nganh_nghe_kinh_doanh") }}:</span> (<span>
+                    <font color="red">*</font>
+                  </span> {{ gettext("bat_buoc") }}) </label>
+                <input type="text" class="form-control" id="bussiness_type"
+                  value="{% if check_app and check_app.setting and check_app.setting.bussiness_type_zalo_pay|length > 0 %}{{ check_app.setting.bussiness_type_zalo_pay}}{% endif %}"
+                  name="bussiness_type" />
+
+              </div>
+              <div class="form-group">
+                <label class="c-field__label"><span>{{ gettext("So_dien_thoai") }}:</span> (<span>
+                    <font color="red">*</font>
+                  </span> {{ gettext("bat_buoc") }}) </label>
+                <input type="text" class="form-control" id="phone_number"
+                  value="{% if check_app and check_app.setting and check_app.setting.phone_number_zalo_pay|length > 0 %}{{ check_app.setting.phone_number_zalo_pay}}{% endif %}"
+                  name="phone_number" />
+
+              </div>
+              <div class="form-group">
+                <label class="c-field__label"><span>Email:</span> (<span>
+                  <font color="red">*</font>
+                </span> {{ gettext("bat_buoc") }}) </label>
+                <input type="text" class="form-control" id="email"
+                  value="{% if check_app and check_app.setting and check_app.setting.email_zalo_pay|length > 0 %}{{ check_app.setting.email_zalo_pay}}{% endif %}"
+                  name="email" />
+
+              </div>
+
+
+            </form>
+
+            <div class="col-6" style="float:right">
+              <button class="btn btn-lg btn-block btn-primary" id="save_info_API">
+                {{ gettext("Dang_ky") }}
+
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+</div>
+</div> <!-- / .container -->
+<input type="hidden" value="{{ check_app.status }}" id="is_register">
+
+{% endblock %}
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+
+  $(document).ready(function () {
+    window.onload = function () {
+      var input = document.getElementById("company_name").focus();
+    }
+
+    $("#save_info_API").click(function () {
+      var status = $("#is_register").val()
+      if (status.length > 0 && (status == "True" || status == true)) {
+        swal('{{ gettext("Da_dang_ky,_khong_the_tiep_tuc_dang_ky_moi") }}', "", "error")
+        return false
+      }
+      var company_name = $("#company_name").val()
+      var brand_name = $("#brand_name").val()
+      var bussiness_type = $("#bussiness_type").val()
+      var phone_number = $("#phone_number").val()
+      var email = $("#email").val()
+      if (company_name.length == 0) {
+        swal('{{ gettext("Chua_nhap_ten_doanh_nghiep") }}', '', 'error')
+      }
+      else if (brand_name.length == 0) {
+        swal('{{ gettext("Chua_nhap_thuong_hieu") }}', '', 'error')
+      }
+      else if (bussiness_type.length == 0) {
+        swal('{{ gettext("Chua_nhap_nganh_nghe_kinh_doanh") }}', '', 'error')
+      }
+      else if (phone_number.length == 0) {
+        swal('{{ gettext("Chua_nhap_so_dien_thoai") }}', '', 'error')
+      }
+      else if (email.length == 0) {
+        swal('{{ gettext("Chua_nhap_email") }}', '', 'error')
+      }
+      else {
+        $.ajax({
+          url: $("#synch_anvui").attr("action"),
+          type: $("#synch_anvui").attr("method"),
+          data: $("#synch_anvui").serialize(),
+          success: function (response) {
+            var returnedData = JSON.parse(response);
+            if ('error' in returnedData) {
+              swal(returnedData['error'], " ", "error");
+              return false;
+            } else {
+              swal('{{ gettext("Dang_ky_thanh_cong,_ZaloPay_se_som_lien_he_voi_ban") }}.', " ", "success");
+              location.reload();
+            }
+          },
+          error: function (xhr, desc, err) {
+            swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+
+
+
+          }
+        });
+      }
+    })
+
+  });
+</script>
+{% endblock %}

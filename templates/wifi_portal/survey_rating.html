@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge"> {% if 'viettel.vn' in request.url %}
+    <title>Viettel | vmarketing</title>
+    {% include 'nextify/viettel_meta_tags.html' %} {% elif 'crmx' in request.url %}
+    <title>CRMX | Better eXperience fo Wi-Fi</title>
+    {% include 'nextify/crmx_meta_tags.html' %} {% else %}
+    <title>Nextify | The Next Generation of Loyalty</title>
+    {% include 'nextify/nextify_meta_tags.html' %} {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+ <link rel="stylesheet" href="/static/nextify/css/bootstrap-rating.css">
+    <link rel="stylesheet" href="/static/wifi_portal/css/fonts.css">
+<link rel="stylesheet" type="text/css" href="/static/wifi_portal/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/wifi_portal/css/fontawesome-stars.css">
+    <link rel="stylesheet" href="/static/nextify/css/main.min.css">
+    <link rel="stylesheet" href="/static/nextify/css/dash_kit_theme.min.css"/>
+<link rel="stylesheet" href="/static/wifi_portal/css/css-stars.css">
+<style>
+        @font-face {
+            font-family: 'Glyphicons Halflings';
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/fonts/glyphicons-halflings-regular.eot');
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+            url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/fonts/glyphicons-halflings-regular.woff') format('woff'),
+            url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
+            url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootlar.svg#glyphicons-halflingsregular') format('svg');
+        }
+    </style>
+    <style>
+        .br-theme-bootstrap-stars .br-widget {
+            height: 35px;
+            white-space: nowrap;
+        }
+
+        .br-theme-bootstrap-stars .br-widget a {
+            font: normal normal normal 30px/1 'Glyphicons Halflings';
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            text-decoration: none;
+            margin-right: 2px;
+        }
+
+        .br-theme-bootstrap-stars .br-widget a:after {
+            content: '\e006';
+            color: #d2d2d2;
+        }
+
+        .br-theme-bootstrap-stars .br-widget a.br-active:after {
+            color: #EDB867;
+        }
+
+        .br-theme-bootstrap-stars .br-widget a.br-selected:after {
+            color: #EDB867;
+        }
+
+        .br-theme-bootstrap-stars .br-widget .br-current-rating {
+            display: none;
+        }
+
+        .br-theme-bootstrap-stars .br-readonly a {
+            cursor: default;
+        }
+
+        @media print {
+            .br-theme-bootstrap-stars .br-widget a:after {
+                content: '\e007';
+                color: black;
+            }
+
+            .br-theme-bootstrap-stars .br-widget a.br-active:after,
+            .br-theme-bootstrap-stars .br-widget a.br-selected:after {
+                content: '\e006';
+                color: black;
+            }
+        }
+    </style>
+
+</head>
+<body>
+
+
+<div class="main-content" id="main-content">
+    <div class="container-fluid">
+        <div class="row justify-content-center mt-5">
+            <div class="col-12 col-md-8 col-xl-6">
+
+            <!-- Card -->
+            <div class="card">
+
+{% if  survey_item.photo %}
+              <img src="{% if survey_item.photo %}{% if survey_item.photo|length == 12 %}//files.nextify.vn/{{ survey_item.photo }} {% else %}//files.nextify.vn/{{ survey_item.photo }}{% endif %}{% endif %}" alt="" class="card-img-top" style="height: 250px">
+{% endif %}         <!-- Body -->
+              <div class="card-body">
+
+                <!-- Image -->
+                {% if  shop_select.logo %}
+                <a href="#" class="avatar avatar-xl card-avatar card-avatar-top">
+                  <img src="//files.nextify.vn/{{ shop_select.logo }}" class="avatar-img rounded-circle border border-4 border-card" alt="...">
+                </a>
+                {% endif %}   
+               <h3 class="card-title mb-3" style="text-align: center;">
+                  <a href="#">{{ survey_item.question }}</a>
+                </h3>
+                <div class="form-group mb-3" style="text-align: center;">
+                      <select id="rating">
+                    {% for i in range(survey_item.min_point, survey_item.max_point) %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                    <option selected value="{{ survey_item.max_point }}">{{ survey_item.max_point }}</option>
+                </select>
+
+                </div>
+                {% if  survey_item.active_comment %}
+               <div class="form-group mb-3">
+                   <label>{{ gettext("Dung_quen_de_lai_gop_y_cho_chung_toi") }}:</label>
+                   <textarea class="form-control"></textarea>
+
+               </div>
+               {%endif%}
+
+
+
+                            <a href="#"  class="btn btn-lg btn-primary btn-block text-uppercase" {% if survey_item.connect_button_color %}style="background-color: {{ survey_item.connect_button_color }};border-color: {{ survey_item.connect_button_color }}" {% endif %}>
+									<i class="fe fe-wifi"></i>
+									   {% if survey_item.connect_button %}
+                        {{ survey_item.connect_button }}
+                    {% else %}
+                        {{ gettext("Ket_noi_Wi-Fi/Go_Online") }}
+                    {% endif %}
+								</a>
+
+              </div>
+
+              <!-- Footer -->
+              <div class="card-footer card-footer-boxed">
+                <div class="row align-items-center justify-content-between">
+                  <div class="col text-center">
+
+                    <!-- Status -->
+{#                    <small>#}
+{#                       #}
+{#                    </small>#}
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+  <script src="/static/js/jquery-3.2.1.min.js"></script>
+    <script src="/static/v2/assets/js/bootstrap.min.js"></script>
+<script src="/static/nextify/js/jquery.barrating.min.js"></script>
+<script nonce="{{ csp_nonce() }}">
+    $(function () {
+
+        $('#rating').barrating('show', {
+            theme: 'bootstrap-stars'
+        });
+
+    })
+</script>
+</body>
+</html>

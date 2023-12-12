@@ -1,0 +1,159 @@
+{% extends 'nextify/base.html' %}
+
+{% block main_content %}
+<div class="container-fluid">
+
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="header">
+                <div class="header-body">
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <!-- Pretitle -->
+                            <h6 class="header-pretitle">
+                                {{ gettext('Thiet_bb') }}
+                            </h6>
+                            <!-- Title -->
+                            <h1 class="header-title">
+                                {{ gettext('Quan_ly_thiet_bi_WIFI') }}
+                            </h1>
+                        </div>
+                        <div class="col-3">
+                            <select class="custom-select control-container" id="shop_in_mer">
+                                <option value="all">Tất cả</option>
+                                {% for shop_mer in shop_in_mer %}
+                                <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Nav -->
+                            <ul class="nav nav-tabs nav-overflow header-tabs">
+                                <li class="nav-item">
+                                    <a href="/grandstream_report/{{ shop_id_select }}" class="nav-link" id="btn_report">
+                                        Báo cáo
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/grandstream_ap/{{ shop_id_select }}" class="nav-link" id="btn_ap">
+                                        AP
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/grandstream_clients/{{ shop_id_select }}" class="nav-link" id="btn_clients">
+                                        Người dùng
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/grandstream_schedule/{{ shop_id_select }}" class="nav-link " id="btn_schedule">
+                                        Lịch trình
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/grandstream_brandwidth/{{ shop_id_select }}" class="nav-link " id="btn_brandwidth">
+                                        Giới hạn băng thông
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/grandstream_wifi/{{ shop_id_select }}" class="nav-link " id="btn_wifi">
+                                        Bật/Tắt Wifi
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/grandstream_block/{{ shop_id_select }}" class="nav-link active" id="btn_firewall">
+                                        Chặn truy cập
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <style>
+                .overlay {  
+                  position:absolute;
+                  left:0;
+                  width:100%;
+                  height:100%;
+                  z-index:1000;
+                  background-color: rgb(250, 250, 250);
+                }
+            </style>
+            <div class="row align-items-center justify-content-center modal_loading">
+                <div class="spinner-border text-danger" role="status">
+                <span class=" sr-only">Loading...</span>
+                </div>
+            </div>
+            <div id=over_land class="overlay"></div>
+
+           <!-- han che truy cap trang web -->
+           <div id="block_web">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="embed-responsive embed-responsive-1by1">
+                        <iframe class="embed-responsive-item" id="iframeBlockWeb"
+                            src="https://grandstream.nextify.vn:8443/network/{{ id_net }}/security/firewall"></iframe>
+                    </div>
+                </div>
+            </div> 
+        </div>
+
+
+
+
+        </div>
+
+    </div>
+    <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+</div>
+
+
+{%endblock%}
+
+{% block js %}
+<script type="text/javascript">
+
+
+    setTimeout(function () {
+            var frame = document.getElementById('iframeBlockWeb');
+            frame.contentWindow.postMessage("regular_remove", '*');
+            frame.contentWindow.postMessage("firewall", '*');        
+            $('.modal_loading').hide();
+        $('#over_land').hide();    
+        }, 3000);
+        setInterval(function(){ 
+            var frame = document.getElementById('iframeBlockWeb');
+
+            frame.contentWindow.postMessage("new_firewall", '*');    
+         }, 1000);
+    $(document).ready(function () {
+
+        $('#shop_in_mer').select2();
+            var shop_id_select = $("#shop_id_select").val();
+            $('#shop_in_mer').val(shop_id_select).trigger('change');
+            $('#shop_in_mer').on("change", function (e) {
+                var shop_id = $('#shop_in_mer').val();
+                if (shop_id != "all"){
+                    var url = "/grandstream_report/" + shop_id;
+                    $(location).attr('href', url);
+                }else{
+                    var url = "/device_grandstream";
+                    $(location).attr('href', url);
+                }
+    
+            });
+        });    
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,354 @@
+<div class="container-fluid">
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-xl-7 mb-5 mb-xl-0">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <div class="row align-items-center">
+                        <div class="tabs-unstyled-tabs">
+                            <div id="walk_throughs" class="tabs-unstyled-tab">
+                                <div class="tabs-unstyled-tab-name row">
+                                    <span>Walk-Throughs</span>
+                                </div>
+                            </div>
+                            <div id="add_impressions" class="tabs-unstyled-tab">
+                                <div class="tabs-unstyled-tab-name row">
+                                    <span>{{ gettext("Luot_xem") }}</span>
+                                </div>
+                            </div>
+                            <div id="enga" class="tabs-unstyled-tab">
+                                <div class="tabs-unstyled-tab-name row">
+                                    <span>{{ gettext("Tuong_tac") }}</span>
+                                </div>
+                            </div>
+                            <div id="clicks" class="tabs-unstyled-tab">
+                                <div class="tabs-unstyled-tab-name row">
+                                    <span>Clicks</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="time-series-details-big-number" id="walk_add_click_total"><span>0</span></div>
+                <div class="ncex-divider"></div>
+                <div class="card-body">
+                    <div class="chart">
+                        <canvas id="walk_add_click" class="chart-canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-5 mb-5 mb-xl-0">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <div class="row align-items-center">
+                        <div class="tabs-unstyled-tabs">
+                            <div id="analysis" class="tabs-unstyled-tab">
+                                <div class="tabs-unstyled-tab-name">
+                                    <h2>{{ gettext("Phan_tich") }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-text_anl">
+                        {{ gettext("Giup_do_cho_viec_cai_thien_hieu_qua_quang_cao,_chung_toi_dua_ra_cac_thong_ke_cua_cac_chi_so_dac_trung._Tu_do_ban_co_the_dua_ra_quyet_dinh_tot_hon,_nang_cao_hieu_suat.") }}
+                    </div>
+                    <div class="data-row">
+                        <span class="header_anl">
+                            Gender
+                        </span>
+                        <span class="value">
+                            Female
+                        </span>
+                    </div>
+                    <div class="data-row">
+                        <span class="header_anl">
+                            Age
+                        </span>
+                        <span class="value">
+                            45-54
+                        </span>
+                    </div>
+                    <div class="data-row">
+                        <span class="header_anl">
+                            Devices
+                        </span>
+                        <span class="value">
+                            Mobile
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="{{ merchant._id }}" id="merchant_id">
+<div class="container-fluid">
+    <div class="row u-mb-large">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table10 v2 align-items-center table-flush">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>{{ gettext("Chien_dich") }}</th>
+                                <th>{{ gettext("Trang_thai") }}</th>
+                                <th>{{ gettext("So_khach_hang") }}</th>
+                                <th id="tooltip_adim">{{ gettext("Luot_xem") }}</th>
+                                <th id="tooltip_clcik">Clicks</th>
+                                <th id="tooltip_egn">{{ gettext("Tuong_tac") }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if not list_post_show %}
+                            <tr height="323">
+                                <td class="null-state" colspan="7">
+                                    <div class="card-text" style="padding-top: 123px">
+                                        <div class="empty-campaigns-message">
+                                            <div class="empty-message-header">
+                                                <span>{{ gettext("Khong_co_chien_dich_nao") }}</span>
+                                            </div>
+                                            <div class="empty-message-body">
+                                                <span>{{ gettext("Vui_long_kiem_tra_lai_de_co_ket_qua_chi_tiet.") }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            {% for post in list_post_show %}
+                            <tr id="campaign_{{ post.id }}">
+                                <input type="hidden" value="{{ post.id }}" id="campaign1_{{ post.id }}">
+                                <td class="campaignName">
+                                    <div class="campaign-name-row">
+                                        <div class="campaign-thumb is-clickable">
+                                            {% if post.photo and post.photo|length > 0 %}
+                                            <img
+                                                src="https://files.nextify.vn/{{ post.photo }}" />
+                                            {% else %}
+                                            <img src="{{ post.avatar.replace('http:', 'https:') }}" />
+                                            {% endif %}
+                                        </div>
+                                        {% if post.title %}
+                                        <div class="campaign-name">{{ post.title|cut_name_post }}</div>
+                                        {% elif post.body_name %}
+                                        <div class="campaign-name">{{ post.body_name|cut_name_post }}</div>
+                                        {% else %}
+                                        <div class="campaign-name">{{ post.name|cut_name_post }}</div>
+                                        {% endif %}
+                                        <div class="campaign-dates">{{ gettext("Tao_luc:") }} {{ post.create_time }}</div>
+                                        <div class="campaign-dates">{{ gettext("Hoan_thanh:") }} {% if post.completed_time %}
+                                            {{ post.completed_time }} {% endif %}</div>
+                                    </div>
+                                </td>
+                                <td class="status">
+                                    {% if post.status == "PAUSED" %}
+                                    <span class="status-label status-pause"><svg class="svg-icon"
+                                            viewBox="0 0 20 20">
+                                            <path fill="none"
+                                                d="M11.469,10l7.08-7.08c0.406-0.406,0.406-1.064,0-1.469c-0.406-0.406-1.063-0.406-1.469,0L10,8.53l-7.081-7.08
+                                        c-0.406-0.406-1.064-0.406-1.469,0c-0.406,0.406-0.406,1.063,0,1.469L8.531,10L1.45,17.081c-0.406,0.406-0.406,1.064,0,1.469
+                                        c0.203,0.203,0.469,0.304,0.735,0.304c0.266,0,0.531-0.101,0.735-0.304L10,11.469l7.08,7.081c0.203,0.203,0.469,0.304,0.735,0.304
+                                        c0.267,0,0.532-0.101,0.735-0.304c0.406-0.406,0.406-1.064,0-1.469L11.469,10z"></path>
+                                        </svg>
+                                        <span>{{ gettext("Tam_dung") }}</span>
+                                    </span>
+                                    {% else %}
+                                    <span class="status-label status-completed">
+                                        <svg width="12" height="9" viewBox="0 0 12 9">
+                                            <polygon fill-rule="evenodd"
+                                                points="17.995 8 11.873 14.122 9.299 11.547 8 12.847 11.873 16.72 19.294 9.299"
+                                                transform="translate(-8 -8)"></polygon>
+                                        </svg>
+                                        <span>{{ gettext("Hoan_thanh") }}</span>
+                                    </span>
+                                    {% if post.tracking_specs == "offline_conversion" %}
+                                    <span class="status-label status-offline">
+                                        <svg width="12" height="9" viewBox="0 0 12 9">
+                                            <polygon fill-rule="evenodd"
+                                                points="17.995 8 11.873 14.122 9.299 11.547 8 12.847 11.873 16.72 19.294 9.299"
+                                                transform="translate(-8 -8)"></polygon>
+                                        </svg>
+                                        <span>ON</span>
+                                    </span>
+                                    {% else %}
+                                    <span class="status-label status-online"><svg class="svg-icon"
+                                            viewBox="0 0 20 20">
+                                            <path fill="none"
+                                                d="M11.469,10l7.08-7.08c0.406-0.406,0.406-1.064,0-1.469c-0.406-0.406-1.063-0.406-1.469,0L10,8.53l-7.081-7.08
+                                        c-0.406-0.406-1.064-0.406-1.469,0c-0.406,0.406-0.406,1.063,0,1.469L8.531,10L1.45,17.081c-0.406,0.406-0.406,1.064,0,1.469
+                                        c0.203,0.203,0.469,0.304,0.735,0.304c0.266,0,0.531-0.101,0.735-0.304L10,11.469l7.08,7.081c0.203,0.203,0.469,0.304,0.735,0.304
+                                        c0.267,0,0.532-0.101,0.735-0.304c0.406-0.406,0.406-1.064,0-1.469L11.469,10z">
+                                            </path>
+                                        </svg>
+                                        <span>OFF</span>
+                                        <span class="tooltiptext">{{ gettext("Chua_kich_hoat_tinh_nang_offline_conversation_cho_bai_dang_nay") }}</span>
+                                    </span>
+
+                                    {% endif %}
+                                    {% endif %}
+                                </td>
+                                <td class="estWalk">
+                                    <div class="campaign-metric bold"><span>0</span></div>
+                                </td>
+                                <td class="impressions">
+                                    <div class="campaign-metric"><span>{{ post.impressions }}</span></div>
+                                </td>
+                                <td class="clicks">
+                                    <div class="campaign-metric"><span>{{ post.clicks }}</span></div>
+                                </td>
+                                <td class="engagement">
+                                    <div class="campaign-metric"><span>{{ post.post_engagement }}</span></div>
+                                </td>
+
+                            </tr>
+                            <script nonce="{{ csp_nonce() }}">
+                                $(document).ready(function () {
+                                    $("#campaign_{{ post.id }}").click(function () {
+                                        var campaign_id = $('#campaign1_{{ post.id }}').val();
+                                        console.log(campaign_id);
+                                        $.ajax({
+                                            url: "/get_data_campaign",
+                                            data: {
+                                                'campaign_id': campaign_id,
+                                                'date_preset': 'this_month',
+                                                'merchant_id': $("#merchant_id").val()
+                                            },
+                                            success: function (res) {
+                                                $("#adv_all_campaign").empty();
+                                                $('#adv_all_campaign').append(res);
+
+                                            },
+                                            error: function (request, status, error) {
+                                                console.log("ajax call went wrong:" + request.responseText);
+                                            }
+                                        });
+
+                                    })
+                                })
+                            </script>
+                            {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                    <script nonce="{{ csp_nonce() }}">
+
+                        function statusChangeCallback(response) {  // Called with the results from FB.getLoginStatus().
+                            var response1 = response;
+                            console.log("statusChangeCallback", response1);
+                            if (response.status === 'connected') {   // Logged into your webpage and Facebook.
+                                $.ajax({
+                                    url: '/fb_callback',
+                                    type: 'POST',
+                                    data: {
+                                        'data': JSON.stringify(response1),
+                                        'merchant_id': $("#merchant_id").val()
+                                    },
+                                    success: function (response_ajax) {
+                                        var returnedData = JSON.parse(response_ajax);
+                                        swal('{{ gettext("Dang_nhap_voi_Facebook_thanh_cong") }}', "", "success");
+                                        $("#walk_add_click_load").hide();
+                                        location.href = returnedData['url'];
+
+                                    },
+                                    error: function (xhr, desc, err) {
+                                        swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+
+                                    }
+                                });
+                            } else {                                 // Not logged into your webpage or we are unable to tell.
+                                document.getElementById('status').innerHTML = 'Please log ' +
+                                    'into this webpage.';
+                            }
+                        };
+
+
+                        $("#facebook_login").click(function () {
+                            console.log("login_with_facebook");
+                            $("#walk_add_click_load").show();
+                            FB.init({
+                                appId: '611214335939430',
+                                cookie: true,                     // Enable cookies to allow the server to access the session.
+                                xfbml: true,                     // Parse social plugins on this webpage.
+                                version: 'v5.0'           // Use this Graph API version for this call.
+                            });
+                            FB.login(function (response) {
+                                testAPI()
+                            }, {
+                                scope: 'public_profile,email,ads_management,manage_pages',
+                            });
+
+                            // };
+
+                        });
+                        $("#logout_fb_btn").click(function () {
+                            var merchant_id = $("#merchant_id").val();
+                            console.log(merchant_id);
+                            $.ajax({
+                                url: '/advertising_logout?merchant_id=' + merchant_id,
+                                type: 'GET',
+                                success: function (response_ajax) {
+                                    var returnedData = JSON.parse(response_ajax);
+                                    swal('{{ gettext("Dang_xuat_thanh_cong") }}', "", "success");
+                                    FB.logout(function (response) {
+                                    });
+                                    location.href = returnedData['url'];
+                                },
+                                error: function (xhr, desc, err) {
+                                    swal("Có lỗi xảy ra, thử lại sau", " ", "error");
+
+                                }
+                            });
+                        });
+
+
+                        (function (d, s, id) {                      // Load the SDK asynchronously
+                            var js, fjs = d.getElementsByTagName(s)[0];
+                            if (d.getElementById(id)) return;
+                            js = d.createElement(s); js.id = id;
+                            js.src = "https://connect.facebook.net/en_US/sdk.js";
+                            fjs.parentNode.insertBefore(js, fjs);
+                        }(document, 'script', 'facebook-jssdk'));
+
+                        function testAPI() {                      // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
+                            FB.api('/me/permissions', function (response) {
+                                console.log('Successful login with permission: ' + response);
+                                var results = false;
+                                for (i = 0; i < 3; i++) {
+                                    console.log(response.data[i].status != "granted");
+                                    if (response.data[i].status != "granted") {
+                                        swal('{{ gettext("Hay_cap_quyen_cho_ung_dung_cua_chung_toi_de_duoc_phuc_vu_tot_nhat") }}', "", "warning");
+                                        console.log("heheeheh");
+                                        return false
+                                        break
+                                    }
+                                };
+                                FB.getLoginStatus(function (response) {   // Called after the JS SDK has been initialized.
+                                    statusChangeCallback(response);        // Returns the login status.
+                                });
+                            },
+                                {
+                                    scope: 'public_profile,email,ads_management,manage_pages'
+                                })
+                        };
+
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<nav class="c-pagination u-justify-center">
+{% if pagination %}
+    {{ pagination.links }}
+{% endif %}
+</nav>
+<script src="{{ url_for('static', filename='nextify/js/advertising.js') }}"></script>
+<input type="hidden" value="{{ post_engagement_total }}" id="post_engagement_total">
+<input type="hidden" value="{{ impressions }}" id="impressions">
+<input type="hidden" value="{{ clicks }}" id="clicks_total">
+<input type="hidden" value="{{ data_chart }}" id="data_chart">
+<input type="hidden" value="{{ created_time_ts }}" id="created_time_ts">
+<input type="hidden" value="{{ completed_time_ts }}" id="completed_time_ts">

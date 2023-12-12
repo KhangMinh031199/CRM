@@ -1,0 +1,62 @@
+<div class="mb-4 mt-2">
+	{% if tag_list.count() != 0 %}
+	{% for tag in tag_list%}
+	<a class="badge badge-pill badge-{{ ['success','warning','info']|random }}" id="tag_name_hotspot_{{ tag._id }}"
+		style="color: white">
+		{{ tag.tag_name }}
+	</a>
+
+	<script>
+		$("#tag_name_hotspot_{{ tag._id }}").click(function () {
+			$.ajax({
+				type: 'POST',
+				url: '/auto_tags',
+				data: {
+					'tag_id': '{{ tag.tag_id }}',
+					'shop_id_select': '{{ shop_id_select }}'
+				},
+				success: function (response) {
+					$('#config_tag').empty();
+					$('#config_tag').append(response);
+				}
+			})
+		});
+	</script>
+	{% endfor %}
+	{% endif %}
+</div>
+<select class="custom-select control-container" name="tags" id="new_tags_selects">
+	<option value="">{{ gettext("Chon_mot_Tag") }}</option>
+	{% for tag in tags %}
+	<option value="{{ tag._id }}">{{ tag.name }}</option>
+	{% endfor %}
+</select>
+
+
+<div id="config_tag" class="mt-4">
+
+</div>
+
+<script>
+	$('#new_tags_selects').select2({
+		dropdownParent: $("#tags_modal")
+	});
+	$('#new_tags_selects').on('change', function (e) {
+		tag = $(this).val();
+		
+		if (tag !== '') {
+			$('#config_tag').empty();
+			$.ajax({
+				type: 'POST',
+				url: '/auto_tags',
+				data: {
+					'tag_id': tag,
+					'shop_id_select': '{{ shop_id_select }}'
+				},
+				success: function (response) {
+					$('#config_tag').html(response);
+				}
+			})
+		}
+	});
+</script>

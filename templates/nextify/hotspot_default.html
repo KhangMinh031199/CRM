@@ -1,0 +1,401 @@
+{% extends 'nextify/manage_hotspot.html' %}
+
+{% block hotspot_item %}
+<input type="hidden" value="{{ page_id }}" id="page_id" />
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id_select" />
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-12 col-xl-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <h6 class="header-pretitle">
+                            {{ gettext('HotspotDefaultWelcomeScreenText') }}
+                        </h6>
+                    </div>
+                    <div class="col-auto" style="float: right">
+                        {% if merchant_id == "5a616f383fd79c2db9147c6a" %}
+                            <a href="/new_portal/{{ shop_select._id }}" class="btn btn-flat d-block d-md-inline-block mb-2">
+                                <i class="fa fa-file-medical"></i> {{ gettext("Chuyen_kieu_slide") }}
+                            </a>
+                            {% endif %}
+                        <a data-toggle="modal" href="#new_image" class="btn btn-flat d-block d-md-inline-block mb-2">
+                            <i class="fa fa-plus"></i> {{ gettext('HotspotAddText') }}
+                        </a>
+                        <div class="col-auto" style="float: right">
+                            <a data-toggle="modal" href="#config_default"
+                               class="btn btn-flat d-block d-md-inline-block">
+                                <i class="fa fa-gear"></i> {{  gettext('HotspotHappyBirthdayScreenSettingText')}}
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal hide fade" id="config_default" tabindex="-1"
+         role="dialog" aria-labelledby="config_default" data-backdrop="static"
+         style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{  gettext('HotspotRegisterScreenSettingText')}}</h3>
+
+                    <a class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </a>
+                </div>
+
+                    <div class="modal-body">
+                     <form method="POST" id="wifi_settings" action="/default_setting_method/{{ shop_id_select }}"
+                                    enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-group">
+                          <label for="hotspot_method">{{ gettext("Hinh_thuc_hotspot") }}</label>
+                          <select class="form-control" id="hotspot_method"
+                              name="hotspot_method">
+                              <option value="default" {% if shop_select.hotspot_method == 'default' %}selected{% endif %}>{{ gettext("Mac_dinh") }}</option>
+                              <option value="profile_code" {% if shop_select.hotspot_method == 'profile_code' %}selected{% endif %}>{{ gettext("Profile_code") }}</option>
+                          </select>
+                        </div>
+                        <input type="hidden" id="ex_hotspot_method" name="ex_hotspot_method" value="{{ shop_select.hotspot_method }}" />
+                        <div id="default_code_div" class="form-group">
+                          <label>{{ gettext("Ma_mac_dinh") }}</label><span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                           aria-label="Mã truy cập Wifi mặc định">
+                         <i class="fa fa-question"></i>
+                        </span>
+                          <input type="text" class="form-control method-form-control" id="default_code" name="default_code"
+                          {% if shop_select.wifi_access_code_default %}
+                            value="{{ shop_select.wifi_access_code_default }}"
+                          {% endif %}
+                          >
+                        </div>
+                         <div class="modal-footer">
+                        <div class="c-field" style="padding:20px">
+                            <button class="c-btn c-btn--info
+                                u-float-right" type="submit" id="wifi_settings_btn">{{  gettext('HotspotRegisterScreenUpdateText')}}
+                            </button>
+                        </div>
+                    </div>
+                     </form>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+            <div class="card-body">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+
+                        {% for card in cards %}
+                        <div class="card">
+                            <div class="card-body">
+                                <a href="#" data-toggle="modal" data-target="#{{ card._id }}_update_image">
+                                    <img style="height:250px; width:100%"
+                                        src="//files.nextify.vn/{{ card.photo }}" />
+                                </a>
+
+                            </div>
+                        </div>
+                        <div class="modal hide fade" id="{{ card._id }}_update_image" tabindex="-1" role="dialog"
+                            aria-labelledby="{{ card._id }}_update_image" data-backdrop="static" style="display: none;"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h3 class="mdal-title">{{ gettext("Cap_nhat") }}</h3>
+
+                                        <a class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </a>
+                                    </div>
+                                    <form method="POST"
+                                        action="/splash_page/{{ shop_id_select }}/item/{{ card._id }}?page_type=default"
+                                        id="form_update_image_{{ card._id }}" enctype="multipart/form-data">
+                                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                        <div class="modal-body">
+                                            <div class="c-field u-mb-xsmall">
+                                                {% if card and card.photo %}
+                                                <p class="help-block">
+                                                    <img src="//files.nextify.vn/{{ card.photo }}"
+                                                        width="200" card_id="{{ card._id }}"
+                                                        id="{{ card._id }}_img_photo" />
+                                                </p>
+                                                {% endif %}
+                                                <input class="c-input child_photo" type="file" class="form-control"
+                                                    id="{{ card._id }}_update_photo" name="photo"
+                                                    {% if card and not card.photo %}required{% endif %}>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            {% if card %}
+                                            <a id="remove_{{card._id}}" class="u-float-left">
+                                                {{ gettext("Xoa") }}
+                                            </a> {% endif %}
+                                            <a class="c-btn
+                                                        c-btn--success u-float-right update_image_submit"
+                                                card_id="{{ card._id }}" href="#">{{ gettext("Luu_lai") }}
+                                            </a>
+                                        </div>
+                                    </form>
+
+                                </div><!-- // .c-modal__content -->
+                            </div><!-- // .c-modal__dialog -->
+                        </div>
+
+
+                        <script nonce="{{ csp_nonce() }}">
+                            $(document).ready(function () {
+                                $('#remove_{{card._id}}').click(function () {
+
+                                    Swal.fire({
+                                        title: '{{ gettext("Ban_co_chac_chan_muon_xoa_anh_khong?") }}',
+
+                                        type: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+focusCancel: true,
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: ' {{ gettext("Co!") }}',
+                                        cancelButtonText: '{{ gettext("Khong!")}}'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            var url = "/splash_page/{{ shop_id_select }}/item/{{ page._id }}?card_id={{ card._id }}&action=remove";
+                                            $.ajax({
+                                                type: 'GET',
+                                                url: url,
+                                                success: function () {
+                                                    swal('{{ gettext("Xoa_anh_thanh_cong") }}', " ", "success");
+                                                    location.reload();
+
+                                                }
+                                            });
+
+
+                                        }
+                                    })
+                                })
+                                function readURL(input, input_view) {
+                                    if (input.files && input.files[0]) {
+                                        var reader = new FileReader();
+                                        var view_id = '#' + input_view;
+                                        reader.onload = function (e) {
+                                            $(view_id).attr('src', e.target.result);
+                                        }
+
+                                        reader.readAsDataURL(input.files[0]);
+                                    }
+                                }
+                                function validate(photo) {
+                                    var file_size = $(photo)[0].files[0].size;
+                                    var file = $(photo).val();
+                                    var exts = ['jpg', 'png', 'jpeg'];
+                                    if (file) {
+                                        var get_ext = file.split('.');
+                                        get_ext = get_ext.reverse();
+                                        if ($.inArray(get_ext[0].toLowerCase(), exts) > -1) {
+                                            if (file_size > 3670016) {
+                                                return false;
+                                            } else {
+                                                return true;
+                                            }
+                                        } else {
+                                            return false;
+                                        }
+                                    }
+
+                                }
+                                $("#{{ card._id }}_update_photo").change(function () {
+                                    if (validate(this) == true) {
+                                        swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                                        $('#{{ card._id }}_img_photo').show();
+                                        readURL(this, '{{ card._id }}_img_photo');
+                                    } else {
+                                        swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                                        $('#{{ card._id }}_update_photo').val('');
+                                        $('#{{ card._id }}_img_photo').hide();
+
+                                    }
+                                    $(".update_image_submit").click(function () {
+                                        var id_card = $(this).attr('card_id');
+                                        $("#form_update_image" + "_" + id_card).submit();
+                                    });
+                                });
+                            })
+                        </script>
+                        {% endfor %}
+
+                    </div>
+                    <div class="col-lg-6">
+                        <center>
+                            <div id="preview"></div>
+                        </center>
+
+
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="modal hide fade" id="new_image" tabindex="-1" role="dialog" aria-labelledby="new_image" data-backdrop="static"
+    style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">{{ gettext('HotspotAddText') }}</h3>
+
+                <a class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </a>
+            </div>
+            <form method="POST" action="/splash_page/{{ shop_id_select }}/item/add?page_type=default"
+                enctype="multipart/form-data" id="form_new_image">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                <div class="modal-body">
+
+                    <div class="c-field u-mb-xsmall">
+                        <h5>{{ gettext("Kich_thuoc_goi_y_750_px_×_1330_px") }}</h5>
+
+                        <p class="help-block">
+                            <img id="img_new_photo" width="200">
+                        </p>
+                        <input class="c-input" type="file" class="form-control" id="new_photo" name="photo"
+                            {% if card and not card.photo %}required{% endif %}>
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <a class="c-btn c-btn--success" href="#" id="new_image_submit">{{ gettext('HotspotSaveText') }}
+                    </a>
+                </div>
+            </form>
+
+        </div><!-- // .c-modal__content -->
+    </div><!-- // .c-modal__dialog -->
+</div>
+{% endblock %}
+{% block js %}
+
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        ex_hotspot_method = $('#ex_hotspot_method').val();
+        if (ex_hotspot_method === 'profile_code') {
+            $("#default_code_div").hide();
+        } else {
+            $("#default_code_div").show();
+        };
+        $('#hotspot_method').select2();
+        $('#hotspot_method').on('change.select2', function (e) {
+            method = $(this).val();
+            if (method === 'profile_code') {
+                $("#default_code_div").hide();
+            } else {
+                $("#default_code_div").show();
+            }
+        });
+        $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+        $('input').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+
+        function readURL(input, input_view) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                var view_id = '#' + input_view;
+                reader.onload = function (e) {
+                    $(view_id).attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function validate(photo) {
+            var file_size = $(photo)[0].files[0].size;
+            
+            var file = $(photo).val();
+            var exts = ['jpg', 'png', 'jpeg'];
+            if (file) {
+                var get_ext = file.split('.');
+                get_ext = get_ext.reverse();
+                if ($.inArray(get_ext[0].toLowerCase(), exts) > -1) {
+                    console.log(file_size);
+                    if (file_size > 3670016) { 
+                        return "big_file";
+                    } else {
+                        return true;
+                    }
+                } else {
+                    return false;
+                }
+            }
+
+        }
+
+
+
+        $("#new_photo").change(function () {
+            var validate_photo = validate(this);
+            if (validate_photo == true) {
+                swal(' {{ gettext("Upload_thanh_cong") }}', '', 'success');
+                $('#img_new_photo').show();
+                readURL(this, 'img_new_photo');
+            } else {
+                if (validate_photo == "big_file"){
+                    swal(' {{ gettext("File_co_kich_thuoc_qua_lon!") }}', '', 'error');
+                    return false
+                };
+                swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                $('#new_photo').val('');
+                $('#img_new_photo').hide();
+                return false
+
+            }
+        });
+
+        $(".child_photo").change(function () {
+            var id_card = $(this).attr('card_id');
+            var input_id = $("#" + id_card + "_update_photo");
+            var view_photo = id_card + "_img_photo";
+            readURL(input_id, view_photo);
+        });
+
+
+        var page_id = $("#page_id").val();
+        var shop_id_select = $("#shop_id_select").val();
+        var url_preview = '/splash_page/' + shop_id_select + '/preview/' + page_id;
+        $("#preview").empty();
+        bioMp(document.getElementById('preview'), {
+            url: url_preview,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+
+        $("#new_image_submit").click(function () {
+            $("#form_new_image").submit();
+        });
+
+        $(".update_image_submit").click(function () {
+            var id_card = $(this).attr('card_id');
+            $("#form_update_image" + "_" + id_card).submit();
+        });
+
+    });
+</script>
+{% endblock %}

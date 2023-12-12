@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{{ shop_select.name }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% if 'viettel.vn' in request.url %}
+    <title>Viettel | vmarketing</title>
+    {% include 'nextify/viettel_meta_tags.html' %}
+    {% elif 'crmx' in request.url %}
+    <title>CRMX | Better eXperience fo Wi-Fi</title>
+    {% include 'nextify/crmx_meta_tags.html' %}
+    {% else %}
+    <title>Nextify | The Next Generation of Loyalty</title>
+    {% include 'nextify/nextify_meta_tags.html' %}
+    {% endif %}
+     <!--===============================================================================================-->
+     <script src="/static/wifi_portal/vendor/jquery/jquery-3.2.1.min.js"></script>
+   
+     <script src="/static/nextify/js/jquery.barrating.min.js"></script>
+<!--===============================================================================================-->
+     <link rel="stylesheet" type="text/css" href="/static/wifi_portal/vendor/bootstrap/css/bootstrap.min.css">
+     <!--===============================================================================================-->
+     <link rel="stylesheet" href="/static/nextify/css/bootstrap-rating.css">
+     <link rel="stylesheet" href="/static/wifi_portal/css/fonts.css">
+         <link rel="stylesheet" type="text/css" href="/static/wifi_portal/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+     <link rel="stylesheet" href="/static/wifi_portal/css/fontawesome-stars.css">
+     <!--===============================================================================================-->
+     <link rel="stylesheet" type="text/css" href="/static/wifi_portal/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+     <!--===============================================================================================-->
+     <link rel="stylesheet" type="text/css" href="/static/wifi_portal/vendor/animate/animate.css">
+     <!--===============================================================================================-->
+     <link rel="stylesheet" type="text/css" href="/static/wifi_portal/vendor/css-hamburgers/hamburgers.min.css">
+     <!--===============================================================================================-->
+     <link rel="stylesheet" type="text/css" href="/static/wifi_portal/vendor/animsition/css/animsition.min.css">
+     <!--===============================================================================================-->
+     <link rel="stylesheet" type="text/css" href="/static/wifi_portal/vendor/daterangepicker/daterangepicker.css">
+     <link rel="stylesheet" href="/static/wifi_portal/css/css-stars.css">
+  
+     <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/css/util.css">
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/preview/survey_rating.css">
+
+    <style>
+        .slider-block {
+            height: 350px;
+            display: inline-block;
+        }
+
+        #carousel {
+            height: 100%;
+        }
+
+        #carousel .carousel-inner {
+            height: 100%;
+        }
+
+        #carousel .item {
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .bg-image {
+            /* The image used */
+            background-image: url(//files.nextify.vn/{{ shop_select.background }});
+
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            /* Full height */
+            height: 100%;
+
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+
+        .br-theme-bootstrap-stars .br-widget {
+            height: 35px;
+            white-space: nowrap;
+        }
+
+        .br-theme-bootstrap-stars .br-widget a {
+            font: normal normal normal 30px/1 'Glyphicons Halflings';
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            text-decoration: none;
+            margin-right: 2px;
+        }
+
+        .br-theme-bootstrap-stars .br-widget a:after {
+            content: '\e006';
+            color: #d2d2d2;
+        }
+
+        .br-theme-bootstrap-stars .br-widget a.br-active:after {
+            color: #EDB867;
+        }
+
+        .br-theme-bootstrap-stars .br-widget a.br-selected:after {
+            color: #EDB867;
+        }
+
+        .br-theme-bootstrap-stars .br-widget .br-current-rating {
+            display: none;
+        }
+
+        .br-theme-bootstrap-stars .br-readonly a {
+            cursor: default;
+        }
+
+        @media print {
+            .br-theme-bootstrap-stars .br-widget a:after {
+                content: '\e007';
+                color: black;
+            }
+
+            .br-theme-bootstrap-stars .br-widget a.br-active:after,
+            .br-theme-bootstrap-stars .br-widget a.br-selected:after {
+                content: '\e006';
+                color: black;
+            }
+        }
+    </style>
+    <!--===============================================================================================-->
+</head>
+
+<body>
+
+    <div class="limiter">
+        <div class="container-login100 bg-image">
+            <div class="wrap-login100">
+                <p style="margin-top: 15px; text-align: center; font-weight: bold; font-size: 25px">
+                    {{ survey_item.title_anvui }}</p>
+                <p style="margin-left: 5px; margin-right: 5px; text-align: center; font-size: 14px;">
+                    {{ survey_item.content_anvui }}</p>
+
+                <br>
+                <form style="margin-top: 0em;" method="post" action="" enctype="multipart/form-data">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    {% if survey_item.question[0] %} 
+                    <div class="text-center" style="margin-left: 15px;margin-right: 15px; text-align: center">
+                        <span class="tx3" style="font-weight: bold">{{ survey_item.question[0] }}</span>
+                    </div>
+                    <div class="login100-form" style="padding: 0px 43px 0px 43px;justify-content: center;">
+                        <select id="rating_0" name="rating_0">
+                            {% for i in range(survey_item.min_point, survey_item.max_point + 1) %}
+                            <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <script nonce="{{ csp_nonce() }}">
+                            $(function () {
+                    
+                                $('#rating_0').barrating('show', {
+                                    theme: 'bootstrap-stars'
+                                });
+                            })
+                        </script>
+                        {% endif %}
+                        {% if survey_item.question[1] %} 
+                        <div class="text-center" style="margin-left: 15px;margin-right: 15px; text-align: center">
+                            <span class="tx3" style="font-weight: bold">{{ survey_item.question[1] }}</span>
+                        </div>
+                        <div class="login100-form" style="padding: 0px 43px 0px 43px;justify-content: center;">
+                            <select id="rating_1" name="rating_1">
+                                {% for i in range(survey_item.min_point, survey_item.max_point + 1) %}
+                                <option value="{{ i }}">{{ i }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <script nonce="{{ csp_nonce() }}">
+                                $(function () {
+                        
+                                    $('#rating_1').barrating('show', {
+                                        theme: 'bootstrap-stars'
+                                    });
+                                })
+                            </script>
+                            {% endif %}
+                            {% if survey_item.question[2] %} 
+                            <div class="text-center" style="margin-left: 15px;margin-right: 15px; text-align: center">
+                                <span class="tx3" style="font-weight: bold">{{ survey_item.question[2] }}</span>
+                            </div>
+                            <div class="login100-form" style="padding: 0px 43px 0px 43px;justify-content: center;">
+                                <select id="rating_2" name="rating_2">
+                                    {% for i in range(survey_item.min_point, survey_item.max_point + 1) %}
+                                    <option value="{{ i }}">{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <script nonce="{{ csp_nonce() }}">
+                                    $(function () {
+                            
+                                        $('#rating_2').barrating('show', {
+                                            theme: 'bootstrap-stars'
+                                        });
+                                    })
+                                </script>
+                                {% endif %}
+                    <div class="form-group" style="margin-left: 15px; margin-right: 15px">
+                        <label style="font-weight: bold; font-size: 15">{{ gettext("Gop_y_khac") }}:</label>
+                        <textarea placeholder=  {{ gettext("Nhan_xet_cua_ban") }}' id="comment" name="comment" cols="35" rows="3"
+                            style=" display: block; margin-left: auto; margin-right: auto;border: solid 2px #c3c2c2; border-radius: 15px; margin-top: 10px"></textarea>
+                    </div>
+                    <div class="container-login100-form-btn p-t-20 p-b-20"
+                        style="justify-content: center; margin-bottom: 15px;">
+                        <button class="login100-form-btn" type="submit">
+                            {% if survey_item.connect_button %}
+                            {{ survey_item.connect_button }}
+                            {% else %}
+                            {{ gettext("Ket_noi_Wi-Fi/Go_Online") }}
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<!--===============================================================================================-->
+
+<!--===============================================================================================-->
+
+<script src="/static/wifi_portal/vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+<script src="/static/wifi_portal/vendor/bootstrap/js/popper.js"></script>
+<script src="/static/wifi_portal/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+<script src="/static/wifi_portal/vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+<script src="/static/wifi_portal/vendor/daterangepicker/moment.min.js"></script>
+<script src="/static/wifi_portal/vendor/daterangepicker/daterangepicker.js"></script>
+<!--===============================================================================================-->
+<script src="/static/wifi_portal/vendor/countdowntime/countdowntime.js"></script>
+
+
+<!--===============================================================================================-->
+    <script src="/static/wifi_portal/js/main.js"></script>
+
+    <script nonce="{{ csp_nonce() }}">
+
+        $(document).ready(function () {
+            $(".carousel").swipe({
+
+                swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
+
+                    if (direction == 'left') $(this).carousel('next');
+                    if (direction == 'right') $(this).carousel('prev');
+
+                },
+                allowPageScroll: "vertical"
+
+            });
+        });
+    </script>
+
+</body>
+
+</html>

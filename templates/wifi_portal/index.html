@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{{ shop.name }} - Nextify</title>
+    <link rel="stylesheet" href="/static/wifi_portal/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/nextify/css/styles.css">
+
+</head>
+<body class="wifi_slider_connect">
+<div id="fb-root"></div>
+ <script nonce="{{ csp_nonce() }}">(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.1&appId=178000429559203&autoLogAppEvents=1';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<div class="container">
+    <!-- header -->
+    <div class="row">
+        <div class="col-md col-lg-6 mg-auto pd-0 mg-top-10">
+            <div id="carouselExampleControls" class="carousel slide"
+                 data-ride="carousel">
+            <ul class="carousel-indicators">
+				{% for num in range(0,cards|length) %}
+			  <li data-target="#demo" data-slide-to="{{num}}"></li>
+			  {% endfor %}
+			</ul>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="//files.nextify.vn/{{cards[0].photo }}"/>
+                    </div>
+                    {% for card in range(1,cards|length) %}
+                        <div class="carousel-item">
+                            <img src="//files.nextify.vn/{{ cards[card].photo }}">
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- end header -->
+
+
+    <!-- middle -->
+    <div class="row">
+         <div class="col-md-8 col-lg-4 mg-auto pd-rl-24">
+          {% if user %} {% if message %}
+          <div class="box_text_intro">
+            <h3>
+              {{ message }}
+            </h3>
+           </div>
+          {% else %}
+          <div class="box_text_intro">
+          <h3>
+            {% if user.name and user.name|length > 1 %} Chào
+            <strong>{{ user.name }}</strong>,
+            <br/> cảm ơn bạn đã ghé thăm. {% else %} Chào
+            <strong>{{ user.phone }}</strong>,
+            <br/>cảm ơn bạn đã ghé thăm.
+            {% endif %}
+
+          </h3>
+          </div>
+          {% endif %} {% if shop.social == "share_fb" %} {% include 'share_fb_box.html' %} {% elif shop.social == "check_in_fb" %}
+          {% include 'check_in_fb.html' %} {% elif shop.social == "connect_fb" %} {% include 'event_connect_fb.html' %} {%
+          else %} {% if auth_target %}
+          <div class="btn_action">
+           {% if device_type=='mikrotik' %}
+            <form name="sendin_fr" action="{{ auth_target }}" method="post">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    <input type="hidden" name="username" value="{{client_mac }}" />
+                    <input type="hidden" name="password" value="{{ 'Accept'|md5_hash  }}" />
+                    <input type="hidden" name="dst" value="{{ redirect_uri }}" />
+                    <input type="hidden" name="popup" value="true" />
+	        </form>
+              <a href="#" id="sendin_btn" class="btn btn btn_bg_green mg-bt-10
+              white_text">
+            <i class="fe fe-wifi font_size_24" aria-hidden="true"></i>
+            {% if redirect_uri%}
+            <span>Tiếp tục đến {{ redirect_uri | truncate(20) }}</span>
+            {% else %}
+            <span>Kết nối Wi-Fi/Go Online</span>
+            {% endif %}
+          </a>
+
+              {% else %}
+          <a id="auth_target" href="{{ auth_target }}" class="btn btn btn_bg_green mg-bt-10 white_text">
+            <i class="fe fe-wifi font_size_24" aria-hidden="true"></i>
+             {% if redirect_uri%}
+            <span>Tiếp tục đến {{ redirect_uri | truncate(50) }}</span>
+            {% else %}
+            <span>Kết nối Wi-Fi/Go Online</span>
+            {% endif %}
+          </a>
+              {% endif %}
+          </div>
+          {% else %}
+          <div class="box_text_intro">
+          <h3 style="color: #2ecc71;">
+            <i class="fe fe-wifi" aria-hidden="true"></i>Kết nối thành công
+          </h3>
+        </div>
+          {% endif %} {% endif %}  {% else %}
+          <h5 style="line-height: 28px;text-align: center;margin: 25px 0;">
+            Đăng ký
+            <strong>khách hàng thân thiết</strong> để nhận các ưu đãi hấp dẫn
+          <a href="/register?gateway_mac={{ gateway_mac }}&client_mac={{
+              client_mac }}" class="btn btn_bg_blue mg-bt-10 white_text">
+            <i class="fe fe-wifi font_size_24" aria-hidden="true"></i>
+            <span>Đăng ký & Kết nối</span>
+          </a>
+          {% if shop.ignore_register and shop.ignore_register|lower == "true" %}
+            {% if device_type=='mikrotik' %}
+            <form name="sendin_fr" action="{{ auth_target }}" method="post">
+                    <input type="hidden" name="username" value="{{
+                            gateway_mac }}" />
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    <input type="hidden" name="password" value="{{ 'Accept'|md5_hash  }}" />
+                    <input type="hidden" name="dst" value="{{ redirect_uri }}" />
+                    <input type="hidden" name="popup" value="true" />
+	        </form>
+              <a href="#" id="sendin_btn" class="btn btn btn_bg_green mg-bt-10
+              white_text">
+            <i class="fe fe-wifi font_size_24" aria-hidden="true"></i>
+            {% if redirect_uri %}
+            <span>Tiếp tục đến {{ redirect_uri | truncate(20) }}</span>
+            {% else %}
+            <span>Kết nối Wi-Fi/Go Online</span>
+            {% endif %}
+          </a>
+
+              {% else %}
+          <a id="auth_target" href="{{ auth_target }}" class="btn btn btn_bg_green mg-bt-10 white_text">
+            <i class="fe fe-wifi font_size_24" aria-hidden="true"></i>
+            {% if redirect_uri %}
+            <span>Tiếp tục đến {{ redirect_uri | truncate(20) }}</span>
+            {% else %}
+            <span>Kết nối Wi-Fi/Go Online</span>
+            {% endif %}
+          </a>
+              {% endif %}
+          {% endif %} {% endif %}
+ {% if shop.facebook_page %}
+                            <div class="row">
+                                <div class="col-lg-5 col-md-7 col-sm-8 col-xs-12 col-centered" style="margin: 10px">
+
+                                   <div class="fb-page" data-href="{{ shop.facebook_page }}" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true"><blockquote cite="{{ shop.facebook_page }}" class="fb-xfbml-parse-ignore"><a href="{{ shop.facebook_page}}">{{ shop.facebook_page }}</a></blockquote></div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        {% endif %}
+        {#
+        <div class="btn_action">#} {#
+          <a href="#" class="btn btn_bg_blue mg-bt-10 white_text">#} {#
+            <i class="fa fa-facebook" aria-hidden="true"></i>#} {#
+            <span>Connect with Facebook</span>#} {# </a>#} {#
+          <a href="#" class="btn btn btn_bg_green mg-bt-10 white_text">#} {#
+            <i class="fa fa-mobile font_size_24" aria-hidden="true"></i>#} {#
+            <span>Connect with Phone Number</span>#} {# </a>#} {#
+          <a href="#" class="btn border">#} {#
+            <i class="fa fa-at" aria-hidden="true"></i>#} {#
+            <span>Connect with Email</span>#} {# </a>#} {# </div>#}
+      </div>
+    </div>
+    <div class="row">
+        <div class="policy_text">
+    <img src="/static/nextify/images/logonextify.png" style="display:
+    inline-block; height: 35px;">
+    <p class="content black_text">http://nextify.vn - The Next Generation
+        of Loyalty</p>
+</div>
+    </div>
+    <!-- end middle -->
+</div>
+<input type="hidden" id="facebook_page" value="{{ shop.facebook_page }}"/>
+<!-- copyright -->
+
+
+<script type="text/javascript" src="/static/scripts/jquery.min.js"></script>
+<script src="/static/wifi_portal/js/jquery.bcSwipe.min.js"></script>
+<script type="text/javascript" src="/static/wifi_portal/js/welcome.js"></script>
+  {% if shop.facebook_pixel_code %}
+    {{ shop.facebook_pixel_code|safe }}
+    {% endif %}
+{% if shop.google_pixel_code %}
+    {{ shop.google_pixel_code|safe }}
+    {% endif %}
+ <script nonce="{{ csp_nonce() }}">
+        $('#sendin_btn').click(function(){
+
+            document.sendin_fr.submit();
+		    return false;
+
+
+        });
+    </script>
+</body>
+</html>

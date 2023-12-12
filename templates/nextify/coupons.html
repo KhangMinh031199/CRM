@@ -1,0 +1,758 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+    <div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-8">
+            <div class="header mt-md-5">
+
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            Marketing
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                            {{ gettext("Phieu_khuyen_mai") }}
+                        </h1>
+
+                    </div>
+
+
+
+                </div>
+            <div class="row align-items-center">
+                  <div class="col">
+
+                    <!-- Nav -->
+                    <ul class="nav nav-tabs nav-overflow header-tabs">
+                      <li class="nav-item">
+                        <a href="/coupons" class="nav-link">
+                            {{ gettext("Phieu_khuyen_mai") }}
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/coupons/codes" class="nav-link active">
+                            {{ gettext("Ma_khuyen_mai") }} ({{ total_coupon_manual }})
+                        </a>
+                      </li>
+
+                    </ul>
+
+                  </div>
+                </div>
+            </div>
+    </div>
+
+
+        <div class="card">
+        <div class="card-header">
+
+                <!-- Form -->
+                <form>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                  <div class="input-group input-group-flush">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="fe fe-search"></i>
+                      </span>
+                    </div>
+                    <input class="form-control list-search search-query" style="margin-left: 10px" type="search" placeholder="Search">
+                  </div>
+                </form>
+
+              </div>
+
+
+<div class="table-responsive">
+                        <table class="table table-sm table-nowrap card-table">
+                                <thead>
+                                <th>{{ gettext("Ma") }}
+                                </th>
+                                <th>{{ gettext("Khach_hang") }}
+                                </th>
+                                <th >
+                                    {{ gettext("Loai") }}
+                                </th>
+                                <th>{{ gettext("Trang_thai") }}
+                                </th>
+                                <th ></th>
+                                <th ></th>
+                                </thead>
+                                <tbody class="list">
+                                {% for coup in coupons %}
+                                    <tr>
+                                        <td>{{ coup.code }}</td>
+                                        <td>
+                                            {% if coup.user_info %}
+                                                {{ coup.user_info.phone }} {% endif %}</td>
+                                        <td>{{ coup.coupon_type_info.name }}</td>
+                                        <td>
+                                            {% if coup.date_expire|is_great_time_than
+                                                   and not coup.redeemed_at %}
+                                                <span class="badge badge-soft-success">{{ gettext("Con_han") }}</span>{% else %}
+                                                <span class="badge badge-soft-secondary">{{ gettext("Het_han") }}</span>{% endif %}
+                                        </td>
+
+                                        <td>
+                                            {% if user_login and user_login.roles in ['1', '3'] %}
+
+                                               <a class="text-reset remove"
+                                                        coupon_id="{{ coup._id }}"
+                                                        id="remove{{coup._id}}">
+                                                   <i class="fe fe-delete"></i>
+                                                </a>
+                                                 <script nonce="{{ csp_nonce() }}">
+                                                    $('.remove').click(function () {
+                                                    var coupon_id = $(this).attr('coupon_id');
+                                                    var url = '/vouchers/remove?coupon_id=' + coupon_id;
+                                                    Swal.fire({
+                                                            title: '{{ gettext("Ban_co_chac_chan_muon_xoa_khong?") }}',
+                                                            type: 'warning',
+                                                            showCancelButton: true,
+                                                            confirmButtonColor: '#3085d6',
+focusCancel: true,
+                                                            cancelButtonColor: '#d33',
+                                                            confirmButtonText: '{{ gettext("Co!") }}',
+                                                            cancelButtonText: '{{ gettext("Khong!")}}'
+                                                    }).then((result) => {
+                                                    if (result.value) {
+                                                    $.ajax({
+                                                        type: 'get',
+                                                        url: url,
+                                                        success: function () {
+                                                            swal('{{ gettext("Xoa_thanh_cong") }}', '', 'success');
+                                                            $(location).attr('href', '/coupons');
+
+                                                        }
+                                                    });
+
+                                                }})});
+                                                </script>
+
+                                                {% endif %}
+
+                                            <a href="#"
+                                                    class="text-reset mr-3 u-ml-small"
+                                                    data-toggle="modal"
+                                                    data-target="#{{ coup._id }}_viewModal"
+                                                    coupon_id="{{ coup._id }}"><i class="fe fe-info"></i>
+                                            </a>
+
+                                        </td>
+                                      <td>
+                                            {% if coup.user_info and 'redeem_by' not in coup %}
+                                                {% if coup
+                                           .date_expire|is_great_time_than
+                                                   and not coup.redeemed_at %}
+
+                                                    <form action="/vouchers/redeem"
+                                                          method="post"
+                                                          id="fr_{{ coup._id }}">
+                                                     <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                                        <input type="hidden"
+                                                               value="{{ shop._id }}"
+                                                               name="shop_id">
+                                                        <input type="hidden"
+                                                               value="{{ merchant_id }}"
+                                                               name="merchant_id">
+                                                        <input type="hidden"
+                                                               value="{{ coup.code }}"
+                                                               name="code">
+                                                    </form>
+                                                    <button type="button"
+                                                            class="btn btn-danger
+                                                        u-ml-small"
+                                                            coupon_id="{{ coup._id }}">
+                                                        {{ gettext("Doi") }}
+                                                    </button>
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <div class="c-modal c-modal--xlarge modal fade"
+                                         id="{{ coup._id }}_viewModal"
+                                         tabindex="-1" role="dialog"
+                                         aria-labelledby="userDetailModal"
+                                         data-backdrop="static">
+                                        <div class="c-modal__dialog modal-dialog"
+                                             role="document">
+                                            <div class="c-modal__content modal-content">
+                                                <a class="c-modal__close c-modal__close--absolute u-text-mute u-opacity-medium"
+                                                   data-dismiss="modal"
+                                                   aria-label="Close">
+                                                    <i class="fa fa-close"></i>
+                                                </a>
+
+                                                <div class="c-modal__body">
+
+
+                                                    <div class="row u-justify-center">
+
+
+                                                        <div class="col-md-4 u-text-center">
+                                                            <h4 class="u-pt-small
+                                      u-color-primary"></h4>
+                                                            <h4 class="u-text-mute u-text-xsmall
+                                       u-pb-small u-text-uppercase"></h4>
+                                                        </div>
+                                                        <div class="col-md-4 u-text-center">
+                                                            <h4 class="u-pt-small
+                                      u-color-primary">{{ coup.code }}</h4>
+                                                            <h4 class="u-text-mute u-text-xsmall
+                                     u-pb-small u-text-uppercase"></h4>
+                                                        </div>
+                                                        <div class="col-md-4 u-text-center">
+                                                            <h4 class="u-pt-small
+                                      u-color-primary"></h4>
+                                                            <h4 class="u-text-mute u-text-xsmall u-pb-small u-text-uppercase">
+                                                            </h4>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row u-justify-center">
+                                                        <div class="col-md-6 u-text-center">
+                                                            <dl class="u-flex u-pv-small u-border-bottom ml-3">
+                                                                <dt class="u-width-50">
+                                                                    {{ gettext("So_dien_thoai") }}
+                                                                </dt>
+                                                                <dd>
+                                                                    {% if coup.user_info %}
+                                                                        {{ coup.user_info.phone }} {% endif %}</dd>
+                                                            </dl>
+                                                            <dl class="u-flex u-pv-small u-border-bottom ml-3">
+                                                                <dt class="u-width-50">
+                                                                    Email
+                                                                </dt>
+                                                                <dd>
+                                                                    {% if coup.user_info %}
+                                                                        {{ coup.user_info.email }} {% endif %}</dd>
+                                                            </dl>
+                                                            <dl class="u-flex u-pv-small u-border-bottom ml-3">
+                                                                <dt class="u-width-50">
+                                                                    {{ gettext("Loai_coupons") }}
+                                                                </dt>
+                                                                <dd>{{ coup.coupon_type_info.name }}</dd>
+                                                            </dl>
+                                                            <dl class="u-flex u-pv-small u-border-bottom ml-3">
+                                                                <dt class="u-width-50">
+                                                                    {{ gettext("Tien_khuyen_mai") }}
+                                                                </dt>
+                                                                <dd>
+                                                                    {% if coup.coupon_type_info.money_exchange %}
+                                                                        {{ coup.coupon_type_info.money_exchange |format_price }}{% endif %}</dd>
+                                                            </dl>
+                                                            <dl class="u-flex u-pv-small u-border-bottom ml-3">
+                                                                <dt class="u-width-50">
+                                                                    {{ gettext("Giam_gia") }}
+                                                                </dt>
+                                                                <dd>{{ coup.coupon_type_info.discount_percent }}</dd>
+                                                            </dl>
+                                                            <dl class="u-flex u-pv-small u-border-bottom ml-3">
+                                                                <dt class="u-width-50">
+                                                                    {{ gettext("Chi_tiet") }}
+                                                                </dt>
+                                                                <dd>{{ coup.coupon_type_info.content }}</dd>
+                                                            </dl>
+
+                                                        </div>
+                                                        <div class="col-md-6 u-text-center">
+                                                            <dl class="u-flex u-pv-small u-border-bottom">
+                                                                <dt class="u-width-50">
+                                                                    {{ gettext("Tao_luc") }}
+                                                                </dt>
+                                                                <dd>
+                                                                    {{ coup.when|human_time }}</dd>
+                                                            </dl>
+                                                            <dl class="u-flex u-pv-small u-border-bottom">
+                                                                <dt class="u-width-50">
+                                                                    {{ gettext("Ngay_het_han") }}
+                                                                </dt>
+                                                                <dd>{{ coup.date_expire }}</dd>
+                                                            </dl>
+                                                            <dl class="u-flex u-pv-small u-border-bottom">
+                                                                <dt class="u-width-50">
+                                                                    {{ gettext("Trang_thai") }}
+                                                                </dt>
+                                                                <dd>  {% if coup.date_expire|is_great_time_than
+                                                   and not coup.redeemed_at %}
+                                                                    <span class="c-badge c-badge--success">{{ gettext("Con_han") }}</span>{% else %}
+                                                                    <span class="c-badge c-badge--secondary">{{ gettext("Het_han") }}</span>{% endif %}
+                                                                </dd>
+                                                            </dl>
+
+                                                            {% if redeemed_at in
+                                                            coup and
+                                                            redeem_by in coup %}
+                                                                <dl class="u-flex u-pv-small u-border-bottom">
+                                                                    <dt class="u-width-50">
+                                                                        {{ gettext("Doi_luc") }}
+                                                                    </dt>
+                                                                    <dd> {{ coup
+                                                                .redeemed_at|human_time }}</dd>
+                                                                </dl>
+                                                                <dl class="u-flex u-pv-small u-border-bottom">
+                                                                    <dt class="u-width-50">
+                                                                       {{ gettext("Nhan_vien") }}
+                                                                    </dt>
+                                                                    <dd> {{ coup
+                                                                        .redeem_by }}</dd>
+                                                                </dl>
+
+                                                            {% endif %}
+
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                <div class="card-footer">
+
+                        <nav class="pagination justify-content-center">
+                            {% if pagination %}
+                                {{ pagination.links }}
+                            {% endif %}
+                        </nav>
+
+
+                </div>
+
+        </div>
+
+
+
+        </div>
+    </div>
+
+
+{#    <div class="container-fluid">#}
+{##}
+{#        <div class="row u-mb-large">#}
+{##}
+{#             <div class="col-12 col-xl-3">#}
+{#             <div class="card">#}
+{#               <div class="card-body">#}
+{##}
+{#                  <form action="/coupons" id="fr_coupons_filter"#}
+{#                              enctype="multipart/form-data">#}
+{#                   <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />#}
+{#                            <div class="form-group">#}
+{##}
+{#                                          <label>{{ gettext("Trang_thai:") }}</label>#}
+{#                            {% if filter %}#}
+{#                                <input type="hidden" value="{{ filter }}"#}
+{#                                       id="ex_filter">#}
+{#                            {% endif %}#}
+{#                                <select id="filter" name="filter"#}
+{#                                        class="form-control">#}
+{#                                    <option value="">{{ gettext("Chua_doi") }}</option>#}
+{#                                    <option value="redeem">{{ gettext("Da_doi") }}</option>#}
+{#                                    <option value="all">{{ gettext("Kho") }}</option>#}
+{#                                </select>#}
+{##}
+{#                                </div>#}
+{#                                  <div class="form-group">#}
+{#                            {% if coupon_type_id %}#}
+{#                                <input type="hidden" id="coupon_type_id"#}
+{#                                       value="{{ coupon_type_id }}">#}
+{#                            {% endif %}#}
+{##}
+{#                             <label>{{ gettext("Loai_coupon:")}}:</label>#}
+{#                                <select name="coupon_type"#}
+{#                                        class="form-control"#}
+{#                                        style="width: auto" id="type_coupon">#}
+{#                                    <option value="all">{{ gettext("Tat_ca") }}</option>#}
+{#                                    {% for coup in coupons_type_select %}#}
+{#                                        <option value="{{ coup._id }}">{{ coup.name }}</option>#}
+{#                                    {% endfor %}#}
+{#                                </select>#}
+{#                            </div>#}
+{#                                   <div class="form-group">#}
+{#                                         <label>{{ gettext("So_dien_thoai:") }}</label>#}
+{#                                <input name="user_phone" type="text"#}
+{#                                       placeholder=""#}
+{#                                       class="form-control" value="#}
+{##}
+{#                                        {% if user_phone %}{{ user_phone }}{% endif %}">#}
+{##}
+{##}
+{#                                </div>#}
+{##}
+{#                               <div class="form-group">#}
+{#                                       <label>  </label>#}
+{##}
+{#                            <button class="btn btn-block btn-primary mt-auto" id="view_filter">{{ gettext("Xem") }}</button>#}
+{##}
+{##}
+{#                                </div>#}
+{##}
+{##}
+{##}
+{##}
+{#                        </form>#}
+{##}
+{#               </div>#}
+{#             </div>#}
+{##}
+{##}
+{##}
+{#            </div>#}
+{#              <div class="col-12 col-xl-9">#}
+{#                <div class="card">#}
+{#                    <div class="col-md-12">#}
+{##}
+{#                         <div class="table-responsive">#}
+{#                        <table class="table table-sm card-table">#}
+{#                                <thead>#}
+{#                                <th>{{ gettext("Ma") }}#}
+{#                                </th>#}
+{#                                <th>{{ gettext("Khach_hang") }}#}
+{#                                </th>#}
+{#                                <th >#}
+{#                                    {{ gettext("Loai") }}#}
+{#                                </th>#}
+{#                                <th>{{ gettext("Trang_thai") }}#}
+{#                                </th>#}
+{#                                <th ></th>#}
+{#                                <th ></th>#}
+{#                                </thead>#}
+{#                                <tbody>#}
+{#                                {% for coup in coupons %}#}
+{#                                    <tr>#}
+{#                                        <td>{{ coup.code }}</td>#}
+{#                                        <td>#}
+{#                                            {% if coup.user_info %}#}
+{#                                                {{ coup.user_info.phone }} {% endif %}</td>#}
+{#                                        <td>{{ coup.coupon_type_info.name }}</td>#}
+{#                                        <td>#}
+{#                                            {% if coup.date_expire|is_great_time_than#}
+{#                                                   and not coup.redeemed_at %}#}
+{#                                                <span class="badge badge-soft-success">{{ gettext("Con_han") }}</span>{% else %}#}
+{#                                                <span class="badge badge-soft-secondary">{{ gettext("Het_han") }}</span>{% endif %}#}
+{#                                        </td>#}
+{##}
+{#                                        <td>#}
+{#                                            {% if user_login and user_login.roles in ['1', '3'] %}#}
+{#                                                {% if coup.user_info is not defined %}#}
+{#                                            #}
+{#                                                <button type="button"#}
+{#                                                        class="c-btn#}
+{#                                                        c-btn--danger#}
+{#                                                        u-ml-small remove"#}
+{#                                                        coupon_id="{{ coup._id }}"#}
+{#                                                        id="remove{{coup._id}}">#}
+{#                                                    {{ gettext("Xoa") }}#}
+{#                                                </button>#}
+{#                                                 <script nonce="{{ csp_nonce() }}">#}
+{#                                                    $('.remove').click(function () {#}
+{#                                                    var coupon_id = $(this).attr('coupon_id');#}
+{#                                                    var url = '/vouchers/remove?coupon_id=' + coupon_id;#}
+{#                                                    Swal.fire({#}
+{#                                                            title: '{{ gettext("Ban_co_chac_chan_muon_xoa_khong?") }}',                  #}
+{#                                                            type: 'warning',#}
+{#                                                            showCancelButton: true,#}
+{#                                                            confirmButtonColor: '#3085d6',
+focusCancel: true,#}
+{#                                                            cancelButtonColor: '#d33',#}
+{#                                                            confirmButtonText: '{{ gettext("Co!") }}'#}
+{#                                                    }).then((result) => {#}
+{#                                                    if (result.value) {#}
+{#                                                    $.ajax({#}
+{#                                                        type: 'get',#}
+{#                                                        url: url,#}
+{#                                                        success: function () {#}
+{#                                                            swal('{{ gettext("Xoa_thanh_cong") }}', '', 'success');#}
+{#                                                            $(location).attr('href', '/coupons');#}
+{##}
+{#                                                        }#}
+{#                                                    });#}
+{##}
+{#                                                }})}); #}
+{#                                                </script>#}
+{#             #}
+{#                                                {% endif %}#}
+{#                                            {% endif %}#}
+{#                                            <a href="#"#}
+{#                                                    class="text-reset mr-3 u-ml-small"#}
+{#                                                    data-toggle="modal"#}
+{#                                                    data-target="#{{ coup._id }}_viewModal"#}
+{#                                                    coupon_id="{{ coup._id }}"><i class="fe fe-info"></i>#}
+{#                                            </a>#}
+{##}
+{#                                        </td>#}
+{#                                      <td>#}
+{#                                            {% if coup.user_info and 'redeem_by' not in coup %}#}
+{#                                                {% if coup#}
+{#                                           .date_expire|is_great_time_than#}
+{#                                                   and not coup.redeemed_at %}#}
+{##}
+{#                                                    <form action="/vouchers/redeem"#}
+{#                                                          method="post"#}
+{#                                                          id="fr_{{ coup._id }}">#}
+{#                                                     <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />#}
+{#                                                        <input type="hidden"#}
+{#                                                               value="{{ shop._id }}"#}
+{#                                                               name="shop_id">#}
+{#                                                        <input type="hidden"#}
+{#                                                               value="{{ merchant_id }}"#}
+{#                                                               name="merchant_id">#}
+{#                                                        <input type="hidden"#}
+{#                                                               value="{{ coup.code }}"#}
+{#                                                               name="code">#}
+{#                                                    </form>#}
+{#                                                    <button type="button"#}
+{#                                                            class="btn btn-danger#}
+{#                                                        u-ml-small"#}
+{#                                                            coupon_id="{{ coup._id }}">#}
+{#                                                        {{ gettext("Doi") }}#}
+{#                                                    </button>#}
+{#                                                {% endif %}#}
+{#                                            {% endif %}#}
+{#                                        </td>#}
+{#                                    </tr>#}
+{#                                    <div class="c-modal c-modal--xlarge modal fade"#}
+{#                                         id="{{ coup._id }}_viewModal"#}
+{#                                         tabindex="-1" role="dialog"#}
+{#                                         aria-labelledby="userDetailModal"#}
+{#                                         data-backdrop="static">#}
+{#                                        <div class="c-modal__dialog modal-dialog"#}
+{#                                             role="document">#}
+{#                                            <div class="c-modal__content modal-content">#}
+{#                                                <a class="c-modal__close c-modal__close--absolute u-text-mute u-opacity-medium"#}
+{#                                                   data-dismiss="modal"#}
+{#                                                   aria-label="Close">#}
+{#                                                    <i class="fa fa-close"></i>#}
+{#                                                </a>#}
+{##}
+{#                                                <div class="c-modal__body">#}
+{##}
+{##}
+{#                                                    <div class="row u-justify-center">#}
+{##}
+{##}
+{#                                                        <div class="col-md-4 u-text-center">#}
+{#                                                            <h4 class="u-pt-small#}
+{#                                      u-color-primary"></h4>#}
+{#                                                            <h4 class="u-text-mute u-text-xsmall#}
+{#                                       u-pb-small u-text-uppercase"></h4>#}
+{#                                                        </div>#}
+{#                                                        <div class="col-md-4 u-text-center">#}
+{#                                                            <h4 class="u-pt-small#}
+{#                                      u-color-primary">{{ coup.code }}</h4>#}
+{#                                                            <h4 class="u-text-mute u-text-xsmall#}
+{#                                     u-pb-small u-text-uppercase"></h4>#}
+{#                                                        </div>#}
+{#                                                        <div class="col-md-4 u-text-center">#}
+{#                                                            <h4 class="u-pt-small#}
+{#                                      u-color-primary"></h4>#}
+{#                                                            <h4 class="u-text-mute u-text-xsmall u-pb-small u-text-uppercase">#}
+{#                                                            </h4>#}
+{#                                                        </div>#}
+{##}
+{#                                                    </div>#}
+{#                                                    <div class="row u-justify-center">#}
+{#                                                        <div class="col-md-6 u-text-center">#}
+{#                                                            <dl class="u-flex u-pv-small u-border-bottom">#}
+{#                                                                <dt class="u-width-50">#}
+{#                                                                    {{ gettext("So_dien_thoai") }}#}
+{#                                                                </dt>#}
+{#                                                                <dd>#}
+{#                                                                    {% if coup.user_info %}#}
+{#                                                                        {{ coup.user_info.phone }} {% endif %}</dd>#}
+{#                                                            </dl>#}
+{#                                                            <dl class="u-flex u-pv-small u-border-bottom">#}
+{#                                                                <dt class="u-width-50">#}
+{#                                                                    Email#}
+{#                                                                </dt>#}
+{#                                                                <dd>#}
+{#                                                                    {% if coup.user_info %}#}
+{#                                                                        {{ coup.user_info.email }} {% endif %}</dd>#}
+{#                                                            </dl>#}
+{#                                                            <dl class="u-flex u-pv-small u-border-bottom">#}
+{#                                                                <dt class="u-width-50">#}
+{#                                                                    {{ gettext("Loai_coupons") }}#}
+{#                                                                </dt>#}
+{#                                                                <dd>{{ coup.coupon_type_info.name }}</dd>#}
+{#                                                            </dl>#}
+{#                                                            <dl class="u-flex u-pv-small u-border-bottom">#}
+{#                                                                <dt class="u-width-50">#}
+{#                                                                    {{ gettext("Tien_khuyen_mai") }}#}
+{#                                                                </dt>#}
+{#                                                                <dd>#}
+{#                                                                    {% if coup.coupon_type_info.money_exchange %}#}
+{#                                                                        {{ coup.coupon_type_info.money_exchange |format_price }}{% endif %}</dd>#}
+{#                                                            </dl>#}
+{#                                                            <dl class="u-flex u-pv-small u-border-bottom">#}
+{#                                                                <dt class="u-width-50">#}
+{#                                                                    {{ gettext("Giam_gia") }}#}
+{#                                                                </dt>#}
+{#                                                                <dd>{{ coup.coupon_type_info.discount_percent }}</dd>#}
+{#                                                            </dl>#}
+{#                                                            <dl class="u-flex u-pv-small u-border-bottom">#}
+{#                                                                <dt class="u-width-50">#}
+{#                                                                    {{ gettext("Chi_tiet") }}#}
+{#                                                                </dt>#}
+{#                                                                <dd>{{ coup.coupon_type_info.content }}</dd>#}
+{#                                                            </dl>#}
+{##}
+{#                                                        </div>#}
+{#                                                        <div class="col-md-6 u-text-center">#}
+{#                                                            <dl class="u-flex u-pv-small u-border-bottom">#}
+{#                                                                <dt class="u-width-50">#}
+{#                                                                    {{ gettext("Tao_luc") }}#}
+{#                                                                </dt>#}
+{#                                                                <dd>#}
+{#                                                                    {{ coup.when|human_time }}</dd>#}
+{#                                                            </dl>#}
+{#                                                            <dl class="u-flex u-pv-small u-border-bottom">#}
+{#                                                                <dt class="u-width-50">#}
+{#                                                                    {{ gettext("Ngay_het_han") }}#}
+{#                                                                </dt>#}
+{#                                                                <dd>{{ coup.date_expire }}</dd>#}
+{#                                                            </dl>#}
+{#                                                            <dl class="u-flex u-pv-small u-border-bottom">#}
+{#                                                                <dt class="u-width-50">#}
+{#                                                                    {{ gettext("Trang_thai") }}#}
+{#                                                                </dt>#}
+{#                                                                <dd>  {% if coup.date_expire|is_great_time_than#}
+{#                                                   and not coup.redeemed_at %}#}
+{#                                                                    <span class="c-badge c-badge--success">{{ gettext("Con_han") }}</span>{% else %}#}
+{#                                                                    <span class="c-badge c-badge--secondary">{{ gettext("Het_han") }}</span>{% endif %}#}
+{#                                                                </dd>#}
+{#                                                            </dl>#}
+{##}
+{#                                                            {% if redeemed_at in#}
+{#                                                            coup and#}
+{#                                                            redeem_by in coup %}#}
+{#                                                                <dl class="u-flex u-pv-small u-border-bottom">#}
+{#                                                                    <dt class="u-width-50">#}
+{#                                                                        {{ gettext("Doi_luc") }}#}
+{#                                                                    </dt>#}
+{#                                                                    <dd> {{ coup#}
+{#                                                                .redeemed_at|human_time }}</dd>#}
+{#                                                                </dl>#}
+{#                                                                <dl class="u-flex u-pv-small u-border-bottom">#}
+{#                                                                    <dt class="u-width-50">#}
+{#                                                                       {{ gettext("Nhan_vien") }}#}
+{#                                                                    </dt>#}
+{#                                                                    <dd> {{ coup#}
+{#                                                                        .redeem_by }}</dd>#}
+{#                                                                </dl>#}
+{##}
+{#                                                            {% endif %}#}
+{##}
+{#                                                        </div>#}
+{#                                                    </div>#}
+{##}
+{##}
+{#                                                </div>#}
+{##}
+{##}
+{#                                            </div>#}
+{##}
+{#                                        </div>#}
+{#                                    </div>#}
+{##}
+{#                                {% endfor %}#}
+{#                                </tbody>#}
+{#                            </table>#}
+{#                        </div>#}
+{##}
+{##}
+{#                        <nav class="c-pagination u-justify-center">#}
+{#                            {% if pagination %}#}
+{#                                {{ pagination.links }}#}
+{#                            {% endif %}#}
+{#                        </nav>#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{##}
+{##}
+{#            </div>#}
+{##}
+{##}
+{#        </div><!-- // .row -->#}
+{#    </div>#}
+
+{% endblock %}
+{% block js %}
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            if ($("#ex_filter").length > 0) {
+                $("#filter").val($("#ex_filter").val());
+            }
+            $('.search-query').keypress(function (e) {
+                if (e.which == 13) {
+                    location.href = '/coupons/codes?search=' + $('.search-query').val();
+                    return false;
+                }
+            });
+            $('#search_coupon').on('click', function (e) {
+                e.preventDefault();
+                location.href = '/vouchers?search=' + $('.search-query').val();
+            });
+
+            $('.redeem_now').on('click', function (e) {
+                e.preventDefault();
+                var coupon_id = $(this).attr('coupon_id');
+                var result = confirm('{{ gettext("Ban_co_muon_doi_khong?") }}');
+                if (result) {
+                    $("#fr_" + coupon_id).submit();
+                }
+            });
+
+            function setParam(uri, key, val) {
+                return uri
+                    .replace(RegExp("([?&]" + key + "(?=[=&#]|$)[^#&]*|(?=#|$))"), "&" + key + "=" + encodeURIComponent(val))
+                    .replace(/^([^?&]+)&/, "$1?");
+            }
+
+            if ($("#coupon_type_id").length > 0) {
+                $("#type_coupon").val($("#coupon_type_id").val());
+            }
+            $('#view_filter').on('click', function (e) {
+                e.preventDefault();
+                var data = $("#fr_coupons_filter").serialize();
+                var href = '/coupons?' + data;
+                location.href = href;
+            });
+            $("#export_coupon").click(function () {
+                var url_export = "/export_coupon_manual";
+                $.ajax({
+                    url: url_export,
+                    data: $("#fr_coupons_filter").serialize(),
+                    success: function (data) {
+                        alert('{{ gettext("File_dang_duoc_xu_ly,_vui_long_kiem_tra_email_de_nhan_file_sau_3-5_phut_nua.") }}')
+                    }
+                });
+            });
+
+
+        });
+    </script>
+ 
+{% endblock %}

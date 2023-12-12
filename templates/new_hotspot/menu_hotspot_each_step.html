@@ -1,0 +1,408 @@
+
+
+        <div class="row">
+            <div class="col-12">
+                <label>{{ gettext("Chon_loai_trang_chao") }}</label>
+                <div class="form-group">
+                    <select class="select_type_splash form-control" style="width: 100%;">
+                {% if step != '4' %}
+                    {% if '0' in arr_splash|safe %}
+                        {% if splash_choosed_step == '0' %}
+                        <option value="0" selected>{{ gettext("Bo_qua") }}</option>
+                        {% else %}
+                        <option value="0">{{ gettext("Bo_qua") }}</option>
+                        {% endif %}
+                    {% endif %}
+                    {% if 'default' in arr_splash|safe %}
+                        {% if splash_choosed_step == 'default' %}
+                            <option value="default" selected>{{ gettext("Trang_mac_dinh") }}</option>
+                        {% else %}
+                            <option value="default">{{ gettext("Trang_mac_dinh") }}</option>
+                        {% endif %}
+                    {% endif %}
+                    {% if 'register' in arr_splash|safe %}
+                        {% if splash_choosed_step == 'register' %}
+                            <option value="register" selected>{{ gettext("Trang_dang_ky") }}</option>
+                        {% else %}
+                            <option value="register">{{ gettext("Trang_dang_ky") }}</option>
+                        {% endif %}
+                    {% endif %}
+                    {% if 'plus_register' in arr_splash|safe %}
+                        {% if splash_choosed_step == 'plus_register' %}
+                            <option value="plus_register" selected>{{ gettext("Trang_cap_nhat_thong_tin") }}</option>
+                        {% else %}
+                            <option value="plus_register">{{ gettext("Trang_cap_nhat_thong_tin") }}</option>
+                        {% endif %}
+                    {% endif %}
+                    {% if 'survey' in arr_splash|safe %}
+                            {% if splash_choosed_step == 'survey' %}
+                                <option value="survey" selected>{{ gettext("Trang_khao_sat") }}</option>
+                            {% else %}
+                                <option value="survey">{{ gettext("Trang_khao_sat") }}</option>
+                            {% endif %}
+                        {% endif %}
+                    {% if shop.merchant_id|package_merchant != "Brand" %}
+                        {% if 'birthday' in arr_splash|safe %}
+                            {% if splash_choosed_step == 'birthday' %}
+                                <option value="birthday" selected>{{ gettext("Chuc_mung_sinh_nhat") }}</option>
+                            {% else %}
+                                <option value="birthday">{{ gettext("Chuc_mung_sinh_nhat") }}</option>
+                            {% endif %}
+                        {% endif %}
+                        {% if 'hour' in arr_splash|safe %}
+                            {% if splash_choosed_step == 'hour' %}
+                                <option value="hour" selected>{{ gettext("Trang_chao_theo_khung_gio") }}</option>
+                            {% else %}
+                                <option value="hour">{{ gettext("Trang_chao_theo_khung_gio") }}</option>
+                            {% endif %}
+                        {% endif %}
+                        {% if 'promotion' in arr_splash|safe %}
+                            {% if splash_choosed_step == 'promotion' %}
+                                <option value="promotion" selected>{{ gettext("Trang_chao_theo_khoang_ngay") }}</option>
+                            {% else %}
+                                <option value="promotion">{{ gettext("Trang_chao_theo_khoang_ngay") }}</option>
+                            {% endif %}
+                        {% endif %}
+                        {% if 'tags' in arr_splash|safe %}
+                            {% if splash_choosed_step == 'tags' %}
+                                <option value="tags" selected>{{ gettext("Trang_chao_theo_tag") }}</option>
+                            {% else %}
+                                <option value="tags">{{ gettext("Trang_chao_theo_tag") }}</option>
+                            {% endif %}
+                        {% endif %}
+                        {% if 'loyal' in arr_splash|safe %}
+                            {% if splash_choosed_step == 'loyal' %}
+                                <option value="loyal" selected>{{ gettext("Trang_chao_theo_luot_den") }}</option>
+                            {% else %}
+                                <option value="loyal">{{ gettext("Trang_chao_theo_luot_den") }}</option>
+                            {% endif %}
+                        {% endif %}
+                        {% if 'weekday' in arr_splash|safe %}
+                            {% if splash_choosed_step == 'weekday' %}
+                                <option value="weekday" selected>{{ gettext("Trang_chao_theo_ngay_trong_tuan") }}</option>
+                            {% else %}
+                                <option value="weekday">{{ gettext("Trang_chao_theo_ngay_trong_tuan") }}</option>
+                            {% endif %}
+                        {% endif %}
+                        {% if 'spin' in arr_splash|safe %}
+                            {% if splash_choosed_step == 'spin' %}
+                                <option value="spin" selected>{{ gettext("Vong_quay_may_man") }}</option>
+                            {% else %}
+                                <option value="spin">{{ gettext("Vong_quay_may_man") }}</option>
+                            {% endif %}
+                        {% endif %}
+                        {% if 'woay' in arr_splash|safe %}
+                            {% if splash_choosed_step == 'woay' %}
+                                <option value="woay" selected>{{ gettext("Vong_quay_Woay") }}</option>
+                            {% else %}
+                                <option value="woay">{{ gettext("Vong_quay_Woay") }}</option>
+                            {% endif %}
+                        {% endif %}
+                        <!-- {% if 'youtube' in arr_splash|safe %}
+                            {% if splash_choosed_step == 'youtube' %}
+                                <option value="youtube" selected>{{ gettext("Trang_chao_youtube") }}</option>
+                            {% else %}
+                                <option value="youtube">{{ gettext("Trang_chao_youtube") }}</option>
+                            {% endif %}
+                        {% endif %} -->
+                    {% endif %}
+                {% else %}
+                    <option value="connect_success" selected>{{ gettext("Trang_ket_noi_thanh_cong") }}</option>
+                {% endif %}
+            </select>
+                </div>
+
+<div class="detail-splash">
+
+</div>
+
+            </div>
+
+        </div>
+
+<script>
+    $(document).ready(function () {
+        var step = parseInt('{{ step }}');
+        var arr_splash = '{{ arr_splash|safe }}';
+        var shop_id = '{{ shop_id_select }}';
+        var splash_choosed_step = '{{ splash_choosed_step }}';
+        if (splash_choosed_step != '0') {
+            $.ajax({
+                url: "/hotspot_type/" + splash_choosed_step,
+                type: 'GET',
+                data: {
+                    'step': step,
+                    'shop_id_select': shop_id
+                },
+                beforeSend: function () {
+                    $(".detail-splash").empty();
+                },
+                success: function (data) {
+                    $(".detail-splash").append(data);
+                }
+            });
+        }
+        arr_splash = JSON.parse(arr_splash);
+        function select_splash() {
+
+            $('.select_type_splash').on('change', function (e) {
+
+                var type_page = $(this).val();
+                if (type_page == '0') {
+                    var url_preview = '/hotspot_type/0?shop_id_select=' + shop_id;
+                    $("#preview").empty();
+                    bioMp(document.getElementById('preview'), {
+                        url: url_preview,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 618,
+                        width: 308
+                    });
+                }
+                 $.ajax({
+                    url: "/hotspot_type/" + type_page,
+                    type: 'GET',
+                    data: {
+                        'step': step,
+                        'shop_id_select': shop_id
+                    },
+                    beforeSend: function () {
+                        $(".detail-splash").empty();
+                    },
+                    success: function (data) {
+                        $(".detail-splash").append(data);
+
+                    }
+                });
+                e.preventDefault();
+            });
+        }
+        if (step != 4) {
+
+            $('#save_campaign_hotspot').hide();
+            $('#status_campaign').hide();
+            select_splash();
+        } else {
+            $.ajax({
+                url: "/hotspot_type/connect_success",
+                type: 'GET',
+                data: {
+                    'step': '4',
+                    'shop_id_select': shop_id
+                },
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $(".detail-splash").empty();
+                    $(".detail-splash").append(data);
+                }
+            });
+            $('#save_campaign_hotspot').show();
+            $('#status_campaign').show();
+        }
+
+        next();
+        function next() {
+            if (step != 4) {
+                $("#next-step").click(function () {
+                    var type_page = $('.select_type_splash').val();
+                    for(i=0; i<arr_splash.length; i++) {
+                        if (arr_splash[i] == type_page && arr_splash[i] != 'survey' && type_page != '0') {
+                            arr_splash.splice(i, 1);
+                        }
+                    };
+                    $("#prev-step").off("click");
+                    $("#next-step").off("click");
+                    $("#btn_next").off("click");
+                    $("#btn_prev").off("click");
+                    step = step + 1;
+                    if (step == 4) {
+                        document.getElementById("next-step").className = 'unactive-step btn';
+                        document.getElementById("btn_next").style.display = 'none';
+                    } else {
+                        document.getElementById("next-step").className = 'active-step btn';
+                        document.getElementById("btn_next").style.display = 'block';
+                    };
+
+                    document.getElementById("prev-step").className = 'active-step btn';
+                    document.getElementById("btn_prev").style.display = 'block';
+                    $.ajax({
+                        headers: {"X-CSRFToken": "{{ csrf_token() }}"},
+                        url: "/hotspot_details",
+                        type: 'POST',
+                        data: {
+                            'arr_splash': JSON.stringify(arr_splash),
+                            'step': step,
+                            'pre_step': step - 1,
+                            'choose_splash': type_page,
+                            'shop_id': shop_id
+                        },
+                        success: function (data) {
+                            document.getElementById("name-step").innerHTML = '{{ gettext("Buoc") }} ' + step;
+                            $(".config-splash").empty();
+                            $(".config-splash").append(data);
+                            select_splash();
+                        }
+                    });
+                });
+            }
+        }
+
+        next_btn();
+        function next_btn() {
+            if (step != 4) {
+                $("#btn_next").click(function () {
+                    var type_page = $('.select_type_splash').val();
+
+                    for(i=0; i<arr_splash.length; i++) {
+                        if (arr_splash[i] == type_page && arr_splash[i] != 'survey' && type_page != '0') {
+                            arr_splash.splice(i, 1);
+                        }
+                    };
+                    $("#prev-step").off("click");
+                    $("#next-step").off("click");
+                    $("#btn_next").off("click");
+                    $("#btn_prev").off("click");
+                    step = step + 1;
+                    if (step == 4) {
+                        document.getElementById("next-step").className = 'unactive-step btn';
+                        document.getElementById("btn_next").style.display = 'none';
+                    } else {
+                        document.getElementById("next-step").className = 'active-step btn';
+                        document.getElementById("btn_next").style.display = 'block';
+                    };
+
+                    document.getElementById("prev-step").className = 'active-step btn';
+                    document.getElementById("btn_prev").style.display = 'block';
+                    $.ajax({
+                        headers: {"X-CSRFToken": "{{ csrf_token() }}"},
+                        url: "/hotspot_details",
+                        type: 'POST',
+                        data: {
+                            'arr_splash': JSON.stringify(arr_splash),
+                            'step': step,
+                            'pre_step': step - 1,
+                            'choose_splash': type_page,
+                            'shop_id': shop_id
+                        },
+                        beforeSend: function () {
+                        },
+                        success: function (data) {
+                            document.getElementById("name-step").innerHTML = '{{ gettext("Buoc") }} ' + step;
+                            $(".config-splash").empty();
+                            $(".config-splash").append(data);
+                            select_splash();
+                        }
+                    });
+                });
+            }
+        }
+
+        prev();
+        function prev() {
+            if(step != 1) {
+                $("#prev-step").click(function () {
+                    var type_page = $('.select_type_splash').val();
+                    for(i=0; i<arr_splash.length; i++) {
+                        if (arr_splash[i] == type_page && arr_splash[i] != 'survey' && type_page != '0') {
+                            arr_splash.splice(i, 1);
+                        }
+                    };
+                    $("#next-step").off("click");
+                    $("#prev-step").off("click");
+                    $("#btn_next").off("click");
+                    $("#btn_prev").off("click");
+                    step = step - 1;
+                    if (step == 1) {
+                        document.getElementById("prev-step").className = 'unactive-step btn';
+                        document.getElementById("btn_prev").style.display = 'none';
+                    } else {
+                        document.getElementById("prev-step").className = 'active-step btn';
+                        document.getElementById("btn_prev").style.display = 'block';
+                    };
+
+                    document.getElementById("next-step").className = 'active-step btn';
+                    document.getElementById("btn_next").style.display = 'block';
+                    $.ajax({
+                        headers: {"X-CSRFToken": "{{ csrf_token() }}"},
+                        url: "/hotspot_details",
+                        type: 'POST',
+                        data: {
+                            'arr_splash': JSON.stringify(arr_splash),
+                            'step': step,
+                            'pre_step': step + 1,
+                            'choose_splash': type_page,
+                            'shop_id': shop_id
+                        },
+                        beforeSend: function () {
+                        },
+                        success: function (data) {
+                            document.getElementById("name-step").innerHTML = '{{ gettext("Buoc") }} ' + step;
+                            $(".config-splash").empty();
+                            $(".config-splash").append(data);
+                            select_splash();
+                        }
+                    });
+                });
+            }
+        }
+
+        prev_btn();
+        function prev_btn() {
+            if(step != 1) {
+                $("#btn_prev").click(function () {
+                    var type_page = $('.select_type_splash').val();
+                    for(i=0; i<arr_splash.length; i++) {
+                        if (arr_splash[i] == type_page && arr_splash[i] != 'survey' && type_page != '0') {
+                            arr_splash.splice(i, 1);
+                        }
+                    }
+                    $("#next-step").off("click");
+                    $("#prev-step").off("click");
+                    $("#btn_next").off("click");
+                    $("#btn_prev").off("click");
+                    step = step - 1;
+                    if (step == 1) {
+                        document.getElementById("prev-step").className = 'unactive-step btn';
+                        document.getElementById("btn_prev").style.display = 'none';
+                    } else {
+                        document.getElementById("prev-step").className = 'active-step btn';
+                        document.getElementById("btn_prev").style.display = 'block';
+                    }
+
+                    document.getElementById("next-step").className = 'active-step btn';
+                    document.getElementById("btn_next").style.display = 'block';
+                    $.ajax({
+                        headers: {"X-CSRFToken": "{{ csrf_token() }}"},
+                        url: "/hotspot_details",
+                        type: 'POST',
+                        data: {
+                            'arr_splash': JSON.stringify(arr_splash),
+                            'step': step,
+                            'pre_step': step + 1,
+                            'choose_splash': type_page,
+                            'shop_id': shop_id
+                        },
+                        beforeSend: function () {
+                        },
+                        success: function (data) {
+                            document.getElementById("name-step").innerHTML = '{{ gettext("Buoc") }} ' + step;
+                            $(".config-splash").empty();
+                            $(".config-splash").append(data);
+                            select_splash();
+                        }
+                    });
+                });
+            }
+        }
+        var url_preview = '/hotspot_type/0?shop_id_select={{ shop_id_select }}';
+        $("#preview").empty();
+        bioMp(document.getElementById('preview'), {
+            url: url_preview,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+    });
+</script>

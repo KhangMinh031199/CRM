@@ -1,0 +1,1466 @@
+{% extends 'nextify/base.html' %}
+
+
+{% block body %}
+    <style>
+        .pt-100 {
+            padding-top: 100px;
+        }
+
+        .pb-100 {
+            padding-bottom: 100px;
+        }
+
+        .section-title {
+            margin-bottom: 60px;
+        }
+
+        .section-title p {
+            color: #777;
+            font-size: 16px;
+        }
+
+        .section-title h4 {
+            text-transform: capitalize;
+            font-size: 40px;
+            position: relative;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .section-title h4:before {
+            position: absolute;
+            content: "";
+            width: 60px;
+            height: 2px;
+            background-color: #ff3636;
+            bottom: 0;
+            left: 50%;
+            margin-left: -30px;
+        }
+
+        .section-title h4:after {
+            position: absolute;
+            background-color: #ff3636;
+            content: "";
+            width: 10px;
+            height: 10px;
+            bottom: -4px;
+            left: 50%;
+            margin-left: -5px;
+            border-radius: 50%;
+        }
+
+        .fill-bar {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+            flex-direction: row;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            height: 24px;
+            border-radius: 2px;
+            overflow-x: hidden;
+            background-color: #ededed;
+        }
+
+        .fill-bar:hover {
+            background-color: blue;
+            color: white;
+        }
+
+        .fill-bar-graph-circle {
+            width: 8px;
+            height: 8px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .radio {
+
+            display: block;
+            position: relative;
+            padding-left: 30px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none
+        }
+
+        /* Hide the browser's default radio button */
+        .radio input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Create a custom radio button */
+        .checkround {
+
+            position: absolute;
+            top: 6px;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: #fff;
+            border-color: #eb7425ed;
+            border-style: solid;
+            border-width: 2px;
+            border-radius: 50%;
+        }
+
+
+        /* When the radio button is checked, add a blue background */
+        .radio input:checked ~ .checkround {
+            background-color: #fff;
+        }
+
+        /* Create the indicator (the dot/circle - hidden when not checked) */
+        .checkround:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        /* Show the indicator (dot/circle) when checked */
+        .radio input:checked ~ .checkround:after {
+            display: block;
+        }
+
+        /* Style the indicator (dot/circle) */
+        .radio .checkround:after {
+            left: 2px;
+            top: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #eb7425ed;
+        }
+
+        .pagination > .active > a,
+        .pagination > .active > a:focus,
+        .pagination > .active > a:hover,
+        .pagination > .active > span,
+        .pagination > .active > span:focus,
+        .pagination > .active > span:hover {
+            z-index: 3;
+            color: #fff;
+            cursor: default;
+            background-color: #77afe0;
+            border-color: #77afe0;
+        }
+
+        .table td, .table th {
+            vertical-align: middle;
+        }
+
+        .table td, .table th {
+            padding: .7375rem;
+        }
+
+        .text-middle {
+            display: flex;
+            justify-content: right;
+            align-items: center;
+        }
+
+        .pd-t-15 {
+            padding-top: 15px;
+        }
+
+        .box {
+            border-left: 1px solid #edf2f9;
+        }
+
+        .mgl0-mgr0 {
+            margin-right: 0px;
+            margin-left: 0px;
+        }
+
+
+        .btn-primary:hover {
+            border-color: unset;
+        }
+
+        .btn-primary {
+            border-color: unset;
+        }
+
+        .c-choice {
+            margin: 0px;
+        }
+
+        label {
+            margin-bottom: 0px
+        }
+
+        .card {
+            border-radius: unset;
+        }
+
+        .loader_filter,
+        .loader_filter:before,
+        .loader_filter:after {
+            background: #ffffff;
+            -webkit-animation: load1 1s infinite ease-in-out;
+            animation: load1 1s infinite ease-in-out;
+            width: 1em;
+            height: 4em;
+        }
+
+        .loader_filter {
+            color: #f57a33;
+            text-indent: -9999em;
+            margin: 88px auto;
+            position: relative;
+            font-size: 20px;
+            -webkit-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-animation-delay: -0.16s;
+            animation-delay: -0.16s;
+        }
+
+        .loader_filter:before,
+        .loader_filter:after {
+            position: absolute;
+            top: 0;
+            content: '';
+        }
+
+        .loader_filter:before {
+            left: -1.5em;
+            -webkit-animation-delay: -0.32s;
+            animation-delay: -0.32s;
+        }
+
+        .loader_filter:after {
+            left: 1.5em;
+        }
+
+        .modal-card .card-body {
+            max-height: none;
+            overflow-y: none;
+        }
+
+        @-webkit-keyframes load1 {
+            0%,
+            80%,
+            100% {
+                box-shadow: 0 0;
+                height: 4em;
+            }
+            40% {
+                box-shadow: 0 -2em;
+                height: 5em;
+            }
+        }
+
+        @keyframes load1 {
+            0%,
+            80%,
+            100% {
+                box-shadow: 0 0;
+                height: 4em;
+            }
+            40% {
+                box-shadow: 0 -2em;
+                height: 5em;
+            }
+        }
+
+        .display11:hover #display1 {
+            display: block;
+        }
+
+        .display11 #display1 {
+            display: none;
+        }
+
+    </style>
+
+    <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+    <input type="hidden" value="{{ camp._id }}" id="camp_id"/>
+   <input type="hidden" id="is_sms_fr" name="is_sms" {% if camp.is_sms %} value="on" {% endif %}>
+   <input type="hidden" id="sms_provider_" name="sms_provider_" {% if merchant.sms_provider %} value="{{ merchant.sms_provider }}" {% endif %}>
+    <div class="container-fluid">
+
+        <div class="row u-mb-large justify-content-center">
+            <div class="col-12 col-md-12 col-xl-12 justify-content-center">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-end">
+
+                            <div class="col-auto">
+                                <a href="/sms_marketing/{{ shop_id_select }}" class="btn btn-lg btn-dark">
+                                    {{ gettext("Dong_lai") }}
+                                </a>
+                            </div>
+                            <div class="col md-8">
+                                <input id="name_camp" type="text"
+                                       class="form-control form-control-flush form-control-auto"
+                                       placeholder='{{ gettext("Nhap_ten_chien_dich") }}' style="
+                                    padding: 20px;
+                                    margin: 0px;
+                                    font-size: 20px;" autofocus {% if camp %} value="{{ camp.code }}" {% endif %}>
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-lg btn-dark" id="prev_step">{{ gettext("Quay_lai") }}</button>
+                                <button type="button" class="btn btn-lg btn-danger" id="next_step">{{ gettext("Tiep_tuc") }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="steps">
+                    <div id="step_1" class="row justify-content-center">
+                        <div class="col-xl-6 col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="header-body text-center" style="border-bottom:0px">
+                                    <!-- Title -->
+                                    <h1 class="header-title">
+                                        {{ gettext("Thiet_lap_noi_dung") }}
+                                    </h1>
+                                </div>
+                                <form class="mt-1">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                    {% if merchant.sms_provider and merchant.sms_provider == 'VINAPHONE'%}
+                                        <div class="form-group">
+                                            <label style="margin-bottom: 12px;">Template Id:</label>
+                                            <input class="form-control" id="sms_content" name="message" rows="2"
+                                            placeholder='{{ gettext("Nhap_template_id") }}' {% if camp %}value = '{{ camp.message }}'{% endif %}>
+                                        </div>
+                                    {% else %}
+                                        <div class="form-group">
+
+                                            <div class="row">
+                                                <div class="col">
+
+                                                </div>
+
+                                                <div class="col-auto">
+                                                <a href="/black_list_keywords" class="form-control btn btn-outline-danger" target="_blank">
+                                                    <p> {{ gettext("Danh_sach_cac_tu_cam_cua_nha_mang") }}</p>
+                                                </a>
+                                            </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                        <textarea class="form-control" id="sms_content" name="message" rows="2"
+                                            placeholder='{{ gettext("Noi_dung_tin_nhan_SMS") }}'>{% if camp %}{{ camp.message }}{% endif %}</textarea>
+                                        </div>
+                                    
+                                    {% endif %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div id="step_2">
+                        <div class="col-xl-10 col-md-10" style="margin: auto">
+                            <div class="card header-body text-center"
+                                 style="border-bottom:0px; margin-bottom: 0px;">
+                                <h1 class="header-title">
+                                    {{ gettext("Thiet_lap_muc_tieu") }}
+                                </h1>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-8 col-md-8" style="padding-right: 0px;">
+                                    <div class="card" style="height: 100%;">
+                                        <div class="row mgl0-mgr0">
+                                            <div class="col-xl-12 col-md-12" style="min-height: 600px;">
+                                                <div style="margin-top: 20px; margin-right: -12px; margin-left: -12px;">
+                                                    <div class="row pd-t-15">
+                                                        <div class="col-xl-2 col-md-2"
+                                                             style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+                                                            <span>{{ gettext("Lua_chon") }}</span>
+                                                        </div>
+                                                        <div class="col-xl-10 col-md-10"
+                                                             style="border-left: 5px solid #edf2f9; margin-bottom: 20px; border-bottom: 1px solid #edf2f9; border-top: 1px solid #edf2f9;">
+                                                            <div class="row"
+                                                                 style="margin-left: 0px;margin-right: 0px; margin-top: 20px; margin-bottom: 20px;">
+                                                                <div class="col-xl-4 col-md-4 text-middle">
+                                                                    <span>{{ gettext("tap_khach_hang") }}</span>
+                                                                </div>
+                                                                <div class="col-xl-4 col-md-4">
+                                                                    <input type="hidden" {% if camp %}
+                                                                           value="{{ camp.all_customers }}" {% else %}
+                                                                           value="" {% endif %} id="ex_all_customers"/>
+                                                                    <select class="form-control" id="all_customers" autofocus>
+                                                                        {% if camp %}
+                                                                            <option value="on"
+                                                                                    {% if camp.all_customers == 'on' %}selected{% endif %}>
+                                                                                {{ gettext("Tat_ca") }}
+                                                                            </option>
+                                                                            <option value="off"
+                                                                                    {% if camp.all_customers == 'off' %}selected{% endif %}>
+                                                                                {{ gettext("Tuy_chon") }}
+                                                                            </option>
+                                                                        {% else %}
+                                                                            <option value="on">{{ gettext("Tat_ca") }}</option>
+                                                                            <option value="off">{{ gettext("Tuy_chon") }}</option>
+                                                                        {% endif %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div id="filter_customer"
+                                                     style="margin-top: 20px; margin-right: -12px; margin-left: -12px;">
+                                                    <div class="row">
+                                                        <div class="col-xl-2 col-md-2"
+                                                             style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+                                                            <span>{{ gettext("Loc") }}</span>
+                                                        </div>
+                                                        <div class="col-xl-10 col-md-10"
+                                                             style="border-left: 5px solid #edf2f9; margin-bottom: 20px; border-bottom: 1px solid #edf2f9; border-top: 1px solid #edf2f9;">
+                                                            <div class="row"
+                                                                 style="margin-left: 0px;margin-right: 0px; margin-top: 20px;">
+                                                                <div class="col-xl-4 col-md-4 text-middle">
+                                                                    <span>{{ gettext("thoi_gian_den") }}</span>
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 25%;">
+                                                                    <input type="hidden" id="ex_visit_from_date"
+                                                                           value="{{ camp.visit_from_date }}"/>
+                                                                    <input id="from_date" type="text"
+                                                                           placeholder='{{ gettext("Tu_ngay") }}..' class="form-control"
+                                                                           style="text-align: center">
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 25%;">
+                                                                    <input type="hidden" id="ex_visit_to_date"
+                                                                           value="{{ camp.visit_to_date }}"/>
+                                                                    <input id="to_date" type="text"
+                                                                           placeholder='{{ gettext("Den_ngay") }}..' class="form-control"
+                                                                           style="text-align: center">
+                                                                </div>
+                                                                <div style="/*! max-width: 100%; *//*! justify-content: left; */padding-right: 24px;/*! padding-left: 12px; */"
+                                                                     class="col text-middle">
+                                                                    <a href="#" class="btn" id="remove_visit_date">
+                                                                        <i class="fe fe-x"></i>
+                                                                    </a>
+                                                                    <div></div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row"
+                                                                 style="margin-left: 0px;margin-right: 0px; margin-top: 20px;">
+                                                                <div class="col-xl-4 col-md-4 text-middle">
+                                                                    <span>{{ gettext("thoi_gian_trong_ngay") }} </span>
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 25%;">
+                                                                    {% if camp %}
+                                                                        <input id="from_time" type="text"
+                                                                                   placeholder="{{ gettext('Tu_gio..') }}" class="form-control onlyNumber"
+                                                                                   style="text-align: center" value="{{ camp.from_time }}">
+                                                                    {% else %}
+                                                                        <input id="from_time" type="text"
+                                                                               placeholder="{{ gettext('Tu_gio..') }}" class="form-control onlyNumber"
+                                                                               style="text-align: center">
+                                                                    {% endif %}
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 25%;">
+                                                                    {% if camp %}
+                                                                        <input id="to_time" type="text"
+                                                                               placeholder="{{ gettext('Den_gio..') }}" class="form-control onlyNumber"
+                                                                               style="text-align: center" value="{{ camp.to_time }}">
+                                                                    {% else %}
+                                                                        <input id="to_time" type="text"
+                                                                               placeholder="{{ gettext('Den_gio..') }}" class="form-control onlyNumber"
+                                                                               style="text-align: center">
+                                                                    {% endif %}
+                                                                </div>
+                                                                <div style="padding-right: 24px;"
+                                                                     class="col text-middle">
+                                                                    <a href="#" class="btn" id="remove_visit_date">
+                                                                        <i class="fe fe-x"></i>
+                                                                    </a>
+                                                                    <div></div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row pd-t-15"
+                                                                 style="margin-left: 0px;margin-right: 0px;">
+                                                                <div class="col-xl-4 col-md-4 text-middle">
+                                                                    <span>{{ gettext("luot_den") }}</span>
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 13%;">
+                                                                    <input type="hidden" value="{{ camp.min_visit }}"
+                                                                           id="ex_min_visit"/>
+                                                                    <input type="text"
+                                                                           placeholder='{{ gettext("Tu") }} ..' class="form-control"
+                                                                           id="min_visit"
+                                                                           value="
+                                                                                   {% if camp.min_visit and camp.min_visit!='None' %}{{ camp.min_visit }}{% endif %}"
+                                                                    >
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 13%;">
+                                                                    <input type="hidden" value="{{ camp.max_visit }}"
+                                                                           id="ex_max_visit"/>
+                                                                    <input type="text"
+                                                                           placeholder='{{ gettext("Den") }} ..' class="form-control"
+                                                                           id="max_visit"
+                                                                           value="
+                                                                                   {% if camp.max_visit and camp.max_visit!='None' %}{{ camp.max_visit }}{% endif %}"
+                                                                    >
+                                                                </div>
+                                                                <div style="/*! max-width: 100%; *//*! justify-content: left; */padding-right: 24px;/*! padding-left: 12px; */"
+                                                                     class="col text-middle">
+                                                                    <a href="#" class="btn" id="remove_visit_by_time">
+                                                                        <i class="fe fe-x"></i>
+                                                                    </a>
+                                                                    <div></div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row pd-t-15"
+                                                                 style="margin-left: 0px;margin-right: 0px; margin-bottom: 20px;">
+                                                                <div class="col-xl-4 col-md-4 text-middle">
+                                                                    <span>{{ gettext("so_ngay_chua_quay_lai") }}</span>
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 15%;">
+                                                                    <input type="hidden" value="{{ camp.lost_day }}"
+                                                                           id="ex_lost_day"/>
+                                                                    <input type="text"
+                                                                           placeholder='{{ gettext("Ngay") }} ..' class="form-control"
+                                                                           id="lost_day"
+                                                                           value="
+                                                                                   {% if camp and camp.lost_day!='None' %}{{ camp.lost_day }}{% endif %}"
+                                                                    >
+                                                                </div>
+                                                                <div style="/*! max-width: 100%; *//*! justify-content: left; */padding-right: 24px;/*! padding-left: 12px; */"
+                                                                     class="col text-middle">
+                                                                    <a href="#" class="btn" id="remove_lost_day">
+                                                                        <i class="fe fe-x"></i>
+                                                                    </a>
+                                                                    <div></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div id="info_customer"
+                                                     style="margin-top: 20px; margin-right: -12px; margin-left: -12px;">
+                                                    <div class="row">
+                                                        <div class="col-xl-2 col-md-2"
+                                                             style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+                                                            <span>{{ gettext("Thong_tin") }}</span>
+                                                        </div>
+                                                        <div class="col-xl-10 col-md-10"
+                                                             style="border-left: 5px solid #edf2f9; margin-bottom: 20px; border-bottom: 1px solid #edf2f9; border-top: 1px solid #edf2f9;">
+                                                            <div class="row"
+                                                                 style="margin-left: 0px;margin-right: 0px; margin-top: 20px;">
+                                                                <div class="col-xl-4 col-md-4 text-middle">
+                                                                    <span>{{ gettext("chon_gioi_tinh") }}</span>
+                                                                </div>
+                                                                <div class="col-xl-8 col-md-8">
+                                                                    <div class="row" style="padding-left: 12px;">
+                                                                        <div class="c-choice c-choice--checkbox text-middle"
+                                                                             style="padding-right: 15px">
+                                                                            <input class="c-choice__input"
+                                                                                   id="gender_male"
+                                                                                    {% if camp and camp.gender %}
+                                                                                   {% if '1' in camp.gender %}checked
+                                                                                   value="1"
+                                                                                   {% else %}
+                                                                                   value="" {% endif %} {% endif %}
+                                                                                   type="checkbox">
+                                                                            <label class="c-choice__label"
+                                                                                   for="gender_male">{{ gettext("Nam") }}</label>
+                                                                        </div>
+                                                                        <div class="c-choice c-choice--checkbox text-middle"
+                                                                             style="padding-right: 15px">
+                                                                            <input class="c-choice__input"
+                                                                                   id="gender_female"
+                                                                                    {% if camp and camp.gender %}
+                                                                                   {% if '2' in camp.gender %}checked
+                                                                                   value="2"
+                                                                                   {% else %}
+                                                                                   value="" {% endif %} {% endif %}
+                                                                                   type="checkbox">
+                                                                            <label class="c-choice__label"
+                                                                                   for="gender_female">{{ gettext("Nu") }}</label>
+                                                                        </div>
+                                                                        <div class="c-choice c-choice--checkbox text-middle"
+                                                                             style="padding-right: 15px">
+                                                                            <input class="c-choice__input"
+                                                                                   id="gender_other"
+                                                                                    {% if camp and camp.gender %}
+                                                                                   {% if '0' in camp.gender %}checked
+                                                                                   value="0"
+                                                                                   {% else %}
+                                                                                   value="" {% endif %} {% endif %}
+                                                                                   type="checkbox">
+                                                                            <label class="c-choice__label"
+                                                                                   for="gender_other">{{ gettext("Chua_xac_dinh") }}</label>
+                                                                        </div>
+                                                                        <div style="/*! max-width: 100%; *//*! justify-content: left; */padding-right: 24px;/*! padding-left: 12px; */"
+                                                                             class="col text-middle">
+                                                                            <a href="#" class="btn" id="remove_gender">
+                                                                                <i class="fe fe-x"></i>
+                                                                            </a>
+                                                                            <div></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row pd-t-15"
+                                                                 style="margin-left: 0px;margin-right: 0px;">
+                                                                <div class="col-xl-4 col-md-4 text-middle">
+                                                                    <span>{{ gettext("sinh_nhat") }}</span>
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 25%;">
+                                                                    <input type="hidden"
+                                                                           value="{{ camp.b_day_from_date }}"
+                                                                           id="ex_b_day_from_date"/>
+                                                                    <input id="bday_from_date" type="text"
+                                                                           placeholder='{{ gettext("Tu_ngay") }}..' class="form-control"
+                                                                           style="text-align: center">
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 25%;">
+                                                                    <input type="hidden"
+                                                                           value="{{ camp.b_day_to_date }}"
+                                                                           id="ex_b_day_to_date"/>
+                                                                    <input id="bday_to_date" type="text"
+                                                                           placeholder='{{ gettext("Den_ngay") }}..' class="form-control"
+                                                                           style="text-align: center">
+                                                                </div>
+                                                                <div style="/*! max-width: 100%; *//*! justify-content: left; */padding-right: 24px;/*! padding-left: 12px; */"
+                                                                     class="col text-middle">
+                                                                    <a href="#" class="btn" id="remove_birthday">
+                                                                        <i class="fe fe-x"></i>
+                                                                    </a>
+                                                                    <div></div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row pd-t-15"
+                                                                 style="margin-left: 0px;margin-right: 0px; margin-bottom: 20px;">
+                                                                <div class="col-xl-4 col-md-4 text-middle">
+                                                                    <span>tag</span>
+                                                                </div>
+                                                                <div class="col-xl-6 col-md-6">
+                                                                    <input type="hidden" name="source_tags"
+                                                                           id="source_tags_filter"
+                                                                           value="{{ camp.tags }}"/>
+                                                                    <input type="hidden" id="new_select_tags_filter"
+                                                                           name="real_tags_filter"/>
+                                                                    <select class="form-control" data-toggle="select"
+                                                                            name="tags"
+                                                                            style="width: 100%;" id="new_tags_selects"
+                                                                            multiple="multiple">
+                                                                        {% for tag in tags %}
+                                                                            <option value="{{ tag._id }}" {% if tag._id|string in camp.tags %}selected {%  endif %}>{{ tag.name }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                    <input type="hidden" id="select_tags_filter"
+                                                                           name="real_tags_filter"/>
+                                                                </div>
+                                                                <div style="/*! max-width: 100%; *//*! justify-content: left; */padding-right: 24px;/*! padding-left: 12px; */"
+                                                                     class="col text-middle">
+                                                                    <a href="#" class="btn" id="remove_tags">
+                                                                        <i class="fe fe-x"></i>
+                                                                    </a>
+                                                                    <div></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="filter_back"
+                                                     style="/*! margin-top: 20px; */ margin-right: -12px; margin-left: -12px; display: none">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                        </div>
+                                                        <div class="col-auto" style="margin-right: 20px;">
+                                                            <button type="button" class="btn btn-lg btn-primary"
+                                                                    id="btn_filter_back"
+                                                                    style="background-color: #337ab7;">{{ gettext("Duyet_lai") }}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-md-4" style="padding-left: 0px;">
+                                    <div class="card" style="border-left: 0px; height: 100%;">
+                                        <div id="customers_load" class="loader_filter"
+                                             style="display: none; margin-top: auto; margin-bottom: auto"></div>
+                                        <div class="text-center" style="text-align: none; display: none"
+                                             id="real_send_div">
+                                            <!-- Heading -->
+                                            <h6 class="text-uppercase text-muted"
+                                                style="margin-top: 15px;">
+                                                <span class="text-success mr-2" id="real_send_count"></span>
+                                                {{ gettext("khach_hang_thoa_man_tren_tong_so") }} <span class="text-danger mr-2"
+                                                                                       id="total_count"></span> {{ gettext("khach_hang") }}
+                                            </h6>
+                                            <!-- Value -->
+                                        </div>
+                                        <div class="card-body"
+                                             style="display: flex; justify-content: center; align-items: center; background-color: #f4f9f6;"
+                                             id="data_cus_select">
+                                            <div class="text-center">
+                                                <!-- Heading -->
+                                                <h6 class="text-uppercase text-muted"
+                                                    style="margin-bottom: 20px ; display: none" id="preview_back">{{ gettext("Vui_long_thiet_lap_lai_tap_khach_hang_muc_tieu.") }}</h6>
+                                                <h6 class="text-uppercase text-muted" style="margin-bottom: 20px"
+                                                    id="preview">{{ gettext("Xem_truoc_tap_khach_hang_muc_tieu") }}</h6>
+                                                <!-- Value -->
+                                                <button type="button" class="btn btn-lg btn-primary"
+                                                        id="btn_data_cus_select" style="background-color: #337ab7;">{{ gettext("Xem_truoc") }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="step_3" class="row">
+
+                        <div class="col-md-6">
+
+
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    <h1 class="header-title">
+                                        {{ gettext("Gui_SMS_Test") }}
+                                    </h1>
+                                </div>
+                                <div class="card-body">
+                                    <div class="input-group input-group-lg input-group-merge">
+                                        <input type="text" class="form-control" placeholder='{{ gettext("So_dien_thoai") }}' id="sms_test">
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button class="btn btn-block btn-danger" id="send_sms_test">
+                                        {{ gettext("Gui_SMS") }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    <h1 class="header-title">
+                                        {{ gettext("Xac_nhan") }}
+                                    </h1>
+                                </div>
+                                <div class="card-body">
+
+
+                                    {% if  camp %}
+                                        {% if camp.date_send %}
+                                            <input type="hidden" value="{{ camp.date_send|format__date_pick }}"
+                                                   id="ex_date_send"/>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    <div class="form-group mt-5">
+                                        <label for="date_send">{{ gettext("Ngay_bat_dau_gui") }}:</label>
+                                        <input type="text" class="form-control" id="date_send" name="date_send"/>
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label>{{ gettext("Tap_khach_hang_da_chon") }}:</label>
+                                        <h2 class="mt-2 mb-2"><span class="badge badge-soft-primary ml-1 mt-n1"
+                                                                    id="verify_text"></span>
+                                        </h2>
+
+                                    </div>
+
+                                </div>
+                                <div class="card-footer">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <button class="btn btn-block btn-primary" id="save_camp">
+                                                {{ gettext("Luu_chien_dich") }}
+                                            </button>
+
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-block btn-danger" id="send_camp">
+                                                {{ gettext("Gui_khach_hang") }}
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block js %}
+
+    <script src="/static/nextify/js/jquery.bootpag.min.js"></script>
+
+    <script nonce="{{ csp_nonce() }}">
+
+        $(document).ready(function () {
+            var shop_id_select = $('#shop_id_select').val();
+            var camp_id = $("#camp_id").val();
+            var sms_provider_ = $('#sms_provider_').val()
+            if (!camp_id) {
+                camp_id = "add"
+            }
+            ;
+
+            $("#remove_visit_date").click(function () {
+                const flatpickr_from_date = flatpickr("#from_date", {});
+                const flatpickr_to_date = flatpickr("#to_date", {});
+                flatpickr_from_date.clear();
+                flatpickr_to_date.clear();
+            });
+
+            $("#remove_birthday").click(function () {
+                const flatpickr_bday_to_date = flatpickr("#bday_to_date", {});
+                const flatpickr_bday_from_date = flatpickr("#bday_from_date", {});
+                flatpickr_bday_from_date.clear();
+                flatpickr_bday_to_date.clear();
+            });
+
+            $("#remove_visit_by_time").click(function () {
+                $("#min_visit").val("");
+                $("#max_visit").val("");
+            });
+
+            $("#remove_lost_day").click(function () {
+                $("#lost_day").val("");
+            });
+
+            $("#remove_gender").click(function () {
+                $("#gender_male").val("");
+                $("#gender_male").prop("checked", false);
+                $("#gender_female").val("");
+                $("#gender_female").prop("checked", false);
+                $("#gender_other").val("");
+                $("#gender_other").prop("checked", false);
+            });
+
+            $("#remove_tags").click(function () {
+                $('#new_tags_selects').val('').trigger('change');
+            });
+
+            var ex_all_customers = $("#ex_all_customers").val();
+            if (ex_all_customers === "on") {
+                $("#filter_customer").hide();
+                $("#info_customer").hide();
+            }
+            ;
+
+            if ($("#ex_date_send").length > 0 && $("#ex_date_send").val().length > 0 && $("#ex_date_send").val() != 'None') {
+                flatpickr("#date_send", {
+                    enableTime: true,
+                    defaultDate: $("#ex_date_send").val(),
+                    minDate: 1,
+                    dateFormat: "H:i d-m-Y",
+                });
+            } else {
+                flatpickr("#date_send", {
+                    enableTime: true,
+                    dateFormat: "H:i d-m-Y",
+                    minDate: 1,
+
+                });
+            }
+
+            // $('#new_tags_selects').select2({
+            //     placeholder: '{{ gettext("Chon_tag") }}',
+            //     dropdownAutoWidth: true
+            // });
+
+            $('#new_tags_selects').on("change", function (e) {
+                if ($('#new_tags_selects').val()) {
+                    $('#new_select_tags_filter').val($('#new_tags_selects').val().toString());
+                } else {
+                    $('#new_select_tags_filter').val("");
+                }
+                ;
+            });
+
+            $("#gender_male").click(function () {
+                if ($("#gender_male").prop("checked")) {
+                    $("#gender_male").val("1");
+                } else {
+                    $("#gender_male").val("");
+                }
+            });
+
+            $("#gender_female").click(function () {
+                if ($("#gender_female").prop("checked")) {
+                    $("#gender_female").val("2");
+                } else {
+                    $("#gender_female").val("");
+                }
+            });
+
+            $("#gender_other").click(function () {
+                if ($("#gender_other").prop("checked")) {
+                    $("#gender_other").val("0");
+                } else {
+                    $("#gender_other").val("");
+                }
+            });
+
+            $('#new_tags_selects').on("change", function (e) {
+                if ($('#new_tags_selects').val()) {
+                    $('#new_select_tags_filter').val($('#new_tags_selects').val().toString());
+                } else {
+                    $('#new_select_tags_filter').val("");
+                }
+                ;
+            });
+
+            $('#all_customers').on('change', function (e) {
+                source = $(this).val();
+                if (source === 'on') {
+                    $("#filter_customer").hide();
+                    $("#info_customer").hide();
+                } else {
+                    $("#filter_customer").show();
+                    $("#info_customer").show();
+                }
+            });
+            $("#is_sms_fr").val("on");
+
+
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+
+            var divs = $('#steps>div');
+            var now = 1; // currently shown div
+            divs.hide().first().show(); // hide all divs except first
+            $("button[id=prev_step]").hide();
+            $("button[id=next_step]").click(function () {
+                if (now == 1) {
+                    if ($("#name_camp").val().length == 0) {
+                        swal('{{ gettext("Vui_long_nhap_ten_chien_dich") }}', "", "error");
+                        return false;
+                    }
+                    if ($("#sms_content").val().length == 0) {
+                        if (sms_provider_ == 'VINAPHONE'){
+                            swal('{{ gettext("Vui_long_nhap_Template_Id") }}', '','error');
+                        }else{
+                             swal('{{ gettext("Vui_long_nhap_noi_dung_SMS") }}', "", "error");
+                        }
+                        return false;
+                    }
+                    if (camp_id && camp_id != 'add') {
+                        load_preview_customers();
+                    }
+
+                }
+                ;
+                divs.eq(now - 1).hide();
+                $("button[id=prev_step]").show();
+                if (now + 1 == divs.length) {
+                    $("button[id=next_step]").hide();
+
+                }
+                ;
+                now = now + 1;
+                divs.eq(now - 1).show(); // show next
+
+                if (now == 3) {
+                    // verify_text_func()
+                    load_preview_customers_step_3()
+                }
+
+
+            });
+            $("button[id=prev_step]").click(function () {
+                divs.eq(now - 1).hide();
+                $("button[id=next_step]").show();
+                if (now - 1 == 1) {
+                    $("button[id=prev_step]").hide();
+                }
+                now = now - 1;
+                divs.eq(now - 1).show(); // show next
+
+
+            });
+            var predict_message;
+
+            function load_preview_customers_step_3() {
+                var customers_sources = $('#all_customers').val();
+                var visit_from_date = $("#from_date").val();
+                var visit_to_date = $('#to_date').val();
+                var min_visit = $("#min_visit").val();
+                var max_visit = $("#max_visit").val();
+                var lost_day = $("#lost_day").val();
+                var gender_male = $("#gender_male").prop("checked");
+                var gender_female = $("#gender_female").prop("checked");
+                var gender_other = $("#gender_other").prop("checked");
+                var bday_from_date = $("#bday_from_date").val();
+                var bday_to_date = $("#bday_to_date").val();
+                var tags = $('#new_tags_selects').val().toString();
+                var gender_filter = [];
+                if ($("#gender_male").prop("checked")) {
+                    gender_filter.push("1")
+                }
+                if ($("#gender_female").prop("checked")) {
+                    gender_filter.push("2")
+                }
+                if ($("#gender_other").prop("checked")) {
+                    gender_filter.push("0")
+                }
+                var data = {
+                    'shop_id_select': shop_id_select,
+                    'is_sms': $("#is_sms_fr").val(),
+                    'gender_filter': gender_filter.toString(),
+                    'gender_male': gender_male,
+                    'gender_female': gender_female,
+                    'gender_other': gender_other,
+                    'real_tags_filter': tags,
+                    'from_date': visit_from_date,
+                    'to_date': visit_to_date,
+                    'bday_from_date': bday_from_date,
+                    'bday_to_date': bday_to_date,
+                    'min_visit': min_visit,
+                    'max_visit': max_visit,
+                    'lost_day': lost_day,
+                    'customers_sources': customers_sources
+                };
+                $.ajax({
+                    url: "/data_create_campaign",
+                    type: 'GET',
+                    data: data,
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        predict_message = data.real_send;
+                        document.getElementById("verify_text").innerHTML = data.real_send + ' {{ gettext("Khach_hang") }}';
+                    }
+                });
+            };
+
+            function load_preview_customers() {
+                var customers_sources = $('#all_customers').val();
+                var visit_from_date = $("#from_date").val();
+                var visit_to_date = $('#to_date').val();
+                var min_visit = $("#min_visit").val();
+                var max_visit = $("#max_visit").val();
+                var lost_day = $("#lost_day").val();
+                var gender_male = $("#gender_male").prop("checked");
+                var gender_female = $("#gender_female").prop("checked");
+                var gender_other = $("#gender_other").prop("checked");
+                var bday_from_date = $("#bday_from_date").val();
+                var bday_to_date = $("#bday_to_date").val();
+                var tags = $('#new_tags_selects').val().toString();
+                var gender_filter = [];
+                if ($("#gender_male").prop("checked")) {
+                    gender_filter.push("1")
+                }
+                if ($("#gender_female").prop("checked")) {
+                    gender_filter.push("2")
+                }
+                if ($("#gender_other").prop("checked")) {
+                    gender_filter.push("0")
+                }
+                var data = {
+                    'shop_id_select': shop_id_select,
+                    'is_sms': $("#is_sms_fr").val(),
+                    'gender_filter': gender_filter.toString(),
+                    'gender_male': gender_male,
+                    'gender_female': gender_female,
+                    'gender_other': gender_other,
+                    'real_tags_filter': tags,
+                    'from_date': visit_from_date,
+                    'to_date': visit_to_date,
+                    'bday_from_date': bday_from_date,
+                    'bday_to_date': bday_to_date,
+                    'min_visit': min_visit,
+                    'max_visit': max_visit,
+                    'lost_day': lost_day,
+                    'customers_sources': customers_sources
+                };
+                $.ajax({
+                    url: "/data_create_campaign",
+                    type: 'GET',
+                    data: data,
+                    beforeSend: function () {
+                        $("#data_cus_select").hide();
+                        $('#real_send_div').hide();
+                        $('#customers_load').show();
+                    },
+                    success: function (data) {
+                        document.getElementById("real_send_count").innerHTML = data.real_send;
+                        document.getElementById("total_count").innerHTML = data.total;
+                        $('#real_send_div').show();
+                        if (data.real_send == 0) {
+                            $("#preview_back").show();
+                            $("#preview").hide();
+                            $("#data_cus_select").hide();
+                            $('#filter_back').show();
+                        } else {
+                            $("#data_cus_select").empty();
+                            $("#data_cus_select").append(data.data);
+                            $('#data_cus_select').show();
+                            $("#preview_back").hide();
+                            $('#filter_back').show();
+                        }
+                        ;
+                        $('#customers_load').hide();
+                    }
+                });
+            };
+            $("#btn_data_cus_select").click(function () {
+                load_preview_customers()
+            });
+
+            $("#btn_filter_back").click(function () {
+                load_preview_customers()
+            });
+
+
+            $("#send_sms_test").click(function () {
+                 if ($("#sms_test").val() == 0) {
+                    swal('{{ gettext("Ban_chua_nhap_tin_nhan_test") }}', "", "error");
+                    return false
+                 }
+                 var data = {
+                     'phone_test': $("#sms_test").val(),
+                      'message': $("#sms_content").val(),
+
+                 };
+                  $.ajax({
+                    url: "/send_sms_test/" + shop_id_select ,
+                    data: data,
+                    type: "POST",
+                    success: function (resp) {
+                        resp = JSON.parse(resp);
+                        if ('error' in resp){
+                            var error = resp['error'];
+                            swal(error, '', 'error');
+
+                        }else{
+                             swal('{{ gettext("Gui_SMS_thanh_cong") }}', '', 'success');
+
+                        }
+                    },
+                    error: function () {
+                        swal('{{ gettext("Khong_thanh_cong") }}', '', 'error');
+                    }
+                });
+                 return false;
+
+            });
+
+            $("#send_camp").click(function (e) {
+                e.preventDefault();
+                 if ($("#name_camp").val() == 0) {
+                    swal('{{ gettext("Nhap_ten_chien_dich") }}', "", "error");
+                    return false
+                }
+
+                if ($("#date_send").val() == 0) {
+                    swal('{{ gettext("Nhap_thoi_gian_chay_chien_dich") }}', "", "error");
+                    return false
+                }
+
+
+                var time_start;
+
+                var gender_filter = [];
+                if ($("#gender_male").prop("checked")) {
+                    gender_filter.push("1")
+                }
+                if ($("#gender_female").prop("checked")) {
+                    gender_filter.push("2")
+                }
+                if ($("#gender_other").prop("checked")) {
+                    gender_filter.push("0")
+                }
+
+                var data_save = {
+                    'code_camp': $("#name_camp").val(), // tên chiến dịch
+                    'gender_filter': gender_filter.toString(),
+                    'gender_male': $("#gender_male").prop("checked"),
+                    'gender_female': $("#gender_female").prop("checked"),
+                    'gender_other': $("#gender_other").prop("checked"),// giới tính
+                    'real_tags_filter': $("#new_tags_selects").val().toString(),
+                    'visit_from_date': $("#from_date").val(), // khhách đến từ ngày
+                    'visit_to_date': $("#to_date").val(),   // khhách đến ngày
+                    'from_date': $("#bday_from_date").val(), // sinh nhật trong khoảng
+                    'to_date': $("#bday_to_date").val(),   // sinh nhật trong khoảng
+                    'min_visit': $("#min_visit").val(), // lươt đến trong khoảng
+                    'max_visit': $("#max_visit").val(), // lượt ddeeesn trong khoảng
+                    'lost_day': $("#lost_day").val(), // số ngày chưa quay lại
+                    'all_customers': $("#all_customers").val(),     // tất cả khách hàng
+                    'announcement': $("#sms_content").val(), //noi dung sms
+                    'is_sms': $("#is_sms_fr").val(),    // dùng email
+                    'date_send': $("#date_send").val(),    // ngày gửi
+                    'visit_by': 'merchant',     // theo chuỗi
+                    'desc_camp': $("#name_camp").val(), // mô tả,
+                    // 'ex_manual': $("#ex_manual").val(), // hạn coupon
+                    'camp_id': camp_id,
+                    'predict_message': predict_message,
+                    'send_to_cus': '1'
+                };
+                $.ajax({
+                    url: "/sms_marketing/" + shop_id_select + "/" + camp_id,
+                    data: data_save,
+                    type: "POST",
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        if ('error' in data){
+                            var error = data['error'];
+                            swal(error, '', 'error');
+
+                        }else{
+                             swal('{{ gettext("SMS_dang_duoc_gui") }}.', " ", "success");
+                            location.href = data.message;
+                        }
+                    },
+                    error: function () {
+                        swal('{{ gettext("Khong_thanh_cong,_vui_long_kiem_tra_lai_cau_hinh_SMS_Brandname") }}.', '', 'error');
+                    }
+                });
+                return false;
+
+            });
+
+            $("#save_camp").click(function () {
+                if ($("#name_camp").val() == 0) {
+                    swal('{{ gettext("Nhap_ten_chien_dich") }}', "", "error");
+                    return false
+                }
+
+                if ($("#date_send").val() == 0) {
+                    swal('{{ gettext("Nhap_thoi_gian_chay_chien_dich") }}', "", "error");
+                    return false
+                }
+
+
+                var time_start;
+
+                var gender_filter = [];
+                if ($("#gender_male").prop("checked")) {
+                    gender_filter.push("1")
+                }
+                if ($("#gender_female").prop("checked")) {
+                    gender_filter.push("2")
+                }
+                if ($("#gender_other").prop("checked")) {
+                    gender_filter.push("0")
+                }
+
+                // thời gian trong ngày
+                var from_time = $('#from_time').val();
+                var to_time = $('#to_time').val();
+                if (from_time == "" || to_time == ""){
+                    from_time = "";
+                    to_time = "";
+                }
+                if (parseInt(from_time) > parseInt(to_time) && from_time != "" && to_time != ""){
+                    swal({
+                        title: "Từ giờ phải nhỏ hơn đến giờ sau",
+                        text: " ",
+                        type: "error",
+                        timer: 2000
+                    });
+                    return 0;
+                }
+                if(parseInt(from_time) > 24 || parseInt(to_time) > 24){
+                    swal({
+                        title: "Thời gian phải nằm trong khoảng từ 0 đến 24",
+                        text: " ",
+                        type: "error",
+                        timer: 2000
+                    });
+                    return 0;
+                }
+
+                var data_save = {
+                    'code_camp': $("#name_camp").val(), // tên chiến dịch
+                    'gender_filter': gender_filter.toString(),
+                    'gender_male': $("#gender_male").prop("checked"),
+                    'gender_female': $("#gender_female").prop("checked"),
+                    'gender_other': $("#gender_other").prop("checked"),// giới tính
+                    'real_tags_filter': $("#new_tags_selects").val().toString(),
+                    'visit_from_date': $("#from_date").val(), // khhách đến từ ngày
+                    'visit_to_date': $("#to_date").val(),   // khhách đến ngày
+                    'from_date': $("#bday_from_date").val(), // sinh nhật trong khoảng
+                    'to_date': $("#bday_to_date").val(),   // sinh nhật trong khoảng
+                    'min_visit': $("#min_visit").val(), // lươt đến trong khoảng
+                    'max_visit': $("#max_visit").val(), // lượt ddeeesn trong khoảng
+                    'lost_day': $("#lost_day").val(), // số ngày chưa quay lại
+                    'all_customers': $("#all_customers").val(),     // tất cả khách hàng
+                    'announcement': $("#sms_content").val(),    // nội dung sms,
+                    'is_sms': $("#is_sms_fr").val(),    // dùng email
+                    'date_send': $("#date_send").val(),    // ngày gửi
+                    'visit_by': 'merchant',     // theo chuỗi
+                    'desc_camp': $("#name_camp").val(), // mô tả,
+                    // 'ex_manual': $("#ex_manual").val(), // hạn coupon
+                    'camp_id': camp_id,
+                    'predict_message': predict_message,
+                    'from_time': from_time,
+                    'to_time': to_time
+                };
+                $.ajax({
+                    url: "/sms_marketing/" + shop_id_select + "/" + camp_id,
+                    data: data_save,
+                    type: "POST",
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        location.href = data.message;
+                    },
+                    error: function () {
+                        swal('{{ gettext("Co_loi_xay_ra,_xin_thu_lai_sau") }}', '', 'error');
+                        return false
+                    }
+                });
+            });
+
+            function verify_text_func() {
+                var text = '';
+                document.getElementById("verify_text").innerHTML = text;
+                if ($("#all_customers").val() == "on") {
+                    text = '{{ gettext("Tat_ca_khach_hang") }}';
+                    document.getElementById("verify_text").innerHTML = text;
+                } else {
+                    if ($("#gender_male").val().length > 0) {
+                        text += '{{ gettext("Nam") }}, '
+                    }
+                    ;
+                    if ($("#gender_female").val().length > 0) {
+                        text += '{{ gettext("Nu") }}, '
+                    }
+                    ;
+                    if ($("#gender_other").val().length > 0) {
+                        text += '{{ gettext("Gioi_tinh_khac") }}, '
+                    }
+                    ;
+
+                    if ($("#to_date").val().length > 0) {
+                        if ($("#from_date").val().length > 0) {
+                            text += '{{ gettext("Den_trong_khoang_ngay_tu") }}: ' + $("#to_date").val() + ' {{ gettext("den") }} ' + $("#from_date").val() + ", "
+                        }
+                        ;
+                    }
+                    ;
+                    if ($("#bday_to_date").val().length > 0) {
+                        if ($("#bday_from_date").val().length > 0) {
+                            text += '{{ gettext("Sinh_nhat") }}: ' + $("#bday_to_date").val() + ' {{ gettext("den") }} ' + $("#bday_from_date").val() + ", "
+                        }
+                        ;
+                    }
+                    ;
+                    if ($("#max_visit").val().length > 0) {
+                        if ($("#min_visit").val().length > 0) {
+                            text += '{{ gettext("Luot_den_tu") }}: ' + $("#min_visit").val() + ' - ' + $("#max_visit").val() + ", "
+                        }
+                        ;
+                    }
+                    ;
+                    if ($("#lost_day").val().length > 0) {
+                        text += $("#lost_day").val() + ' {{ gettext("ngay_chua_quay_lai") }}' + ", "
+                    }
+                    ;
+                    text = text.slice(0, -2)
+                    document.getElementById("verify_text").innerHTML = text + ".";
+                }
+            };
+            if ($("#ex_is_spam").length > 0) {
+                $('#is_spam').val($("#ex_is_spam").val()).trigger("change");
+            }
+            ;
+            // var source_tags = $("#source_tags_filter").val();
+            // if (source_tags && source_tags.length > 0 && source_tags.toString() != 'None') {
+            //     var source_tags = source_tags.replace(/\u'/g, "'");
+            //     var source_tags = source_tags.replace(/\'/g, '"');
+            //     var data_soure_tags = JSON.parse(source_tags);
+            //     $("#new_tags_selects").val(data_soure_tags);
+            //     $('#new_tags_selects').trigger('change');
+            // }
+            // thoi gian den
+            if ($("#ex_visit_from_date").length > 0 && $("#ex_visit_from_date").val().length > 0 &&
+                $("#ex_visit_from_date").val() != 'None') {
+                flatpickr("#from_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_visit_from_date").val(),
+                    dateFormat: "d-m-Y",
+                });
+            } else {
+                flatpickr("#from_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y",
+
+                });
+            }
+            if ($("#ex_visit_to_date").length > 0 && $("#ex_visit_to_date").val().length > 0 && $("#ex_visit_to_date").val() != 'None') {
+                flatpickr("#to_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_visit_to_date").val(),
+                    dateFormat: "d-m-Y",
+                });
+            } else {
+                flatpickr("#to_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y",
+                });
+            }
+            // sinh nhat
+            if ($("#ex_b_day_from_date").length > 0 && $("#ex_b_day_from_date").val().length > 0 && $("#ex_b_day_from_date").val() != 'None') {
+                flatpickr("#bday_from_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_b_day_from_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#bday_from_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+                });
+            }
+            if ($("#ex_b_day_to_date").length > 0 && $("#ex_b_day_to_date").val().length > 0 && $("#ex_b_day_to_date").val() != 'None') {
+                flatpickr("#bday_to_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_b_day_to_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#bday_to_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+                });
+            }
+            if ($("#ex_type_coupon").length > 0) {
+                $('#type_coupon').select2().val($("#ex_type_coupon").val()).trigger("change");
+                $('#camp_type_coupon').val($('#type_coupon').val().toString());
+            }
+            // only number input
+            $(".onlyNumber").on("keypress keyup blur", function (event) {
+                $(this).val($(this).val().replace(/[^\d].+/, ""));
+                if ((event.which < 48 || event.which > 57)) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,24 @@
+body {
+    background-color: white;
+}
+
+footer {
+    background-color: #f5f5f5;
+}
+
+.sidebar {
+    margin-top: 10px;
+}
+
+.sidebar .active {
+    background: #f1f1f1;
+}
+
+.main {
+    margin-top: 10px;
+}
+
+form .open>.dropdown-menu {
+    height: 300px;
+    overflow-y: auto;
+}

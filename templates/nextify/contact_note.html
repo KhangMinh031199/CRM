@@ -1,0 +1,132 @@
+{% extends 'nextify/contact.html' %} {%block nav_contact_page%}
+<ul class="nav nav-tabs nav-overflow header-tabs">
+  <li class="nav-item">
+    <a href="/contacts/index/{{contact_id}}" class="nav-link text-nowrap">
+      Tổng quan
+    </a>
+  </li>
+  <li class="nav-item">
+    <a
+      href="/contacts/index/{{contact_id}}/notes"
+      class="nav-link text-nowrap active"
+    >
+      Ghi chú
+    </a>
+  </li>
+</ul>
+{%endblock%} {%block main_contact_page%}
+<link href="https://cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet" />
+<div class="card">
+  <div class="card-body">
+    <div id="editor">
+      <p>Hello World!</p>
+      <p>Some initial <strong>bold</strong> text</p>
+      <p><br /></p>
+    </div>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+    <script>
+      var quill = new Quill("#editor", {
+        theme: "bubble",
+      });
+    </script>
+  </div>
+  <div class="card-footer">
+    <div class="row align-items-end">
+      <div class="col"></div>
+      <div class="col-auto">
+        <a href="#!" class="btn btn-primary d-block d-md-inline-block lift">
+          Lưu lại
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+<div class="card-body">
+
+  <div class="comment mb-3">
+    <div class="row">
+      <div class="col-auto">
+        <i class="fe fe-edit h1"></i>
+      </div>
+      <div class="col ms-n2">
+
+        <!-- Body -->
+        <div class="comment-body">
+
+          <div class="row">
+            <div class="col">
+
+              <!-- Title -->
+              <h5 class="comment-title">
+                Ab Hadley
+              </h5>
+
+            </div>
+            <div class="col-auto">
+
+              <!-- Time -->
+              <time class="comment-time">
+                11:12
+              </time>
+
+            </div>
+          </div> <!-- / .row -->
+
+          <!-- Text -->
+          <p class="comment-text">
+            Looking good Dianna! I like the image grid on the left, but it feels like a lot to process and doesn't really <em>show</em> me what the product does? I think using a short looping video or something similar demo'ing the product might be better?
+          </p>
+
+        </div>
+
+      </div>
+    </div> <!-- / .row -->
+  </div>
+  <div class="comment mb-3">
+    <div class="row">
+      <div class="col-auto">
+        <i class="fe fe-edit h1"></i>
+      </div>
+      <div class="col ms-n2">
+
+        <!-- Body -->
+        <div class="comment-body">
+
+          <div class="row">
+            <div class="col">
+
+              <!-- Title -->
+              <h5 class="comment-title">
+                Adolfo Hess
+              </h5>
+
+            </div>
+            <div class="col-auto">
+
+              <!-- Time -->
+              <time class="comment-time">
+                11:12
+              </time>
+
+            </div>
+          </div> <!-- / .row -->
+
+          <!-- Text -->
+          <p class="comment-text">
+            Any chance you're going to link the grid up to a public gallery of sites built with Launchday?
+          </p>
+
+        </div>
+
+      </div>
+    </div> <!-- / .row -->
+  </div>
+
+</div>
+
+</div>
+
+{%endblock%}

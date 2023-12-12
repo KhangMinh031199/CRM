@@ -1,0 +1,197 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+<style>
+    th {
+        padding: 15px;
+    }
+
+    div input {
+        height: 100%;
+        width: 100%;
+    }
+</style>
+<div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                        {{ gettext("Ung_dung") }}
+                    </h6>
+
+                    <!-- Title -->
+                    <h1 class="header-title">
+                      Botup
+                    </h1>
+
+                </div>
+            </div> <!-- / .row -->
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row align-items-center">
+        <div class="col-12 col-md-5 col-xl-12 order-md-1 my-5">
+            <div class="card">
+                <div class="card-header">
+
+                            <div class="row">
+
+                                <div class="col">
+
+                              <input id="apply_merchant" value="" class="form-control" autofocus
+                        placeholder="Link Botup cho tất cả các địa điểm">
+                                </div>
+                                <div class="col-auto">
+                                     <button id="apply_merchant_btn"
+                        class="btn btn-lg btn-info">
+                        {{ gettext("Ap_dung") }}
+                    </button>
+                                </div>
+                            </div>
+
+                </div>
+
+                <div class="card-body">
+
+                  <div class="table-responsive">
+                    <input type="hidden" id="shop_apply_select" value="">
+                    <input type="hidden" id="shop_id_in_mer" value="{{ shop_id_in_mer }}">
+                    <input type="hidden" id="link_shop_apply_select" value="">
+                    <table class="table table-sm">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">{{ gettext("Dia_diem") }}</th>
+                                <th scope="col">Link BotUp</th>
+                                <th scope="col">{{ gettext("Ap_dung") }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for shop in shop_info_in_mer %}
+                            <tr>
+                                <td>
+                                    {{ shop.name }}
+                                </td>
+                                <td>
+                                    {% if shop.bot_up %}
+                                    <input class="form-control" id="link_{{ shop._id }}" value="{{ shop.bot_up.link }}"
+                                        id="link_{{ shop._id }}">
+                                    {% else %}
+                                    <input class="form-control" id="link_{{ shop._id }}" value="">
+                                    {% endif %}
+                                </td>
+                                <td >
+                                    
+                                    <div class="form-group row">
+    
+                                
+                                          <div class="custom-control custom-switch {% if status == 'True' %}is-active{% endif %}">
+                                            <input class="custom-control-input" name="inp_apply_{{ shop._id }}" id="inp_apply_{{ shop._id }}" type="checkbox"
+                                            {% if shop.bot_up and shop.bot_up.active == True %}checked="checked"
+                                            {% endif %} value="{{ shop._id }}">
+                                              <label class="custom-control-label"
+                                              for="inp_apply_{{ shop._id }}"></label>
+                                          </div>
+                                      </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-2" style="float:right; margin-top: 15px;">
+        <button class="btn btn-lg btn-block btn-primary" id="save_id_loc">
+            {{ gettext("Luu") }}
+        </button>
+    </div>
+    <div class="card-footer">
+        <nav class="pagination justify-content-center">
+            {% if pagination %}
+            {{ pagination.links }}
+            {% endif %}
+        </nav>
+    </div>
+</div>
+
+
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        var data123 = [];
+        $("#save_id_loc").click(function () {
+            var shop_id_in_mer = JSON.parse($("#shop_id_in_mer").val())
+
+            for (i = 0; i < shop_id_in_mer.length; i++) {
+                var shop_id = shop_id_in_mer[i].id;
+                var status = $("#inp_apply_" + shop_id).is(":checked")
+                data123.push({
+                    'shop_id': shop_id,
+                    'link': $("#link_" + shop_id).val(),
+                    'active': $("#inp_apply_" + shop_id).is(":checked")
+                })
+            };
+            $.ajax({
+                url: '/save_setting_botup',
+                type: 'POST',
+                data: {
+                    'data': JSON.stringify(data123),
+                },
+                success: function (response) {
+                    var returnedData = JSON.parse(response);
+                    if ('error' in returnedData) {
+                        swal(returnedData['error'], " ", "error");
+                        return false;
+                    }
+                    else {
+                        swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+                        location.reload();
+                    }
+                },
+                error: function (xhr, desc, err) {
+                    swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+                }
+            });
+
+            return false;
+        })
+
+        $("#apply_merchant_btn").click(function () {
+            var inp_apply_merchant = $("#apply_merchant").val();
+            $.ajax({
+                url: '/save_setting_botup',
+                type: 'GET',
+                data: {
+                    'data': inp_apply_merchant,
+                },
+                success: function (response) {
+                    var returnedData = JSON.parse(response);
+                    if ('error' in returnedData) {
+                        swal(returnedData['error'], " ", "error");
+                        return false;
+                    }
+                    else {
+                        swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+                        location.reload();
+                    }
+                },
+                error: function (xhr, desc, err) {
+                    swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+                }
+            });
+
+            return false;
+        })
+    });
+</script>
+
+{% endblock %}
+{% block js %}
+{% endblock %}

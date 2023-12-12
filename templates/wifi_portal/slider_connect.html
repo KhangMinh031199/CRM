@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Nextify</title>
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/nextify/css/styles.css">
+
+<script type="text/javascript" src="/static/wifi_portal/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/static/wifi_portal/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/wifi_portal/js/jquery.bcSwipe.min.js"></script>
+</head>
+<body>
+
+<div class="wifi_slider_connect">
+    <div class="container">
+        <!-- header -->
+        <div class="row">
+            <div class="col-md col-lg-6 mg-auto pd-0 mg-top-10">
+                <div id="demo" class="carousel slide" data-ride="carousel">
+                    <ul class="carousel-indicators">
+                        {% for card in cards %}
+                            <li data-target="#demo" data-slide-to="{{ loop.index }}"></li>
+                        {% endfor %}
+                    </ul>
+                    <div class="carousel-inner" role="listbox">
+                        <!-- item -->
+                        {% for card in cards %}
+                            <div class="carousel-item {% if loop.index == 1 %} active{% endif %}">
+                                <img srcset="//files.nextify.vn/{{ card.photo }} 320w,
+                                         //files.nextify.vn/{{ card.photo }} 480w,
+                                         //files.nextify.vn/{{ card.photo }} 800w"
+                                     sizes="(max-width: 320px) 280px,
+                                                (max-width: 480px) 440px,
+                                                800px"
+                                     src="//files.nextify.vn/{{ card.photo }}"/>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end header -->
+
+
+        <!-- middle -->
+        <div class="row">
+            <div class="col-md-8 col-lg-4 mg-auto pd-rl-24">
+
+                {% if is_wifi_code == 'True' and wifi_access_code %}
+                    <div class="box_text_intro">
+                        <h3>
+                            Vui lòng nhập mã truy cập WIFI từ hóa đơn của bạn.
+
+                        </h3>
+                    </div>
+
+                    <form name="check_wifi_code"
+                          id="check_wifi_code">
+                          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <input type="hidden" value="{{ gateway_mac }}"
+                               name="gateway_mac"/>
+                        <input type="hidden" value="{{ client_mac }}"
+                               name="client_mac"/>
+                        <input type="hidden" value="{{ nas_id }}"
+                               name="nas_id"/>
+                        <input type="hidden" value="{{ device_type }}"
+                               name="device_type"/>
+                        <input type="text" class="c-input"
+                               placeholder="" id="code" name="code" value="">
+                        <input type="hidden" name="shop_id" value="{{ shop_select._id }}">
+
+                    </form>
+                    <hr/>
+                    <a id="check_wifi_code_btn"
+                       class="btn btn btn_bg_green mg-bt-10 white_text">
+                        <i class="fe fe-wifi font_size_24" aria-hidden="true"></i>
+                        {% if shop_select.connect_button %}
+                            <span>{{ shop_select.connect_button }}</span>
+                        {% else %}
+                            <span>Kết nối Wi-Fi/Go Online</span>
+                        {% endif %}
+                    </a>
+
+
+                {% else %}
+                    <div id="welcome_info">
+                        {% if message %}
+                            <div class="box_text_intro">
+                                <h3>
+                                    {{ message }}
+                                </h3>
+                            </div>
+                        {% else %}
+                            <div class="box_text_intro">
+                                <h3>
+                                    {% if user.name and user.name|length > 1 %} Chào
+                                        <strong>{{ user.name }}</strong>,
+                                        <br/> cảm ơn bạn đã ghé thăm. {% else %} Chào
+                                        <strong>{{ user.phone }}</strong>,
+                                        <br/>cảm ơn bạn đã ghé thăm.
+                                    {% endif %}
+
+                                </h3>
+                            </div>
+                        {% endif %}
+                        <div class="btn_action">
+
+                                    <button class="btn btn btn_bg_green mg-bt-10 white_text"
+                                            style="width:100%" onclick="doLogin()">
+                                        <i class="fe fe-wifi font_size_24" aria-hidden="true"></i>
+                                        {% if shop_select.connect_button %}
+                                            <span>{{ shop_select.connect_button }}</span>
+                                        {% else %}
+                                            <span>Kết nối Wi-Fi/Go Online</span>
+                                        {% endif %}
+                                    </button>
+                                </div>
+
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="policy_text" style="
+    width: 100%;
+    position: fixed;
+    left: 50%;
+    bottom: 0px;
+    transform: translate(-50%, -50%);
+    margin: 0 auto;
+">
+                <img alt="" src="{% if 'viettel.vn' in request.url %}/static/nextify/images/logo_viettel2.png{% else %}/static/nextify/images/logonextify.png{% endif %}" style="display:inline-block; height: 35px;">
+                <p class="content black_text">{% if 'viettel.vn' in request.url %}vmarketing - VIETTEL{% else %}http://nextify.vn - The Next Generation
+                    of Loyalty{% endif %}</p>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+</body>
+
+</html>

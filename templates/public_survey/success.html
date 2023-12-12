@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% if 'viettel.vn' in request.url %}Viettel{% elif 'crmx' in request.url %}CRMX{% else %}
+        Nextify{% endif %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+  	{% if 'viettel.vn' in request.url %}
+        <title>Viettel | vmarketing</title>
+        {% include 'nextify/viettel_meta_tags.html' %}
+        {% elif 'crmx' in request.url %}
+        <title>CRMX | Better eXperience fo Wi-Fi</title>
+         {% include 'nextify/crmx_meta_tags.html' %}
+    {% else %}
+        <title>Nextify | The Next Generation of Loyalty</title>
+         {% include 'nextify/nextify_meta_tags.html' %}
+    {% endif %}
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/register/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/register/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="/static/wifi_portal/register/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/register/vendor/animate/animate.css">
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/register/vendor/css-hamburgers/hamburgers.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/register/vendor/animsition/css/animsition.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/register/css/util.css">
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/register/css/main.css">
+    <style>
+        .slider-block {
+            height: 350px;
+            display: inline-block;
+        }
+
+        #carousel {
+            height: 100%;
+        }
+
+        #carousel .carousel-inner {
+            height: 100%;
+        }
+
+        #carousel .item {
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .bg-image {
+            /* The image used */
+            background-image: url(//files.nextify.vn/{{ shop.background }});
+
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            /* Full height */
+            height: 100%;
+
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .text-checkbox100 {
+            font-family: 'PlainRegular', Helvetica Neue, Helvetica, Arial, sans-serif !important;
+            font-size: 16px;
+            color: #999999;
+            line-height: 1.4;
+
+            display: block;
+            position: relative;
+            padding-left: 26px;
+            cursor: pointer;
+        }
+
+
+
+    </style>
+    <!--===============================================================================================-->
+    <script src="/static/wifi_portal/register/vendor/jquery/jquery-3.2.1.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="/static/wifi_portal/register/vendor/animsition/js/animsition.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="/static/wifi_portal/register/vendor/bootstrap/js/popper.js"></script>
+    <script src="/static/wifi_portal/register/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<div class="limiter">
+    <div class="container-login100 bg-image">
+
+        <div class="wrap-login100" style="width: 670px;">
+
+
+            <div class="login100-form-title">
+                  <span class="login100-form-avatar">
+						<img src="//files.nextify.vn/{{ shop.logo }}"
+                             style="width: 120px; height: 120px" alt="AVATAR">
+					</span>
+
+            </div>
+
+                    <div class="flex-sb-m w-full p-b-30" style="justify-content: center;">
+
+                        <span class="login100-form-title-1" style="color: #0dff9a;font-family: 'PlainRegular', Helvetica Neue, Helvetica, Arial, sans-serif !important;font-size: 20px">
+						<i class="fa fa-check-circle"></i> Cảm ơn bạn tham gia khảo sát
+					</span>
+
+
+                    </div>
+                     <div class="flex-sb-m w-full p-b-30" style="justify-content: center;">
+                        <span class="text-checkbox100">Đừng quên theo dõi chúng tôi trên Fanpage</span>
+                     </div>
+                     <div class="flex-sb-m w-full p-b-30" style="justify-content: center;">
+                         <div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.3&appId=611214335939430&autoLogAppEvents=1"></script>
+                         <div class="fb-page" data-href="{{ shop.facebook_page }}" data-tabs="" data-width="" data-height="" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="{{ shop.facebook_page }}" class="fb-xfbml-parse-ignore"><a href="{{ shop.facebook_page }}">Facebook</a></blockquote></div>
+                     </div>
+
+
+        </div>
+    </div>
+</div>
+
+	<script src="/static/wifi_portal/register/vendor/jquery/jquery-3.2.1.min.js"></script>
+	<script src="/static/wifi_portal/register/vendor/animsition/js/animsition.min.js"></script>
+	<script src="/static/wifi_portal/register/vendor/bootstrap/js/popper.js"></script>
+	<script src="/static/wifi_portal/register/vendor/bootstrap/js/bootstrap.min.js"></script>
+{% if shop.facebook_pixel_code and  shop.facebook_pixel_code != 'None' %}
+    {{ shop.facebook_pixel_code|safe }}
+{% endif %}
+{% if shop.google_pixel_code  and  shop.google_pixel_code != 'None' %}
+    {{ shop.google_pixel_code|safe }}
+{% endif %}
+</body>
+</html>

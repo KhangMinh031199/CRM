@@ -1,0 +1,86 @@
+{% extends "nextify/index.html" %}
+
+{% block main_content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card u-p-medium">
+                    <div class="row u-justify-center">
+                        <div class="col-lg-6">
+                            <div class="u-mt-large u-text-center">
+                                <h4 class="u-mb-xsmall">{{ gettext("Tao_nhom_khach_hang") }}</h4>
+                                <p class="u-text-mute u-mb-large"></p>
+                            </div>
+                            <form method="POST" action="/create_tags/{% if tag_item %}{{ tag_item._id }}{% else %}add{% endif %}"
+                                  data-toggle="validator" role="form">
+                             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                 <div class="col-lg-12">
+                                <div class="row u-mb-medium">
+                                    {% if error %}
+                                        <div class="alert alert-danger">
+                                            {{ error | safe }}
+                                        </div>
+                                    {% endif %} {% if message %}
+                                    <div class="alert alert-success">
+                                        {{ message | safe }}
+                                    </div>
+                                {% endif %}
+                                    <div class="col-lg-12">
+
+                                        {% if tag_item %}
+                                            <input type="hidden"
+                                                   value="{{ tag_item._id }}"
+                                                   name="tag_id"/>
+                                        {% endif %}
+                                        <div class="c-field u-mb-small">
+                                            <label for="name"
+                                                   class="c-field__label">{{ gettext("Ten:") }}</label>
+                                            <input type="tel"
+                                                   class="c-input" id="name"
+                                                   name="name"
+                                                   placeholder="Loại tag"
+                                                   value="
+                                                           {% if tag_item %}{{ tag_item.name }}{% endif %}"/>
+                                        </div>
+                                        <div class="c-field u-mb-small">
+                                            <label class="c-field__label"
+                                                   for="textarea2">{{ gettext("Mo_ta") }}</label>
+                                            <textarea class="c-input" id="desc"
+                                                      name="desc"
+                                                      placeholder='{{ gettext("Mo_ta") }}'>{% if tag_item %}
+                                                {{ tag_item.description }}{% endif %}</textarea>
+                                        </div>
+
+                                        <div class="c-field u-mb-small"
+                                             style="padding-top:20px">
+                                            <input type="submit" class="c-btn
+                                     c-btn--info u-float-right"
+                                                   value="Lưu lại"/>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block js %}
+    <script  nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+        });
+    </script>
+{% endblock %}

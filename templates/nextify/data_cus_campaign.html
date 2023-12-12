@@ -1,0 +1,148 @@
+{# <div class="content-section content-pane no-divider">
+    <div class="contacts-to-reach-content">
+        <span>{{ gettext("Dua_vao_so_lieu_co_duoc,_chung_toi_uoc_tinh_se_gui") }}
+            <b>{{ real_send }}</b> {{ gettext("tren_tong_so") }} {{ total }} {{ gettext("phu_hop_voi_cac_dieu_kien.") }}</span>
+        <div class="fill-bar-graph">
+            <input type="hidden" value="{{ real_send }}" id="predict_message" />
+            <hr>
+            <div class="fill-bar">
+                <div class="bar-content text-right" {% if total != 0 %}
+                    style="color: black; background-color: rgb(193, 193, 238); flex: {{ sub / total }} 1 0%; opacity: 1;"
+                    {% else %} style="color: black; background-color: rgb(193, 193, 238); flex: 0 1 0%; opacity: 1;"
+                    {% endif %}>
+                    <span class="hidden-content">{{ sub }}</span>
+                </div>
+                <div class="bar-content text-right" {% if total != 0 %}
+                    style="color: white; background-color: rgb(50, 50, 200); flex: {{ real_send / total }} 1 0%; opacity: 1;"
+                    {% else %} style="color: white; background-color: rgb(50, 50, 200); flex: 0 1 0%; opacity: 1;"
+                    {% endif %}>
+                    <span class="hidden-content">{{ real_send }}</span>
+                </div>
+            </div>
+            <div class="fill-bar-graph-legend" style="margin: 20px;">
+                <span>
+                    <div class="fill-bar-graph-circle" style="background-color: rgb(193, 193, 238); opacity: 1;">
+                    </div>
+                    <span class="fill-bar-graph-category" style="opacity: 1;">{{ gettext("Nguoi_dung_khong_phu_hop") }}</span>
+                </span>
+                <span>
+                    <div class="fill-bar-graph-circle" style="background-color: rgb(50, 50, 200); opacity: 1;">
+                    </div><span class="fill-bar-graph-category" style="opacity: 1;">{{ gettext("Thuc_gui") }}</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div> #}
+<div class="table-responsive">
+    <table class="table table-hover table-sm table-nowrap card-table" id="list_customers">
+        <tbody class="list">
+            {% for cus in customers %}
+            <tr>
+                <td style="width: 50px">
+                    <a href="#" class="avatar">
+                        {% if cus.user.avatar and cus.user.avatar|length > 0 %}
+                        <img class="avatar-img rounded-circle" src="{{ cus.user.avatar.replace('http:', 'https:') }}" />
+                        {% else %}
+                        {%set avatar = cus.user|human_avatar%}
+                        <img class="avatar-img rounded-circle" src="{{ avatar }}" />
+                        {% endif %}
+                    </a>
+                </td>
+                <td class="orders-product">
+                    <div class="contact">
+                        {% if is_email %}
+                            {{ cus.user.email }}
+                        {% endif %}
+                        {% if is_sms %}
+                            {{ cus.user.phone }}
+                        {% endif %}
+                        {% if is_zalo %}
+                            {{ cus.user.phone }}
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+    <div class="c-pagination u-justify-center">
+        <ul id="example_pagination" class="pagination-sm"></ul>
+    </div>
+</div>
+
+<input type="hidden" value="{{ real_send }}" id="real_send">
+<input type="hidden" value="{{ current_page }}" id="current_page">
+<input type="hidden" value="{{ total_pages }}" id="total_pages">
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id_select">
+<script>
+    $(document).ready(function () {
+
+        $('#example_pagination').bootpag({
+            total: parseInt($("#total_pages").val()),
+            maxVisible: 4,
+            firstLastUse: true,
+            first: '←',
+            last: '→',
+            nextClass: 'next',
+            prevClass: 'prev',
+            lastClass: 'last',
+            firstClass: 'first'
+        }).on("page", function(event, /* page number here */ num){
+            var gender_filter = [];
+            if ($("#gender_male").prop("checked")) {
+                gender_filter.push("1")
+            }
+            if ($("#gender_female").prop("checked")) {
+                gender_filter.push("2")
+            }
+            if ($("#gender_other").prop("checked")) {
+                gender_filter.push("0")
+            }
+            if($('#active_esms').is(":checked")){
+                    var active_esms = "on";
+            }
+            else{
+               var active_esms = "off";
+            }
+            var data = {
+                'shop_id_select': $("#shop_id_select").val(),
+                'gender_filter': gender_filter.toString(),
+                'is_email': $("#is_email_fr").val(),
+                'is_sms': $("#is_sms_fr").val(),
+                'is_zalo': $("#is_zalo_fr").val(),
+                'gender_male': $("#gender_male").prop("checked"),
+                'gender_female': $("#gender_female").prop("checked"),
+                'gender_other': $("#gender_other").prop("checked"),// giới tính
+                'real_tags_filter': $('#new_select_tags_filter').val(),
+                'visit_from_date': $("#from_date").val(), // khhách đến từ ngày
+                'visit_to_date': $("#to_date").val(),   // khhách đến ngày
+                'from_date': $("#bday_from_date").val(), // sinh nhật trong khoảng
+                'to_date': $("#bday_to_date").val(),   // sinh nhật trong khoảng
+                'min_visit': $("#min_visit").val(), // lươt đến trong khoảng
+                'max_visit': $("#max_visit").val(), // lượt ddeeesn trong khoảng
+                'lost_day': $("#lost_day").val(),
+                'customers_sources': $('#all_customers').val(),
+                'current_page': num,
+                'active_esms': active_esms
+            };
+            $.ajax({
+                url: "/data_cus_pagination",
+                type: 'GET',
+                data: data,
+                beforeSend: function () {
+                    $("#data_cus_select").hide();
+                    $('#real_send_div').hide();
+                    $('#customers_load').show();
+                },
+                success: function (data) {
+                    $('#real_send_div').show();
+                    $("#list_customers").empty();
+                    $("#list_customers").append(data);
+                    $('#customers_load').hide();
+                    $('#list_customers').show();
+                    $("#data_cus_select").show();
+                }
+            });
+        });
+    });
+</script>

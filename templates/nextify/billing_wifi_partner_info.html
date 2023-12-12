@@ -1,0 +1,159 @@
+{% extends 'nextify/base.html' %} {% block main_content %}
+
+<div class="container-fluid">
+  <div class="header">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">Báo cáo</h6>
+          <!-- Title -->
+          <h1 class="header-title">{{wifi_partner.name}}</h1>
+        </div>
+      </div>
+    </div>
+
+    <div class="row align-items-center">
+      <div class="col">
+        <!-- Nav -->
+        <ul class="nav nav-tabs nav-overflow header-tabs">
+          <li class="nav-item">
+            <a
+              href="/{{merchant_id}}/wifi_partners/{{wifi_partner_id}}/reports"
+              class="nav-link"
+            >
+              Báo cáo
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              href="/{{merchant_id}}/wifi_partners/{{wifi_partner_id}}/bills"
+              class="nav-link active"
+            >
+              Hóa đơn
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-lg-12 d-flex flex-column">
+      <div class="row">
+        <div class="col-12 col-lg-4 col-xl">
+          <!-- Card -->
+          <div class="card">
+            <div class="card-body">
+              <div class="row align-items-center gx-0">
+                <div class="col">
+                  <!-- Title -->
+                  <h6 class="text-uppercase text-muted mb-2">Tổng tiền</h6>
+
+                  <!-- Heading -->
+                  <span class="h2 mb-0"> đ 24,500 </span>
+                </div>
+                <div class="col-auto">
+                  <!-- Icon -->
+                  <span class="h2 fe fe-dollar-sign text-muted mb-0"></span>
+                </div>
+              </div>
+              <!-- / .row -->
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-4 col-xl">
+          <!-- Card -->
+          <div class="card">
+            <div class="card-body">
+              <div class="row align-items-center gx-0">
+                <div class="col">
+                  <!-- Title -->
+                  <h6 class="text-uppercase text-muted mb-2">Đã thanh toán</h6>
+
+                  <!-- Heading -->
+                  <span class="h2 mb-0"> đ 20,500 </span>
+                </div>
+                <div class="col-auto">
+                  <!-- Icon -->
+                  <span class="h2 fe fe-dollar-sign text-muted mb-0"></span>
+                </div>
+              </div>
+              <!-- / .row -->
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-4 col-xl">
+          <!-- Card -->
+          <div class="card">
+            <div class="card-body">
+              <div class="row align-items-center gx-0">
+                <div class="col">
+                  <!-- Title -->
+                  <h6 class="text-uppercase text-muted mb-2">Còn nợ</h6>
+
+                  <!-- Heading -->
+                  <span class="h2 mb-0"> đ 4,500 </span>
+                </div>
+                <div class="col-auto">
+                  <!-- Icon -->
+                  <span class="h2 fe fe-dollar-sign text-muted mb-0"></span>
+                </div>
+              </div>
+              <!-- / .row -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-lg-12 d-flex flex-column">
+      <div class="card">
+        <div class="card-header">
+          <!-- Title -->
+          <h4 class="card-header-title">Lịch sử thanh toán</h4>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-sm table-nowrap card-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Ngày</th>
+                <th>Số tiền</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody class="fs-base">
+              <tr>
+                <td>
+                  <a href="#">#10395</a>
+                </td>
+                <td>
+                  <time datetime="2020-04-24">Apr. 24, 2022</time>
+                </td>
+                <td>đ 290,000</td>
+                <td>
+                  <span class="badge bg-secondary">Chưa chuyển tiền</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="invoice.html">#10244</a>
+                </td>
+                <td>
+                  <time datetime="2020-03-24">Mar. 29, 2022</time>
+                </td>
+                <td>đ 1,900,000</td>
+                <td>
+                  <span class="badge bg-success">Đã chuyển tiền</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

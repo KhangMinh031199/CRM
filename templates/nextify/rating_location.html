@@ -1,0 +1,473 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+<div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                         {{ gettext("Danh_gia_cua_khach_hang") }}
+                    </h6>
+
+                    <!-- Title -->
+                    <h1 class="header-title">
+                        {{ shop_select.name }}
+                    </h1>
+
+                </div>
+                <div class="col-lg-3">
+                    <select class="form-control" style="width: 100%;" id="shop_in_mer">
+                        {% for shop_mer in shop_in_mer %}
+                        <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+             <div class="col-12 col-md-auto">
+
+                <!-- Button
+                <a data-toggle="modal" href="#config_rating" class="btn btn-primary d-block d-md-inline-block lift">
+                 {{ gettext("Cau_hinh") }}
+                </a> -->
+
+              </div>
+
+            </div> <!-- / .row -->
+        </div>
+    </div>
+</div>
+    <div class="modal hide fade" id="config_rating" tabindex="-1" role="dialog" aria-labelledby="config_rating"
+  data-backdrop="static" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">{{ gettext("Cau_hinh_kenh_danh_gia") }}</h3>
+
+        <a class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </a>
+      </div>
+
+      <div class="modal-body">
+      <p class="form-text text-muted">
+                      {{ gettext("Moi_khach_hang_danh_gia_qua_mang_xa_hoi._Cac_kenh_se_hien_thi_trong_email_ban_gui_khach_hang.") }}
+                    </p>
+
+        <form method="POST" id="login_form_settings" enctype="multipart/form-data">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <div class="form-group">
+            <label>Facebook</label> <div class="c-switch {% if shop_select.setting_rating %}{% if shop_select.setting_rating.check_facebook|string == 'True' %}is-active
+                                        {% endif %}{% endif %}" id="switch_facebook_rating" style="float:right">
+                                        <input class="c-switch__input"
+                                               name="active_facebook_rating"
+                                               id="active_facebook_rating"
+                                               type="checkbox"
+                                               {% if shop_select.setting_rating %}{% if shop_select.setting_rating.check_facebook|string == 'True' %}checked="checked"
+                                               {% endif %}{% endif %} >
+                                    </div>
+             <input class="form-control" id="url_facebook" name="url_facebook" type="text" value="{% if shop_select.setting_rating %}{{ shop_select.setting_rating.url_facebook }}{% endif %}" placeholder="https://www.facebook.com/pg/KeystoneClifton/reviews/?ref=page_internal">
+            </div>
+            <div class="form-group">
+                <label>Google</label><div class="c-switch {% if shop_select.setting_rating %}{% if shop_select.setting_rating.check_google|string == 'True' %}is-active
+                                        {% endif %}{% endif %}" id="switch_check_google_rating" style="float:right">
+                                        <input class="c-switch__input"
+                                               name="active_check_google_rating"
+                                               id="active_check_google_rating"
+                                               type="checkbox"
+                                               {% if shop_select.setting_rating %}{% if shop_select.setting_rating.check_google|string == 'True' %}checked="checked"{% endif %}{% endif %} >
+                                    </div>
+                <input class="form-control" id="url_google" name="url_google" type="text" value="{% if shop_select.setting_rating %}{{ shop_select.setting_rating.url_google }}{% endif %}" placeholder="https://www.google.com/search?q=keystone+bar+and+grill+clifton&oq=keystone+bar+and+grill+cli&aqs=chrome.0.0j69i57j0l4.4213j0j1&sourceid=chrome&ie=UTF-8#lrd=0x8841b3f36763c579:0xc2d621bd96506ec7,1,,,">
+
+            </div>
+
+                <div class="form-group">
+            <label>TripAdvisor</label><div class="c-switch {% if shop_select.setting_rating %}{% if shop_select.setting_rating.check_tripadvisor|string == 'True' %}is-active
+                                        {% endif %}{% endif %}" id="switch_check_tripadvisor_rating" style="float:right">
+                                        <input class="c-switch__input"
+                                               name="active_check_tripadvisor_rating"
+                                               id="active_check_tripadvisor_rating"
+                                               type="checkbox"
+                                               {% if shop_select.setting_rating %}{% if shop_select.setting_rating.check_tripadvisor|string == 'True' %}checked="checked"
+                                               {% endif %}{% endif %}>
+                                    </div>
+                <input class="form-control" id="url_tripadvisor" name="url_tripadvisor" type="text" value="{% if shop_select.setting_rating %}{{ shop_select.setting_rating.url_tripadvisor }}{% endif %}" placeholder="https://www.tripadvisor.com/UserReviewEdit-g60993-d5110007-Keystone_Bar_Grill_Clifton-Cincinnati_Ohio.html">
+
+
+                </div>
+
+
+
+        </form>
+        <div class="form-group justify-content-center">
+            <a href="#" class="btn btn-primary d-block d-md-inline-block lift" style="float: right" id="setting_rating">{{ gettext("Xac_nhan") }}</a>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+    <div class="row mt-4 mt-md-5">
+
+
+
+    <div class="col-12 col-md-6 col-xl-6">
+      <!-- Card -->
+      <div class="card align-items-center">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Tong_so_danh_gia") }}</h5>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="col-auto">
+            <div id="customers_load_total" class="loader_avg_100" style="display: none;"></div>
+            <span id="total_rating" class="total" style="font-size: 80px">{{ total_rating }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-xl-6">
+      <input type="hidden" value="{{ rating }}" id="average_earnings_inp">
+      <div class="card align-items-center">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Danh_gia_trung_binh") }}</h5>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="col">
+            <div id="customers_load_avg" class="loader_avg_100" style="display: none;"></div>
+            <span id="average_rating" class="total" style="font-size: 80px">{{ avg_rating }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+<div class="row align-items-center">
+                  <div class="col">
+
+
+                    <h3 class="header-title">
+                      {{ gettext("Khach_hang_danh_gia") }}
+                    </h3>
+
+                  </div>
+                  <div class="col-auto">
+          <select class="form-control" style="width: 100%;" id="select_source">
+            <option value="all">{{ gettext("Tat_ca_cac_kenh") }}</option>
+            <!-- <option value="Facebook">Facebook</option>
+            <option value="Google">Google</option>
+            <option value="Tripadsvisor">Tripadsvisor</option>
+            <option value="Wifi">Wifi</option> -->
+          </select>
+        </div>
+        <div class="col-auto">
+          <select class="form-control" style="width: 100%;" id="select_star">
+            <option value="">{{ gettext("Tat_ca_so_sao") }}</option>
+            <option value="1">{{ gettext("1_Sao") }}</option>
+            <option value="2">{{ gettext("2_Sao") }}</option>
+            <option value="3">{{ gettext("3_Sao") }}</option>
+            <option value="4">{{ gettext("4_Sao") }}</option>
+            <option value="5">{{ gettext("5_Sao") }}</option>
+          </select>
+        </div>
+                </div>
+    <div class="row mt-4 mt-md-5">
+
+        <div class="col-12">
+
+             {% for survey in survey_result %}
+            <div class="card">
+              <div class="card-body">
+
+                <!-- Header -->
+                <div class="mb-3">
+                  <div class="row align-items-center">
+                    <div class="col-auto">
+
+                      <!-- Avatar -->
+                      <a href="#!" class="avatar">
+                          {% if survey.avatar and survey.avatar|length > 0 %}
+              <img class="avatar-img rounded-circle" src="{{ survey.avatar }}" />
+              {% else %}
+              <img class="avatar-img rounded-circle" src="/static/v2/assets/img/medium-default-avatar.png">
+              {% endif %}
+
+                      </a>
+
+                    </div>
+                    <div class="col ml-n2">
+
+                      <!-- Title -->
+                      <h4 class="mb-1">
+                           {% if survey.name %}
+                {{ survey.name }}
+                {% else %}
+                Guest
+                {% endif %}
+                      </h4>
+                            {% if survey.human_time %}
+                      <!-- Time -->
+                      <p class="card-text small text-muted">
+                        <span class="fe fe-clock"></span> {{ survey.human_time }}
+                      </p>
+                    {% endif %}
+
+                    </div>
+                    <div class="col-auto">
+
+                      <!-- Dropdown -->
+                      <div class="dropdown">
+                        <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fe fe-more-vertical"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                          <a href="#!" class="dropdown-item remove_survey" survey_res_id="{{ survey._id }}">
+                            {{ gettext("Xoa") }}
+                          </a>
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div> <!-- / .row -->
+                </div>
+
+                <!-- Text -->
+
+
+                <!-- Buttons -->
+                <div class="mb-3">
+                  <div class="row">
+                    <div class="col">
+                        <label class="sr-only"></label>
+
+                      <textarea class="form-control form-control-flush" data-toggle="autosize" rows="1" placeholder='{{ gettext("Khach_hang_khong_de_lai_y_kien") }}' style="overflow: hidden; overflow-wrap: break-word; height: 40px;" readonly>
+                           {% if survey.comment and survey.comment|length > 0  %}
+                               {{ survey.comment }}
+                          {% endif %}
+
+                      </textarea>
+
+                    </div>
+                    <div class="col-4">
+                    <p>
+ {% if survey.answers == 1 %}
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == 2 %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == 3 %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == 4 %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == 5 %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == 6 %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == 7 %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == 8 %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == 9 %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif survey.answers == 10 %}
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              {% elif not survey.answers %}
+              <i class="fa fa-star"></i>
+              {% endif %}
+                    </p>
+   {% if survey.email %}<p><i class="fa fa-envelope-o"></i> {{ survey.email }}</p>{% endif %}
+                {% if survey.phone %}<p><i class="fa fa-phone"></i> {{ survey.phone }}</p>{% endif %}
+              {% if survey.source %}<p><i class="fa fa-location-arrow"></i> {{ survey.source }}</p>{% endif %}
+
+                    </div>
+                  </div> <!-- / .row -->
+                </div>
+
+
+              </div>
+            </div>
+            {% endfor %}
+              <ul class="pagination mb-0 u-justify-center">
+                            {% if pagination %}
+                            {{ pagination.links }}
+                            {% endif %}
+                        </ul>
+        </div>
+    </div>
+
+</div>
+      <input type="hidden" value="{{ source }}" id="source" />
+    <input type="hidden" value="{{ star }}" id="star" />
+    <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select" />
+{% endblock %}
+
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+  $(document).ready(function () {
+
+
+        $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+        $('input').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+        var shop_id_select = $('#shop_id_select').val();
+        $('#shop_in_mer').val(shop_id_select).trigger('change');
+        $('#shop_in_mer').on("change", function (e) {
+            var shop_id = $('#shop_in_mer').val();
+            var url = "/rating/" + shop_id;
+            $(location).attr('href', url);
+        });
+
+        $("#setting_rating").click(function (e) {
+    var url = "/save_setting_rating";
+    var url_facebook = $("#url_facebook").val();
+    var url_google = $("#url_google").val();
+    var url_tripadvisor = $("#url_tripadvisor").val();
+    var content_rating = $("#content_rating").val();
+    var shop_id_rating = $("#shop_id_select").val();
+    var check_facebook = $("#active_facebook_rating").is(":checked");
+    var check_google = $("#active_check_google_rating").is(":checked");
+    var check_tripadvisor = $("#active_check_tripadvisor_rating").is(":checked");
+
+
+    if (check_facebook == true && url_facebook.length == 0){
+       swal('{{ gettext("Kenh_da_kich_hoat_khong_duoc_de_trong_duong_dan.") }}', '', 'error');
+         return false;
+    }
+
+    if (check_google == true && url_google.length == 0){
+       swal('{{ gettext("Kenh_da_kich_hoat_khong_duoc_de_trong_duong_dan.") }}', '', 'error');
+     return false;
+    }
+     if (check_tripadvisor == true && url_google.length == 0){
+       swal('{{ gettext("Kenh_da_kich_hoat_khong_duoc_de_trong_duong_dan.") }}', '', 'error');
+    return false;
+    }
+        $.ajax({
+          type: "POST",
+          url: url,
+          data: {
+            'url_facebook': url_facebook,
+            'url_google': url_google,
+            'url_tripadvisor': url_tripadvisor,
+            'content_rating': content_rating,
+            'shop_id_rating': shop_id_rating,
+            'check_facebook': check_facebook,
+            'check_google': check_google,
+            'check_tripadvisor': check_tripadvisor
+          },
+          success: function (data) {
+            swal('{{ gettext("Cap_nhat_thanh_cong") }}', '', 'success');
+          }
+        });
+
+
+      e.preventDefault();
+  });
+
+         var source = $('#source').val();
+        $('#select_source').val(source).trigger('change');
+    $('#select_source').on('change', function (e) {
+              var shop_id = $('#shop_in_mer').val();
+              var star = $('#select_star').val();
+            var url = "/rating/" + shop_id + '?source=' +  $('#select_source').val() + '&star=' + star;
+            $(location).attr('href', url);
+    });
+    var star = $('#star').val();
+        if (!star || star.toString() == 'None'){
+            star = '';
+      }
+         $('#select_star').val(star).trigger('change');
+    $('#select_star').on('change', function (e) {
+              var shop_id = $('#shop_in_mer').val();
+            var url = "/rating/" + shop_id + '?source=' +  $('#select_source').val() + '&star=' +   $('#select_star').val();
+            $(location).attr('href', url);
+    });
+
+$(".remove_survey").click(function () {
+    var cus_id = $(this).attr('survey_res_id');
+    Swal.fire({
+      title: '{{ gettext("Ban_co_chac_chan_muon_xoa_danh_gia_khong?") }}',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+focusCancel: true,
+      cancelButtonColor: '#d33',
+      confirmButtonText: '{{ gettext("Co!") }}',
+      cancelButtonText: '{{ gettext("Khong!")}}'
+    }).then((result) => {
+      if (result.value) {
+        var url_submit = '/survey_remove/' + cus_id;
+        $.ajax({
+          url: url_submit,
+          type: 'GET',
+          success: function (data) {
+            swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+            location.reload();
+          }
+        });
+      }});
+  });
+  });
+
+</script>
+{% endblock %}

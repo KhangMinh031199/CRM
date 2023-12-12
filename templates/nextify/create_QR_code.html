@@ -1,0 +1,372 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-8">
+
+            <!-- Header -->
+            <div class="header mt-md-5">
+                <div class="header-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Pretitle -->
+                            <h6 class="header-pretitle">
+                                {{ gettext("Tai_khoan") }}
+                            </h6>
+
+                            <!-- Title -->
+                            <h1 class="header-title">
+                                {{ gettext("Cau_hinh_tai_khoan") }}
+                            </h1>
+
+                        </div>
+                    </div> <!-- / .row -->
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Nav -->
+                            <ul class="nav nav-tabs nav-overflow header-tabs">
+                                <li class="nav-item">
+                                    <a href="/settings" class="nav-link">
+                                        {{ gettext("Cau_hinh_chung") }}
+                                    </a>
+                                </li>
+                                {% if merchant._id|package_merchant != "Brand" and merchant._id|package_merchant != "Basic" %}
+                                <li class="nav-item">
+                                    <a href="/accounts" class="nav-link">
+                                        {{ gettext("Tai_khoan_truy_cap") }}
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#!" class="nav-link ">
+                                        {{ gettext("Thanh_toan") }}
+                                    </a>
+                                </li>
+                                <!-- <li class="nav-item">
+                                        <a href="/setting_integration" class="nav-link">
+                                            {{ gettext("Tich_hop") }}
+                                        </a>
+                                    </li> -->
+                                <li class="nav-item">
+                                    <a href="/setting_detection_employee" class="nav-link">
+                                        {{ gettext("Nhan_dien_nhan_vien") }}
+                                    </a>
+                                </li>
+                                {% endif %}
+                                <li class="nav-item">
+                                    <a href="/create_QR_code" class="nav-link active">
+                                        {{ gettext("Tao_ma_QR") }}
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="/logout" class="nav-link" style="color:#3232c8">
+                                        {{ gettext("Dang_xuat") }}
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <!-- Subtitle -->
+                <div class="card-header">
+                    <h3>Facebook Fanpage:</h3>
+                </div>
+                <div class="card-body">
+                    <p class="header-subtitle">
+                        ({{ gettext("Nhap_link_Facebook_fanpage_theo_dinh_dang:") }}
+                        https://www.facebook.com/tên_fanpage)
+                    </p>
+
+                    <!-- Input -->
+                    <form>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"/>
+                        <div class="form-group">
+                        <input type="text" name="link_QR_code_fb" id="link_QR_code_fb" class="form-control" autofocus></div>
+
+                        <div class="row align-items-center">
+                            <div class="col"></div>
+                            <div class="col-auto">
+                            <button type="button" id="create_QR_code_fb" class="btn btn-lg btn-block btn-primary">
+                                {{ gettext("Tao") }}
+                            </button>
+                            </div>
+                        </div>
+
+                        <div id="id_qrcode_fb"></div>
+
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Chatbot Messenger: </h3>
+                </div>
+                <div class="card-body">
+                    <p class="header-subtitle">
+                        ({{ gettext("Nhap_link_Chatbot_Messenger_theo_dinh_dang:") }} https://m.me/page_name)
+                    </p>
+
+                    <!-- Input -->
+                    <form>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-group">
+                        <input type="text" name="link_QR_code_mess" id="link_QR_code_mess" class="form-control"></div>
+
+                        <div class="row align-items-center">
+                            <div class="col"></div>
+                            <div class="col-auto">
+                            <button type="button" id="create_QR_code_mess" class="btn btn-lg btn-block btn-primary">
+                                {{ gettext("Tao") }}
+                            </button>
+                            </div>
+                        </div>
+
+                        <div id="id_qrcode_mess"></div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Zalo OA: <span class="fe fe-help-circle" data-toggle="tooltip"
+                        title="Trong phần quản lỷ tài khoản Zalo OA chọn Quản lý -> Thông tin tài khoản, tìm tới phần Qr code để lấy link."></span></h3>
+                </div>
+                <div class="card-body">
+                    <p class="header-subtitle">
+                        ({{ gettext("Nhap_link_Zalo_OA_theo_dinh_dang") }}: https://zalo.me/...)
+                    </p>
+
+                    <!-- Input -->
+                    <form>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-group">
+                            <input type="text" name="link_QR_code_zalo" id="link_QR_code_zalo" class="form-control"><br>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col"></div>
+                            <div class="col-auto">
+                                <button type="button" id="create_QR_code_zalo" class="btn btn-lg btn-block btn-primary">
+                                    {{ gettext("Tao") }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="id_qrcode_zalo"></div>
+
+                    </form>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Website:</h3>
+
+                </div>
+                <div class="card-body">
+                    <p class="header-subtitle">
+                        ({{ gettext("Nhap_link_Website_theo_dinh_dang:") }} https://...)
+                    </p>
+                    <!-- Input -->
+                    <form>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-group">
+                        <input type="text" name="link_QR_code_website" id="link_QR_code_website" class="form-control">
+                        </div>
+
+                        <div class="row align-items-center">
+                            <div class="col"></div>
+                            <div class="col-auto">
+                            <button type="button" id="create_QR_code_website" class="btn btn-lg btn-block btn-primary">
+                                {{ gettext("Tao") }}
+                            </button>
+                            </div>
+                        </div>
+
+                        <div id="id_qrcode_website"></div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Wifi:</h3>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <p class="header-subtitle">{{ gettext("Ten_wifi:") }} </p>
+                        <div class="form-group">
+                        <input type="text" name="name_wifi" id="name_wifi" class="form-control">
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col"></div>
+                            <div class="col-auto">
+                            <button type="button" id="create_QR_code_wifi" class="btn btn-lg btn-block btn-primary">
+                                {{ gettext("Tao") }}
+                            </button>
+                            </div>
+                        </div>
+                        <div id="id_qrcode_wifi"></div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+
+
+<script type="text/javascript" src="/static/nextify/js/qrcode.js"></script>
+<script nonce="{{ csp_nonce() }}">
+
+    $(document).ready(function () {
+
+
+        $("#create_QR_code_fb").click(function () {
+            var link_QR_code_fb = $("#link_QR_code_fb").val();
+            if (link_QR_code_fb.length == 0) {
+                swal('{{ gettext("Duong_dan_khong_duoc_bo_trong") }}', '', 'error')
+            }
+            else if (!(link_QR_code_fb.includes("https://www.facebook.com/"))) {
+                swal('{{ gettext("Nhap_dung_dinh_dang_link") }}  fanpage facebook', '', 'error')
+            }
+            else {
+                $("#id_qrcode_fb").empty();
+                var qrcode = new QRCode("id_qrcode_fb", {
+                    text: $("#link_QR_code_fb").val(),
+                    width: 180,
+                    height: 180,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+            }
+
+        })
+
+
+
+        $("#create_QR_code_mess").click(function () {
+            var link_QR_code_mess = $("#link_QR_code_mess").val();
+            if (link_QR_code_mess.length == 0) {
+                swal('{{ gettext("Duong_dan_khong_duoc_bo_trong") }}', '', 'error')
+            }
+            else if (!(link_QR_code_mess.includes("https://m.me/"))) {
+                swal('{{ gettext("Nhap_dung_dinh_dang_link") }} Chatbot Messenger', '', 'error')
+            }
+            else {
+                $("#id_qrcode_mess").empty();
+                var qrcode = new QRCode("id_qrcode_mess", {
+                    text: $("#link_QR_code_mess").val(),
+                    width: 180,
+                    height: 180,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+            }
+
+        })
+
+
+
+        $("#create_QR_code_zalo").click(function () {
+            var link_QR_code_zalo = $("#link_QR_code_zalo").val();
+            if (link_QR_code_zalo.length == 0) {
+                swal('{{ gettext("Duong_dan_khong_duoc_bo_trong") }}', '', 'error')
+            }
+            else if (!(link_QR_code_zalo.includes("https://zalo.me/"))) {
+                swal('{{ gettext("Nhap_dung_dinh_dang_link") }} zalo', '', 'error')
+            }
+            else {
+                $("#id_qrcode_zalo").empty();
+                var qrcode = new QRCode("id_qrcode_zalo", {
+                    text: $("#link_QR_code_zalo").val(),
+                    width: 180,
+                    height: 180,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+            }
+
+        })
+
+
+
+        $("#create_QR_code_website").click(function () {
+            var link_QR_code_website = $("#link_QR_code_website").val();
+            if (link_QR_code_website.length == 0) {
+                swal('{{ gettext("Duong_dan_khong_duoc_bo_trong") }}', '', 'error')
+            }
+            else if (!(link_QR_code_website.includes("https://"))) {
+                swal('{{ gettext("Nhap_dung_dinh_dang_link") }} Website', '', 'error')
+            }
+            else {
+                $("#id_qrcode_website").empty();
+                var qrcode = new QRCode("id_qrcode_website", {
+                    text: $("#link_QR_code_website").val(),
+                    width: 180,
+                    height: 180,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+            }
+
+        })
+
+
+
+        $("#create_QR_code_wifi").click(function () {
+            var name_wifi = $("#name_wifi").val();
+
+
+            if (name_wifi.length == 0) {
+                swal('{{ gettext("Ten_wifi_khong_duoc_bo_trong") }}', '', 'error')
+            }
+            else {
+
+                var text = "WIFI:S:" + name_wifi + ";T:" + + ";P:" + + ";;";
+                $("#id_qrcode_wifi").empty();
+                var qrcode = new QRCode("id_qrcode_wifi", {
+                    text: text,
+                    width: 180,
+                    height: 180,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+
+
+            }
+        })
+
+
+    })
+
+</script>
+
+{% endblock %}

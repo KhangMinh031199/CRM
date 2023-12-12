@@ -1,0 +1,143 @@
+{% extends "v2/base.html" %}
+{% block right_content %}
+    <div class="row">
+     <div class="card">
+       <div class="header">
+                    <div class='btn-toolbar pull-right col-md-6'>
+
+                                <div class="input-group">
+                                    <input type="text" class="search-query form-control" placeholder='{{ gettext("Tim_coupon") }}'
+                                        value="{{ coupon_code }}"/>
+                                    <span class="input-group-btn">
+                                                <button class="btn btn-default" type="button" id="search_coupon">
+                                                    <span class="pe-7s-search"></span>
+                                                </button>
+                                            </span>
+                                </div>
+
+            </div>
+            <ul class="nav nav-pills">
+                    <li class="active">
+                       <a href="/coupons" class="active">{{ gettext("Chua_doi") }}</a>
+                    </li>
+                    <li >
+                         <a href="/coupons/redeem">{{ gettext("Da_doi") }}</a>
+                    </li>
+
+                </ul>
+                                    </div>
+                <div class="content">
+
+         <input type="hidden" id="coupon_type" value="{{ coupon_type }}">
+    {% if error %}
+        <div class="alert alert-danger">
+        {{ error | safe }}
+        </div>
+    {% endif %}
+        {% if message %}
+          <div class="alert alert-success">
+              {{ message | safe }}
+          </div>
+          {% endif %}
+
+         <div class="content table-responsive table-full-width">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                 <th>
+                     <div class="dropdown">
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle" >{{ gettext("Loc_coupons") }}<b class="caret"></b></a>
+    <ul class="dropdown-menu">
+        <li><a href="/coupons?coupon_type=all">{{ gettext("Tat_ca_coupons") }}</a></li>
+        <li><a href="/coupons?coupon_type=welcome">{{ gettext("Khach_den_lan_dau") }}</a></li>
+        <li><a href="/coupons?coupon_type=returning">{{ gettext("Khach_den_lan_2") }}</a></li>
+        <li><a href="/coupons?coupon_type=old_customer">{{ gettext("Khach_1_thang_moi_quay_lai") }}</a></li>
+        <li><a href="/coupons?coupon_type=regular_customer">{{ gettext("Khach_than_thiet(>3_lan/1thang)") }}</a></li>
+        <li><a href="/coupons?coupon_type=seven_day">{{ gettext("Khach_7_ngay_chua_quay_lai_quan") }}</a></li>
+        <li><a href="/coupons?coupon_type=fourteen_day">{{ gettext("Khach_14_ngay_chua_quay_lai_quan") }}</a></li>
+        <li><a href="/coupons?coupon_type=announcement">{{ gettext("Khuyen_mai_chung") }}</a></li>
+
+    </ul>
+</div>
+                </th>
+                 <th>
+                    {{ gettext("Ma") }}
+                </th>
+                <th>
+                    {{ gettext("Tao_luc") }}
+               </th>
+                <th>
+                    {{ gettext("Han_dung") }}
+                </th>
+             </thead>
+                 <tbody>
+            {% for coupon in coupons %}
+                 <tr>
+                 <td>
+                   <button shop_id={{shop._id}} coupon={{coupon.coupon}} user_id={{coupon.user._id}} type="button" class="btn btn-info btn-fill redeem_now">{{ gettext("Doi") }}</button>
+                </td>
+                 <td>
+                   <strong>{{coupon.coupon}}</strong>
+                </td>
+                <!--<div class="col-xs-3 cell">
+{#                   {{coupon.user.name}}#}
+                </div>-->
+               <!--<div class="col-xs-3 cell">
+                   {%if coupon.detail%}{{coupon.detail}}{%endif%}
+                </div>-->
+                 <td>
+                   {{ coupon.create_str }}
+                </td>
+                <td>
+                   {{ coupon.expire_str }}
+                </td>
+            </tr>
+            {% endfor %}
+                    </tbody>
+                    </table>
+        </div>
+        {% if coupons %}
+        {%if pagination %}
+        <center>
+            {{ pagination.links }}
+        </center>
+        {%endif%}
+         {%endif%}
+</div>
+            </div>
+    </div>
+
+
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+
+     <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+              $('#vouchers').click();
+            $('.search-query').keypress(function (e) {
+                if (e.which == 13) {
+                    location.href = '/coupons?search=' + $('.search-query').val();
+                    return false; //<---- Add this line
+                }
+            });
+            $('#search_coupon').on('click', function (e) {
+                e.preventDefault();
+                location.href = '/coupons?search=' + $('.search-query').val();
+            });
+
+              $('.redeem_now').on('click', function (e) {
+                    e.preventDefault();
+                    coupon = $(this).attr("coupon");
+                    if (window.confirm(' {{ gettext("Ban_co_muon_doi_coupon") }}' + coupon + " ?")) {
+                        user_id = $(this).attr("user_id");
+                        shop_id =  $(this).attr("shop_id");
+                        location.href = "/" +shop_id + "/user/" + user_id + "/redeem/" + coupon;
+                    }
+                });
+
+        });
+
+
+    </script>
+{% endblock %}

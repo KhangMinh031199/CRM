@@ -1,0 +1,373 @@
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id_select" />
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-12 col-xl-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-end">
+                    <div class="col">
+                        <h6 class="header-pretitle">
+                            {{ gettext("Trang_chao_theo_thu_trong_tuan") }}
+                        </h6>
+                    </div>
+                </div>
+            </div>
+            {%if list_wk|length > 0%}
+            <div class="table-responsive">
+                <table class="table table-sm card-table">
+                    <thead>
+                        <tr>
+                            <th>
+                            </th>
+                            <th>
+                            </th>
+                            <th>
+                            </th>
+                            <th>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for page in [0, 1, 2, 3, 4, 5, 6] %}
+                        <tr>
+                            <td>
+                                {{ list_wk[page] }}
+                            </td>
+                            <td>
+                                {% if not pages[page] %}
+                                <a href="">
+                                    <span class="badge badge-soft-secondary">{{ gettext("Chua_cau_hinh") }}</span></a>
+                                {% else %}
+                                {% if pages[page] and pages[page].active %}
+                                <a id="active_splash_{{ pages[page]._id }}">
+                                    <span class="badge badge-soft-success">{{ gettext("Hoat_dong") }}</span>
+                                </a>
+                                {% else %}
+                                <a id="active_splash_{{ pages[page]._id }}">
+                                    <span class="badge badge-soft-secondary">{{ gettext("Tam_ngung") }}</span>
+                                </a>
+                                {% endif %}
+                                {% endif %}
+                                <script nonce="{{ csp_nonce() }}">
+                                    $(document).ready(function () {
+                                        $('#active_splash_{{ pages[page]._id }}').click(function () {
+                                            var url = '/{{ shop_id_select }}/weekday/{{ pages[page]._id }}/active';
+                                            $.ajax({
+                                                type: 'GET',
+                                                url: url,
+                                                success: function () {
+                                                    $.ajax({
+                                                        url: "/hotspot_type/weekday",
+                                                        type: 'GET',
+                                                        data: {
+                                                            'shop_id_select': '{{ shop_id_select }}'
+                                                        },
+                                                        beforeSend: function () {
+                                                            $(".detail-splash").empty();
+                                                        },
+                                                        success: function (data) {
+                                                            $(".detail-splash").append(data);
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        });;
+                                    });
+                                </script>
+                            </td>
+                            <td>
+                                <a data-toggle="modal" href="#edit_{{ page }}">
+                                    <i class="fa fa-edit"></i>{{ gettext("Chinh_sua") }}</a>
+                            </td>
+                            <td>
+                                {% if pages[page] %}
+                                <a href="#view_{{ page }}" data-toggle="modal">
+                                    <i class="fa fa-mobile"></i>
+                                    {{ gettext("Xem_truoc") }}</a>
+                                <div class="modal hide fade" id="view_{{ page }}" tabindex="-1" role="dialog" aria-labelledby="new_image" data-backdrop="static" style="display: none;" aria-hidden="true">
+                                    <input type="hidden" id="page_id_{{ page }}" {% if pages[page] %} value="{{ pages[page]._id }}" {% endif %} />
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3 class="modal-title">
+                                                    {{gettext('HotspotNumberofvisitsScreenReviewText')}}</h3>
+                                                <a class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </a>
+                                            </div>
+                                            <div class="modal-body" style="margin: auto">
+                                                <div id="preview_{{ page }}"></div>
+                                                <script nonce="{{ csp_nonce() }}">
+                                                    $(document).ready(function () {
+                                                        var page_id = $("#page_id_{{ page }}").val();
+                                                        var url_preview = '/splash_page/{{shop_id_select}}' + '/preview/' + page_id;
+                                                        $("#preview_{{ page }}").empty();
+                                                        bioMp(document.getElementById('preview_{{ page }}'), {
+                                                            url: url_preview,
+                                                            view: 'front',
+                                                            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                            height: 618,
+                                                            width: 308
+                                                        });
+                                                    });
+
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <div class="modal hide fade" id="edit_{{ page }}" tabindex="-1" role="dialog" aria-labelledby="new_image" data-backdrop="static" style="display: none;" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title">{{ list_wk[page] }}</h3>
+                                        <a class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </a>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="POST" {% if pages[page] %} action="/splash_page/{{ shop_id_select }}/weekday/{{ pages[page]._id }}" {% else %} action="/splash_page/{{ shop_id_select }}/weekday/add" {% endif %} enctype="multipart/form-data" id="update_page_{{ page }}">
+                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                            <input type="hidden" name="week_id" value="{{ page }}" />
+                                            {# <div class="row">
+                                                <div class="col-sm-12 col-md-6 u-mb-medium">
+                                                    <div class="form-group">
+                                                        <label for="hotspot_method_{{ page }}">Hình thức hotspot</label>
+                                                        <select class="form-control" id="hotspot_method_{{ page }}" name="hotspot_method">
+                                                            <option value="default" {% if pages[page].hotspot_method=='default' %}selected{% endif %}>Mặc định</option>
+                                                            <option value="profile_code" {% if pages[page].hotspot_method=='profile_code' %}selected{% endif %}>Profile code</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" id="ex_hotspot_method_{{ page }}" name="ex_hotspot_method" value="{{ pages[page].hotspot_method }}" />
+                                                <div id="default_code_div_{{ page }}" class="col-sm-12 col-md-6 u-mb-medium">
+                                                    <div class="form-group">
+                                                        <label>Mã mặc định</label><span class="c-badge c-badge--info c-tooltip c-tooltip--top" aria-label="Mã truy cập Wifi mặc định">
+                                                            <i class="fa fa-question"></i>
+                                                        </span>
+                                                        <input type="text" class="form-control method-form-control" id="default_code_{{ page }}" name="default_code" {% if pages[page].default_code %} value="{{ pages[page].default_code }}" {% endif %}>
+                                                    </div>
+                                                </div>
+                                            </div> #}
+                                            <div class="form-group">
+                                                <label class="" for="photo">{{gettext('HotspotEventScreenPictureText')}}:</label>
+                                                <h5>{{gettext('HotspotEventScreenRecommendText')}}</h5>
+                                                <p class="help-block">
+                                                    <img id="img_new_photo_{{ page }}" {% if pages[page] %} {% if pages[page].photo %}src="https://files.nextify.vn/{{ pages[page].photo }}" {% endif %} {% else %} src="" {% endif %} width="200">
+                                                </p>
+                                                <input type="file" class="form-control" id="new_photo_{{ page }}" name="photo">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="" for="title">{{gettext('HotspotNumberofvisitsScreenTitleText')}}:</label>
+                                                <input type="text" maxlength="200" class="form-control" id="title_{{ page }}" name="title" {% if pages[page] %} value="{% if pages[page].title %}{{ pages[page].title }}{% endif %}" {% else %} value="" {% endif %} placeholder='{{ gettext("(Khong_bat_buoc)") }}'>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="" for="content">{{gettext('HotspotNumberofvisitsScreenContentText')}}:</label>
+                                                <textarea class="form-control" id="content_{{ page }}" name="content" rows="6" maxlength="1000" placeholder='{{ gettext("(Khong_bat_buoc)") }}'>{% if pages[page].content %}
+                                        {{ pages[page].content }}{% endif %}</textarea>
+                                            </div>
+                                            {# <div class="form-group">
+                                                <label class="" for="auto_popup">{{gettext('HotspotEventScreenRedirectText')}}:</label>
+                                                <input type="text" class="form-control" id="auto_popup_{{ page }}" name="auto_popup" {% if pages[page] %} value="{% if pages[page].auto_popup|string != 'None' %}{{ pages[page].auto_popup }}{% endif %}" {% else %} value="" {% endif %} placeholder="">
+                                            </div> #}
+                                            <input type="hidden" value="weekday" name="auto_mar" />
+                                            <div class="form-group">
+                                                <label class="">{{ gettext("Nut_ket_noi_WIFI") }}</label>
+                                                <input type="text" class="form-control method-form-control" id="connect_button_{{ page }}" name="connect_button"
+                                                    value="{% if pages[page].connect_button|string != 'None' %}{{ pages[page].connect_button }}{% else %}{{ gettext("Ket_noi") }}{% endif %}"
+                                                >
+                                            </div>
+                                            <div class="c-choice c-choice--checkbox">
+                                                <input class="c-choice__input" type="checkbox" name="active" id="active_{{ page }}" {% if pages[page].active %}checked{% endif %}>
+                                                <label class="c-choice__label" for="active_{{ page }}">{{gettext('HotspotHappyBirthdayScreenActiveText')}}</label>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="col-3" style="float:right">
+                                            <button id="update_{{ page }}_btn" class="btn btn-lg btn-block btn-primary">{{gettext('HotspotHappyBirthdayScreenUpdateText')}}</button>
+                                        </div>
+                                    </div>
+                                </div><!-- // .c-modal__content -->
+                            </div><!-- // .c-modal__dialog -->
+                        </div>
+                        <script nonce="{{ csp_nonce() }}">
+                        $(document).ready(function() {
+                            var shop_id_select = $("#shop_id_select").val();
+
+                            // ex_hotspot_method = $('#ex_hotspot_method_{{ page }}').val();
+                            // if (ex_hotspot_method === 'profile_code') {
+                            //     $("#default_code_div_{{ page }}").hide();
+                            // } else {
+                            //     $("#default_code_div_{{ page }}").show();
+                            // };
+                            // $('#hotspot_method_{{ page }}').select2();
+                            // $('#hotspot_method_{{ page }}').on('change.select2', function(e) {
+                            //     method = $(this).val();
+                            //     if (method === 'profile_code') {
+                            //         $("#default_code_div_{{ page }}").hide();
+                            //     } else {
+                            //         $("#default_code_div_{{ page }}").show();
+                            //     }
+                            // });
+
+                            $('#update_{{ page }}_btn').click(function() {
+                                var form = $('#update_page_{{ page }}')[0];
+                                var data = new FormData(form);
+                                var url = $('#update_page_{{ page }}').attr('action');
+                                var title = $('#title_{{ page }}').val();
+                                var content = $('#content_{{ page }}').val();
+                                var active = $('#active_{{ page }}').is(":checked");
+                                var auto_popup = $('#auto_popup_{{ page }}').val();
+                                // var hotspot_method = $('#hotspot_method_{{ page }}').val();
+                                // var default_code = $('#default_code_{{ page }}').val();
+                                var fileInput = $('#new_photo_{{ page }}');
+                                var file = fileInput[0].files[0];
+
+                                var connect_button = $('#connect_button_{{ page }}').val();
+
+                                data.append('auto_mar', 'weekday');
+                                data.append('title', title);
+                                data.append('content', content);
+                                data.append('active', active);
+                                data.append('auto_popup', auto_popup);
+                                // data.append('hotspot_method', hotspot_method);
+                                // data.append('default_code', default_code);
+                                data.append('week_id', '{{ page }}');
+                                data.append('photo', file);
+
+                                data.append('connect_button', connect_button);
+
+                                $.ajax({
+                                    type: 'post',
+                                    url: url,
+                                    data: data,
+                                    processData: false,
+                                    contentType: false,
+                                    cache: false,
+                                    timeout: 600000,
+                                    success: function(response) {
+                                        var returnedData = JSON.parse(response);
+                                        if ('error' in returnedData) {
+                                            swal(returnedData['error'], " ", "error");
+                                            return false;
+                                        } else {
+                                            $('#edit_{{ page }}').modal('hide');
+                                            $('body').removeClass('modal-open');
+                                            $('.modal-backdrop').remove();
+                                            $.ajax({
+                                                url: "/hotspot_type/weekday",
+                                                type: 'GET',
+                                                data: {
+                                                    'shop_id_select': shop_id_select
+                                                },
+                                                beforeSend: function() {
+                                                    $(".detail-splash").empty();
+                                                },
+                                                success: function(data) {
+                                                    $(".detail-splash").append(data);
+                                                }
+                                            });
+                                        }
+                                    },
+                                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                        swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+                                    }
+                                });
+                            });
+                        });
+                        </script>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+{% endif %}
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+$(document).ready(function() {
+    $('textarea').each(function() {
+        $(this).val($(this).val().trim());
+    });
+    $('input').each(function() {
+        $(this).val($(this).val().trim());
+    });
+
+    var page_active_random = '{{ page_active_random }}';
+    if (page_active_random){
+        var url_preview = '/splash_page/{{ shop_id_select }}' + '/preview/' + page_active_random;
+        $("#preview").empty();
+        bioMp(document.getElementById('preview'), {
+            url: url_preview,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+    }  else {
+        var url_preview = '/hotspot_type/0?shop_id_select={{ shop_id_select }}';
+        $("#preview").empty();
+        bioMp(document.getElementById('preview'), {
+            url: url_preview,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+    };
+
+    function readURL(input, input_view) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            var view_id = '#' + input_view;
+            reader.onload = function(e) {
+                $(view_id).attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function validate(photo) {
+        var file_size = $(photo)[0].files[0].size;
+        var file = $(photo).val();
+        var exts = ['jpg', 'png', 'jpeg'];
+        if (file) {
+            var get_ext = file.split('.');
+            get_ext = get_ext.reverse();
+            if ($.inArray(get_ext[0].toLowerCase(), exts) > -1) {
+                if (file_size > 36700160) {
+                    return "big_file";
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        }
+    }
+
+    $("#new_photo_{{ page }}").change(function() {
+        var validate_photo = validate(this);
+        if (validate_photo == true) {
+            swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+            $('#img_new_photo_{{ page }}').show();
+            readURL(this, 'img_new_photo_{{ page }}');
+        } else {
+            if (validate_photo == "big_file") {
+                swal('{{ gettext("File_co_kich_thuoc_qua_lon!") }}', '', 'error');
+                return false
+            };
+            swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+            $('#new_photo_{{ page }}').val('');
+            $('#img_new_photo_{{ page }}').hide();
+        }
+    });
+});
+</script>
+{% endblock %}

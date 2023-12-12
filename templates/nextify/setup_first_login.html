@@ -1,0 +1,133 @@
+{% extends 'nextify/base.html' %}
+
+
+{% block body %}
+    <script>
+  window.fbAsyncInit = function() {
+    FB.init({
+        appId: '611214335939430',
+      autoLogAppEvents : true,
+      xfbml            : true,
+      version          : 'v6.0'
+    });
+  };
+</script>
+<script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
+
+    <style>
+    .btn-facebook-page {
+color: #fff;
+background-color: #007bff;
+border-color: #007bff;
+}
+    .btn-facebook-page:hover {
+    color: #fff;
+    background-color: #0069d9;
+    border-color:#0062cc
+}
+
+.btn-facebook-page.focus, .btn-facebook-page:focus {
+    box-shadow:0 0 0 .2rem rgba(38, 143, 255, .5)
+}
+
+.btn-facebook-page.disabled, .btn-facebook-page:disabled {
+    color: #fff;
+    background-color: #007bff;
+    border-color:#007bff
+}
+
+.btn-facebook-page:not(:disabled):not(.disabled).active, .btn-facebook-page:not(:disabled):not(.disabled):active, .show > .btn-facebook-page.dropdown-toggle {
+    color: #fff;
+    background-color: #0062cc;
+    border-color:#005cbf
+}
+
+.btn-facebook-page:not(:disabled):not(.disabled).active:focus, .btn-facebook-page:not(:disabled):not(.disabled):active:focus, .show > .btn-facebook-page.dropdown-toggle:focus {
+    box-shadow:0 0 0 .2rem rgba(38, 143, 255, .5)
+}
+    .btn-light {
+    color: #212529;
+    background-color: #f8f9fa;
+    border-color:#f8f9fa
+}
+
+.btn-light:hover {
+    color: #212529;
+    background-color: #e2e6ea;
+    border-color:#dae0e5
+}
+
+.btn-light.focus, .btn-light:focus {
+    box-shadow:0 0 0 .2rem rgba(216, 217, 219, .5)
+}
+
+.btn-light.disabled, .btn-light:disabled {
+    color: #212529;
+    background-color: #f8f9fa;
+    border-color:#f8f9fa
+}
+
+.btn-light:not(:disabled):not(.disabled).active, .btn-light:not(:disabled):not(.disabled):active, .show > .btn-light.dropdown-toggle {
+    color: #212529;
+    background-color: #dae0e5;
+    border-color:#d3d9df
+}
+
+.btn-light:not(:disabled):not(.disabled).active:focus, .btn-light:not(:disabled):not(.disabled):active:focus, .show > .btn-light.dropdown-toggle:focus {
+    box-shadow:0 0 0 .2rem rgba(216, 217, 219, .5)
+}
+
+
+    </style>
+
+<div class="container-fluid">
+      <div class="row align-items-center justify-content-center">
+        <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5">
+
+          <!-- Heading -->
+          <h1 class="display-4 text-center mb-3">
+            {{ gettext("Bat_dau_thiet_lap_dia_diem_cua_ban") }}!
+          </h1>
+
+          <!-- Subheading -->
+          <p class="text-muted text-center mb-5">
+            {{ gettext("Cach_nhanh_nhat_va_de_dang_nhat_la_ket_noi_voi_Facebook_Page_cua_doanh_nghiep") }}.
+          </p>
+            <a href="https://www.facebook.com/v6.0/dialog/oauth?client_id=611214335939430&redirect_uri=https://api.nextify.vn/fb_auth&state={{ request.host_url }}&scope=public_profile,email,manage_pages,pages_messaging,ads_read,ads_management">
+                 <button class="btn btn-lg btn-facebook-page btn-block text-uppercase" id="connect_fb"> {{ gettext("Ket_noi_Facebook_Page") }}</button>
+
+            </a>
+            <a href="/welcome/init">
+                 <button class="btn btn-lg btn-light btn-block text-uppercase" >
+                {{ gettext("Tu_nhap_thong_tin") }}
+            </button>
+            </a>
+
+
+             <p class="text-center" style="margin-top:20px">
+{#              <small class="text-muted text-center">#}
+{#                © 2020 Power by <a href="http://nextify.vn">NEXTIFY SOFTWARE.,JSC.</a>.#}
+{#              </small>#}
+            </p>
+
+
+
+        </div>
+        <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
+
+          <!-- Image -->
+          <div class="bg-cover vh-100 mt-n1 mr-n3" style="background-image: url(/static/images/onboard/welcome_1.jpg);"></div>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+
+{%endblock%}
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+
+
+    })
+</script>
+{%endblock%}

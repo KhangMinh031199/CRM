@@ -1,0 +1,77 @@
+<div class="row u-justify-center">
+        <div class="col-md-7">
+            <div class="u-mt-medium u-text-center">
+                <div class="c-avatar c-avatar--large u-mb-small u-inline-flex">
+                    {% if cus.avatar and cus.avatar|length > 0 %}
+
+                    <img class="c-avatar__img" src="{{ cus.avatar.replace('http:', 'https:') }}">
+                    {% else %}
+                    <img class="c-avatar__img"
+                        src="/static/v2/assets/img/medium-default-avatar.png">
+                    {% endif %}
+                </div>
+                <h2 class="u-h5">
+                    {{ cus.name }}
+                </h2>
+                <input type="hidden" value="{{ cus.phone }}" id="callTo">
+                <h3 class="u-h5">
+                    {{ cus.phone }}
+                </h3>
+                {{ gettext('Trang_thai:') }}
+                <span id="callStatus1" style="color: red"></span>
+            </div>
+        </div>
+        <main id="animation" style="display: none;">
+            <section>
+                <div class="voice-coder">
+                    <!-- 45 spans inside the main .voice-coder wrapper -->
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+            </section>
+        </main>
+    </div>

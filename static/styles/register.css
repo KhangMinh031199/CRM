@@ -1,0 +1,33 @@
+
+.splash-main-block {
+    width: 340px;
+}
+
+.alert {
+    margin: 50px 10px -25px;
+}
+
+.button {
+    margin: 25px 0 30px;
+}
+
+form {
+    padding: 10px;
+    text-align: left;
+    margin-top: 40px;
+}
+
+.birthday .form-group {
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.birthday input[name="day"],
+.birthday input[name="month"] {
+    width: 75px;
+}
+
+.birthday input[name="year"] {
+    width: 121px;
+}
+

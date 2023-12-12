@@ -1,0 +1,153 @@
+{% extends "v2/base.html" %}
+{% block css %}
+<style>
+    .page-inner {
+      background: url(//crm.nextify.vn/static/images/background.jpg);
+      background-size: cover;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+{% endblock %}
+{% block wrapper %}
+
+  <div class="page-inner" style="min-height:868px !important; ">
+    <div id="main-wrapper">
+      <div class="row">
+        <div class="col-md-3 center">
+          <div class="panel panel-white" id="js-alerts">
+            <div class="panel-body">
+              <div class="login-box">
+                <a href="index.html"
+                   class="logo-name text-lg text-center m-t-xs"><a href="/manage_merchants">Nextify</a></a>
+                <p class="text-center m-t-md">Automation Marketing & Loyalty
+                  Platform.</p>
+                 {% if message %}
+            <div class="alert alert-success">
+            {{ message | safe }}
+            </div>
+        {% endif %}
+              {% if merchant %}
+                <a href="/manage_merchants/{{ merchant._id
+                  }}/locations">{{ gettext("Dia_diem") }}</a>
+              {% endif %}
+
+        <form method="POST" action="{% if ex_merchant_id %}/update_merchants/{{ ex_merchant_id }}{% else %}/new_merchants{% endif %}" enctype="multipart/form-data">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" /> 
+          {% if ex_merchant_id %}
+                <input type="hidden" value="{{ ex_merchant_id }}" name="ex_merchant_id"/>
+                <input type="hidden" value="{{ merchant.sms_provider }}" id="ex_sms_provider"/>
+            {% endif %}
+            <div class="form-group">
+                <label for="name">{{ gettext("Ten_chuoi") }}:</label>
+                <input type="text" maxlength="50" class="form-control" id="name" name="name" {% if merchant %}value="{{ merchant.name }}" {% endif %}/>
+            </div>
+            <div class="form-group">
+                <label for="name">{{ gettext("So_quan_ly") }}</label>
+                <input type="text" maxlength="50" class="form-control" id="phone" name="phone" {% if merchant %}value="{{ merchant.phone }}" {% endif %}/>
+            </div>
+            <div class="form-group">
+                <label for="name">Email</label>
+                <input type="text" class="form-control" id="email" name="email" {% if merchant %}value="{{ merchant.email }}" {% endif %}/>
+            </div>
+            <div class="form-group">
+                <label for="name">{{ gettext("Password") }}</label>
+                <input type="text" maxlength="50" class="form-control" id="password" name="password"/>
+            </div>
+            <div class="form-group">
+                <label for="name">{{ gettext("Re-Password") }}</label>
+                <input type="text" maxlength="50" class="form-control" id="re_password" name="re_password"/>
+            </div>
+         <div class="form-group">
+             <label for="package">{{ gettext("Goi_san_pham") }}</label>
+          {% if merchant %}<input type="hidden" value="{{ merchant.package }}" id="ex_pkg" />{% endif %}
+                    <select class="form-control" name="package"
+                            id="package">
+                        {% for pkg in packages %}
+                            <option value="{{ pkg._id }}">{{ pkg.name}}</option>
+                        {% endfor %}
+                    </select>
+            </div>
+
+            <div class="form-group">
+                     <label for="sms_provider">{{ gettext("Nha_cung_cap_SMS") }}</label>
+                    <select class="form-control" name="sms_provider" id="sms_provider">
+                            <option value="BLUESEA">BLUESEA</option>
+                            <option value="FPT">FPT</option>
+                            <option value="NOAH">NOAH</option>
+                    </select>
+            </div>
+            <div class="form-group">
+                <label>Quota SMS</label>
+              <input type="text" class="form-control" name="quota" {% if
+              merchant %}value="{{ merchant.quota }}" {% endif %} />
+            </div>
+           <div class="form-group">
+                <label for="brandname">Brandname SMS</label>
+                <input type="text" class="form-control" id="brand_name" name="brand_name" {% if merchant %}value="{{ merchant.brand_name }}" {% endif %}/>
+            </div>
+            <div class="form-group">
+                <label for="user_sms">User SMS</label>
+                <input type="text" class="form-control" id="user_sms" name="user_sms" {% if merchant %}value="{{ merchant.user_sms }}" {% endif %}/>
+            </div>
+            <div class="form-group">
+                <label for="pass_sms">{{ gettext("Password_SMS") }}</label>
+                <input type="text" class="form-control" id="pass_sms" name="pass_sms" {% if merchant %}value="{{ merchant.pass_sms }}" {% endif %}/>
+            </div>
+            <div class="form-group">
+                <label for="fcm_key_ios">FCM IOS</label>
+                <input type="text" class="form-control" id="fcm_key_ios" name="fcm_key_ios" {% if merchant %}value="{{ merchant.fcm_key_ios }}" {% endif %}/>
+            </div>
+            <div class="form-group">
+                <label for="fcm_key_android">FCM Android</label>
+                <input type="text" class="form-control" id="fcm_key_android" name="fcm_key_android" {% if merchant %}value="{{ merchant.fcm_key_android }}" {% endif %}/>
+            </div>
+            <div class="form-group">
+                <label for="server_hq">Server HQ</label>
+                <input type="text" class="form-control" id="server_hq" name="server_hq" {% if merchant %}value="{{ merchant.server_hq }}" {% endif %}/>
+            </div>
+           <div class="form-group">
+                <label for="db_hq">DB HQ</label>
+                <input type="text" class="form-control" id="db_hq" name="db_hq" {% if merchant %}value="{{ merchant.db_hq }}" {% endif %}/>
+            </div>
+            <div class="form-group">
+                <label for="user_hq">User HQ</label>
+                <input type="text" class="form-control" id="user_hq" name="user_hq" {% if merchant %}value="{{ merchant.user_hq }}" {% endif %}/>
+            </div>
+            <div class="form-group">
+                <label for="pass_hq">{{ gettext("Pass_HQ") }}</label>
+                <input type="text" class="form-control" id="pass_hq" name="pass_hq" {% if merchant %}value="{{ merchant.pass_hq }}" {% endif %}/>
+            </div>
+            <hr>
+            <button type="submit" class="btn btn-success">{{ gettext("Luu_thong_tin") }}</button>
+        </form>
+                <p class="text-center m-t-xs text-sm">2018 © Nextify</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- Row -->
+    </div><!-- Main Wrapper -->
+  </div>
+
+
+
+{% endblock %}
+
+
+   {% block js %}
+
+     <script nonce="{{ csp_nonce() }}">
+            $(document).ready(function () {
+                if($("#ex_sms_provider").length > 0){
+                    $("#sms_provider").val($("#ex_sms_provider").val());
+                     $("#sms_provider").trigger('change');
+                }
+                if($("#ex_pkg").length > 0){
+                    $("#package").val($("#ex_pkg").val());
+                         $("#package").trigger('change');
+                }
+
+            });
+    </script>
+{% endblock %}

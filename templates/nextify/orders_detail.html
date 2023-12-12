@@ -1,0 +1,107 @@
+ <div class="list-group list-group-flush list-group-activity my-n3">
+                                {% for order in orders %}
+                                <div class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-auto">
+
+                                            <!-- Avatar -->
+                                            <div class="avatar avatar-sm">
+                                                <div
+                                                    class="avatar-title font-size-lg bg-primary-soft rounded-circle text-primary">
+                                                    <i class="fa fa-map-marker-alt"></i>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col ml-n2">
+
+
+                                            <!-- Text -->
+                                            <p class="small text-gray-700 mb-0">
+                                                Thời gian: {{ order.date_create_order }}   
+                                            </p>
+                                            <p class="small text-gray-700 mb-0">
+                                                Mã đơn hàng: {{ order.name }}
+                                            </p>
+                                          
+                                            <a href="#detail_order_{{ order._id }}" data-toggle="modal">
+                                                
+                                                Chi tiết
+                                            </a>
+
+                                            <div class=" modal fade" id="detail_order_{{ order._id }}" tabindex="-1" role="dialog" style="display: none;"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Chi tiết đơn hàng</h4>
+                                                        <a class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </a>
+
+                                                    </div>
+                                                    <div class="modal-body">
+
+
+                                                        <form >
+                                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                                            <div class="row u-mb-medium">
+                                                                <div class="col-lg-12">
+                                                                    <p class="small text-gray-700 mb-0">
+                                                                        Mã đơn hàng: {{ order.name }}   
+                                                                    </p>
+                                                                    <p class="small text-gray-700 mb-0">
+                                                                        Thời gian: {{ order.date_create_order }}   
+                                                                    </p>
+                                                                    <p class="small text-gray-700 mb-0">
+                                                                        Nguồn: {{ order.source_order }}
+                                                                    </p>
+                                                                    <p class="small text-gray-700 mb-0">
+                                                                        Tiền sản phẩm: {{ order.total_line_items_price }}
+                                                                    </p>
+                                                                    <p class="small text-gray-700 mb-0">
+                                                                        Giảm giá: {{ order.total_discounts }}
+                                                                    </p>
+                                                                    <p class="small text-gray-700 mb-0">
+                                                                        Phí khác: {{ order.other_fees }}
+                                                                    </p>
+                                                                    <p class="small text-gray-700 mb-0">
+                                                                        Tổng tiền: {{ order.total_price }}
+                                                                    </p>
+                                                                    <p class="small text-gray-700 mb-0">
+                                                                        Chi tiết:
+                                                                    </p>
+                                                                    {% for item in order.list_items %}
+                                                                    <p>----------------------</p>
+                                                                    <p class="small text-gray-700 mb-0">
+                                                                        Sản phẩm: {{ item.name_product}}
+                                                                    </p>
+                                                                    <p class="small text-gray-700 mb-0">
+                                                                        Mã sản phẩm: {{ item.id_product}}
+                                                                    </p>
+                                                                    <p class="small text-gray-700 mb-0">
+                                                                        Giá: {{ item.price}}
+                                                                    </p>
+                                                                    <p class="small text-gray-700 mb-0">
+                                                                        Số lượng: {{ item.quantity}}
+                                                                    </p>
+                                                                    {% endfor%}
+
+                                                                   
+                                                                </div>
+                                                            </div>
+
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                            
+
+                                        </div>
+                                    </div> <!-- / .row -->
+                                </div>
+                                {% endfor %}
+                            </div>

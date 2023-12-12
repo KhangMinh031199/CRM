@@ -1,0 +1,1501 @@
+<div class="form-group">
+    <label>Loại trang</label>
+    <select class="custom-select control-container" id="page_type_selects">       
+        <option value="0" {% if choose_page == '0' %}selected {% endif %}>Bỏ qua</option>        
+        <option value="collect" {% if choose_page == 'collect' %}selected {% endif %}>Form cập nhật thông tin</option>        
+        <option value="image" {% if choose_page == 'image' %}selected {% endif %}>Hình ảnh</option>
+        <option value="slides" {% if choose_page == 'slides' %}selected {% endif %}>Slides</option>
+        <option value="survey" {% if choose_page == 'survey' %}selected {% endif %}>Khảo sát</option>
+        {% if merchant._id|package_merchant != "Basic" %}      
+        <option value="youtube" {% if choose_page == 'youtube' %}selected {% endif %}>Youtube Video</option>
+        {% endif %}
+        <!-- {% if medical_declaration and medical_declaration.status %}
+        <option value="khai_bao_y_te" {% if choose_page == 'khai_bao_y_te' %}selected {% endif %}>Khai báo y tế</option>
+        {% endif %} -->
+        <option value="spin" {% if choose_page == 'spin' %} selected {% endif %}>Vòng quay may mắn</option>      
+        <option value="template" {% if choose_page == 'template' %} selected {% endif %}>Nhúng template</option>
+        <option value="template" {% if choose_page == 'textmatching' %} selected {% endif %}>Text matching</option>
+        <!-- {% if choose_page == 'woay' %}
+        <option value="woay" selected>Woay Game</option>
+        {% else %}
+        <option value="woay">Woay Game</option>
+        {% endif %} -->
+    </select>
+</div>
+<div class="form" id="page_type_div">
+    <select class="custom-select" id="page_type_list">
+        <option value="">Chọn vòng quay</option>
+        {% for spin in list_spin_splash %}
+        <option value="{{ spin._id }}" {% if detail_step.spin_id and detail_step.spin_id==spin._id|string %}selected {%
+            endif %}>{{ spin.info.name }}
+        </option>
+        {% endfor %}
+    </select>
+</div>
+<div class="form" id="page_type_div_survey">
+    <select class="custom-select" id="page_type_list_survey">
+        <option value="">Chọn khảo sát</option>
+        {% for survey in list_survey_splash %}
+        <option value="{{ survey._id }}" {% if detail_step.survey_id and detail_step.survey_id==survey._id|string
+            %}selected {% endif %}>{{ survey.question }}
+        </option>
+        {% endfor %}
+    </select>
+    <div class="form-group mt-3">
+        <label class="form-label">Giới hạn số lượt khảo sát</label>
+        <input type="text" class="form-control"/>
+    </div>
+</div>
+
+<div class="form" id="page_type_div_template">
+    <select class="custom-select" id="page_type_list_template">
+        <option value="">Chọn template</option>
+        {% for temp in list_templates %}
+        <option value="{{ temp._id }}" {% if detail_step.temp_id and detail_step.temp_id==temp._id|string
+            %}selected {% endif %}>{{ temp.name_temp }}
+        </option>
+        {% endfor %}
+    </select>
+</div>
+
+<div class="modal fade" id="modal_form" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Trang chào form thông tin</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="collect_form">
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    
+                    <div class="form-group row">
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" id="checkbox1" name="phone_visible" type="checkbox"
+                                    {% if detail_step.phone and detail_step.phone|lower=="true" %}checked{% endif %}>
+                                <label class="custom-control-label" for="checkbox1">{{
+                                    gettext('HotspotRegisterScreenPhoneText') }}</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="u-block">
+                                <div class="custom-control custom-switch">
+                                    <input class="custom-control-input" id="switch1" type="checkbox"
+                                        name="phone_require" {% if detail_step.phone_require and
+                                        detail_step.phone_require|lower=="true" %}checked{% endif %}>
+                                    <label class="custom-control-label" for="switch1"
+                                        style="padding-left: 10px; font-size: 15px;">{{
+                                        gettext("bat_buoc") }}</label>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" id="checkbox2" name="email_visible" type="checkbox"
+                                    {% if detail_step.email and detail_step.email|lower=="true" %}checked{% endif %}>
+                                <label class="custom-control-label" for="checkbox2">{{
+                                    gettext('HotspotRegisterScreenEmailText') }}</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="u-block">
+                                <div class="custom-control custom-switch">
+                                    <input class="custom-control-input" id="switch2" type="checkbox"
+                                        name="email_require" {% if detail_step.email_require and
+                                        detail_step.email_require|lower=="true" %}checked{% endif %}>
+                                    <label class="custom-control-label" for="switch2"
+                                        style="padding-left: 10px; font-size: 15px;">{{
+                                        gettext("bat_buoc") }}</label>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" id="checkbox3" name="name_visible" type="checkbox"
+                                    {% if detail_step .name and detail_step.name|lower=="true" %}checked{% endif %}>
+                                <label class="custom-control-label" for="checkbox3">{{
+                                    gettext('HotspotRegisterScreenNameText') }}</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="u-block">
+                                <div class="custom-control custom-switch">
+                                    <input class="custom-control-input" id="switch3" type="checkbox" name="name_require"
+                                        {% if detail_step.name_require and detail_step.name_require|lower=="true"
+                                        %}checked{% endif %}>
+                                    <label class="custom-control-label" for="switch3"
+                                        style="padding-left: 10px; font-size: 15px;">{{
+                                        gettext("bat_buoc") }}</label>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" id="checkbox4" name="birthday_visible"
+                                    type="checkbox" {% if detail_step.birthday and detail_step.birthday|lower=="true"
+                                    %}checked{% endif %}>
+                                <label class="custom-control-label" for="checkbox4">{{
+                                    gettext('HotspotRegisterScreendayofbirthText') }}</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="u-block">
+                                <div class="custom-control custom-switch">
+                                    <input class="custom-control-input" id="switch4" type="checkbox"
+                                        name="birthday_require" {% if detail_step.birthday_require and
+                                        detail_step.birthday_require|lower=="true" %}checked{% endif %}>
+                                    <label class="custom-control-label" for="switch4"
+                                        style="padding-left: 10px; font-size: 15px;">{{
+                                        gettext("bat_buoc") }}</label>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" id="checkbox5" name="year_birthday_visible"
+                                    type="checkbox" {% if detail_step.year_birthday and
+                                    detail_step.year_birthday|lower=="true" %}checked{% endif %}>
+                                <label class="custom-control-label" for="checkbox5">{{
+                                    gettext('HotspotRegisterScreenYearofbirthText') }}</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="u-block">
+                                <div class="custom-control custom-switch">
+                                    <input class="custom-control-input" id="switch5" type="checkbox"
+                                        name="year_birthday_require" {% if detail_step.year_birthday_require and
+                                        detail_step.year_birthday_require|lower=="true" %}checked{% endif %}>
+                                    <label class="custom-control-label" for="switch5"
+                                        style="padding-left: 10px; font-size: 15px;">{{
+                                        gettext("bat_buoc") }}</label>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" id="checkbox6" name="gender_visible" type="checkbox"
+                                    {% if detail_step.gender and detail_step.gender|lower=="true" %}checked{% endif %}>
+                                <label class="custom-control-label" for="checkbox6">{{
+                                    gettext('HotspotRegisterScreenGenderText') }}</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="u-block">
+                                <div class="custom-control custom-switch">
+                                    <input class="custom-control-input" id="switch6" type="checkbox"
+                                        name="gender_require" {% if detail_step.gender_require and
+                                        detail_step.gender_require|lower=="true" %}checked{% endif %}>
+                                    <label class="custom-control-label" for="switch6"
+                                        style="padding-left: 10px; font-size: 15px;">{{
+                                        gettext("bat_buoc") }}</label>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" id="checkbox7" name="company_visible"
+                                    type="checkbox" {% if detail_step.company and detail_step.company|lower=="true"
+                                    %}checked{% endif %}>
+                                <label class="custom-control-label" for="checkbox7">{{
+                                    gettext("Cong_ty") }}</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="u-block">
+                                <div class="custom-control custom-switch">
+                                    <input class="custom-control-input" id="switch7" type="checkbox"
+                                        name="company_require" {% if detail_step.company_require and
+                                        detail_step.company_require|lower=="true" %}checked{% endif %}>
+                                    <label class="custom-control-label" for="switch7"
+                                        style="padding-left: 10px; font-size: 15px;">{{
+                                        gettext("bat_buoc") }}</label>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" id="checkbox9" name="vocation_visible"
+                                    type="checkbox" {% if detail_step.vocation and detail_step.vocation|lower=="true"
+                                    %}checked{% endif %}>
+                                <label class="custom-control-label" for="checkbox9">{{
+                                    gettext("Nghe_nghiep") }}</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="u-block">
+                                <div class="custom-control custom-switch">
+                                    <input class="custom-control-input" id="switch9" type="checkbox"
+                                        name="vocation_require" {% if detail_step.vocation_require and
+                                        detail_step.vocation_require|lower=="true" %}checked{% endif %}>
+                                    <label class="custom-control-label" for="switch7"
+                                        style="padding-left: 10px; font-size: 15px;">{{
+                                        gettext("bat_buoc") }}</label>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" id="checkbox8" name="company_role_visible"
+                                    type="checkbox" {% if detail_step.company_role and
+                                    detail_step.company_role|lower=="true" %}checked{% endif %}>
+                                <label class="custom-control-label" for="checkbox8">{{
+                                    gettext("Chuc_vu") }}</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="u-block">
+                                <div class="custom-control custom-switch">
+                                    <input class="custom-control-input" id="switch8" type="checkbox"
+                                        name="company_role_require" {% if detail_step.company_role_require and
+                                        detail_step.company_role_require|lower=="true" %}checked{% endif %}>
+                                    <label class="custom-control-label" for="switch8"
+                                        style="padding-left: 10px; font-size: 15px;">{{
+                                        gettext("bat_buoc") }}</label>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" id="checkbox10" name="connect_with_facebook"
+                                    type="checkbox" {% if detail_step.connect_with_facebook and
+                                    detail_step.connect_with_facebook|lower=="true" %}checked{% endif %}>
+                                <label class="custom-control-label" for="checkbox10">{{
+                                    gettext("Ket_noi_qua_Facebook") }}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" id="checkbox12" name="connect_with_zalo"
+                                    type="checkbox" {% if detail_step.connect_with_zalo and
+                                    detail_step.connect_with_zalo|lower=="true" %}checked{% endif %}>
+                                <label class="custom-control-label" for="checkbox12">{{
+                                    gettext("Ket_noi_qua_Zalo") }}</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="u-block">
+                                <div class="custom-control custom-switch">
+                                    <input class="custom-control-input" id="switch10" type="checkbox"
+                                        name="allow_access_friend_zalo" {% if detail_step.allow_access_friend_zalo and
+                                        detail_step.allow_access_friend_zalo|lower=="true" %}checked{% endif %}>
+                                    <label class="custom-control-label" for="switch10"
+                                        style="padding-left: 10px; font-size: 15px;">{{
+                                        gettext("Dong_bo_ban_be") }}</label>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <img class="preview" id="view_background" {% if detail_step.background %} src="{% if detail_step.background|length == 12 %}//files.nextify.vn/{{ detail_step.background }} {% else %}//files.nextify.vn/{{ detail_step.background }}{% endif %}" style="width: auto;height: 200px" {% endif %}>
+                        <label for="background_fr">Ảnh Cover
+                            (<span>{{ gettext("Kich_thuoc_goi_y_1280_px_×_720_px")
+                                }}</span>)</label>
+                        <input type="file" class="imgInp img-collect" id="background_fr" name="background_fr">
+                    </div>
+                    <div class="form-group">
+                        <label>{{ gettext('HotspotRegisterScreenWelcomemessageText') }}</label>
+                        <textarea class="form-control" id="welcome_text" name="welcome_text" rows="6">
+                                      {% if detail_step.welcome_text and detail_step.welcome_text|length > 1 %}
+                                              {{ detail_step.welcome_text }}
+                                          {% else %}
+                                              {{ gettext("Dang_ky_khach_hang_than_thiet_de_nhan_cac_uu_dai_hap_dan") }} <br/>
+                                              {{ gettext("Get_connected_with_FREE_WIFI") }}
+                                          {% endif %}
+                                                                </textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>{{ gettext('HotspotRegisterScreenBirthdaymessageText') }}</label>
+                        <textarea class="form-control" id="birthday_text" name="birthday_text" rows="6">
+                                      {% if detail_step.birthday_text and detail_step.birthday_text|length > 1 %}
+                                              {{ detail_step.birthday_text }}
+                                          {% else %}
+                                              {{ gettext("Dung_quen_nhap_ngay_sinh_de_nhan_qua_tu_chung_toi_nhe") }}
+                                          {% endif %}
+                                                                </textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>{{ gettext('HotspotRegisterScreenConnectbuttonText') }}</label>
+                        <textarea class="form-control" id="welcome_button" name="welcome_button" rows="2">
+                                      {% if detail_step.welcome_button and detail_step.welcome_button|length > 1 %}
+                                      {{ detail_step.welcome_button }}
+                                  {% else %}
+                                  {{ gettext("Ket_noi_Wi-Fi/Go_Online") }}
+                                  {% endif %}
+                                                        </textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="tag_select">{{ gettext("Chon_tag_khach_hang:") }}</label>
+                        <select class="form-control" name="tags" id="tag_select" multiple>
+
+                            {% for tag in tags %}
+                            <option value="{{ tag._id }}" {% if tag._id in detail_step.tag %}selected{% endif %}>{{
+                                tag.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tag_select">Giới hạn số lượt đăng ký</label>
+                        <input type='text' class="form-control" name="collect_target" id="collect_target"
+                        value="{% if detail_step.collect_target %}{{ detail_step.collect_target }}{% endif %}" >
+                            
+                    </div>
+                    <input type="hidden" id="select_tags_filter" name="real_tags_filter" />
+                    <input type="hidden" name="source_tags" id="source_tags" value="" />
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" id="otp">
+                        <label class="custom-control-label" for="otp">{{ gettext("Su_dung_OTP") }}
+                        </label>
+                        <span class="d-inline-block" tabindex="0" data-toggle="tooltip"
+                            title="Cần đăng ký hoặc kích hoạt SMS Brandname cho tính năng này.">
+                            <button class="btn btn-primary btn-sm" style="pointer-events: none;" type="button"
+                                disabled><i class="fa fa-question"></i></button>
+
+                        </span>
+                    </div>
+                    <input type="hidden" value="" name="otp" id="otp_val" />
+                    <script nonce="{{ csp_nonce() }}">
+                        $(document).ready(function () {
+                            $('#tag_select').select2({
+                                dropdownParent: $("#collect_form")
+                            });
+                            $('#tag_select').on("select2:select", function (e) {
+                                if ($('#tag_select').val()) {
+                                    $('#select_tags_filter').val($('#tag_select').val().toString());
+                                } else {
+                                    $('#select_tags_filter').val("");
+                                }
+                            });
+
+
+                        });
+                    </script>
+
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" style="float: right;" id="save_collect"
+                    data-dismiss="modal">
+                    Lưu lại
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal_image" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Trang chào hình ảnh</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <input type="hidden" value="{{ detail_step.photo }}" id="photo_image" />
+            <div class="card-body">
+                <div class="col-auto mb-2" style="display: flex; align-items: center;">
+                    <div class="spinner-border text-danger" role="status" id="image_loading"
+                        style="margin: auto; display: none;">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    
+
+                </div>
+                <div class="dropzone dropzone-multiple" data-toggle="dropzone_img" id='my-dropzone-img'
+                    data-options='{"url": "/files",  "maxFiles": 1, "acceptedFiles": "image/*"}'>
+
+                    <!-- Fallback -->
+                    <div class="fallback">
+                        <div class="custom-file">
+
+                            <input type="file" class="custom-file-input" id="customFileUploadMultiple" multiple>
+                            <label class="custom-file-label" for="customFileUploadMultiple">{{ gettext("Dong_lai") }}</label>
+                        </div>
+                    </div>
+
+                    <ul class="dz-preview dz-preview-multiple list-group list-group-lg list-group-flush" id='preview_image'>
+                        <li class="list-group-item">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+
+                                    <!-- Image -->
+                                    <div class="avatar">
+                                        <img class="avatar-img rounded" src="" alt="..." data-dz-thumbnail>
+                                    </div>
+
+
+                                </div>
+                                <div class="col ml-n3">
+
+                                    <!-- Heading -->
+                                    <h4 class="mb-1" data-dz-name></h4>
+
+                                  
+
+                                </div>
+                                <div class="col-auto">
+
+                                    <span class="fe fe-x-circle mr-4" data-dz-remove></span>
+
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <script nonce="{{ csp_nonce() }}">
+                        var csrf_token = "{{ csrf_token() }}";
+                        var img_name = $('#photo_image').val();
+                        var t = function () {
+                            var e = document.querySelectorAll('[data-toggle="dropzone_img"]');
+                            "undefined" != typeof Dropzone && e && (Dropzone.autoDiscover = !1, Dropzone.thumbnailWidth = null, Dropzone.thumbnailHeight = null, [].forEach.call(e, function (e) {
+                                ! function (e) {
+                                    var t = void 0,
+                                        a = e.dataset.options;
+                                    a = a ? JSON.parse(a) : {};
+                                    var o = {
+                                        previewsContainer: e.querySelector(".dz-preview"),
+                                        previewTemplate: e.querySelector(".dz-preview").innerHTML,
+                                        init: function () {
+                                            // init image co san
+                                            if (img_name.length != 0){
+                                                
+                                                img_name = img_name.replaceAll("u'",'')
+                                                img_name = img_name.replaceAll("'",'')
+                                                img_name = img_name.trim()
+                                                var init_url = '//files.nextify.vn/' + img_name
+                                               
+                                                var mockFile = {
+                                                url: init_url,                                               
+                                                name: img_name
+                                                };
+                                                this.emit("addedfile", mockFile); 
+                                                this.emit("thumbnail", mockFile, mockFile.url);
+                                                
+                                            }
+                                            
+                                            
+                                            this.on("addedfile", function (e) {
+                                                    1 == a.maxFiles && t && this.removeFile(t), t = e
+                                            });
+                                            this.on("success", function(file, response) {
+                                                var obj = jQuery.parseJSON(response)                                               
+                                                var new_img = obj['new_img']
+                                                this.removeAllFiles(true);
+                                                var countDiv = $('ul#preview_image li').length
+                                                if(countDiv <1){
+                                                    
+                                                    var mockFile = {
+                                                    url: '//files.nextify.vn/' + new_img,                                               
+                                                    name: new_img
+                                                    };
+                                                    this.emit("addedfile", mockFile); 
+                                                    this.emit("thumbnail", mockFile, mockFile.url);
+                                                    $('#photo_image').val(new_img)
+                                                    
+                                                }else{
+                                                    swal('Tối đa 1 ảnh', '', 'error')
+                                                }
+                                                $("#image_loading").hide();
+                                            })
+                                            this.on("sending", function (file, xhr, formData) {
+                                                $("#image_loading").show();
+                                                formData.append('_csrf_token', '{{ csrf_token() }}');
+                                                formData.append('type_page', 'image');
+                                            });
+                                            this.on("removedfile", function (file) {
+                                                $('#photo_image').val('')
+
+                                            });
+                                            
+                                            
+                                            
+                                        }
+                                    }, l = Object.assign(o, a);
+                                    e.querySelector(".dz-preview").innerHTML = "", new Dropzone(e, l)
+                                }(e)
+                            }))
+                        }();
+
+                    </script>
+                </div>
+                <div class="form-group mt-5">
+                    <label for="title">{{ gettext('HotspotHappyBirthdayScreenTitleText')
+                        }}:</label>
+                    <input type="text" maxlength="200" class="form-control" id="title_image" name="title_image"
+                        value="{% if detail_step.title_image %}{{ detail_step.title_image }}{% endif %}">
+                </div>
+                <div class="form-group">
+                    <label for="content_image">{{
+                        gettext('HotspotHappyBirthdayScreenContentText') }}:</label>
+                    <textarea class="form-control" id="content_image" name="content_image" rows="6" maxlength="1000"
+                        placeholder='{{ gettext("Khong_bat_buoc") }}'>
+                                  {% if detail_step.content_image and detail_step.content_image|length > 1 %}
+                                  {{ detail_step.content_image }}
+                              {% endif %}</textarea>
+                </div>
+                <div class="form-group mt-5">
+                    <label for="title">Mục tiêu:</label>
+                    <input type="text" maxlength="200" class="form-control" id="image_target" name="image_target"
+                        value="{% if detail_step.image_target %}{{ detail_step.image_target }}{% endif %}">
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button type="button" class="btn btn-danger" style="float: right;" id="save_image" data-dismiss="modal">
+                    Lưu lại
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal_slides" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Trang chào Slides</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <input type="hidden" name="detail_slides" value="{{ detail_step.slides }}" id='slide_saved' />
+            <div class="card-body">
+                <div class="col-auto mb-2" style="display: flex; align-items: center;">
+                    <div class="spinner-border text-danger" role="status" id="slide_loading"
+                        style="margin: auto; display: none;">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    
+
+                </div>
+                <div class="dropzone dropzone-multiple" data-toggle="dropzone" id='my-dropzone'
+                    data-options='{"url": "/files",  "maxFiles": 5, "acceptedFiles": "image/*"}'>
+
+                    <!-- Fallback -->
+                    <div class="fallback">
+                        <div class="custom-file">
+
+                            <input type="file" class="custom-file-input" id="customFileUploadMultiple" multiple>
+                            <label class="custom-file-label" for="customFileUploadMultiple">{{ gettext("Choose_file") }}</label>
+                        </div>
+                    </div>
+
+                    <ul class="dz-preview dz-preview-multiple list-group list-group-lg list-group-flush" id='preview_slide'>
+                        <li class="list-group-item">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+
+                                    <!-- Image -->
+                                    <div class="avatar">
+                                        <img class="avatar-img rounded" src="" alt="..." data-dz-thumbnail>
+                                    </div>
+
+                                </div>
+                                <div class="col ml-n3">
+
+                                    <!-- Heading -->
+                                    <h4 class="mb-1" data-dz-name></h4>
+
+                                  
+
+                                </div>
+                                <div class="col-auto">
+
+                                    <span class="fe fe-x-circle mr-4" data-dz-remove></span>
+
+
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <script nonce="{{ csp_nonce() }}">
+                        var csrf_token = "{{ csrf_token() }}";
+                        var slides_str = $('#slide_saved').val();
+                        var slides_arr = slides_str.split(",");
+                        var t = function () {
+                            var e = document.querySelectorAll('[data-toggle="dropzone"]');
+                            "undefined" != typeof Dropzone && e && (Dropzone.autoDiscover = !1, Dropzone.thumbnailWidth = null, Dropzone.thumbnailHeight = null, [].forEach.call(e, function (e) {
+                                ! function (e) {
+                                    var t = void 0,
+                                        a = e.dataset.options;
+                                    a = a ? JSON.parse(a) : {};
+                                    var o = {
+                                        previewsContainer: e.querySelector(".dz-preview"),
+                                        previewTemplate: e.querySelector(".dz-preview").innerHTML,
+                                        init: function () {
+                                            // init image co san
+                                            if (slides_str.length != 0){
+                                                for (img_name of slides_arr){
+                                                    img_name = img_name.replaceAll('[','')
+                                                    img_name = img_name.replaceAll(']','')
+                                                    img_name = img_name.replaceAll("u'",'')
+                                                    img_name = img_name.replaceAll("'",'')
+                                                    img_name = img_name.trim()
+                                                    if(img_name.length == 12){
+                                                        var init_url = '//files.nextify.vn/' + img_name
+                                                    }else{
+                                                        var init_url = '//files.nextify.vn/' + img_name
+                                                    }
+                                                    var mockFile = {
+                                                    url: init_url,                                               
+                                                    name: img_name
+                                                    };
+                                                    this.emit("addedfile", mockFile); 
+                                                    this.emit("thumbnail", mockFile, mockFile.url);
+                                                }
+                                            }
+                                            
+                                            
+                                            this.on("addedfile", function (e) {
+                                                    1 == a.maxFiles && t && this.removeFile(t), t = e
+                                            });
+                                            this.on("success", function(file, response) {
+                                                var obj = jQuery.parseJSON(response)                                               
+                                                var slides = obj['slides']
+                                                var new_img = obj['new_img']
+                                                $('#slide_saved').val(slides)
+                                                this.removeAllFiles(true);
+                                                var countDiv = $('ul#preview_slide li').length
+                                                if(countDiv <5){
+                                                    var mockFile = {
+                                                    url: '//files.nextify.vn/' + new_img,                                               
+                                                    name: new_img
+                                                    };
+                                                    this.emit("addedfile", mockFile); 
+                                                    this.emit("thumbnail", mockFile, mockFile.url);
+                                                    
+                                                }else{
+                                                    swal('Tối đa 5 ảnh', '', 'error')
+                                                }
+                                                $("#slide_loading").hide();
+                                            })
+                                            this.on("sending", function (file, xhr, formData) {
+                                                $("#slide_loading").show();
+                                                formData.append('_csrf_token', '{{ csrf_token() }}');
+                                                formData.append('slides', slides_str);
+                                                formData.append('type_page', 'slides');
+                                            });                                            
+                                        }
+                                    }, l = Object.assign(o, a);
+                                    e.querySelector(".dz-preview").innerHTML = "", new Dropzone(e, l)
+                                }(e)
+                            }))
+                        }();
+
+                    </script>
+
+                <div class="form-group mt-5">
+                    <label for="title">Mục tiêu:</label>
+                    <input type="text" maxlength="200" class="form-control" id="slide_target" name="slide_target"
+                        value="{% if detail_step.slide_target %}{{ detail_step.slide_target }}{% endif %}">
+                </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button type="button" class="btn btn-danger" style="float: right;" id="save_slide" data-dismiss="modal">
+                    Lưu lại
+                </button>
+            </div>
+
+            <script nonce="{{ csp_nonce() }}">
+                $(document).ready(function () {
+                    $(".imgAdd").click(function () {
+                        $(this).closest(".row").find('.imgAdd').before('<div class="col-sm-4  text-center imgUp count-slide"><div class="imagePreview"></div><label class="btn btn-outline-danger mb-2">Upload<input type="file" class="uploadFile img img-slide" value="Upload Photo" style="width: 0.1px;height: 0.1px;opacity: 0;overflow: hidden;position: absolute;z-index: -1;"></label><i class="fa fa-times del"></i></div>');
+                    });
+                    $(document).on("click", "i.del", function () {
+                        $(this).parent().remove();
+                    });
+                    $(function () {
+                        $(document).on("change", ".uploadFile", function () {
+                            var uploadFile = $(this);
+                            var files = !!this.files ? this.files : [];
+                            if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
+
+                            if (/^image/.test(files[0].type)) { // only image file
+                                var reader = new FileReader(); // instance of the FileReader
+                                reader.readAsDataURL(files[0]); // read the local file
+
+                                reader.onloadend = function () { // set image data as background of div
+                                    //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
+                                    uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
+                                }
+                            }
+
+                        });
+                    });
+                })
+            </script>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal_youtube" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Trang chào Youtube</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="youtube_form">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="content_youtube">Link Youtube:</label>
+                        <input class="form-control" id="link_youtube" name="link_youtube" {% if detail_step.link_youtube
+                            %} value="{{ detail_step.link_youtube }}" {% endif %}>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Mục tiêu:</label>
+                        <input type="text" maxlength="200" class="form-control" id="youtube_target" name="youtube_target"
+                            value="{% if detail_step.youtube_target %}{{ detail_step.youtube_target }}{% endif %}">
+                    </div>
+                </div>
+            </form>
+            <div class="card-footer">
+                <button type="button" class="btn btn-danger" style="float: right;" id="save_youtube"
+                    data-dismiss="modal">
+                    Lưu lại
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" value="{% if detail_step.survey_id %}{{ detail_step.survey_id }}{% endif %}" id="ex_survey_id" />
+<input type="hidden" value="{% if detail_step.question %}{{ detail_step.question }}{% endif %}" id="ex_name_survey" />
+<script>
+
+    $(document).ready(function () {
+
+
+        $("#page_type_selects").select2();
+
+
+        var merchant_id = $("#merchant_id").val()
+        var camp_id = $("#camp_id").val();
+        var type_page = $("#page_type_selects").val();
+        var current_step = $("#current_step").val();
+
+        if (current_step == "4") {
+            type_page = "connect_success"
+        }
+        if (type_page == "survey") {
+            var survey_id = $('#page_type_list_survey').val();
+            var url_preiew = '/preview_survey_ads/' + merchant_id + '/' + survey_id;
+        }
+        else if (type_page == "spin") {
+            var spin_id = $('#page_type_list').val();
+            var url_preiew = '/game/' + spin_id;
+        }
+        else if (type_page == "template") {
+            var temp_id = $('#page_type_list_template').val();
+            var url_preiew = '/preview_template/' + merchant_id + '/' + temp_id;
+        }
+        // else if (type_page == "khai_bao_y_te") {
+        //     var url_preiew = '/tokhaiyte/' + shop_id_select
+        // }
+        else if (type_page == "woay") {
+            var url_preiew = 'https://app.woay.vn/w/8b97ab99-9bdc-417f-978d-1edb1c5efaa3/?shop_id=1';
+        }
+        else {
+            var url_preiew = '/preview_ads/' + type_page + '/' + merchant_id + '/' + camp_id + '/' + current_step;
+        }
+        $("#preview").empty();
+        bioMp(document.getElementById('preview'), {
+            url: url_preiew,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+
+
+        function save_step(type_page) {
+            var current_step = $("#current_step").val();
+            if (parseInt(current_step) == 4) {
+                $("#input_type_step_4").val('connect_success');
+            } else {
+                $("#input_type_step_" + current_step).val(type_page);
+            }
+        }
+
+        function checkFields(form) {
+            var checks_radios = form.find(':checkbox, :radio');
+            var checked = checks_radios.filter(':checked');
+
+            if (checked.length === 0) {
+                return false;
+            }
+            return true;
+
+        }
+
+        function check_input_empty(form) {
+            var count = 0;
+            $(form).find(':input[name=link_youtube]').each(function () {
+                if ($(this).val().length > 0) {
+                    count = count + 1;
+                }
+
+            });
+            if (count == 0) {
+                return false;
+            }
+            return true;
+        }
+
+        function check_images_form(form) {
+            var has_selected_file = $(form + ' input[type=file]').filter(function () {
+                return $.trim(this.value) != ''
+            }).length > 0;
+            return has_selected_file;
+        }
+
+
+        function check_list_select(type_page) {
+            if (type_page == "spin") {
+                var item_select = $('#page_type_list').val();
+            }
+            if (type_page == "survey") {
+                var item_select = $('#page_type_list_survey').val();
+            }
+            if (type_page == "template") {
+                var item_select = $('#page_type_list_template').val();
+            }
+            if (!item_select) {
+                return false;
+            }
+            return true;
+        }
+
+
+        function check_config_page(type_page) {
+
+            if (type_page == 'collect') {
+                var oneFilled = checkFields($('#collect_form'));
+                if (!oneFilled) {
+                    return false;
+                }
+            }
+
+            if (type_page == 'image') {
+                var has_photo = $("#photo_image").val();
+                if (!check_file && has_photo.length == 0) {
+                    return false;
+                }
+            }
+
+            if (type_page == 'slides') {
+                var c = $('ul#preview_slide li').length;
+                var check_file = check_images_form('#slide_form');
+                if (!check_file && c == 0) {
+                    return false;
+                }
+
+            }
+
+            if (['survey', 'spin', 'template'].includes(type_page)) {
+                return check_list_select(type_page);
+            }
+
+            if (type_page == "youtube") {
+                var check_file = check_input_empty('#youtube_form');
+                if (!check_file) {
+                    return false;
+                }
+            }
+            return true;
+
+        }
+
+        function display_config() {
+            var current_step = $("#current_step").val();
+            if (parseInt(current_step) == 4) {
+                $("#step_header").text("Kết nối");
+                $("#setting_page").hide();
+                $("#page_type_list").hide();
+                $("#page_type_div").hide();
+            } else {
+                $("#step_header").text("Bước " + $("#current_step").val());
+                var current_type_page = $("#page_type_selects").val();
+                $("#setting_page_type").val(current_type_page);
+                var arrayPage = ['survey', 'spin', 'woay', 'khai_bao_y_te', 'template'];
+
+                if ($.inArray(current_type_page, arrayPage) >= 0) {
+                    if (current_type_page == "spin") {
+                        $("#setting_page").hide();
+                        $("#page_type_div_survey").hide();
+                        $("#page_type_div_template").hide();
+                        $("#page_type_div").show();
+                    } if (current_type_page == "survey") {
+                        $("#setting_page").hide();
+                        $("#page_type_div").hide();
+                        $("#page_type_div_template").hide();
+                        $("#page_type_div_survey").show();
+                    } if (current_type_page == "template") {
+                        $("#setting_page").hide();
+                        $("#page_type_div").hide();
+                        $("#page_type_div_template").show();
+                        $("#page_type_div_survey").hide();
+                    }if (current_type_page == "woay" || current_type_page == "khai_bao_y_te") {
+                        $("#setting_page").hide();
+                        $("#page_type_div").hide();
+                        $("#page_type_div_survey").hide();
+                        $("#page_type_div_template").hide();
+                    }
+
+                } else if (current_type_page != "0") {
+                    $("#setting_page").show();
+                    $("#page_type_div").hide();
+                    $("#page_type_div_survey").hide();
+                    $("#page_type_div_template").hide();
+                } else {
+                    $("#setting_page").hide();
+                    $("#page_type_div").hide();
+                    $("#page_type_div_survey").hide();
+                    $("#page_type_div_template").hide();
+                }
+            }
+
+        }
+        display_config();
+
+        $('#next_step').on('click', function () {
+            $('#next_step').hide();
+            $('#next_step_loading').show();
+            var merchant_id = $("#merchant_id").val()
+            var camp_id = $("#camp_id").val();
+            var current_step = $('#current_step').val();
+            var next_step = 1;
+            var type_page = $("#page_type_selects").val();
+            if (check_config_page(type_page)) {
+                save_step(type_page);
+                if (parseInt(current_step) != 4) {
+                    next_step = parseInt(current_step) + 1;
+                    $('#prev_step').removeAttr("disabled");
+
+                }
+                if (parseInt(next_step) == 4) {
+                    $('#next_step').attr('disabled', true);
+                    $("#select_type_page").hide();
+                    $("#setting_page").hide();
+                    $("#page_type_div").hide();
+                    $("#page_type_div_survey").hide();
+                    $("#page_type_div_template").hide();
+                    $("#connect_success").show();
+
+                }
+
+                $("#current_step").val(next_step);
+                step = $("#current_step").val();
+                if (step == 2) {
+                    var choose_page = $("#input_type_step_2").val();
+                }
+                if (step == 3) {
+                    var choose_page = $("#input_type_step_3").val();
+                }
+                if (step == 4) {
+                    var choose_page = $("#input_type_step_4").val();
+                }
+
+                $.ajax({
+                    headers: { "X-CSRFToken": "{{ csrf_token() }}" },
+                    url: "/wifi_ads_detail",
+                    type: 'POST',
+                    data: {
+                        'prev_step': parseInt(step) - 1,
+                        'step': step,
+                        'merchant_id': merchant_id,
+                        'choose_page': choose_page,
+                        'camp_id': camp_id,
+
+                    },
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        $('#page_selector li').removeClass("active");
+                        $("#page_selector li[data-value='" + next_step + "']").addClass("active");
+                        $("#select_type_page").empty();
+                        $("#select_type_page").append(data);
+                        $('#next_step').show();
+                        $('#next_step_loading').hide();
+                    }
+                });
+                $("#next_step").off("click");
+                $("#prev_step").off("click");
+
+            } else {
+                $('#next_step').show();
+                $('#next_step_loading').hide();
+                swal('Vui lòng cấu hình trang chào', '', 'error');
+            }
+        });
+
+        $('#prev_step').on('click', function () {
+            $('#prev_step').hide();
+            $('#prev_step_loading').show();
+            var current_step = $('#current_step').val();
+            var type_page = $("#page_type_selects").val();
+            save_step(type_page);
+            var prev_step = 4;
+
+            if (parseInt(current_step) != 1) {
+                prev_step = parseInt(current_step) - 1;
+                $('#next_step').removeAttr("disabled");
+                $("#setting_page").hide();
+                $("#page_type_div").hide();
+                $("#page_type_div_survey").hide();
+                $("#page_type_div_template").hide();
+                $("#connect_success").hide();
+            }
+            if (parseInt(prev_step) == 1) {
+                $('#prev_step').attr('disabled', true);
+            }
+
+            $("#current_step").val(prev_step);
+            step = $("#current_step").val();
+            if (step == 2) {
+                var choose_page = $("#input_type_step_2").val();
+            }
+            if (step == 3) {
+                var choose_page = $("#input_type_step_3").val();
+            }
+            if (step == 1) {
+                var choose_page = $("#input_type_step_1").val();
+            }
+            $.ajax({
+                headers: { "X-CSRFToken": "{{ csrf_token() }}" },
+                url: "/wifi_ads_detail",
+                type: 'POST',
+                data: {
+                    'prev_step': parseInt(step) + 1,
+                    'step': step,
+                    'merchant_id': merchant_id,
+                    'choose_page': choose_page,
+                    'camp_id': camp_id
+
+                },
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $('#page_selector li').removeClass("active");
+                    $("#page_selector li[data-value='" + step + "']").addClass("active");
+                    $("#select_type_page").show();
+                    $("#select_type_page").empty();
+                    $("#select_type_page").append(data);
+                    $('#prev_step').show();
+                    $('#prev_step_loading').hide();
+                }
+            });
+            $("#next_step").off("click");
+            $("#prev_step").off("click");
+
+        });
+
+
+        $("#page_type_selects").change(function () {
+            var choose = $(this).val();
+            $("#setting_page_type").val(choose);
+            $("#next_step").on("click");
+            $("#prev_step").on("click");
+            var arrayPage = ['survey', 'spin', 'template'];
+
+            if ($.inArray(choose, arrayPage) >= 0) {
+                $("#setting_page").hide();
+                $("#page_type_div").hide();
+                $("#page_type_div_survey").hide();
+                $("#page_type_div_template").hide();
+                if (choose == 'survey') {
+                    $("#page_type_div_survey").show();
+                }
+                if (choose == 'spin') {
+                    $("#page_type_div").show();
+
+                }
+                if (choose == 'template') {
+                    $("#page_type_div_template").show();
+                }
+            } else if (choose != "0") {
+                if (choose == 'woay' || choose == 'khai_bao_y_te') {
+                    $("#setting_page").hide();
+                    $("#page_type_div").hide();
+                    $("#page_type_div_survey").hide();
+                    $("#page_type_div_template").hide();
+                    var url_preview = 'https://app.woay.vn/w/8b97ab99-9bdc-417f-978d-1edb1c5efaa3/?shop_id=1';
+                    if (choose == 'khai_bao_y_te'){
+                        var url_preview = '/tokhaiyte/' + shop_id_select
+                    }
+                    $("#preview").empty();
+                    bioMp(document.getElementById('preview'), {
+                        url: url_preview,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 618,
+                        width: 308
+                    });
+                } else {
+                    $("#setting_page").show();
+                    $("#page_type_div").hide();
+                    $("#page_type_div_survey").hide();
+                    $("#page_type_div_template").hide();
+                }
+
+            } else {
+                $("#setting_page").hide();
+                $("#page_type_div").hide();
+                $("#page_type_div_survey").hide();
+                $("#page_type_div_template").hide();
+            }
+            save_step(choose)
+
+        });
+
+
+        $("#setting_page").on('click', function () {
+            var setting_page_type = $("#setting_page_type").val();
+            if (setting_page_type == 'collect') {
+                $("#modal_form").modal('show');
+            } else if (setting_page_type == 'image') {
+                $("#modal_image").modal('show');
+            } else if (setting_page_type == 'slides') {
+                $("#modal_slides").modal('show');
+            } else if (setting_page_type == 'youtube') {
+                $("#modal_youtube").modal('show');
+            }
+
+        });
+
+
+        $("#save_collect").click(function () {
+            var current_step = $("#current_step").val();
+            var camp_id = $("#camp_id").val();
+            var merchant_id = $("#merchant_id").val();
+            var modal_collect = document.getElementById('collect_form');
+            var type_page = 'collect'
+            var form_collect = new FormData(modal_collect);
+            var collect_page = {};
+            var form_data = new FormData();
+            form_collect.forEach((value, key) => {
+                // Reflect.has in favor of: object.hasOwnProperty(key)
+                if (!Reflect.has(collect_page, key)) {
+                    collect_page[key] = value;
+                    return;
+                }
+                if (!Array.isArray(collect_page[key])) {
+                    collect_page[key] = [collect_page[key]];
+                }
+                collect_page[key].push(value);
+            });
+            form_data.append('collect_page', JSON.stringify(collect_page))
+            form_data.append('img_collect', $('input.img-collect[type=file]')[0].files[0]);
+            form_data.append('camp_id', camp_id)
+            form_data.append('merchant_id', merchant_id)
+            form_data.append('current_step', current_step)
+            form_data.append('type_page', 'collect')
+            $.ajax({
+                headers: { "X-CSRFToken": '{{ csrf_token() }}' },
+                url: "/save_step_wifi_ads_camp/" + merchant_id + "/" + camp_id,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function () {
+                    swal(ngettext("Thanh_cong"), " ", "success");
+                    var url_preiew = '/preview_ads/' + type_page + '/' + merchant_id + '/' + camp_id + '/' + current_step;
+                    $("#preview").empty();
+                    bioMp(document.getElementById('preview'), {
+                        url: url_preiew,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 618,
+                        width: 308
+                    });
+                }
+            });
+
+        });
+
+        $("#save_image").click(function () {
+            var current_step = $("#current_step").val();
+            var camp_id = $("#camp_id").val();
+            var merchant_id = $("#merchant_id").val();
+            var image_target = $("#image_target").val();
+            var modal_image = document.getElementById('image_form');
+            var type_page = 'image'
+            var photo = $('#photo_image').val()
+            var title_image = $("#title_image").val();
+            var content_image = $("#content_image").val();
+            var image_page = {};
+            var form_data = new FormData();
+        
+            form_data.append('img_image', photo);
+            form_data.append('title_image', title_image);
+            form_data.append('image_target', image_target);
+            form_data.append('content_image', content_image);
+            form_data.append('camp_id', camp_id)
+            form_data.append('merchant_id', merchant_id)
+            form_data.append('current_step', current_step)
+            form_data.append('type_page', 'image')
+            $.ajax({
+                headers: { "X-CSRFToken": '{{ csrf_token() }}' },
+                url: "/save_step_wifi_ads_camp/" + merchant_id + "/" + camp_id,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function () {
+                    swal(ngettext("Thanh_cong"), " ", "success");
+                    var url_preiew = '/preview_ads/' + type_page + '/' + merchant_id + '/' + camp_id + '/' + current_step;
+                    $("#preview").empty();
+                    bioMp(document.getElementById('preview'), {
+                        url: url_preiew,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 618,
+                        width: 308
+                    });
+                }
+            });
+
+        });
+
+        $("#save_youtube").click(function () {
+            var current_step = $("#current_step").val();
+            var camp_id = $("#camp_id").val();
+            var merchant_id = $("#merchant_id").val();
+            var modal_youtube = document.getElementById('youtube_form');
+            var form_youtube = new FormData(modal_youtube);
+            var youtube_page = {};
+            var type_page = 'youtube'
+            var form_data = new FormData();
+            form_youtube.forEach((value, key) => {
+                // Reflect.has in favor of: object.hasOwnProperty(key)
+                if (!Reflect.has(youtube_page, key)) {
+                    youtube_page[key] = value;
+                    return;
+                }
+                if (!Array.isArray(youtube_page[key])) {
+                    youtube_page[key] = [youtube_page[key]];
+                }
+                youtube_page[key].push(value);
+            });
+            form_data.append('youtube_page', JSON.stringify(youtube_page))
+            form_data.append('camp_id', camp_id)
+            form_data.append('merchant_id', merchant_id)
+            form_data.append('current_step', current_step)
+            form_data.append('type_page', 'youtube')
+            $.ajax({
+                headers: { "X-CSRFToken": '{{ csrf_token() }}' },
+                url: "/save_step_wifi_ads_camp/" + merchant_id + "/" + camp_id,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function () {
+                    swal(ngettext("Thanh_cong"), " ", "success");
+                    var url_preiew = '/preview_ads/' + type_page + '/' + merchant_id + '/' + camp_id + '/' + current_step;
+                    $("#preview").empty();
+                    bioMp(document.getElementById('preview'), {
+                        url: url_preiew,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 618,
+                        width: 308
+                    });
+                }
+            });
+
+        });
+
+        $("#save_slide").click(function () {
+            var current_step = $("#current_step").val();
+            var camp_id = $("#camp_id").val();
+            var merchant_id = $("#merchant_id").val();
+            var type_page = 'slides'
+            var form_data = new FormData();
+            var countDiv = $('ul#preview_slide li').length
+            var slide_target = $("#slide_target").val();
+            var num = 1
+            var images = [];
+            var slides_saved = $("#slide_saved").val();
+            $('#preview_slide').each(function(){
+                var phrase = '';
+                $(this).find('li').each(function(){
+                    phrase = $(this).find( 'h4').text();  
+                    images.push(phrase); 
+                });
+                
+            });
+            form_data.append('number_slide', countDiv)
+            form_data.append('camp_id', camp_id)
+            form_data.append('images', images)
+            form_data.append('merchant_id', merchant_id)
+            form_data.append('current_step', current_step)
+            form_data.append('type_page', 'slides')
+            form_data.append('slide_target', slide_target)
+            $.ajax({
+                headers: { "X-CSRFToken": '{{ csrf_token() }}' },
+                url: "/save_step_wifi_ads_camp/" + merchant_id + "/" + camp_id,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function () {
+                    swal(ngettext("Thanh_cong"), " ", "success");
+                    var url_preiew = '/preview_ads/' + type_page + '/' + merchant_id + '/' + camp_id + '/' + current_step;
+                    $("#preview").empty();
+                    bioMp(document.getElementById('preview'), {
+                        url: url_preiew,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 618,
+                        width: 308
+                    });
+
+                }
+            });
+
+        });
+
+        $('#page_type_list_survey').on('change', function () {
+            var current_step = $("#current_step").val();
+            var survey_id = $('#page_type_list_survey').val();
+            var camp_id = $("#camp_id").val();
+            var merchant_id = $("#merchant_id").val();
+            var type_page = "survey"
+            var form_data = new FormData();
+            form_data.append('camp_id', camp_id)
+            form_data.append('merchant_id', merchant_id)
+            form_data.append('current_step', current_step)
+            form_data.append('survey_id', survey_id)
+            form_data.append('type_page', 'survey')
+            $.ajax({
+                headers: { "X-CSRFToken": '{{ csrf_token() }}' },
+                url: "/save_step_wifi_ads_camp/" + merchant_id + "/" + camp_id,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function () {
+                    var url_preiew = '/preview_survey_ads/' + merchant_id + '/' + survey_id;
+                    $("#preview").empty();
+                    bioMp(document.getElementById('preview'), {
+                        url: url_preiew,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 618,
+                        width: 308
+                    });
+                }
+            });
+
+        });
+
+        $('#page_type_list').change(function () {
+            var current_step = $("#current_step").val();
+            var spin_id = $('#page_type_list').val();
+            var camp_id = $("#camp_id").val();
+            var merchant_id = $("#merchant_id").val();
+            var type_page = "spin"
+            var form_data = new FormData();
+            form_data.append('camp_id', camp_id)
+            form_data.append('merchant_id', merchant_id)
+            form_data.append('current_step', current_step)
+            form_data.append('spin_id', spin_id)
+            form_data.append('type_page', 'spin')
+            $.ajax({
+                headers: { "X-CSRFToken": '{{ csrf_token() }}' },
+                url: "/save_step_wifi_ads_camp/" + merchant_id + "/" + camp_id,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function () {
+                    var url_preiew = '/game/' + spin_id;
+                    $("#preview").empty();
+                    bioMp(document.getElementById('preview'), {
+                        url: url_preiew,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 618,
+                        width: 308
+                    });
+                }
+            });
+
+        });
+
+        $('#page_type_list_template').on('change', function () {
+            var current_step = $("#current_step").val();
+            var temp_id = $('#page_type_list_template').val();
+            var camp_id = $("#camp_id").val();
+            var merchant_id = $("#merchant_id").val();
+            var type_page = "template"
+            var form_data = new FormData();
+            form_data.append('camp_id', camp_id)
+            form_data.append('merchant_id', merchant_id)
+            form_data.append('current_step', current_step)
+            form_data.append('temp_id', temp_id)
+            form_data.append('type_page', 'template')
+            $.ajax({
+                headers: { "X-CSRFToken": '{{ csrf_token() }}' },
+                url: "/save_step_wifi_ads_camp/" + merchant_id + "/" + camp_id,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function () {
+                    var url_preiew = '/preview_template/' + merchant_id + '/' + temp_id;
+                    $("#preview").empty();
+                    bioMp(document.getElementById('preview'), {
+                        url: url_preiew,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 618,
+                        width: 308
+                    });
+                }
+            });
+
+        });
+    })
+</script>

@@ -1,0 +1,113 @@
+<table class="c-table">
+    <caption class="c-table__title">
+        {{ shop_select.name }}
+        <a href="/marketing_campaign/{{shop_id_select}}/detail/add">
+            <button type="button" class="c-btn c-btn--success u-ml-small
+            u-float-right" >
+                {{ gettext("Tao_chien_dich") }}
+            </button>
+        </a>
+    </caption>
+    <thead class="c-table__head c-table__head--slim">
+    <tr class="c-table__row">
+        <th class="c-table__cell c-table__cell--head">{{ gettext("Code") }}</th>
+        <th class="c-table__cell c-table__cell--head">{{ gettext("Trang_thai") }}</th>
+        <th class="c-table__cell c-table__cell--head">{{ gettext("Tao_luc") }}</th>
+        <th class="c-table__cell c-table__cell--head">SMS</th>
+        <th class="c-table__cell c-table__cell--head">{{ gettext("Push_App") }}</th>
+        <th class="c-table__cell c-table__cell--head">{{ gettext("Loai") }}</th>
+        <th class="c-table__cell c-table__cell--head">Code FPT</th>
+        <th class="c-table__cell c-table__cell--head">{{ gettext("Tin_du_kien") }}</th>
+        <th class="c-table__cell c-table__cell--head"></th>
+        <th class="c-table__cell c-table__cell--head"></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for record in list_camp %}
+        <tr class="c-table__row">
+            <td class="c-table__cell c-table__cell--img o-media"><a
+                    href="/marketing_campaign/{{
+                                              shop_id_select
+                                              }}/detail/{{
+                                              record._id }}">{{
+                    record.code }}</a>
+            </td>
+           <td class="c-table__cell">
+                {% if not record.status == '0' and not record.active %}{{ gettext("Chua_gui") }}{% elif record.status =='1' %}{{ gettext("Dang_gui") }}{% else %}{{ gettext("Da_gui") }}{% endif %}
+            </td>
+            <td class="c-table__cell">{{ record.when_str }}</td>
+          <td class="c-table__cell">
+                {% if record.is_sms %}SMS{% endif %}</td>
+           <td class="c-table__cell">
+                {% if record.is_push_app %}Push{% endif %}</td>
+           <td class="c-table__cell">
+                {% if record.is_spam %}{% if record.is_spam == 'care' %}{{ gettext("Cham_soc") }}
+                {% else %}{{ gettext("Quang_cao") }}{% endif %}{% endif %}</td>
+           <td class="c-table__cell">
+                {% if sms_provider and sms_provider|upper == 'FPT' %}
+                    {% if record.code_fpt %}
+                        {{ record.code_fpt }}{% endif %} {% endif %}
+            </td>
+            <td class="c-table__cell">{{ record.predict_message }}</td>
+
+            <td class="c-table__cell">
+                {% if sms_provider and user_sms and pass_sms and brand_name and
+          sms_provider|length > 0 and user_sms|length > 0 and
+          pass_sms|length > 0 and brand_name|length > 0 %}
+                    {% if merchant.quota == '-1'  or merchant.quota|int > 0 %}
+                        {% if not record.status != '0' %}
+                            {% if merchant.sms_provider == 'FPT' %}
+                                {% if record.is_spam == 'care' %}
+                                    <a href="/sms_marketing/{{
+                                            shop_id_select }}/{{ record._id
+                                        }}/send" >
+                                        <button class="c-btn c-btn--success">
+                                            {{ gettext("Gui_tin") }}
+                                        </button>
+                                    </a>
+                                {% else %}
+                                    {% if record.code_fpt %}
+                                        <a href="/sms_marketing/{{
+                                                shop_id_select }}/{{ record
+                                        ._id }}/send">
+                                            <button class="c-btn c-btn--success">
+                                                {{ gettext("Gui_tin") }}
+                                            </button>
+                                        </a>
+                                    {% else %}
+
+                                        <a href="/sms_marketing/{{ shop_id_select }}/{{ record
+                                        ._id }}/fpt_campaign">
+                                            <button class="c-btn c-btn--warning">
+                                                {{ gettext("Dang_ky_chien_dich") }}
+                                            </button>
+                                        </a>
+
+                                    {% endif %}
+
+                                {% endif %}
+                            {% else %}
+
+                                <a href="/sms_marketing/{{ shop_id_select }}/{{ record._id
+                                        }}/send">
+                                    <button class="c-btn c-btn--success">
+                                        {{ gettext("Gui_tin") }}
+                                    </button>
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            </td>
+
+         <td class="c-table__cell"><a class="c-btn c-btn--info"
+                                      href="/marketing_campaign/{{
+                                              shop_id_select
+                                              }}/detail/{{
+                                              record._id }}">
+                {{ gettext("Chi_tiet") }}</a></td>
+        </tr>
+
+    {% endfor %}
+    </tbody>
+</table>

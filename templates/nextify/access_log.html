@@ -1,0 +1,116 @@
+{% extends 'nextify/wifi.html' %}
+{% block menu_wifi %}
+    <li class="c-menu__item has-submenu">
+
+        <a class="c-menu__link"
+           data-toggle="collapse"
+           href="#splash-submenu"
+           aria-expanded="true" aria-controls="sidebar-submenu">
+            <i class="fa fa-trophy u-mr-xsmall"></i>{{ gettext("Trang_chao") }}
+        </a>
+        <ul class="c-sidebar__submenu collapse"
+            id="splash-submenu" style="padding-left:20px">
+            {% for shop_mer in shop_in_mer %}
+                <li><a class="c-menu__link"
+                       href="/wifi/{{ shop_mer._id }}">{{ shop_mer.name }}</a>
+                </li>
+            {% endfor %}
+
+        </ul>
+
+    </li>
+    <li class="c-menu__item has-submenu">
+
+        <a class="c-menu__link" data-toggle="collapse" href="#sidebar-submenu"
+           aria-expanded="true" aria-controls="sidebar-submenu">
+            <i class="fa fa-caret-square-o-down u-mr-xsmall"></i>{{ gettext("Cau_hinh") }}
+        </a>
+        <ul class="c-sidebar__submenu collapse"
+            id="sidebar-submenu" style="padding-left:20px">
+            {% for shop_mer in shop_in_mer %}
+                <li><a class="c-menu__link"
+                       href="/wifi_settings/{{ shop_mer._id }}">{{ shop_mer.name }}</a>
+                </li>
+            {% endfor %}
+
+        </ul>
+
+    </li>
+    <li class="c-menu__item">
+        <a class="c-menu__link" href="/devices_shop" >
+            <i class="c-menu__icon fa
+                                    fa-bullhorn"></i>{{ gettext("Thiet_bi") }}
+        </a>
+    </li>
+     <li class="c-menu__item">
+        <a class="c-menu__link is-active" href="/access_log" >
+            <i class="c-menu__icon fa fa-bullhorn"></i>{{ gettext("Thong_ke_hien_thi") }}
+        </a>
+    </li>
+{% endblock %}
+{% block wifi_main %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="c-table-responsive@tablet">
+                <table class="c-table u-mb-large">
+                    <caption class="c-table__title">
+                        {{ gettext("Tong_luot_hien_thi") }}
+                        <a href="#"
+                            <button type="button" class="c-btn
+                                        c-btn--success u-ml-small u-float-right">
+                                {{ total_access_log }}
+                            </button>
+                        </a>
+                    </caption>
+
+                    <thead class="c-table__head c-table__head--slim">
+                    <tr>
+                        <th class="c-table__cell c-table__cell--head">
+                            Client Mac
+                        </th>
+                        <th class="c-table__cell c-table__cell--head">
+                            {{ gettext("Dia_diem") }}
+                        </th>
+                        <th class="c-table__cell c-table__cell--head">
+                            {{ gettext("Thiet_bi") }}
+                        </th>
+                        <th class="c-table__cell
+                                                c-table__cell--head">
+                            {{ gettext("He_dieu_hanh") }}
+                        </th>
+                        <th class="c-table__cell
+                                                c-table__cell--head">{{ gettext("Thoi_gian") }}
+                        </th>
+                        <th class="c-table__cell c-table__cell--head">
+                            <span class="u-hidden-visually"></span>
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for access in access_log %}
+                        <tr class="c-table__row">
+                            <td class="c-table__cell">{{ access.client_mac
+                                    }}</td>
+                            <td class="c-table__cell">{{ access.shop }}</td>
+                            <td class="c-table__cell">{{ access.device}}</td>
+                            <td class="c-table__cell">{{ access.os }}</td>
+                            <td class="c-table__cell">{{ access.when }}</td>
+
+                        </tr>
+                    {% endfor %}
+
+
+                    </tbody>
+                </table>
+             <nav class="c-pagination u-justify-center">
+                    {% if pagination %}
+                        {{ pagination.links }}
+                    {% endif %}
+                </nav>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

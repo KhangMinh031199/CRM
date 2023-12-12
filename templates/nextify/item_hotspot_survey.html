@@ -1,0 +1,183 @@
+{% extends 'nextify/new_hotspot.html' %}
+{% block item_hotspot %}
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-center mb-2">
+                    {{ gettext("Them_trang_chao_khao_sat") }}
+                </h2>
+            </div>
+         <form method="POST" action="/wifi/{{ shop_id_select }}/new_hotspot/survey"
+          enctype="multipart/form-data"
+          id="form_new_survey">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <div class="card-body">
+                {% if error %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong style="color: #fff;">{{ error }}</strong>
+                  </div>
+                {% endif %}
+
+
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            {{ gettext("Cau_hoi") }}
+                        </h6>
+
+                        <input type="text" class="form-control" id="question" name="question"
+                               placeholder='{{ gettext("Ban_danh_gia_the_nao_ve_dich_vu_cua_chung_toi") }}?'/>
+
+                    </div>
+                    <div class="col-auto">
+                        <select class="form-control" id="survey_type" name="survey_type">
+                            <option value="0">{{ gettext("Loai_khao_sat") }}</option>
+                            <option value="multi_select">{{ gettext("Chon_nhieu_dap_an") }}</option>
+                            <option value="one_select">{{ gettext("Chi_mot_dap_an") }}</option>
+                            <option value="rating">{{ gettext("Cham_diem") }}</option>
+                            <option value="comment">{{ gettext("Binh_luan") }}</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="row align-items-end" style="padding-top: 10px; padding-bottom: 10px">
+
+                    <div class="col-12" id="multi_select">
+                        <div class="form-group">
+                            <label class="c-field__label">
+                                {{ gettext("Dap_an") }}
+                            </label>
+                        </div>
+                        <div id="an_multi_select">
+                            <div class="form-group form-inline">
+                                    <label>{{ gettext("Noi_dung") }}: </label>
+                                    <input type="text" class="form-control"  style="margin-left: 10px"/>
+                                    <label style="margin-left: 20px">Tag: </label>
+                                    <input type="text" class="form-control"/>
+                            </div>
+                           <div class="form-group form-inline">
+                                    <label>{{ gettext("Noi_dung") }}: </label>
+                                    <input type="text" class="form-control" style="margin-left: 10px"/>
+                                    <label style="margin-left: 20px">Tag: </label>
+                                    <input type="text" class="form-control"/>
+                            </div>
+                            <div class="form-group form-inline">
+                                    <label>{{ gettext("Noi_dung") }}: </label>
+                                    <input type="text" class="form-control"  style="margin-left: 10px"/>
+                                    <label style="margin-left: 20px">Tag: </label>
+                                    <input type="text" class="form-control"/>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <a id="new_result_multi"
+                               class="c-btn c-btn--info u-float-right"
+                               href="#">
+                                {{ gettext("Them_dap_an") }}
+                            </a>
+                        </div>
+
+
+                    </div>
+                    <div class="col-12" id="one_select">
+                        <div class="form-group">
+                            <label class="c-field__label">
+                                {{ gettext("Dap_an") }}
+                            </label>
+                        </div>
+                        <div id="an_one_select">
+                           <div class="form-group form-inline">
+                                    <label>{{ gettext("Noi_dung") }}: </label>
+                                    <input type="text" class="form-control"  style="margin-left: 10px"/>
+                                    <label style="margin-left: 20px">Tag: </label>
+                                    <input type="text" class="form-control"/>
+                            </div>
+                           <div class="form-group form-inline">
+                                    <label>{{ gettext("Noi_dung") }}: </label>
+                                    <input type="text" class="form-control" style="margin-left: 10px"/>
+                                    <label style="margin-left: 20px">Tag: </label>
+                                    <input type="text" class="form-control"/>
+                            </div>
+                            <div class="form-group form-inline">
+                                    <label>{{ gettext("Noi_dung") }}: </label>
+                                    <input type="text" class="form-control"  style="margin-left: 10px"/>
+                                    <label style="margin-left: 20px">Tag: </label>
+                                    <input type="text" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <a id="new_result_single"
+                               class="c-btn c-btn--info u-float-right"
+                               href="#">
+                                {{ gettext("Them_dap_an") }}
+                            </a>
+                        </div>
+
+                    </div>
+                    <div class="col-12" id="rating">
+                        <div class="form-group">
+                            <label class="c-field__label">
+                                {{ gettext("Thang_diem") }}
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label class="c-field__label">{{ gettext("Tu") }}: </label>
+                                    <input type="text" class="c-input"
+                                           value=""
+                                           id="min_point"
+                                           name="min_point"
+                                           placeholder="1"/>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="c-field__label">{{ gettext("den") }}: </label>
+                                    <input type="text" class="c-input"
+                                           value=""
+                                           id="max_point"
+                                           name="max_point"
+                                           placeholder="10"/>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <div class="c-field u-mb-small">
+                        <label class="c-field__label">{{ gettext("Kich_hoat") }}</label>
+                        <input type="checkbox" name="active" id="active"
+                               class="c-input">
+                    </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            </form>
+            <div class="card-footer">
+
+                <div class="btn-toolbar pull-right">
+                    <div class="btn-group">
+                        <button id="save_survey_hotspot"
+                                class="c-btn c-btn--info u-float-right">
+                            {{ gettext("Luu_trang_chao") }}
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+{% endblock %}

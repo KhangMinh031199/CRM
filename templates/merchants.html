@@ -1,0 +1,92 @@
+{% extends "v2/base.html" %} {% block right_content %}
+<div class="row">
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <input type="hidden" value="{{shop_id}}" id="current_shop"/>
+            <div class="content">
+                <div class="form-group">
+                    <label>{{ gettext("Chon_dia_diem") }}:</label>
+                    <select class="selectpicker form-control" id="select_shop" data-live-search="true">
+                    {%for mer in list_merchant%}
+                    <option value="{{mer._id}}">{{mer.name}}</option>
+                    {%endfor%}
+                </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">{{ gettext("So_dia_diem") }}</h4>
+            </div>
+            <div class="content" style="text-align: center">
+                <h3 class="title" style="color: #00a65a">
+                    {{total_shops}}
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">{{ gettext("Khach_toan_chuoi")}}</h4>
+            </div>
+            <div class="content" style="text-align: center">
+                <h3 class="title" style="color: #00a65a">
+                    {{mer_customers}}
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">{{ gettext("Den_nhieu_nhat") }}</h4>
+            </div>
+            <div class="content" style="text-align: center">
+                <h3 class="title"><b>{{ shop_max.total }}</b></h3>
+                <h4 style="color: #00a65a">
+                    {{shop_max.name}}
+                    </h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">{{ gettext("Den_it_nhat") }}</h4>
+            </div>
+            <div class="content" style="text-align: center">
+                <h3 class="title"><b>{{ shop_min.total }}</b></h3>
+                <h4 style="color: #00a65a">
+                    {{shop_min.name}}
+                    </h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">{{ gettext("So_thiet_bi") }}</h4>
+            </div>
+            <div class="content" style="text-align: center">
+                <h3 class="title"><b>{{ total_device }}</b></h3>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block js %}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#select_shop").val($('#current_shop').val());
+        $("#select_shop").on('changed.bs.select', function (e) {
+            $(location).attr('href','/shop/' + $(this).val());
+        });
+    });
+
+</script>
+{%endblock%}

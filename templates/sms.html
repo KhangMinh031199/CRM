@@ -1,0 +1,61 @@
+{% extends "v2/base.html" %}{% block right_content %}
+    <div class="row">
+        <div class="card">
+
+        <div class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills nav-justified">
+                        <li {% if request.path.startswith('/auto_marketing') or request.path.startswith('/auto_marketing/') %}class="active"{% endif %}><a href="/auto_marketing">Chăm sóc</a></li>
+                        <li {% if request.path.startswith('/sms_announcement') or request.path.startswith('/sms_announcement/') %}class="active"{% endif %}><a href="/sms_announcement">SMS Marketing</a></li>
+                        <li {% if request.path.startswith('/social_marketing') or request.path.startswith('/social_marketing/') %}class="active"{% endif %}><a href="/social_marketing">Social</a></li>
+                         <li {% if request.path.startswith( '/loyalty') or request.path.startswith( '/loyalty/') %}class="active" {% endif %}>
+                                    <a href="/loyalty">Loyalty</a></li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+            <div class="card">
+
+                <div class="content">
+    <div class="row">
+           <div class="col-sm-12" id="sms_mar">
+
+                </div>
+    </div>
+</div>
+    </div>
+    </div>
+
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.ajax({
+                        url: "/get_sms_announcement",
+                        success: function(data) {
+                            $("#sms_mar").html(data);
+                        }
+                    });
+
+    });
+</script>
+ <script nonce="{{ csp_nonce() }}">
+    (function(i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function() {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-77263576-1', 'auto');
+    ga('send', 'pageview');
+</script>
+{%endblock%}

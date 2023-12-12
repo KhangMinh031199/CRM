@@ -1,0 +1,154 @@
+<h3 class="u-mb-small">{% if book %}#
+    {{ book.code }}{% else %}{{ gettext('Them_moi') }}{% endif %}</h3>
+<form method="POST" action="{% if book %}/booking_table/
+    {{ book._id }}{% else %}/booking_table/add{% endif %}">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+<label class="c-field__label" for="shops">{{ gettext('Dia_diem') }}</label>
+    <div class="c-field u-mb-small">
+
+        {% if book %}
+            <input type="hidden" value="{{ book._id }}" id="book_id"
+                   name="book_id"/>
+            <input type="hidden" value="{{ book.shop_id }}" id="book_shop_id"/>
+        {% endif %}
+        <select name="shop_book" class="c-select"  style="width: 100%;"
+                id="item_select_shop">
+            {% for shop in shops %}
+                <option value="{{ shop._id }}">{{ shop.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+        <label class="c-field__label">{{ gettext('So_nguoi') }}</label>
+    <div class="c-field u-mb-small">
+
+        <input type="number" class="c-input"
+               value="{% if book %}{{ book.count }}{% endif %}" name="count"
+               required/>
+    </div>
+        <label class="c-field__label">{{ gettext('So_dien_thoai') }}</label>
+    <div class="c-field u-mb-small">
+
+        <input type="number" class="c-input"
+               value="{% if book %}{{ book.phone }}{% endif %}" name="phone"
+               required/>
+    </div>
+        <label class="c-field__label">{{ gettext('Ghi_chu') }}</label>
+    <div class="c-field u-mb-small">
+
+        <textarea name="content" class="c-input">{% if book %}
+            {{ book.content }}{% endif %}</textarea>
+    </div>
+        <label class="c-field__label">{{ gettext('Ngay_den:') }} </label>
+    <div class="c-field u-mb-small">
+        {% if book %}
+            <input type="hidden" value="{{ book.arrival_date }}"
+                   id="ex_arrival_date"/>
+        {% endif %}
+
+        <input id="arrival_date" name="arrival_date" type="text"
+               placeholder="Ngày"
+               class="c-input" required>
+    </div>
+       <label class="c-field__label">{{ gettext('Gio_den:') }} </label>
+    <div class="c-field u-mb-small">
+        {% if book %}
+            <input type="hidden" value="{{ book.arrival_hour }}"
+                   id="ex_arrival_hour"/>
+        {% endif %}
+
+        <input id="arrival_hour" name="arrival_hour" type="text"
+               placeholder="Giờ" class="c-input"
+               required>
+    </div>
+
+        <label class="c-field__label" for="shops">{{ gettext('Nguon') }}</label>
+    <div class="c-field u-mb-small">
+
+        <input type="hidden" value="{{ book.source }}" id="ex_book_source"/>
+        <select id="item_source" name="source" class="c-select"  style="width: 100%;">
+            {% for sour in booking_source %}
+                <option value="{{ sour.id }}">{{ sour.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    {% if book %}
+            <label class="c-field__label" for="shops">{{ gettext('Trang_thai') }}</label>
+        <div class="c-field u-mb-small">
+
+            <input type="hidden" value="{{ book.status }}" class="c-input"
+                   id="ex_book_status"/>
+            <select id="item_status" name="status" class="c-select"  style="width: 100%;">
+                <option value="1">{{ gettext('Dang_xu_ly') }}</option>
+                <option value="2">{{ gettext('Thanh_cong') }}</option>
+                <option value="3">{{ gettext('Da_huy') }}</option>
+            </select>
+        </div>
+    {% endif %}
+
+    <div class="c-field u-mb-small">
+        <input type="submit" class="c-btn c-btn--info" value="Lưu thông tin"/>
+    </div>
+
+</form>
+
+
+ <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+
+            $('#item_source').select2({
+                dropdownAutoWidth: true
+            });
+            if ($("#ex_book_source").length > 0) {
+                var data_soure = $("#ex_book_source").val();
+                $('#source').select2().val(data_soure)
+                    .trigger("change");
+            }
+            $('#item_status').select2({
+                dropdownAutoWidth: true
+            });
+            if ($("#ex_book_status").length > 0) {
+                var data_status = $("#ex_book_status").val();
+                $('#status').select2().val(data_status)
+                    .trigger("change");
+            }
+            $('#select_shop').select2({
+                dropdownAutoWidth: true
+            });
+            if ($("#book_shop_id").length > 0) {
+                var data_soure_shops = $("#book_shop_id").val();
+                $('#item_select_shop').select2().val(data_soure_shops)
+                    .trigger("change");
+            }
+
+        if ($("#ex_arrival_date").length > 0 && $("#ex_arrival_date").val().length > 0 && $("#ex_arrival_date").val() != 'None') {
+            flatpickr("#arrival_date", {
+                enableTime: false,
+                defaultDate: $("#ex_arrival_date").val(),
+                dateFormat: "d-m-Y"
+            });
+        } else {
+            flatpickr("#arrival_date", {
+                enableTime: false,
+                dateFormat: "d-m-Y"
+            });
+        }
+
+        if ($("#ex_arrival_hour").length > 0 && $("#ex_arrival_hour").val().length > 0 && $("#ex_arrival_hour").val() != 'None') {
+            flatpickr("#arrival_hour", {
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i",
+                time_24hr: true,
+                defaultDate: $("#ex_arrival_hour").val()
+            });
+        } else {
+            flatpickr("#arrival_hour", {
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i",
+                time_24hr: true
+            });
+        }
+    });
+
+</script>

@@ -1,0 +1,56 @@
+sort_camp.css
+ul{
+    list-style:none;
+}
+.p-sortable{
+    cursor: move;
+    display: flex;
+    flex-flow: row nowrap;
+    display: -webkit-box;
+    display: -webkit-flex;
+
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+}
+.p-sortable-handle{
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: 0.125rem 0 0 0.125rem;
+
+}
+.group_text{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    margin-bottom: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 0.125rem;
+}
+.p_item_overflow{
+    padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.5;
+        border: 1px solid #d4d5d7;
+        color: #555;
+        background-color: #fff;
+        border-radius: 0;
+        /*width: 500px;*/
+        -webkit-flex: 1 1 auto;
+}
+.p_text_overflow{
+    display: inline-block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+}

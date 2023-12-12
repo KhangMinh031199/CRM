@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge"> {% if 'viettel.vn' in request.url %}
+    <title>Viettel | vmarketing</title>
+    {% include 'nextify/viettel_meta_tags.html' %} {% else %}
+    <title>Nextify | The Next Generation of Loyalty</title>
+    {% include 'nextify/nextify_meta_tags.html' %} {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/nextify/css/main.min.css">
+    <link rel="stylesheet" href="/static/nextify/css/dash_kit_theme.min.css" />
+    <script src="/static/js/jquery-3.2.1.min.js"></script>
+    <script src="/static/v2/assets/js/bootstrap.min.js"></script>
+    <style>
+        .ticket {
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+            border: 3px dashed #ccc;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="main-content" id="main-content">
+        <div class="container-fluid">
+            <div class="row justify-content-center mt-5">
+                <div class="col-12 col-md-8 col-xl-6">
+
+                    <!-- Card -->
+                    <div class="card">
+
+
+                        <!-- Image -->
+                        <img src="{% if connect_success.background_connect %}//files.nextify.vn/{{ connect_success.background_connect }}{% elif shop.background %}//files.nextify.vn/{{ shop.background }}{% else %}//files.nextify.vn/2/205b2f83eb39{% endif %}" alt="..."
+                            class="card-img-top">
+
+                        <!-- Body -->
+                        <div class="card-body text-center">
+
+                            <!-- Image -->
+                            <a href="#" class="avatar avatar-xl card-avatar card-avatar-top">
+                                <img src="{% if shop.logo %}//files.nextify.vn/{{ shop.logo }}{% else %}//files.nextify.vn/2/205b2f83eb39{% endif %}"
+                                    class="avatar-img rounded-circle border border-4 border-card" alt="...">
+                            </a>
+
+                            <!-- Heading -->
+                            <h2 class="card-title">
+                                <a href="#">{{ shop.name }}</a>
+                            </h2>
+
+
+                            {% if connect_success.display_coupon %}
+                            {% if connect_success.display_coupon_txt and connect_success.display_coupon_txt|length > 0
+                            %}<p class='ticket' style='text-align:center'>{{ connect_success.display_coupon_txt }}</p>{% else %}
+                            <p class='ticket' style='text-align:center'>COUPON10</p>{% endif %}
+
+                            {% else %}
+                            {% if (not connect_success.default_code or connect_success.default_code|length == 0)
+                            and connect_success.hotspot_method == "default" %}
+                            <div class="mt-5 mb-5"
+                                style="border-radius:100px; height:100px; width:100px; background: #F8FAF5; margin:0 auto;text-align: center">
+                                <i class="checkmark" style="color: #9ABC66;
+        font-size: 60px;
+        line-height: 100px;
+        margin-left:-15px;">✓</i>
+                            </div>
+
+                            {% if shop.connect_success and shop.connect_success.content|length > 0%}
+                            <p class="text-muted">
+                                {{ shop.connect_success.content }}
+                            </p>
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
+
+                            {% if (connect_success.hotspot_method == "profile_code") or (connect_success.default_code
+                            and connect_success.hotspot_method == "default") %}
+                            <div class="form-group mb-3">
+                                <div>
+                                    <input type="text" id="code" name="code" class="form-control"
+                                        placeholder='{{ gettext("Ma_truy_cap/_Wifi_code") }}'>
+
+                                </div>
+                            </div>
+
+
+                            {% endif %}
+
+                            <a href="#" class="btn btn-lg btn-primary btn-block text-uppercase" {% if connect_success.connect_button_color %}style="background-color: {{ connect_success.connect_button_color }};border-color: {{ connect_success.connect_button_color }}" {% endif %}>
+                                <i class="fe fe-wifi"></i>
+                                {% if connect_success.connect_button and connect_success.connect_button|length > 1 %}
+                                {{ connect_success.connect_button }}
+                                {% else %}
+                                {{ gettext("Ket_noi_Wi-Fi/Go_Online") }}
+                                {% endif %}
+                            </a>
+
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="card-footer card-footer-boxed">
+                            <div class="row align-items-center justify-content-between">
+                                <div class="col text-center">
+
+                                    <!-- Status -->
+                                    <small>
+
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

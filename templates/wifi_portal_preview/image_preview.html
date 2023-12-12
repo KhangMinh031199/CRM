@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge"> {% if 'viettel.vn' in request.url %}
+    <title>Viettel | vmarketing</title>
+    {% include 'nextify/viettel_meta_tags.html' %} {% elif 'crmx' in request.url %}
+    <title>CRMX | Better eXperience fo Wi-Fi</title>
+    {% include 'nextify/crmx_meta_tags.html' %} {% else %}
+    <title>Nextify | The Next Generation of Loyalty</title>
+    {% include 'nextify/nextify_meta_tags.html' %} {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='stylesheet' id='google-fonts-roboto-css'
+        href='//fonts.googleapis.com/css?family=Roboto+Slab%3A400%2C300%2C100%2C700&#038;subset=latin%2Cgreek%2Cvietnamese%2Ccyrillic-ext%2Clatin-ext%2Ccyrillic'
+        type='text/css' media='all' />
+    <link rel="stylesheet" href="/static/nextify/css/main.min.css">
+    <link rel="stylesheet" href="/static/nextify/css/dash_kit_theme.min.css" />
+
+
+    <script src="/static/js/jquery-3.2.1.min.js"></script>
+    <script src="/static/v2/assets/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+
+    <div class="main-content" id="main-content">
+        <div class="container-fluid">
+            <div class="row justify-content-center mt-5">
+                <div class="col-12 col-md-8 col-xl-6">
+
+                    <!-- Card -->
+                    <div class="card">
+
+                        <!-- Image -->
+
+                        <img src="//files.nextify.vn/{{ image }}" alt="..." class="card-img-top"
+                            style="max-height: 100%;">
+
+                        <div class="card-body text-center">
+
+                            <div id="wftimer">
+                                <h4 class="mb-2 mt-2 name">Vui lòng chờ <span>5</span>s để kết nối</h4>
+                            </div>
+
+
+                        </div>
+
+
+
+
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer card-footer-boxed">
+                        <div class="row align-items-center justify-content-between">
+                            <div class="col text-center">
+
+                                <!-- Status -->
+                                <!--    <small>
+                      © {{ gettext("2020_Power_by_NEXTIFY_SOFTWARE.,JSC.") }}
+                    </small> -->
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+    </div>
+
+</body>
+
+</html>

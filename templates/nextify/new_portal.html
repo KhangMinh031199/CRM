@@ -1,0 +1,381 @@
+{% extends 'nextify/manage_hotspot.html' %}
+
+{% block hotspot_item %}
+<link rel="stylesheet" href="/static/nextify/css_new/wifi.css">
+<link rel="stylesheet" type="text/css" href="/static/nextify/css_new/wifi_01.css">
+<link rel="stylesheet" type="text/css" href="/static/nextify/css_new/swipe_1.css">
+<link rel="stylesheet" type="text/css" href="/static/nextify/css_new/swipe_2.css">
+<style id="erd_scroll_detection_scrollbar_style">
+    /* Created by the element-resize-detector library. */
+
+    .erd_scroll_detection_container>div::-webkit-scrollbar {
+        display: none;
+    }
+
+    .erd_scroll_detection_container_animation_active {
+        -webkit-animation-duration: 0.1s;
+        animation-duration: 0.1s;
+        -webkit-animation-name: erd_scroll_detection_container_animation;
+        animation-name: erd_scroll_detection_container_animation;
+    }
+
+    @-webkit-keyframes erd_scroll_detection_container_animation {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes erd_scroll_detection_container_animation {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    .well {
+        min-height: 20px;
+        background-color: #f5f5f5;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+    }
+
+    .filedrag {
+        border: 2px dashed #AAA;
+        border-radius: 7px;
+        cursor: default;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<span id="CW_PUBLIC_PATH" style="display:none">https://cdn1.swipewifi.com/ClientApp/build/</span>
+
+<input id="data" type="hidden" value="{{ data }}">
+
+<a href="#new_image" data-toggle="modal" class="btn btn-flat d-block d-md-inline-block mb-2">
+    <i class="fa fa-file-medical"></i> {{ gettext("Chon_anh") }}
+</a>
+
+<div class="modal fade bd-example-modal-lg" id="new_image" tabindex="-1" role="dialog" aria-labelledby="new_image"
+    data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-body" data-toggle="lists" data-lists-values="[&quot;name&quot;]">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Title -->
+                            <h4 class="card-header-title" id="exampleModalCenterTitle">
+                                {{ gettext("Chon_anh") }}
+                            </h4>
+
+                        </div>
+                        <div class="col-auto">
+
+                            <!-- Close -->
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+
+                        </div>
+                    </div> <!-- / .row -->
+                </div>
+                <form method="POST" action="/save_image_new_portal/{{ shop_select._id }}" enctype="multipart/form-data"
+                    id="form_new_image">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    <div class="modal-body">
+
+                        <div class="c-field u-mb-xsmall">
+                            <h5>{{ gettext("Kich_thuoc_goi_y_750_px_×_540_px") }}</h5>
+
+                            <div class="well filedrag row">
+                                <div class="col-md-6">
+                                    <p class="help-block">
+                                        {% if cards[0] %}
+                                        <img src="//files.nextify.vn/{{ cards[0].photo }}"
+                                            width="400px" card_id="{{ cards[0]._id }}" id="" />
+                                        <a href="/remove_cards/{{ cards[0]._id }}" class="u-float-left btn">
+                                            {{ gettext("Xoa_anh_ngay") }}
+                                        </a>
+                                        {% else %}
+                                        <img id="img_new_photo1" width="400px">
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="c-input btn" type="file"" class="form-control" id="new_photo1"
+                                        name="photo1" accept="image/*">
+                                </div>
+                            </div>
+
+                            <div class="well filedrag row">
+                                <div class="col-md-6">
+                                    <p class="help-block">
+                                        {% if cards[1] %}
+                                        <img src="//files.nextify.vn/{{ cards[1].photo }}"
+                                            width="400px" card_id="{{ cards[1]._id }}" id="" />
+                                        <a href="/remove_cards/{{ cards[1]._id }}" class="u-float-left btn">
+                                            {{ gettext("Xoa_anh_ngay") }}
+                                        </a>
+                                        {% else %}
+                                        <img id="img_new_photo2" width="400px">
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="c-input btn" type="file"" class=" form-control" id="new_photo2"
+                                        name="photo2" accept="image/*">
+                                </div>
+                            </div>
+
+                            <div class="well filedrag row">
+                                <div class="col-md-6">
+                                    <p class="help-block">
+                                        {% if cards[2] %}
+                                        <img src="//files.nextify.vn/{{ cards[2].photo }}"
+                                            width="400px" card_id="{{ cards[2]._id }}" id="" />
+                                        <a href="/remove_cards/{{ cards[2]._id }}" class="u-float-left btn">
+                                            {{ gettext("Xoa_anh_ngay") }}
+                                        </a>
+                                        {% else %}
+                                        <img id="img_new_photo3" width="400px">
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="c-input btn" type="file"" class=" form-control" id="new_photo3"
+                                        name="photo3" accept="image/*">
+                                </div>
+                            </div>
+
+
+                            <div class="well filedrag row">
+                                <div class="col-md-6">
+                                    <p class="help-block">
+                                        {% if cards[3] %}
+                                        <img src="//files.nextify.vn/{{ cards[3].photo }}"
+                                            width="400px" card_id="{{ cards[3]._id }}" id="" />
+                                        <a href="/remove_cards/{{ cards[3]._id }}" class="u-float-left btn">
+                                            {{ gettext("Xoa_anh_ngay") }}
+                                        </a>
+                                        {% else %}
+                                        <img id="img_new_photo4" width="400px">
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="c-input btn" type="file"" class=" form-control" id="new_photo4"
+                                        name="photo4" accept="image/*">
+                                </div>
+                            </div>
+                            <div class="well filedrag row">
+                                <div class="col-md-6">
+                                    <p class="help-block">
+                                        {% if cards[4] %}
+                                        <img src="//files.nextify.vn/{{ cards[4].photo }}"
+                                            width="400px" card_id="{{ cards[4]._id }}" id="" />
+                                        <a href="/remove_cards/{{ cards[4]._id }}" class="u-float-left btn">
+                                            {{ gettext("Xoa_anh_ngay") }}
+                                        </a>
+                                        {% else %}
+                                        <img id="img_new_photo5" width="400px">
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="c-input btn" type="file"" class=" form-control" id="new_photo5"
+                                        name="photo5" accept="image/*">
+                                </div>
+                            </div>
+                            <div class="well filedrag row">
+                                <div class="col-md-6">
+                                    <p class="help-block">
+                                        {% if cards[5] %}
+                                        <img src="//files.nextify.vn/{{ cards[5].photo }}"
+                                            width="400px" card_id="{{ cards[5]._id }}" id="" />
+                                        <a href="/remove_cards/{{ cards[5]._id }}" class="u-float-left btn">
+                                            {{ gettext("Xoa_anh_ngay") }}
+                                        </a>
+                                        {% else %}
+                                        <img id="img_new_photo6" width="400px">
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="c-input btn" type="file"" class=" form-control" id="new_photo6"
+                                        name="photo6" accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <a class="c-btn c-btn--success" id="submit_form">{{ gettext("Luu_lai") }}
+                    </a>
+                </div>
+                
+                <script nonce="{{ csp_nonce() }}">
+                    $(document).ready(function () {
+                        function readURL(input, input_view) {
+                            if (input.files && input.files[0]) {
+                                var reader = new FileReader();
+                                var view_id = '#' + input_view;
+                                reader.onload = function (e) {
+                                    $(view_id).attr('src', e.target.result);
+                                }
+                                reader.readAsDataURL(input.files[0]);
+                            }
+                        };
+                        $("#new_photo1").change(function () {
+                            swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                            $('#img_new_photo1').show();
+                            readURL(this, 'img_new_photo1');
+                        });
+                        $("#new_photo2").change(function () {
+                            swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                            $('#img_new_photo2').show();
+                            readURL(this, 'img_new_photo2');
+                        });
+                        $("#new_photo3").change(function () {
+                            swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                            $('#img_new_photo3').show();
+                            readURL(this, 'img_new_photo3');
+                        });
+                        $("#new_photo4").change(function () {
+                            swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                            $('#img_new_photo4').show();
+                            readURL(this, 'img_new_photo4');
+                        });
+                        $("#new_photo5").change(function () {
+                            swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                            $('#img_new_photo5').show();
+                            readURL(this, 'img_new_photo5');
+                        });
+                        $("#new_photo6").change(function () {
+                            swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                            $('#img_new_photo6').show();
+                            readURL(this, 'img_new_photo6');
+                        });
+                        $("#submit_form").click(function () {
+                            $('#form_new_image').submit()
+                            // $.ajax({
+                            //     type: 'POST',
+                            //     data: $('#form_new_image').serialize(),
+                            //     url: "/save_image_new_portal/{{ shop_select._id }}",
+                            //     success: function (response) {
+                            //         var returnedData = JSON.parse(response);
+                            //         if ('error' in returnedData) {
+                            //             swal(returnedData['error'], " ", "error");
+                            //             return false;
+                            //         }
+                            //         else {
+                            //             swal("Thao tác thành công", " ", "success");
+                            //             location.reload();
+                            //         }
+                            //     },
+                            //     error: function (xhr, desc, err) {
+                            //         swal("Có lỗi xảy ra, thử lại sau", " ", "error");
+                            //     }
+                            // });
+                        });
+                    })
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="root">
+    <div class="styles_app__eeYrK">
+        <div class="styles_cardDeck__1HKgd">
+            <div class="styles_wrapper__3LQnL">
+                <div class="styles_cardFrame__333ZJ" style="width: 598.2565310576433px; height: 846.0625px;">
+
+                </div>
+            </div>
+            <div class="erd_scroll_detection_container erd_scroll_detection_container_animation_active"
+                style="visibility: hidden; display: inline; width: 0px; height: 0px; z-index: -1; overflow: hidden; margin: 0px; padding: 0px;">
+                <div dir="ltr" class="erd_scroll_detection_container"
+                    style="position: absolute; flex: 0 0 auto; overflow: hidden; z-index: -1; visibility: hidden; width: 100%; height: 100%; left: 0px; top: 0px;">
+                    <div class="erd_scroll_detection_container"
+                        style="position: absolute; flex: 0 0 auto; overflow: hidden; z-index: -1; visibility: hidden; left: -1px; top: -1px; right: 0px; bottom: 0px;">
+                        <div
+                            style="position: absolute; flex: 0 0 auto; overflow: scroll; z-index: -1; visibility: hidden; width: 100%; height: 100%;">
+                            <div style="position: absolute; left: 0px; top: 0px; width: 644px; height: 857px;"></div>
+                        </div>
+                        <div
+                            style="position: absolute; flex: 0 0 auto; overflow: scroll; z-index: -1; visibility: hidden; width: 100%; height: 100%;">
+                            <div style="position: absolute; width: 100%; height: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="styles_progressWrapper__32ici">
+            <div class="styles_progressProvider__2_OAZ" role="progressbar" aria-valuemin="1" aria-valuemax="8"
+                aria-valuenow="0" aria-valuetext="7 Swipes Remaining">
+                <div class="styles_dotWrapper__6HQFN" role="presentation">
+                    <div class="styles_dot__ouPyW styles_active__3EQOc"></div>
+                    <div class="styles_dot__ouPyW"></div>
+                    <div class="styles_dot__ouPyW"></div>
+                    <div class="styles_dot__ouPyW"></div>
+                    <div class="styles_dot__ouPyW"></div>
+                    <div class="styles_dot__ouPyW"></div>
+                    <div class="styles_dot__ouPyW"></div>
+                </div>
+            </div>
+        </div>
+        <nav class="styles_navButtonContainer__1PqOG"><button aria-label="previous" class="styles_navButton__3s5xO"><svg
+                    aria-hidden="true" focusable="false" x="0" y="0" width="30px" height="30px" viewBox="0 0 25 25"
+                    enable-background="new 0 0 x y">
+                    <path fill="#8994a3"
+                        d="M16.5,18.5H8.25a.5.5,0,0,1,0-1H16.5a2.5,2.5,0,0,0,0-5h-12a1,1,0,0,1-.71-1.71L8.9,5.65a.49.49,0,0,1,.7.7L4.46,11.5h12a3.5,3.5,0,0,1,0,7Z">
+                    </path>
+                </svg></button>
+            <button class="styles_menuButton__31Tip" aria-label="Privacy &amp; Terms"><svg
+                    class="styles_menuIcon__3hjoF" aria-hidden="true" focusable="false" x="0px" y="0px" width="25px"
+                    height="25px" viewBox="0 0 25 25" enable-background="new 0 0 x y">
+                    <path fill="#8994a3" d="M4,6.5H20a.5.5,0,0,0,0-1H4a.5.5,0,0,0,0,1Z"></path>
+                    <path fill="#8994a3" d="M20,11.45H4a.5.5,0,0,0,0,1H20a.5.5,0,0,0,0-1Z"></path>
+                    <path fill="#8994a3"
+                        d="M20,17.46H4a.5.5,0,0,0-.5.5.5.5,0,0,0,.5.5H20a.5.5,0,0,0,.5-.5A.5.5,0,0,0,20,17.46Z"></path>
+                </svg></button>
+            <button aria-label="next" class="styles_navButton__3s5xO"><svg aria-hidden="true" focusable="false" x="0"
+                    y="0" width="30px" height="30px" viewBox="0 0 25 25" enable-background="new 0 0 x y">
+                    <g>
+                        <path fill="#323642"
+                            d="M19.5,10.79,14.35,5.65a.49.49,0,0,0-.7.7l5.14,5.15H4a.5.5,0,0,0,0,1H18.79a1,1,0,0,0,.71-1.71Z">
+                        </path>
+                        <path fill="#323642"
+                            d="M17.65,13.65l-4,4a.48.48,0,0,0,0,.7.48.48,0,0,0,.7,0l4-4a.49.49,0,1,0-.7-.7Z"></path>
+                    </g>
+                </svg></button>
+        </nav>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script charset="utf-8" src="/static/nextify/js_new/wifi_01.js"></script>
+<script charset="utf-8" src="/static/nextify/js_new/swipe_1.js"></script>
+<script charset="utf-8" src="/static/nextify/js_new/swipe_2.js"></script>
+<script src="/static/nextify/js_new/swipe_4.js"></script>
+
+{% endblock %}

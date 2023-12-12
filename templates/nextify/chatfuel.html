@@ -1,0 +1,222 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                          {{ gettext("Ung_dung") }}
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                          {{ gettext("Quan_ly_ung_dung") }}
+                        </h1>
+
+                    </div>
+                </div> <!-- / .row -->
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row align-items-center">
+          <div class="col-12 col-md-4 offset-xl-1 offset-md-1 order-md-2 mb-5 mb-md-0">
+  
+            <!-- Image -->
+            <div class="text-center">
+              <img src="/static/nextify/img/happiness.svg" alt="..." class="img-fluid">
+            </div>
+  
+          </div>
+
+          <div class="col-12 col-md-5 col-xl-6 order-md-1 my-5">
+            <div class="card u-p-medium">
+                <div class="row u-justify-center" style="margin-bottom: 20px;">
+                    <h1 class="header-title">
+                        CHATFUEL
+                      </h1>
+                    </div>
+              <div class="row u-justify-center">
+                  <div class="col-12">
+            <!-- Heading -->
+  
+            <!-- Form -->
+            <form id="chatfuel_connect" method="post" action="/save_chatbot_id_CHATFUEL">
+                   <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+  
+              <!-- Email address -->
+              <div class="form-group">
+  
+                <!-- Label -->
+                <label>ID chatbot CHATFUEL: (<span>
+                  <font color="red">*</font>
+              </span> {{ gettext("bat_buoc") }})</label>
+  
+                <!-- Input -->
+                <input type="text" id="chatbot_id" name="chatbot_id" class="form-control" placeholder="5d7f08f66774190001746172"
+                {% if chatbot_id %} value="{{ chatbot_id }}" {% endif %}>
+  
+              </div>
+              <div class="form-group">
+  
+                <!-- Label -->
+                <label>Broadcasting API Token:</label>
+  
+                <!-- Input -->
+                <input type="text" id="chatfuel_token" name="chatfuel_token" class="form-control" placeholder="ERP1NWrxmWJ41SNohsfjA1wxNR38fK8srUZj2r2o5ty723aGstGeriHqoaA2zKLI"
+                {% if chatfuel_token %} value="{{ chatfuel_token }}" {% endif %}>
+  
+              </div>
+              <div class="form-group row">
+                <div class="col-3">
+                  <span>{{ gettext("Kich_hoat") }}:</span>
+                </div>
+                <div class="col-auto">
+                  <div class="custom-control custom-switch {% if status == 'True' %}is-active{% endif %}">
+                    <input class="custom-control-input" name="status" id="status" type="checkbox"
+                      {% if status =="True" %}checked="checked" {% endif %}>
+                      <label class="custom-control-label"
+                      for="status"></label>
+                  </div>
+              </div>
+                
+            </form>
+                  </div>
+                    <div class="card-footer">
+                      <div class="col-6" style="float:right">
+                         <button class="btn btn-lg btn-block btn-primary" 
+                                                        
+                            id="save_info_API">
+                    {{ gettext("Luu_thong_tin") }}
+                   
+                      </button>
+                    </div>
+              </div>
+      
+            </div>
+            
+          </div>
+        </div> <!-- / .row -->
+        </div>
+        </div>
+        <!-- <div class="row align-items-center">
+          <div class="col-12 col-md-5 col-xl-6 order-md-1 my-5">
+            <div class="card u-p-medium">
+              <div class="row u-justify-center">
+                  <div class="col-12">
+           
+  
+            
+            <form id="chatfuel_broadcast" method="post" action="/broadcast_chatfuel">
+                   <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+  
+            
+              <div class="form-group">
+  
+           
+                <label>Block Name</label>
+  
+                
+                <input type="text" id="block_name" name="block_name" class="form-control" placeholder="Welcome Message" >
+  
+              </div>
+            </form>
+                    <div class="col-9" style="float:right">
+                         <button class="btn btn-lg btn-block btn-primary" 
+                                                        
+                            id="send_broadcast_API">
+                    Gửi tin nhắn
+                   
+                      </button>
+                    </div>
+      
+            </div>
+            
+          </div>
+        </div>
+        </div>
+        </div>  -->
+        </div>
+      </div> <!-- / .container -->
+
+      <script nonce="{{ csp_nonce() }}">
+
+          $(document).ready(function () {
+      $("#send_broadcast_API").click( function () {
+        var block_name = $("#block_name").val();   
+        if (block_name.length == 0){
+              swal('Block Name {{ gettext("khong_duoc_de_trong") }}', " ", "error");
+                   return false;
+        }
+    
+          $.ajax({
+              url: $("#chatfuel_broadcast").attr("action"),
+              type: $("#chatfuel_broadcast").attr("method"),
+             data: $("#chatfuel_broadcast").serialize(),
+             success: function (response) {
+                  var returnedData = JSON.parse(response);
+                    if ('error' in returnedData){
+                      swal(returnedData['error'], " ", "error");
+                    return false;}
+                    else{
+                      swal('{{ gettext("Da_gui_tin_nhan_thanh_cong") }}', " ", "success");
+                                   }
+
+              },
+              error: function (xhr, desc, err)
+              {
+                   swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+
+
+
+              }
+          });
+
+        return false;
+        })
+
+      $("#save_info_API").click( function () {
+        var chatbot_id = $("#chatbot_id").val();     
+        if (chatbot_id.length == 0){
+              swal('Chatbot ID {{ gettext("khong_duoc_de_trong") }}', " ", "error");
+                   return false;
+        }  
+          $.ajax({
+              url: $("#chatfuel_connect").attr("action"),
+              type: $("#chatfuel_connect").attr("method"),
+             data: $("#chatfuel_connect").serialize(),
+             success: function (response) {
+                  var returnedData = JSON.parse(response);
+                    if ('error' in returnedData){
+                      swal(returnedData['error'], " ", "error").then(function(){
+                        location.reload();
+                      });
+                    return false;}
+                    else{
+                      swal('{{ gettext("Thao_tac_thanh_cong") }}', " ", "success");
+                        }
+
+              },
+              error: function (xhr, desc, err)
+              {
+                   swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+
+
+
+              }
+          });
+
+        return false;
+        })
+
+    });
+</script>
+
+{% endblock %}
+{% block js %}
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "v2/base.html" %} {% block right_content %}
+
+    <div class="row">
+
+        <div class="col-md-6">
+       <div class="panel panel-white">
+        <div class="panel-heading clearfix">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <h3 class="title">{{ merchant.name }}</h3>
+
+                        </div>
+                    </div>
+                </div>
+                <form method="POST" action="/config_hq" enctype="multipart/form-data">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    <div class="panel-body">
+                        {% if error %}
+                            <div class="alert alert-danger">
+                                {{ error | safe }}
+                            </div>
+                        {% endif %} {% if message %}
+                        <div class="alert alert-success">
+                            {{ message | safe }}
+                        </div>
+                    {% endif %}
+                        <input type="hidden" value="{{ merchant._id }}" name="merchant_id"/>
+                        <div class="form-group">
+                            <label for="name">Tên:</label>
+                            <input type="text" class="form-control form-input" id="name" name="name"
+                                   value="{{ merchant.name }}" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="url_access">Đường dẫn truy cập:</label>
+                          <input type="text" id="url_access"
+                                 class="form-control
+                                 form-input"
+                                 value="//crm.nextify.vn/{{ merchant.slug }}"
+                                 readonly/>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control form-input" id="email" name="email"
+                                   value="{{ merchant.email }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">ZALO OA ID:</label>
+                            <input type="text" class="form-control form-input" id="zalo_oa_id" name="zalo_oa_id"
+                                   value="{{ merchant.zalo_oa_id }}"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">ZALO OA KEY:</label>
+                            <input type="text" class="form-control form-input" id="zalo_oa_key" name="zalo_oa_key"
+                                   value="{{ merchant.zalo_oa_key }}"/>
+                        </div>
+
+                    <div class="form-group">
+                            <label for="name">Gói sản phẩm:</label>
+                            <input type="text" class="form-control form-input"
+                                   value="{{ merchant.pricing_plan }}"
+                                   readonly/>
+                        </div>
+
+                    <div class="form-group">
+                        <div class="btn-toolbar pull-right">
+                            <div class="btn-group">
+                                <button type="submit" id="save_info" class="btn btn-info btn-fill pull-right">Lưu lại
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="clearfix"></div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+{% block js %}
+     <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('#settings').click();
+        });
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,551 @@
+{% extends 'nextify/base.html' %} {% block main_content %}
+    {% if from_date %}
+        <input type="hidden" value="{{ from_date }}" id="ex_from_date">
+    {% endif %}
+    {% if to_date %}
+        <input type="hidden" value="{{ to_date }}" id="ex_to_date">
+    {% endif %}
+
+    {% if from_hour %}
+        <input type="hidden" value="{{ from_hour }}" id="ex_from_hour">
+    {% endif %}
+    {% if to_hour %}
+        <input type="hidden" value="{{ to_hour }}" id="ex_to_hour">
+    {% endif %}
+
+
+    <div class="c-toolbar u-mb-medium">
+        <h3 class="c-toolbar__title has-divider">{{ gettext("Dat_ban") }}</h3>
+        <h5 class="c-toolbar__meta u-mr-auto">{{ gettext("Khach_dat_ban") }}</h5>
+        <div class="c-field c-field--inline has-icon-right u-hidden-down@tablet">
+            <div class="c-search-form__section">
+
+                <button class="c-btn c-btn--success u-ml-small"
+                        data-toggle="modal" data-target="#new_booking_table">{{ gettext("Them_moi") }}
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row u-mb-large">
+            <div class="col-lg-3 order-lg-2">
+                <form action="/booking_table" class="c-search-form
+                c-search-form--dark" id="booking_filter"
+                      method="post" enctype="multipart/form-data">
+                      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    <h5 class="c-search-form__label">{{ gettext("Ngay_den:") }} </h5>
+                    <div class="c-search-form__section">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input id="from_date" name="from_date"
+                                       type="text"
+                                       placeholder=' {{ gettext("Tu_ngay..") }} '
+                                       class="c-input">
+                            </div>
+                            <div class="col-md-6">
+                                <input id="to_date" name="to_date"
+                                       type="text"
+                                       placeholder=' {{ gettext("Den_ngay..") }} '
+                                       class="c-input">
+                            </div>
+                        </div>
+
+                    </div>
+                    <h5 class="c-search-form__label">{{ gettext("Gio_den:") }} </h5>
+                    <div class="c-search-form__section">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input id="from_hour" name="from_hour"
+                                       type="text"
+                                       placeholder='{{ gettext("Tu_gio..") }} '
+                                       class="c-input">
+                            </div>
+                            <div class="col-md-6">
+                                <input id="to_hour" name="to_hour"
+                                       type="text"
+                                       placeholder=' {{ gettext("Den_gio..") }} '
+                                       class="c-input">
+                            </div>
+                        </div>
+
+                    </div>
+                    <h5 class="c-search-form__label">{{ gettext("So_nguoi:") }} </h5>
+                    <div class="c-search-form__section">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input id="from_count" name="from_count"
+                                       type="number"
+                                       {% if from_count %}value="{{ from_count }}"{% endif %}
+                                       class="c-input">
+                            </div>
+                            <div class="col-md-6">
+                                <input id="to_count" name="to_count"
+                                       type="number"
+                                       {% if to_count %}value="{{ to_count }}"{% endif %}
+                                       class="c-input">
+                            </div>
+                        </div>
+
+                    </div>
+                    <h5 class="c-search-form__label">{{ gettext("So_dien_thoai:") }} </h5>
+                    <div class="c-search-form__section">
+
+                        <input class="c-input" type="text"
+                               name="phone"
+                               value="
+
+                                       {% if phone %}{{ phone }}{% endif %}"/>
+                    </div>
+                    <h5 class="c-search-form__label">{{ gettext("Nhan_vien:") }} </h5>
+                    <div class="c-search-form__section">
+
+                        <input class="c-input" type="text" name="emp"
+                               value="{% if emp %}{{ emp }}{% endif %}"/>
+                    </div>
+                    <h5 class="c-search-form__label">{{ gettext("Nguon:") }} </h5>
+                    <div class="c-search-form__section">
+
+                        {% if source %}
+                            <input type="hidden" value="{{ source }}"
+                                   id="ex_source">
+                        {% endif %}
+                        <select id="source" style="width: 100%;" name="source"
+                                class="c-select">
+                            <option value="None">{{ gettext("Tat_ca") }}</option>
+                            {% for sour in booking_source %}
+                                <option value="{{ sour.id }}">{{ sour.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <h5 class="c-search-form__label">{{ gettext("Trang_thai:") }} </h5>
+                    <div class="c-search-form__section">
+                        {% if status %}
+                            <input type="hidden" value="{{ status }}"
+                                   id="ex_status">
+                        {% endif %}
+
+                        <select id="status" style="width: 100%;"
+                                name="status"
+                                class="c-select">
+                            <option value="None">{{ gettext("Tat_ca") }}</option>
+                            <option value="1">{{ gettext("Dang_xu_ly") }}</option>
+                            <option value="2">{{ gettext("Thanh_cong") }}</option>
+                            <option value="3">{{ gettext("Da_huy") }}</option>
+                        </select>
+                    </div>
+                    <h5 class="c-search-form__label">{{ gettext("Dia_diem") }}</h5>
+                    <div class="c-search-form__section">
+
+                        {% if shop_order %}
+                            <input type="hidden" value="{{ shop_order }}"
+                                   id="ex_shop_order">
+                        {% endif %}
+                        <select name="shop_book" style="width: 100%;"
+                                class="c-select"
+                                id="select_shop">
+                            <option value="None">{{ gettext("Tat_ca") }}</option>
+                            {% for shop in shop_select %}
+                                <option value="{{ shop._id }}">{{ shop.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="row u-justify-center">
+                        <button class="c-btn c-btn--info
+                                c-btn--fullwidth" id="view_data">{{ gettext("Xem") }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-9 order-lg-1">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="c-table-responsive@desktop">
+                            <table class="c-table c-table--zebra u-mb-small"
+                                   id="datatable2">
+                                <thead class="c-table__head">
+                                <tr class="c-table__row">
+
+                                    <th class="c-table__cell c-table__cell--head">
+                                        {{ gettext("Ma") }}
+                                    </th>
+                                    <th class="c-table__cell c-table__cell--head">
+                                        {{ gettext("Phone") }}
+                                    </th>
+                                    <th class="c-table__cell c-table__cell--head">
+                                        {{ gettext("Ten") }}
+                                    </th>
+                                    <th class="c-table__cell c-table__cell--head">
+                                        {{ gettext("So_nguoi") }}
+                                    </th>
+                                    {#                                    <th class="c-table__cell c-table__cell--head">#}
+                                    {#                                        Nội dung#}
+                                    {#                                    </th>#}
+                                    <th class="c-table__cell c-table__cell--head">
+                                        {{ gettext("Ngay_đen") }}
+                                    </th>
+                                    <th class="c-table__cell c-table__cell--head">
+                                        {{ gettext("Gio_den") }}
+                                    </th>
+                                    {#                                    <th class="c-table__cell c-table__cell--head">#}
+                                    {#                                        Lúc#}
+                                    {#                                    </th>#}
+                                    <th class="c-table__cell c-table__cell--head">
+                                        {{ gettext("Dia_diem") }}
+                                    </th>
+                                    {#                                    <th class="c-table__cell c-table__cell--head">#}
+                                    {#                                        Nhân viên#}
+                                    {#                                    </th>#}
+                                    {#                                    <th class="c-table__cell c-table__cell--head">#}
+                                    {#                                        Nguồn#}
+                                    {#                                    </th>#}
+                                    {#                                    <th class="c-table__cell c-table__cell--head">#}
+                                    {#                                        Trạng thái#}
+                                    {#                                    </th>#}
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {% for record in order_log %}
+                                    <tr class="c-table__row">
+                                        <td class="c-table__cell"><a href="#"
+                                                                     record_id="{{ record._id }}"
+                                                                     class="book-detail">#{{ record.code }}</a>
+                                        </td>
+                                        <td class="c-table__cell"><a href="#"
+                                                                     record_id="{{ record._id }}"
+                                                                     class="book-detail">{{ record.phone }}</a>
+                                        </td>
+                                        <td class="c-table__cell">
+                                            {% if 'user' in record %}
+                                                {{ record.user.name }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="c-table__cell">{{ record.count }}</td>
+                                        {#                                        <td class="c-table__cell">#}
+                                        {#                                            {% if record.content %}#}
+                                        {#                                                {{ record.content }} {% endif %}</td>#}
+                                        <td class="c-table__cell">
+                                            {% if record.arrival_date %}
+                                                {% set arrival_date = record
+                                                .arrival_date|string %}
+                                                {% set list_date = arrival_date.split(' ') %}
+                                                {{ list_date[0] }} {% endif %}</td>
+                                        <td class="c-table__cell">
+                                            {% if record.arrival_hour %}
+                                                {% set arrival_hour = record.arrival_hour|string %}
+                                                {% set list_hour = arrival_hour.split(' ') %}
+                                                {{ list_hour[1] }} {% endif %}</td>
+                                        {#                                        <td class="c-table__cell">{{ record.when|human_time }}</td>#}
+                                        <td class="c-table__cell">{{ record.shop_name }}</td>
+                                        {#                                        <td class="c-table__cell">#}
+                                        {#                                            {% if record.assign_info %}#}
+                                        {#                                                {{ record.assign_info.email }}#}
+                                        {#                                            {% endif %}#}
+                                        {#                                        </td>#}
+
+                                        {#                                        <td class="c-table__cell">#}
+                                        {#                                            {% if record.source %}#}
+                                        {#                                                {{ record.source }}{% endif %}</td>#}
+                                        {#                                        <th class="c-table__cell">#}
+                                        {#                                            {% if record.status and record.status == '1' %}#}
+                                        {#                                                Đang xử#}
+                                        {#                                                lý{% elif record.status and record.status == '2' %}#}
+                                        {#                                                Đã xử#}
+                                        {#                                                lý{% elif record.status and record.status == '3' %}#}
+                                        {#                                                Đã#}
+                                        {#                                                huỷ{% endif %}</th>#}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <nav class="c-pagination u-justify-center">
+                                {% if pagination %}
+                                    {{ pagination.links }}
+                                {% endif %}
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="c-modal c-modal--xlarge modal fade"
+         id="booking_item_modal"
+         tabindex="-1" role="dialog" aria-labelledby="userDetailModal"
+         data-backdrop="static">
+        <div class="c-modal__dialog modal-dialog" role="document">
+            <div class="c-modal__content modal-content">
+                <a class="c-modal__close c-modal__close--absolute u-text-mute u-opacity-medium"
+                   data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close"></i>
+                </a>
+                <div class="c-modal__body">
+
+                    <div class="row u-justify-center">
+                        <div class="col-md-6">
+                            <div class="u-mt-medium u-text-center"
+                                 id="content_modal">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="c-modal c-modal--xlarge modal fade"
+         id="new_booking_table"
+         tabindex="-1" role="dialog" aria-labelledby="userDetailModal"
+         data-backdrop="static">
+        <div class="c-modal__dialog modal-dialog" role="document">
+            <div class="c-modal__content modal-content">
+                <a class="c-modal__close c-modal__close--absolute u-text-mute u-opacity-medium"
+                   data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close"></i>
+                </a>
+                <div class="c-modal__body">
+
+                    <div class="row u-justify-center">
+                        <div class="col-md-6">
+                            <div class="u-mt-medium u-text-center">
+                                <h3 class="u-mb-small">{{ gettext("Dat_ban") }}</h3>
+
+                                <form method="POST" action="{% if book %}/booking_table/
+    {{ book._id }}{% else %}/booking_table/add{% endif %}">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                    <label class="c-field__label" for="shops">{{ gettext("Dia_diem") }}</label>
+                                    <div class="c-field u-mb-small">
+
+                                        <select name="shop_book"
+                                                class="c-select"
+                                                id="new_select_shop">
+                                            {% for shop in shop_select %}
+                                                <option value="{{ shop._id }}">{{ shop.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <label class="c-field__label">{{ gettext("So_nguoi") }}</label>
+                                    <div class="c-field u-mb-small">
+
+                                        <input type="number" class="c-input"
+                                               value="{% if book %}{{ book.count }}{% endif %}"
+                                               name="count"
+                                               required/>
+                                    </div>
+                                    <label class="c-field__label">{{ gettext("So_dien_thoai") }}</label>
+                                    <div class="c-field u-mb-small">
+
+                                        <input type="number" class="c-input"
+                                               value="{% if book %}{{ book.phone }}{% endif %}"
+                                               name="phone"
+                                               required/>
+                                    </div>
+                                    <label class="c-field__label">{{ gettext("Ghi_chu") }}</label>
+                                    <div class="c-field u-mb-small">
+                                        <textarea name="content" class="c-input"></textarea>
+                                    </div>
+                                    <label class="c-field__label">{{ gettext("Ngay_den:") }} </label>
+                                    <div class="c-field u-mb-small">
+                                        <input id="new_arrival_date"
+                                               name="arrival_date" type="text"
+                                               placeholder=' {{ gettext("Ngay") }} '
+                                               class="c-input" required>
+                                    </div>
+                                    <label class="c-field__label">{{ gettext("Gio_den:") }} </label>
+                                    <div class="c-field u-mb-small">
+                                     <input id="new_arrival_hour"
+                                               name="arrival_hour" type="text"
+                                               placeholder=' {{ gettext("Gio") }} '
+                                               class="c-input"
+                                               required>
+                                    </div>
+
+                                    <label class="c-field__label" for="shops">{{ gettext("Nguon") }}</label>
+                                    <div class="c-field u-mb-small">
+                                        <select id="new_source" name="source"
+                                                class="c-select">
+                                            {% for sour in booking_source %}
+                                                <option value="{{ sour.id }}">{{ sour.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+
+                                    <div class="c-field u-mb-small">
+                                        <input type="submit"
+                                               class="c-btn c-btn--info"
+                                               value=' {{ gettext("Luu_thong_tin") }}'/>
+                                    </div>
+
+                                </form>
+                                 <script nonce="{{ csp_nonce() }}">
+                                    $(document).ready(function () {
+                                          $('#new_source').select2({
+                                                dropdownAutoWidth: true
+                                            });
+                                          $('#new_select_shop').select2({
+                                                dropdownAutoWidth: true
+                                            });
+
+                                        if ($("#ex_arrival_date").length > 0 && $("#ex_arrival_date").val().length > 0 && $("#ex_arrival_date").val() != 'None') {
+                                            flatpickr("#new_arrival_date", {
+                                                enableTime: false,
+                                                defaultDate: $("#ex_arrival_date"),
+                                                dateFormat: "d-m-Y"
+                                            });
+                                        } else {
+                                            flatpickr("#new_arrival_date", {
+                                                enableTime: false,
+                                                dateFormat: "d-m-Y"
+                                            });
+                                        }
+
+                                        if ($("#ex_arrival_hour").length > 0 && $("#ex_arrival_hour").val().length > 0 && $("#ex_arrival_hour").val() != 'None') {
+                                            flatpickr("#new_arrival_hour", {
+                                                enableTime: true,
+                                                noCalendar: true,
+                                                dateFormat: "H:i",
+                                                time_24hr: true,
+                                                defaultDate: $("#ex_arrival_hour").val()
+                                            });
+                                        } else {
+                                            flatpickr("#new_arrival_hour", {
+                                                enableTime: true,
+                                                noCalendar: true,
+                                                dateFormat: "H:i",
+                                                time_24hr: true
+                                            });
+                                        }
+                                    });
+
+                                </script>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block js %}
+     <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            if ($("#ex_from_date").length > 0 && $("#ex_from_date").val().length > 0 && $("#ex_from_date").val() != 'None') {
+
+                flatpickr("#from_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_from_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#from_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+                });
+            }
+            if ($("#ex_to_date").length > 0 && $("#ex_to_date").val().length > 0 && $("#ex_to_date").val() != 'None') {
+                flatpickr("#to_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_to_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#to_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+                });
+            }
+            if ($("#ex_from_hour").length > 0 && $("#ex_from_hour").val().length > 0 && $("#ex_from_hour").val() != 'None') {
+                flatpickr("#from_hour", {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                    time_24hr: true,
+                    defaultDate: $("#ex_from_hour").val()
+                });
+            } else {
+                flatpickr("#from_hour", {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                    time_24hr: true
+                });
+            }
+
+            if ($("#ex_to_hour").length > 0 && $("#ex_to_hour").val().length > 0 && $("#ex_to_hour").val() != 'None') {
+                flatpickr("#to_hour", {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                    time_24hr: true,
+                    defaultDate: $("#ex_to_hour").val()
+                });
+            } else {
+                flatpickr("#to_hour", {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                    time_24hr: true
+                });
+            }
+            $('#source').select2({
+                dropdownAutoWidth: true
+            });
+            if ($("#ex_source").length > 0) {
+                var data_soure = $("#ex_source").val();
+                $('#source').select2().val(data_soure)
+                    .trigger("change");
+            }
+            $('#status').select2({
+                dropdownAutoWidth: true
+            });
+            if ($("#ex_status").length > 0) {
+                var data_status = $("#ex_status").val();
+                $('#status').select2().val(data_status)
+                    .trigger("change");
+            }
+            $('#select_shop').select2({
+                dropdownAutoWidth: true
+            });
+            if ($("#ex_shop_order").length > 0) {
+                var data_soure_shops = $("#ex_shop_order").val();
+                $('#select_shop').select2().val(data_soure_shops)
+                    .trigger("change");
+            }
+
+
+            $(".book-detail").click(function () {
+
+                var record_id = $(this).attr('record_id');
+                $("#content_modal").empty();
+                var url_user = '/booking_table/' + record_id;
+
+                $('#content_modal').load(url_user, function (result) {
+                    $('#booking_item_modal').modal({show: true});
+                });
+
+
+            });
+
+
+        });
+
+
+    </script>
+
+{% endblock %}

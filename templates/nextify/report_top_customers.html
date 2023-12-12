@@ -1,0 +1,30 @@
+<div class="c-table-responsive@desktop">
+    <table class="c-table c-table--zebra u-mb-small"
+           id="datatable2">
+        <thead class="c-table__head">
+        <tr class="c-table__row">
+            <th class="c-table__cell c-table__cell--head">{{ gettext("Khach") }}
+            </th>
+          <th class="c-table__cell c-table__cell--head">{{ gettext("Luot_den") }}
+            </th>
+            <th class="c-table__cell c-table__cell--head">{{ gettext("Lan_cuoi") }}
+            </th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+        {% for cus in customers %}
+
+
+            <tr class="c-table__row">
+                                <td class="c-table__cell"> {% if cus.name and cus.name|length >0 %}
+                            {{ cus.name }} {% else %}{{ cus.phone }}{% endif %} </td>
+
+                                <td class="c-table__cell">{{ cus.visit_count }} </td>
+                                <td class="c-table__cell">{{ cus.timestamp_str }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

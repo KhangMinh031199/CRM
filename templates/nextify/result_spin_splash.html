@@ -1,0 +1,196 @@
+{% extends 'nextify/base.html' %}
+{% block body %}
+
+<style>
+    
+    .tooltip_img {
+        visibility: hidden;
+    }
+    .badge-soft-success {
+    color: #000000 !important;
+    }
+    align-self: start;.tooltip_1 {outline:none; }
+    a.tooltip_1 strong {line-height:30px;}
+    a.tooltip_1:hover {text-decoration:none;} 
+    a.tooltip_1 span {
+        z-index:10;display:none;
+        margin-top: -260px;
+        margin-left:0;
+        width:300px; line-height:16px;
+    }
+    a.tooltip_1:hover span{
+        display:inline;
+        position:absolute; 
+        border:2px solid #FFF;
+        color:#EEE;
+        
+    }
+        
+    /*CSS3 extras*/
+    a.tooltip_1 span
+    {
+        border-radius:2px;        
+        box-shadow: 0px 0px 8px 4px #666;
+        /*opacity: 0.8;*/
+    }
+    .notice-danger {
+        border-color: #d73814;
+        font-size: larger;
+    }
+    .notice-danger>strong {
+        color: #d73814;
+    }
+    .notice {
+        padding: 15px;
+        background-color:#fffcfb;
+        border-left: 8px solid #f00000;;
+        margin-bottom: 10px;
+        -webkit-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+        -moz-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+        box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+    }
+    .table-responsive {
+        overflow-x: inherit !important ;
+    }
+</style>
+<div class="header">
+    <div class="container-fluid">
+    </div>
+</div>
+
+<div class="container-fluid">
+            <div class="">
+                <div class="card" id="lists" data-toggle="lists">
+                    {% if list_result|length == 0 %}
+                        <div class="notice notice-danger">
+                            <strong>{{ gettext('KHONG_CO_KET_QUA_NAO!') }}</strong>
+                        </div>
+                    {% endif %}
+                    <div class="card-header">
+                        <div class="card-header">
+                            <div class="col"> </div>
+                            <div class="col-auto">
+                                <a href="#" style="width: auto;float: right;">
+                                    <i class="fa fa-close"></i> {{ gettext('Dong_lai') }}
+                                </a>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    {% if list_result|length > 0 %}
+                    <div id="list_data">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-sm table-nowrap card-table">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <h3 class="mb-1" style="font-weight: 700;">{{ gettext('Tong_so') }} {{ total }}</h3>
+                                            </th>
+                                            <th>
+                                                <h3 class="mb-1" style="font-weight: 700;">{{ gettext('Thong_tin') }}</h3>
+                                            </th>
+                                            <th>
+                                                <h3 class="mb-1" style="font-weight: 700;">{{ gettext('Dia_chi_mac') }}</h3>
+                                            </th>
+                                            <th>
+                                                <h3 class="mb-1" style="font-weight: 700;">{{ gettext('Phan_thuong') }}</h3>
+                                            </th>
+                                            <th>
+                                                <h3 class="mb-1" style="font-weight: 700;">{{ gettext('Thoi_gian') }}</h3>
+                                            </th>
+                                            <th>
+                                                <h3 class="mb-1" style="font-weight: 700;">{{ gettext('Dia_diem') }}</h3>
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody class="list">
+                                        {% for cus in list_result %}
+                                        <tr>
+                                            <td style="width: 5%;">
+                                                <a href="#" class="avatar">
+                                                    {% if cus.user.avatar and cus.user.avatar|length > 0 %}
+                                                    <img class="avatar-img rounded-circle"
+                                                        src="{{ cus.user.avatar.replace('http:', 'https:') }}" />
+                                                    {% else %}
+                                                    {%set avatar = cus.user|human_avatar%}
+                                                    <img class="avatar-img rounded-circle" src="{{ avatar }}" />
+
+                                                    {% endif %}
+                                                </a>
+                                            </td>
+                                            <td class="orders-product detail_customer" cus_id="{{ cus._id }}">
+
+
+                                                <div class="name" style="font-size: 16px;
+                                                                         font-weight: 700;
+                                                                         text-overflow: ellipsis;
+                                                                         overflow: hidden;">
+                                                    {% if cus.user.phone and cus.user.phone|string != 'None' and cus.user.phone|length != 0 %}
+                                                        {{ cus.user.phone }}
+                                                    {% else %}
+                                                        {% if cus.user.email | string != 'None' %}{{ cus.user.email }}{% endif %}
+                                                    {% endif %}
+
+                                                </div>
+
+                                                {% if (not cus.user.name and not cus.user.phone and not cus.user.email) or (cus.user.phone | string == 'None' and cus.user.name|string == 'None' and cus.user.phone|length == 0 and cus.user.email | string == 'None' and cus.user.client_mac|string != 'None') and cus.user.client_mac | length > 0%}
+                                                    <div class="name">
+                                                        {{ cus.user.client_mac[0] if cus.user.client_mac[0] |string != 'None' else ''}}
+                                                    </div>
+                                                {% endif %}
+                                                <div class="contact">
+                                                    {% if cus.user.name and cus.user.name|string != 'None' and cus.user.name|length != 0 %}
+                                                        {{ cus.user.name }}
+                                                    {% else %}{% endif %}
+                                                </div>
+                                            </td>
+                                            <td class="orders-status">
+                                                {{ cus.client_mac }}
+                                            </td>
+                                            <td class="orders-date">
+                                                {% if cus.old_reward|get_old_reward %}
+                                                <a style="font-size: small;" class="tooltip_1 badge badge-soft-success ml-auto">{{ cus.old_reward|get_old_reward }}</span>
+                                                    <span>
+                                                        <!-- <img class="callout" src="https://freefrontend.com/assets/img/css-tooltips/pure-css-tooltips.png" /> -->
+                                                        <img src="//files.nextify.vn/{{ cus.old_reward|get_old_reward_img }}" style="float:right;" />
+                                                        
+                                                    </span>
+                                                </a>
+                                                {% else %}
+                                                    <span style="font-size: small;" class="badge badge-soft-danger ml-auto"> {{ gettext('Khong_trung_thuong') }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="orders-total">
+                                                {{ cus.spin_log|get_human_time }}
+                                            </td>
+                                            <td class="orders-status">
+                                                {{ cus.shop_id|shop_name }}
+                                            </td>
+
+                                        </tr>
+                                        {%endfor%}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+
+                            <ul class="pagination mb-0 u-justify-center">
+                                {% if pagination %}
+                                {{ pagination.links }}
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+        <input type="hidden" value="{{ loc_id}}" id="shop_id_select" />
+
+        {% endblock %}
+        {% block js %}
+
+        {% endblock %}

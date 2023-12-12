@@ -1,0 +1,47 @@
+<div class="chart">
+    <canvas id="deviceChart" class="chart-canvas"></canvas>
+  </div>
+  <input type="hidden" value="{{label}}" id="device_label_data" />
+  <input type="hidden" value="{{dataset}}" id="device_dataset_data" />
+  <script>
+    var device_label_data = document.getElementById("device_label_data").value;
+    var device_dataset_data = document.getElementById("device_dataset_data").value;
+    var device_label_data = JSON.parse(device_label_data);
+    var device_dataset_data = JSON.parse(device_dataset_data);
+    var config = {
+        type: 'horizontalBar',
+        data: {
+            labels: device_label_data,
+            datasets: [{
+                backgroundColor: "rgba(235, 29, 29, 0.7)",
+                data: device_dataset_data,
+            }]
+        },
+        options: {
+            // responsive: true,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                mode: 'single',
+                callbacks: {
+                    label: function(tooltipItems, data) {
+                        return  tooltipItems.xLabel + ' thiết bị';
+                    }
+                }
+            }
+        }
+    };
+    var ctx = document.getElementById("deviceChart").getContext("2d");
+    new Chart(ctx, config);
+  </script>

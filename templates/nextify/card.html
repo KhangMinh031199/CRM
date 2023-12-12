@@ -1,0 +1,129 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="container ">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card u-p-medium">
+                    <div class="row u-justify-center">
+                        <div class="col-lg-6">
+                            <div class="u-mt-large u-text-center">
+                                <h4 class="u-mb-xsmall">{{ gettext('Them_trang_chao') }}</h4>
+                                <p class="u-text-mute u-mb-large"></p>
+                            </div>
+                            <form method="POST"
+                                  action="/splash_page/{{ shop_id_select }}/item/add?page_type=default"
+                                  enctype="multipart/form-data"
+                                  id="form_new_image">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                <div class="col-lg-12">
+                                    <div class="c-field u-mb-xsmall">
+                                        <label class="c-field__label"
+                                               for="photo">{{ gettext('Anh:') }}</label>
+                                        <p class="help-block">
+                                            <img id="img_new_photo"
+                                                 width="200">
+                                        </p>
+                                        <input class="c-input" type="file"
+                                               class="form-control"
+                                               id="new_photo"
+                                               name="photo"
+                                               {% if card and not card.photo %}required{% endif %}>
+                                    </div>
+
+                                    <div class="c-field u-mb-xsmall">
+                                        <label class="c-field__label"
+                                               for="title">{{ gettext('Tieu_de') }}</label>
+                                        <input class="c-input" type="text"
+                                               maxlength="70"
+                                               class="form-control form-input"
+                                               id="title"
+                                               
+                                               name="title" 
+                                               value="{% if card and card.title %}{{ card.title }}{% endif %}"
+                                               placeholder='( {{ gettext("Khong_bat_buoc")}} )'>
+                                    </div>
+
+                                    <div class="c-field u-mb-xsmall">
+                                        <label class="c-field__label"
+                                               for="content">{{ gettext('Noi_dung:') }}</label>
+                                        <textarea class="c-input"
+                                                  id="content" name="content"
+                                                  rows="6"
+                                                  maxlength="1000"
+                                                  placeholder='( {{ gettext("Khong_bat_buoc")}} )'>{% if card and  card.content %}
+                                            {{ card.content }}{% endif %}</textarea>
+                                    </div>
+                                    <div class="c-field u-mb-xsmall">
+                                        {% if card and  card.auto_mar %}
+                                            <input type="hidden"
+                                                   class="c-input"
+                                                   value="{{ card.auto_mar }}"
+                                                   id="card_auto_mar"/>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <button id="new_splash_submit"
+                                        class="c-btn c-btn--info u-float-right">
+                                    {{ gettext('Luu_thong_tin') }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+                // function readURL(input, input_view) {
+                //     if (input.files && input.files[0]) {
+                //     var reader = new FileReader();
+                //     var view_id = '#' + input_view;
+                //     reader.onload = function (e) {
+                //         $(view_id).attr('src', e.target.result);
+                //     }
+
+                //     reader.readAsDataURL(input.files[0]);
+                // }
+                //                                     }
+                function validate(photo) {
+                var file_size = $(photo)[0].files[0].size;
+                var file = $(photo).val();
+                var exts = ['jpg', 'png', 'jpeg'];
+                    if (file) {
+                var get_ext = file.split('.');
+                    get_ext = get_ext.reverse();
+            if ($.inArray ( get_ext[0].toLowerCase(), exts) > -1){
+            if(file_size > 3670016){
+                return "big_file";
+                } else{
+                return true;
+                        }
+                    } else {
+                    return false;
+                        }
+                    }
+
+                    }                            
+
+            $("#new_photo").change(function () {
+                var validate_photo = validate(this);
+                if (validate_photo == true){
+                  swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                //   $('#img_new_photo').show();
+                // readURL(this, 'img_new_photo');
+              } else {
+                  if (validate_photo == "big_file"){
+                    swal('{{ gettext("File_co_kich_thuoc_qua_lon") }}', '', 'error');
+                    return false;
+                  };
+                swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                $('#new_photo').val('');
+                // $('#img_new_photo').hide();
+
+              }
+            });
+        })
+      </script>
+
+{% endblock %}

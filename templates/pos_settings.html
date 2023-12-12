@@ -1,0 +1,90 @@
+{% extends "v2/base.html" %}
+{% block right_content %}
+
+    <div class="row">
+
+        <div class="col-md-6">
+          <div class="panel panel-white">
+            <div class="panel-body">
+                    {% if error %}
+                        <div class="alert alert-danger">
+                            {{ error | safe }}
+                        </div>
+                    {% endif %} {% if message %}
+                    <div class="alert alert-success">
+                        {{ message | safe }}
+                    </div>
+                {% endif %}
+
+                    <form method="POST" action="/pos_settings" enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="row">
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>POS:</label>
+                                    <input type="hidden" id="current_pos_patner" class="form-control"
+                                           value="{% if shop.pos_patner %}{{ shop.pos_patner }}{% endif %}"/>
+                                    <select name="pos_patner" class="form-control" id="pos_patner">
+                                        <option value="0">Không</option>
+                                        <option value="easypos">EasyPOS</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Merchant ID: </label>
+                                    <input type="text" name="merchant_id" class="form-control"
+                                           value="{% if shop.merchant_id %}{{ shop.merchant_id }}{% endif %}" readonly/>
+                                </div>
+                                <div class="form-group">
+                                    <label>POS ID: </label>
+                                    <input type="text" name="pos_id" class="form-control"
+                                           value="{% if shop.pos_settings%}{% if shop.pos_settings.pos_id %}{{ shop.pos_settings.pos_id }}{% endif %}{% endif %}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Server POS: </label>
+                                    <input type="text" name="server_hq" class="form-control"
+                                           value="{% if shop.pos_settings%}{% if shop.pos_settings.server_hq %}{{ shop.pos_settings.server_hq }}{% endif %}{% endif %}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Database POS: </label>
+                                    <input type="text" name="db_hq" class="form-control"
+                                           value="{% if shop.pos_settings%}{% if shop.pos_settings.db_hq %}{{ shop.pos_settings.db_hq }}{% endif %}{% endif %}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label>User DB POS: </label>
+                                    <input type="text" name="user_hq" class="form-control"
+                                           value="{% if shop.pos_settings%}{% if shop.pos_settings.user_hq %}{{ shop.pos_settings.user_hq }}{% endif %}{% endif %}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Password DB POS: </label>
+                                    <input type="text" name="pass_hq" class="form-control"
+                                           value="{% if shop.pos_settings%}{% if shop.pos_settings.pass_hq %}{{ shop.pos_settings.pass_hq }}{% endif %}{% endif %}"/>
+                                </div>
+                                <div class="btn-toolbar pull-right">
+                                    <div class="btn-group">
+                                        <button type="submit" class="btn btn-info btn-fill pull-right">Lưu thông tin
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+                        </div>
+
+                    </form>
+                </div>
+
+          </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block js %} {{ super() }}
+      <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+if ($("#current_pos_patner").length > 0) {
+            $("#pos_patner").val($("#current_pos_patner").val());
+        }
+        })
+    </script>
+{% endblock %}

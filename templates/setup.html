@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Setup - WifiMan{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  <link href="{{ url_for('static', filename='styles/setup.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4 col-sm-offset-4">
+        <div class="page-header text-center">
+          <a href="/">
+            <img class="logo" height="100" src="/static/wifiman.png">
+          </a>
+        </div>
+
+        {% if message %}
+            <div class="alert alert-success">
+            {{ message | safe }}
+            </div>
+        {% endif %}
+
+        <form method="POST" action="/setup" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <div class="form-group">
+                <label for="name">{{ gettext("Chon_cua_hang:") }}</label>
+                <select class="form-control" name="shop_id">
+                    {% for shop in shops %}
+                    <option value="{{ shop._id }}" {% if gateway_mac in shop.gateway_mac %}selected{% endif %}>{{ shop.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="name">{{ gettext("Hoac_go_ten_cua_hang_moi:") }}</label>
+                <input type="text" maxlength="50" class="form-control" id="name" name="name"d>
+            </div>
+            <div class="form-group">
+                <label for="mac">{{ gettext("Gateway_MAC:") }}</label>
+                <input type="text" class="form-control" id="mac" name="gateway_mac" value="{% if gateway_mac %}{{ gateway_mac }}{% endif %}" required>
+            </div>
+            <hr>
+            <button type="submit" class="btn btn-success">{{ gettext("Luu_thong_tin") }}</button>
+        </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+     <script nonce="{{ csp_nonce() }}">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-77263576-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+     <script nonce="{{ csp_nonce() }}">
+    window.onload = function() {
+        if(navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(function(position){
+                var positionInfo = position.coords.latitude + ", " + position.coords.longitude;
+                document.getElementById("geolocation").value = positionInfo;
+            });
+        } else{
+            alert('{{ gettext("Sorry,_your_browser_does_not_support_HTML5_geolocation.") }}');
+        }
+    }
+    </script>
+{% endblock %}

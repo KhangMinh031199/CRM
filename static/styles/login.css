@@ -1,0 +1,27 @@
+
+.splash-main-block {
+    width: 340px;
+}
+
+.splash-logo {
+    margin: 0;
+}
+
+.alert {
+    margin: 50px 10px -25px;
+}
+
+.button {
+    margin: 25px 0 30px;
+}
+
+.help-block {
+    color: #ccc;
+}
+
+form {
+    padding: 10px;
+    text-align: left;
+    margin-top: 40px;
+    color: white;
+}

@@ -1,0 +1,629 @@
+{% extends 'nextify/base.html' %}
+
+
+{% block body %}
+
+
+    <div class="container-fluid">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-sm-6 col-sm-offset-3">
+                <!-- Heading -->
+                <h1 class="display-4 text-center mb-3 mt-5">
+                    Cấu hình tích hợp
+                </h1>
+
+                <!-- Subheading -->
+                <p class="text-muted text-center mb-5">
+                    Tích hợp SMS/EMAIL/ZALO OA/Facebook Chatbot
+                </p>
+
+
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="header-title">
+                            Email
+                        </h1>
+                    </div>
+                    <form method="POST" action="/info_email" enctype="multipart/form-data" id="mail_settings">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"/>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="custom-control custom-radio checklist-control">
+                                        <input class="custom-control-input" name="mail_box" id="checkbox_mail_nextify"
+                                               type="radio" checked value="mailgun"/>
+                                        <label class="custom-control-label" for="checkbox_mail_nextify"></label>
+                                        <span class="custom-control-caption">
+                                         Mailgun
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="custom-control custom-radio checklist-control">
+                                        <input class="custom-control-input" id="checkbox_gmail" name="mail_box"
+                                               type="radio" value="gmail">
+                                        <label class="custom-control-label" for="checkbox_gmail"></label>
+                                        <span class="custom-control-caption">
+                                         Gmail
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="custom-control custom-radio checklist-control">
+                                        <input class="custom-control-input" id="checkbox_mail_khac" name="mail_box"
+                                               type="radio" value="mail_khac">
+                                        <label class="custom-control-label" for="checkbox_mail_khac"></label>
+                                        <span class="custom-control-caption">
+                                         Khác
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <div id="mail_nexify">
+
+                                        <div class="form-group">
+                                            <label>Mailgun Domain:</label>
+                                            <input class="form-control" type="text" name="mail_domain" value="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Mailgun API KEY:</label>
+                                            <input class="form-control" type="text" name="mail_api_key" value="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Mailgun API URL:</label>
+                                            <input class="form-control" type="text" name="mail_api_url" value="">
+                                        </div>
+
+
+                                    </div>
+                                    <div id="mail_gmail" style="display: none">
+
+
+                                        <div class="form-group">
+                                            <label>Email gửi: </label>
+                                            <input type="text" class="form-control" value="{% if merchant.mail_settings.mail_server|string() == "smtp.gmail.com"|string() %}{{ merchant.mail_settings.mail_name }}{% endif %}"
+                                                   name="name_gmail"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Mật khẩu: </label>
+                                            <input type="password" class="form-control" value="
+                                                    {% if merchant.mail_settings.mail_server|string() == "smtp.gmail.com"|string() %}{{ merchant.mail_settings.mail_pass }}{% endif %}"
+                                                   name="pass_gmail"/>
+                                        </div>
+
+                                    </div>
+                                    <div id="mail_smtp" style="display: none">
+
+                                        <div class="form-group">
+                                            <label>Email gửi: </label>
+                                            <input type="text" class="form-control" value="
+                                                    {% if (merchant.mail_settings.mail_server|string() != "smtp.nextify.vn"|string()) and (merchant.mail_settings.mail_server|string() != "smtp.gmail.com"|string()) %}{{ merchant.mail_settings.mail_name }}{% endif %}"
+                                                   name="smtp_email"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tài khoản: </label>
+                                            <input type="text" class="form-control" value="
+
+                                                    {% if (merchant.mail_settings.mail_server|string() != "smtp.nextify.vn"|string()) and (merchant.mail_settings.mail_server|string() != "smtp.gmail.com"|string()) %}{{ merchant.mail_settings.mail_user }}{% endif %}"
+                                                   name="smtp_user"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Mật khẩu: </label>
+                                            <input type="password" class="form-control" value="
+
+
+                                                    {% if (merchant.mail_settings.mail_server|string() != "smtp.nextify.vn"|string()) and (merchant.mail_settings.mail_server|string() != "smtp.gmail.com"|string()) %}{{ merchant.mail_settings.mail_pass }}{% endif %}"
+                                                   name="smtp_pass"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>SMTP Server: </label>
+                                            <input type="text" class="form-control" value="
+
+
+                                                    {% if (merchant.mail_settings.mail_server|string() != "smtp.nextify.vn"|string()) and (merchant.mail_settings.mail_server|string() != "smtp.gmail.com"|string()) %}{{ merchant.mail_settings.mail_server }}{% endif %}"
+                                                   name="smtp_server"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Port: </label>
+                                            <input type="text" class="form-control" value="
+
+
+                                                    {% if (merchant.mail_settings.mail_server|string() != "smtp.nextify.vn"|string()) and (merchant.mail_settings.mail_server|string() != "smtp.gmail.com"|string()) %}{{ merchant.mail_settings.mail_port }}{% endif %}"
+                                                   name="smtp_port"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="c-choice c-choice--checkbox">
+                                                <input class="c-choice__input"
+                                                       type="checkbox"
+                                                       name="checkbox_ssl"
+                                                       id="checkbox_ssl"
+                                                       {% if merchant.mail_settings.mail_server %}checked{% endif %}>
+                                                <label class="c-choice__label"
+                                                       for="checkbox_ssl">Sử dụng SSL</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-lg-12 u-float-right">
+                                    <a href="#" class="btn btn-danger mb-2 btn-block" id="save_email">
+                                        Lưu cấu hình
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="header-title">
+                            Zalo OA
+                        </h1>
+                    </div>
+                    <div class="card-body">
+                    <form>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-group">
+                            <label class="c-field__label">Zalo OA ID </label>
+                            <input type="text"
+                                   class="form-control"
+                                   value="
+
+                                           {% if shop_select.zalo_oa_id and  shop_select.zalo_oa_id|length > 0 %}{{ shop_select.zalo_oa_id }}{% endif %}"
+                                   name="zalo_oa_id"/>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="c-field__label">Zalo App ID </label>
+                            <input type="text"
+                                   class="form-control"
+                                   value="
+
+                                           {% if shop_select.zalo_app_id and  shop_select.zalo_app_id|length > 0 %}{{ shop_select.zalo_app_id }}{% endif %}"
+                                   name="zalo_app_id"/>
+
+
+                        </div>
+                        <div class="form-group">
+                            <label class="c-field__label">Zalo Accesstoken <i class="fe fe-help-circle"></i>
+                                {% if shop_select.zalo_app_id and  shop_select.zalo_app_id|length > 0 %}
+                                    <a href="https://oauth.zaloapp.com/v3/oa/permission?app_id={{ shop_select.zalo_app_id }}&redirect_uri=https://api.nextify.vn/zalo_callback"
+                                       target="_blank"><span
+                                            class="badge badge-soft-primary ml-1 mt-n1">Lấy Accesstoken</span> </a>
+                                {% endif %}
+
+                            </label>
+
+                            <input type="text" class="form-control"
+                                   value="
+
+                                           {% if shop_select.zalo_access_token and  shop_select.zalo_access_token|length > 0 %}{{ shop_select.zalo_access_token }}{% endif %}"
+                                   name="zalo_access_token"/>
+                        </div>
+                    </form>
+                    </div>
+                     <div class="card-footer">
+                            <div class="row">
+                                <div class="col-lg-12 u-float-right">
+                                    <a href="#" class="btn btn-danger mb-2 btn-block" id="save_zalo">
+                                        Lưu cấu hình
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="header-title">
+                            SMS
+                        </h1>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-group">
+                            <label class="c-field__label" for="notes">SMS Provider:</label>
+                            <input type="hidden" class="form-control" id="ex_sms_provider"
+                                   value=""/>
+                            <select class="form-control" name="sms_provider" id="sms_provider">
+                                <option value="" selected>Chọn SMS Provider</option>
+                                <option value="VHT">VHT</option>
+                                <option value="VIETTEL">VIETTEL</option>
+                                <option value="FPT">FPT</option>
+                                <option value="BLUESEA">BLUESEA</option>
+                                <option value="VHAT">ViHAT</option>
+                                <option value="INCOM">INCOM</option>
+                            </select>
+                        </div>
+                        <div id="incom_div" style="display: none;">
+                            <div id="" class="form-group">
+                                <label class="c-field__label" for="notes">SMS Type:</label>
+                                <input type="hidden" class="form-control" id="ex_sms_type_incom"
+                                       value=""/>
+                                <select class="form-control" name="sms_type_incom" id="sms_type_incom">
+                                    <option value="" selected>Chọn SMS Type</option>
+                                    <option value="0">SMS phát sinh từ dịch vụ, không tính tiền khách hàng</option>
+                                    <option value="1">Có trừ tiền của khách hàng</option>
+
+                                </select>
+                            </div>
+                            <div id="" class="form-group">
+                                <label class="c-field__label" for="notes">USERNAME:</label>
+                                <input type="text" class="form-control" name="username_incom" id="username_incom"
+                                       value=""/>
+                            </div>
+                            <div id="" class="form-group">
+                                <label class="c-field__label" for="notes">PASSWORD:</label>
+                                <input type="text" class="form-control" name="password_incom"
+                                       id="password_incom" value=""/>
+                            </div>
+                            <div id="" class="form-group">
+                                <label class="c-field__label" for="notes">COMMAND CODE:</label>
+                                <input type="text" class="form-control" name="command_code_incom"
+                                       id="command_code_incom"
+                                       value=""/>
+                            </div>
+                            <div id="" class="form-group">
+                                <label class="c-field__label" for="notes">PREFIX ID:</label>
+                                <input type="text" class="form-control" name="prefix_id_incom" id="prefix_id_incom"
+                                       value=""/>
+                            </div>
+                        </div>
+                        <div id="other_incom_div">
+                            <div id="sms_type_" class="form-group">
+                                <label class="c-field__label" for="notes">SMS Type:</label>
+                                <input type="hidden" class="form-control" id="ex_sms_type"
+                                       value=""/>
+                                <select class="form-control" name="sms_type" id="sms_type">
+                                    <option value="" selected>Chọn SMS Type</option>
+                                    <option value="1">BrandName quảng cáo</option>
+                                    <option value="2">BrandName chăm sóc khách hàng</option>
+                                    <option value="8">Tin nhắn từ đầu số cố định</option>
+                                </select>
+                            </div>
+                            <div id="api_key_" class="form-group">
+                                <label class="c-field__label" for="notes">API KEY:</label>
+                                <input type="text" class="form-control" name="api_key_vhat" id="api_key_vhat"
+                                       value=""/>
+                            </div>
+                            <div id="secret_key_" class="form-group">
+                                <label class="c-field__label" for="notes">SECRET KEY:</label>
+                                <input type="text" class="form-control" name="secret_key_vhat"
+                                       id="secret_key_vhat" value=""/>
+                            </div>
+                            <div id="user_sms_" class="form-group">
+                                <label class="c-field__label" for="notes">User SMS:</label>
+                                <input type="text" class="form-control" name="user_sms" id="user_sms"
+                                       value=""/>
+                            </div>
+                            <div id="pass_sms_" class="form-group">
+                                <label class="c-field__label" for="notes">Password SMS:</label>
+                                <input type="text" class="form-control" name="pass_sms" id="pass_sms"
+                                       value=""/>
+                            </div>
+                            <div class="form-group">
+                                <label class="c-field__label" for="notes">SMS Brandname:</label>
+                                <input type="text" class="form-control" name="brand_name" id="brand_name"
+                                       value=""/>
+                            </div>
+                            <div id="quota_" class="form-group">
+                                <label class="c-field__label" for="notes">SMS Quota:</label>
+                                <input type="text" class="form-control" name="quota" id="quota"
+                                       value=""/>
+                            </div>
+                        </div>
+                            </form>
+
+                    </div>
+                   <div class="card-footer">
+                            <div class="row">
+                                <div class="col-lg-12 u-float-right">
+                                    <a href="#" class="btn btn-danger mb-2 btn-block" id="save_sms">
+                                        Lưu cấu hình
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="header-title">
+                            Chatbot
+                        </h1>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="custom-control custom-radio checklist-control">
+                                    <input class="custom-control-input" name="chatbot" id="aha" type="radio"
+                                           checked/>
+                                    <label class="custom-control-label" for="aha"></label>
+                                    <span class="custom-control-caption">
+                                         AhaChat
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="custom-control custom-radio checklist-control">
+                                    <input class="custom-control-input" name="chatbot" id="chatfuel" type="radio"/>
+                                    <label class="custom-control-label" for="chatfuel"></label>
+                                    <span class="custom-control-caption">
+                                         Chatfuel
+                                        </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row mt-4" id="aha_chatbot">
+                            <div class="col-12">
+                                <form id="ahachat_connect" method="post" action="/save_chatbot_id_AHACHAT">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"/>
+
+                                    <!-- Email address -->
+                                    <div class="form-group">
+
+                                        <!-- Label -->
+                                        <label>ID chatbot AHACHAT</label>
+
+                                        <!-- Input -->
+                                        <input type="text" id="chatbot_id" name="chatbot_id" class="form-control"
+                                               placeholder="1001411"
+                                                {% if chatbot_id %} value="{{ chatbot_id }}" {% endif %}>
+
+                                    </div>
+                                    <div class="form-group">
+
+                                        <!-- Label -->
+                                        <label>Broadcasting API Token</label>
+
+                                        <!-- Input -->
+                                        <input type="text" id="ahachat_token" name="ahachat_token" class="form-control"
+                                               placeholder="573c0884a4fabc848279eb83435707982b5a6106f390446f29cffcca631b8d02"
+                                                {% if ahachat_token %} value="{{ ahachat_token }}" {% endif %}>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="c-switch {% if status=='True' %}is-active{% endif %}">
+                                            <input class="c-switch__input" name="status" id="status" type="checkbox"
+                                                   {% if status=='True' %}checked="checked" {% endif %}>
+                                            Kích hoạt
+                                        </div>
+
+                                    </div>
+
+                                </form>
+                            </div>
+
+                        </div>
+                        <div class="row mt-4" id="chatfuel_chatbot">
+                            <div class="col-12">
+
+                                  <form id="chatfuel_connect" method="post" action="/save_chatbot_id_CHATFUEL">
+                   <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+              <!-- Email address -->
+              <div class="form-group">
+
+                <!-- Label -->
+                <label>ID chatbot CHATFUEL</label>
+
+                <!-- Input -->
+                <input type="text" id="chatbot_id" name="chatbot_id" class="form-control" placeholder="5d7f08f66774190001746172"
+                {% if chatbot_id %} value="{{ chatbot_id }}" {% endif %}>
+
+              </div>
+              <div class="form-group">
+
+                <!-- Label -->
+                <label>Broadcasting API Token</label>
+
+                <!-- Input -->
+                <input type="text" id="chatfuel_token" name="chatfuel_token" class="form-control" placeholder="ERP1NWrxmWJ41SNohsfjA1wxNR38fK8srUZj2r2o5ty723aGstGeriHqoaA2zKLI"
+                {% if chatfuel_token %} value="{{ chatfuel_token }}" {% endif %}>
+
+              </div>
+              <div class="form-group">
+                <div class="c-switch {% if status=='True' %}is-active{% endif %}">
+                  <input class="c-switch__input" name="status" id="status" type="checkbox"
+                    {% if status=='True' %}checked="checked" {% endif %}>
+                  Kích hoạt
+                </div>
+
+              </div>
+
+            </form>
+                            </div>
+                        </div>
+                    </div>
+                <div class="card-footer">
+                            <div class="row">
+                                <div class="col-lg-12 u-float-right">
+                                    <a href="#" class="btn btn-danger mb-2 btn-block" id="save_chatbot">
+                                        Lưu cấu hình
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                </div>
+                <a href="/" >
+                    <button class="btn btn-outline-primary mb-2 btn-block text-uppercase">Đến trang quản trị</button>
+                </a>
+
+
+{#                <p class="text-center" style="margin-top:20px">#}
+{#                    <small class="text-muted text-center">#}
+{#                        © 2020 Power by <a href="http://nextify.vn">NEXTIFY SOFTWARE.,JSC.</a>.#}
+{#                    </small>#}
+{#                </p>#}
+
+
+            </div>
+
+        </div> <!-- / .row -->
+    </div>
+
+{% endblock %}
+{% block js %}
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $("#aha_chatbot").show();
+                $("#chatfuel_chatbot").hide();
+             $("#aha").on('click', function () {
+                $("#aha_chatbot").show();
+                $("#chatfuel_chatbot").hide();
+            });
+                  $("#chatfuel").on('click', function () {
+                $("#chatfuel_chatbot").show();
+                $("#aha_chatbot").hide();
+            });
+
+            $("#checkbox_mail_nextify").on('click', function () {
+                $("#mail_nexify").show();
+                $("#mail_gmail").hide();
+                $("#mail_smtp").hide();
+            });
+            $("#checkbox_gmail").on('click', function () {
+                $("#mail_nexify").hide();
+                $("#mail_gmail").show();
+                $("#mail_smtp").hide();
+            });
+            $("#checkbox_mail_khac").on('click', function () {
+                $("#mail_nexify").hide();
+                $("#mail_gmail").hide();
+                $("#mail_smtp").show();
+            });
+            if ($("#sms_provider").val() == "VHAT") {
+                $("#api_key_").show();
+                $("#secret_key_").show();
+                $("#sms_type_").show();
+                $("#user_sms_").hide();
+                $("#pass_sms_").hide();
+                $("#quota_").hide();
+            } else {
+                $("#api_key_").hide();
+                $("#secret_key_").hide();
+                $("#sms_type_").hide();
+            }
+            $('#sms_provider').on('change', function (e) {
+                var sms_provider_select = $("#sms_provider").val();
+                var ex_brand_name = $("#ex_brand_name").val();
+                var ex_user_sms = $("#ex_user_sms").val();
+                var ex_pass_sms = $("#ex_pass_sms").val();
+                var ex_quota = $("#ex_quota").val();
+                var ex_api_key_vhat = $("#ex_api_key_vhat").val();
+                var ex_secret_key_vhat = $("#ex_secret_key_vhat").val();
+                var ex_sms_provider = $("#ex_sms_provider").val();
+                var ex_sms_type = $("#ex_sms_type").val();
+                if (sms_provider_select == "INCOM") {
+                    $("#incom_div").show();
+                    $("#other_incom_div").hide();
+                } else {
+                    $("#incom_div").hide();
+                    $("#other_incom_div").show();
+                }
+                if (sms_provider_select == ex_sms_provider) {
+                    if (sms_provider_select == "VHAT") {
+                        $("#api_key_").show();
+                        $("#api_key").val(ex_api_key_vhat);
+                        $("#secret_key_").show();
+                        $("#secret_key").val(ex_secret_key_vhat);
+                        $("#user_sms_").hide();
+                        $("#pass_sms_").hide();
+                        $("#quota_").hide();
+                        $("#brand_name_").show();
+                        $("#brand_name").val(ex_brand_name);
+                        $("#sms_type_").show();
+                        $("#sms_type").val(ex_sms_type);
+                    } else {
+                        $("#api_key_").hide();
+                        $("#secret_key_").hide();
+                        $("#user_sms_").show();
+                        $("#pass_sms_").show();
+                        $("#quota_").show();
+                        $("#user_sms").val(ex_user_sms);
+                        $("#pass_sms").val(ex_pass_sms);
+                        $("#brand_name").val(ex_brand_name);
+                        $("#quota").val(ex_quota);
+                        $("#sms_type_").hide();
+                    }
+                } else {
+                    if (sms_provider_select == "VHAT") {
+                        $("#api_key_").show();
+                        $("#api_key_vhat").val('');
+                        $("#secret_key_").show();
+                        $("#secret_key_vhat").val('');
+                        $("#user_sms_").hide();
+                        $("#pass_sms_").hide();
+                        $("#quota_").hide();
+                        $("#brand_name_").show();
+                        $("#brand_name").val('');
+                        $("#sms_type_").show();
+                        $("#sms_type").val('');
+                    } else {
+                        $("#api_key_").hide();
+                        $("#secret_key_").hide();
+                        $("#user_sms").val('');
+                        $("#pass_sms").val('');
+                        $("#brand_name").val('');
+                        $("#quota").val('');
+                        $("#user_sms_").show();
+                        $("#pass_sms_").show();
+                        $("#quota_").show();
+                        $("#sms_type_").hide();
+                    }
+                }
+            });
+
+            $("#save_email").on('click', function () {
+                var data = $("#mail_settings").serialize();
+                console.log($("input[name='mail_box']:checked").val());
+                         $.ajax({
+                            type: 'post',
+                            url: '/info_email?init=1',
+                            data: data,
+                            success: function () {
+                                swal("Cập nhật thành công", " ", "success");
+                            }
+                        });
+            });
+
+            $("#save_zalo").on('click', function () {
+
+            });
+
+            $("#save_sms").on('click', function () {
+
+            });
+            $("#save_chatbot").on('click', function () {
+
+            });
+
+        })
+    </script>
+{% endblock %}

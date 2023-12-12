@@ -1,0 +1,196 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">
+            {{ gettext("Ung_dung") }}
+          </h6>
+
+          <!-- Title -->
+          <h1 class="header-title">
+            GetFly CRM
+          </h1>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <h1 class="header-title">
+            {{ gettext("Cau_hinh") }}
+          </h1>
+        </div>
+        <div class="card-body">
+
+          <!-- Heading -->
+
+          <!-- Form -->
+          <form id="ipos_connect" method="post" action="/save_getfly_settings">
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+            <!-- Email address -->
+            <div class="form-group">
+
+              <!-- Label -->
+              <label>{{ gettext("Link_dang_nhap:") }} (<span>
+                  <font color="red">*</font>
+                </span> {{ gettext("bat_buoc") }})</label>
+
+              <!-- Input -->
+              <input type="text" id="url_login" name="url_login" class="form-control" {% if url_login %}
+                value="{{ url_login }}" {% endif %}>
+
+            </div>
+            <div class="form-group">
+
+              <label>API Key: (<span>
+                  <font color="red">*</font>
+                </span> {{ gettext("bat_buoc") }})</label>
+
+              <!-- Input -->
+              <input type="text" id="api_key_getfly" name="api_key" class="form-control"
+                value="{% if api_key %}{{ api_key }}{% endif %}">
+
+            </div>
+            <div class="form-group">
+
+              <!-- Label -->
+              <label>ID merchant app :</label>
+
+              <!-- Input -->
+              <input type="text" id="merchant_id_app" name="merchant_id_app" class="form-control" {% if merchant_id_app
+                %} value="{{ merchant_id_app }}" {% endif %}>
+
+            </div>
+            <div class="form-group row">
+              <div class="col-2">
+                <span>{{ gettext("Kich_hoat") }}:</span>
+              </div>
+              <div class="col-auto">
+                <div class="custom-control custom-switch {% if status == 'True' %}is-active{% endif %}">
+                  <input class="custom-control-input" name="status" id="status" type="checkbox" {% if status=="True"
+                    %}checked="checked" {% endif %}>
+                  <label class="custom-control-label" for="status"></label>
+                </div>
+              </div>
+            </div>
+          </form>
+
+
+        </div>
+        <div class="card-footer">
+          <div class="col-6" style="float:right">
+            <button class="btn btn-lg btn-block btn-primary" id="save_info_API">
+              {{ gettext("Luu_thong_tin") }}
+
+            </button>
+          </div>
+        </div>
+      </div> <!-- / .row -->
+    </div>
+
+
+  </div>
+</div>
+
+<script nonce="{{ csp_nonce() }}">
+
+  $(document).ready(function () {
+    window.onload = function () {
+      var input = document.getElementById("url_login").focus();
+    }
+    $("#redirect_shop_select").select2();
+    $('#redirect_shop_select').on('change.select2', function (e) {
+      var shop_id = $(this).val();
+      var url = "/apps/getfly" + "?shop_id=" + shop_id;
+      location.replace(url);
+    })
+    $("#save_id_loc").click(function () {
+      $.ajax({
+        url: $("#save_id_location").attr("action"),
+        type: $("#save_id_location").attr("method"),
+        data: $("#save_id_location").serialize(),
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ('error' in returnedData) {
+            swal(returnedData['error'], " ", "error");
+            return false;
+          }
+          else {
+            swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+            location.reload();
+          }
+
+        },
+        error: function (xhr, desc, err) {
+          swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+
+
+
+        }
+
+      })
+    });
+
+
+    $("#save_info_API").click(function () {
+      var url_login = $("#url_login").val();
+      var api_key_getfly = $("#api_key_getfly").val();
+      var status = $("#status").is(':checked');
+      if (status == true) {
+        if (url_login.length == 0) {
+          swal('{{ gettext("url_login_khong_duoc_de_trong") }}', '', 'error');
+          return false;
+        }
+        if (api_key_getfly.length == 0) {
+          swal('{{ gettext("API_KEY_khong_duoc_de_trong") }}', '', 'error');
+          return false;
+        }
+      }
+      $.ajax({
+        url: $("#ipos_connect").attr("action"),
+        type: $("#ipos_connect").attr("method"),
+        data: $("#ipos_connect").serialize(),
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ('error' in returnedData) {
+            swal(returnedData['error'], " ", "error");
+            return false;
+          }
+          else {
+            swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+            location.reload();
+          }
+
+        },
+        error: function (xhr, desc, err) {
+          swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+
+
+
+        }
+      });
+
+      return false;
+    })
+
+  });
+</script>
+
+{% endblock %}
+{% block js %}
+{% endblock %}

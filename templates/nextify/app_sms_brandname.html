@@ -1,0 +1,757 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                        {{ gettext("Ung_dung") }}
+                    </h6>
+
+                    <!-- Title -->
+                    <h1 class="header-title">
+                       SMS Brandname
+                    </h1>
+
+                </div>
+            </div> <!-- / .row -->
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row" style='margin-top: 10px; margin-bottom: 10px;'>
+                        <div class="col">
+                            <h1 class="header-title">
+                                {{ gettext("Cau_hinh") }}
+                            </h1>
+                        </div>
+                            <div class="col-auto">
+                                <a class="btn btn-outline-primary d-block d-md-inline-block" href="/apps/sms_register">
+                            {{ gettext("Dang_ky") }}
+                        </a>
+                            </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="/info_sms" enctype="multipart/form-data" id="fr_sms_config">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"/>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="notes">{{ gettext("SMS_Provider") }}: (<span>
+                                        <font color="red">*</font>
+                                      </span> {{ gettext("bat_buoc") }})</label>
+                                    <input type="hidden" class="form-control" id="ex_sms_provider" 
+                                           value="{{ merchant.sms_provider }}"/>
+                                    <select class="form-control" name="sms_provider" id="sms_provider" autofocus>
+                                        <option value="" selected>{{ gettext("Chon_SMS_Provider") }}</option>
+                                        <option value="VHT">VHT</option>
+                                        <option value="VIETTEL">VIETTEL</option>
+                                        <option value="FPT">FPT</option>
+                                        <option value="MOBIFONE">MOBIFONE</option>
+                                        <option value="BLUESEA">BLUESEA</option>
+                                        <option value="VHAT">VHAT</option>
+                                        <option value="INCOM">INCOM</option>
+                                        <option value="VINAPHONE">VINAPHONE</option>
+                                        <option value="VIETGUY">VIETGUY</option>
+                                        <option value="GHD">GHD</option>
+                                    </select>
+                                </div>
+                                <div id="incom_div" style="display:none">
+                                    <div id="" class="form-group">
+                                        <label for="notes">SMS Type: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="hidden" class="form-control" id="ex_sms_type_incom"
+                                               value="{{ merchant.sms_type_incom }}"/>
+                                        <select class="form-control" name="sms_type_incom" id="sms_type_incom">
+                                            <option value="" selected>{{ gettext("Chon_SMS_Type") }}</option>
+                                            <option value="0">{{ gettext("SMS_phat_sinh_tu_dich_vu,_khong_tinh_tien_khach_hang") }}
+                                            </option>
+                                            <option value="1">{{ gettext("Co_tru_tien_cua_khach_hang") }}</option>
+
+                                        </select>
+                                    </div>
+                                    <div id="" class="form-group">
+                                        <label for="notes">USERNAME: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="username_incom"
+                                               id="username_incom"
+                                               value="{{ merchant.username_incom }}"/>
+                                    </div>
+                                    <div id="" class="form-group">
+                                        <label for="notes">PASSWORD: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="password_incom"
+                                               id="password_incom" value="{{ merchant.password_incom }}"/>
+                                    </div>
+                                    <div id="" class="form-group">
+                                        <label for="notes">COMMAND CODE: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="command_code_incom"
+                                               id="command_code_incom"
+                                               value="{{ merchant.command_code_incom }}"/>
+                                    </div>
+                                    <div id="" class="form-group">
+                                        <label for="notes">PREFIX ID: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="prefix_id_incom"
+                                               id="prefix_id_incom"
+                                               value="{{ merchant.prefix_id_incom }}"/>
+                                    </div>
+                                </div>
+                                <div id="other_incom_div" style="display:none">
+                                    <div id="sms_type_" class="form-group">
+                                        <label for="notes">{{ gettext("SMS_Type") }}: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="hidden" class="form-control" id="ex_sms_type"
+                                               value="{{ merchant.sms_type }}"/>
+                                        <select class="form-control" name="sms_type" id="sms_type">
+                                            <option value="" selected>{{ gettext("Chon_SMS_Type") }}</option>
+                                            <option value="1">BrandName {{ gettext("quang_cao") }}</option>
+                                            <option value="2">BrandName {{ gettext("cham_soc_khach_hang") }}</option>
+                                            <option value="8">{{ gettext("Tin_nhan_tu_dau_so_co_dinh") }}</option>
+                                        </select>
+                                    </div>
+                                    <div id="api_key_" class="form-group">
+                                        <label for="notes">API KEY: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="api_key_vhat" id="api_key_vhat"
+                                               value="{{ merchant.api_key_vhat }}"/>
+                                    </div>
+                                    <div id="secret_key_" class="form-group">
+                                        <label for="notes">SECRET KEY: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="secret_key_vhat"
+                                               id="secret_key_vhat" value="{{ merchant.secret_key_vhat }}"/>
+                                    </div>
+                                    <div id="user_sms_" class="form-group">
+                                        <label for="notes">User SMS: (<span>
+                                            <font color="red">*</font>
+                                        </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="user_sms" id="user_sms"
+                                               value="{{ merchant.user_sms }}"/>
+                                    </div>
+                                    <div id="pass_sms_" class="form-group">
+                                        <label for="notes">Password SMS: (<span>
+                                            <font color="red">*</font>
+                                        </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="pass_sms" id="pass_sms"
+                                               value="{{ merchant.pass_sms }}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="notes">SMS Brandname: (<span>
+                                            <font color="red">*</font>
+                                        </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="brand_name" id="brand_name"
+                                               value="{{ merchant.brand_name }}"/>
+                                    </div>
+
+                                </div>
+                                <div id="setting_brandname_viettel">
+                                    <div id="user_sms_" class="form-group">
+                                        <label for="notes">User SMS: (<span>
+                                            <font color="red">*</font>
+                                        </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="user_sms_viettel" id="user_sms"
+                                               value="{{ merchant.user_sms }}"/>
+                                    </div>
+                                    <div id="pass_sms_" class="form-group">
+                                        <label for="notes">Password SMS: (<span>
+                                            <font color="red">*</font>
+                                        </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="pass_sms_viettel" id="pass_sms"
+                                               value="{{ merchant.pass_sms }}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="notes">SMS Brandname: (<span>
+                                            <font color="red">*</font>
+                                        </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="brand_name_viettel" id="brand_name"
+                                               value="{{ merchant.brand_name }}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="notes">CPCode: (<span>
+                                            <font color="red">*</font>
+                                        </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="cp_code" id="cp_code"
+                                               value="{{ merchant.cp_code }}"/>
+                                    </div>
+                                </div>
+
+                                <div id="setting_branchname_vinaphone"
+                                     style="display: none;">
+                                    
+                                    <div class="form-group">
+                                        <label for="notes">Label ID: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="vina_label_id" id="vina_label_id"
+                                               value="{% if merchant.brand_name_vina %}{{ merchant.brand_name_vina.vina_label_id }}{% endif %}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="notes">{{ gettext("Ma_hop_dong") }}: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="vina_contract_id" id="vina_contract_id"
+                                               value="{% if merchant.brand_name_vina %}{{ merchant.brand_name_vina.vina_contract_id }}{% endif %}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="notes">Agent Id: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="vina_agent_id" id="vina_agent_id"
+                                               value="{% if merchant.brand_name_vina %}{{ merchant.brand_name_vina.vina_agent_id }}{% endif %}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="notes">Api User: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="vina_api_user" id="vina_api_user"
+                                               value="{% if merchant.brand_name_vina %}{{ merchant.brand_name_vina.vina_api_user }}{% endif %}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="notes">Api Password: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="vina_api_pass" id="vina_api_pass"
+                                               value="{% if merchant.brand_name_vina %}{{ merchant.brand_name_vina.vina_api_pass }}{% endif %}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="notes">Api URL: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="vina_api_url" id="vina_api_url"
+                                               value="{% if merchant.brand_name_vina %}{{ merchant.brand_name_vina.vina_api_url }}{% endif %}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="notes">{{ gettext("Ten_dang_nhap") }}: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="vina_user_name" id="vina_user_name"
+                                               value="{% if merchant.brand_name_vina %}{{ merchant.brand_name_vina.vina_user_name }}{% endif %}"/>
+                                    </div>
+
+
+                                </div>
+                                <div id="setting_ghd">
+                                    <div class="form-group">
+                                        <label for="notes">USERNAME: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="user_sms_ghd"
+                                               id="user_sms_ghd"
+                                               value="{{ merchant.user_sms }}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="notes">PASSWORD: (<span>
+                                            <font color="red">*</font>
+                                          </span> {{ gettext("bat_buoc") }})</label>
+                                        <input type="text" class="form-control" name="pass_sms_ghd"
+                                               id="pass_sms_ghd" value="{{ merchant.pass_sms }}"/>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col">
+                         
+                        </div>
+                            <div class="col-auto">
+                                <button id="save_sms_config"
+                                class="btn btn-lg btn-block btn-primary">
+                            {{ gettext("Luu_cau_hinh") }}
+                        </button>
+                            </div>
+                    </div>
+                  
+                </div>
+            </div> <!-- / .row -->
+        </div>
+
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="request_provider_brandname" tabindex="-1" role="dialog" style="display: none;"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+   <div class="modal-content">
+       <div class="modal-header">
+           <h3 class="modal-title">{{ gettext("De_xuat_tich_hop_SMS_Brandname") }}</h3>
+           <a class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">×</span>
+           </a>
+       </div>
+
+       <div class="modal-body">
+
+           <div class="row u-justify-center">
+               <div class="col-md-12">
+                   <div class="form-group">
+                       <label>{{ gettext("Ten_nha_cung_cap_hien_tai") }}: </label>
+                       <input type="text"
+                              class="form-control"
+                              style="margin-top:10px;font-size: 16px;"
+                              id="sms_provider_register"
+                              name="sms_provider"
+                              placeholder='{{ gettext("Ten_nha_cung_cap") }}'/>
+                   </div>
+
+                   <div class="form-group">
+                       <label>{{ gettext("Ten_Brandname_hien_tai") }}: </label>
+                       <input type="text"
+                              class="form-control"
+                              style="margin-top:10px;font-size: 16px;"
+                              id="brand_name_register"
+                              name="brand_name"
+                              placeholder='{{ gettext("Ten_thuong_hieu") }}'/>
+                   </div>
+
+
+               </div>
+               <div class="row justify-content-center">
+                   <div class="col-lg-12 float-right">
+                       <button type="submit"
+                               class="c-btn c-btn--info u-float-right"
+                               id="request_integration_brandname">
+                           {{ gettext("Gui_yeu_cau") }}
+                       </button>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+
+</div>
+</div>
+<div class="modal fade" id="add_brand_name" tabindex="-1" role="dialog" style="display: none;"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{ gettext("Dang_ky_moi_SMS_Brandname") }}</h3>
+                    <a class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </a>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row u-justify-center">
+                        <div class="col-md-12">
+                            <div class="u-mt-medium
+                                                       u-text-center"></div>
+                            <form id="fr_register_brandname">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"/>
+                                <div class="form-group">
+                                    <label>{{ gettext("Ten_thuong_hieu") }} *: </label>
+                                    <input type="text"
+                                           class="form-control"
+                                           style="margin-top:10px;font-size: 16px;"
+                                           name="brand_name"
+                                           id="name_brand_name"
+                                           placeholder="Tên thương hiệu"/>
+                                </div>
+                                <div class="form-group">
+
+                                    <label>{{ gettext("Nhom_thuong_hieu") }}: </label>
+                                    <div class="c-search-form__section" id="categories">
+
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input" id="checkbox1"
+                                                   name="category" value="1" type="checkbox">
+                                            <label class="c-choice__label"
+                                                   for="checkbox1">{{ gettext("Bat_dong_san") }}</label>
+                                        </div>
+
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input" id="checkbox2"
+                                                   name="category" value="2" type="checkbox">
+                                            <label class="c-choice__label"
+                                                   for="checkbox2">{{ gettext("Tuyen_sinh,_tuyen_dung") }} (3_UD)</label>
+                                        </div>
+
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input" id="checkbox3"
+                                                   name="category"
+                                                   value="6" type="checkbox">
+                                            <label class="c-choice__label" for="checkbox3">{{ gettext("Linh_vuc_khac") }}</label>
+                                        </div>
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input" id="checkbox4"
+                                                   name="category"
+                                                   value="7" type="checkbox">
+                                            <label class="c-choice__label" for="checkbox4">{{ gettext("Nhom_MP_QC") }}/label>
+                                        </div>
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input" id="checkbox5"
+                                                   name="category"
+                                                   value="8" type="checkbox">
+                                            <label class="c-choice__label" for="checkbox5">{{ gettext("Thoi_trang,_an_uong") }}...
+                                                (4_UD)</label>
+                                        </div>
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input" id="checkbox6"
+                                                   name="category"
+                                                   value="9" type="checkbox">
+                                            <label class="c-choice__label" for="checkbox6">{{ gettext("Nhom") }} HCC</label>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group" id="telcos">
+                                    <label>{{ gettext("Nha_mang") }}: </label>
+                                    <div class="c-choice c-choice--checkbox">
+                                        <input class="c-choice__input" id="checkbox_viettel"
+                                               name="telco" value="viettel" type="checkbox"
+                                        >
+                                        <label class="c-choice__label"
+                                               for="checkbox_viettel">Viettel</label>
+                                    </div>
+                                    <div class="c-choice c-choice--checkbox">
+                                        <input class="c-choice__input" id="checkbox_mobiphone"
+                                               name="telco" value="mobiphone" type="checkbox"
+                                        >
+                                        <label class="c-choice__label"
+                                               for="checkbox_mobiphone">Mobiphone</label>
+                                    </div>
+                                    <div class="c-choice c-choice--checkbox">
+                                        <input class="c-choice__input" id="checkbox_vinaphone"
+                                               name="telco" value="vinaphone" type="checkbox"
+                                        >
+                                        <label class="c-choice__label"
+                                               for="checkbox_vinaphone">Vinaphone</label>
+                                    </div>
+                                    <div class="c-choice c-choice--checkbox">
+                                        <input class="c-choice__input" id="checkbox_vietnammobile"
+                                               name="telco" value="vietnammobile" type="checkbox"
+                                        >
+                                        <label class="c-choice__label"
+                                               for="checkbox_vietnammobile">Vietnam Mobile</label>
+                                    </div>
+                                    <div class="c-choice c-choice--checkbox">
+                                        <input class="c-choice__input" id="checkbox_gmobile"
+                                               name="telco" value="gmobile" type="checkbox"
+                                        >
+                                        <label class="c-choice__label"
+                                               for="checkbox_gmobile">Gmobile</label>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-lg-12">
+                            <button type="submit"
+                                    class="c-btn c-btn--info u-float-right"
+                                    id="register_brandname">
+                                {{ gettext("Dang_ky") }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="ex_brand_name" value="{{ merchant.brand_name }}"/>
+    <input type="hidden" id="ex_user_sms" value="{{ merchant.user_sms }}"/>
+    <input type="hidden" id="ex_pass_sms" value="{{ merchant.pass_sms }}"/>
+    <input type="hidden" id="ex_quota" value="{{ merchant.quota }}"/>
+    <input type="hidden" id="ex_api_key_vhat" value="{{ merchant.api_key_vhat }}"/>
+    <input type="hidden" id="ex_secret_key_vhat" value="{{ merchant.secret_key_vhat }}"/>
+
+{% endblock %}
+
+{% block js %}
+
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+        $('input').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+
+
+        if ($("#ex_brand_name").length > 0) {
+            $("#brand_name").val($("#ex_brand_name").val());
+        }
+        if ($("#sms_provider").val() == "VHAT") {
+            $("#api_key_").show();
+            $("#secret_key_").show();
+            $("#sms_type_").show();
+            $("#user_sms_").hide();
+            $("#pass_sms_").hide();
+            $("#quota_").hide();
+        } else {
+            $("#api_key_").hide();
+            $("#secret_key_").hide();
+            $("#sms_type_").hide();
+        }
+        $('#sms_provider').on('change', function (e) {
+            var sms_provider_select = $("#sms_provider").val();
+            var ex_brand_name = $("#ex_brand_name").val();
+            var ex_user_sms = $("#ex_user_sms").val();
+            var ex_pass_sms = $("#ex_pass_sms").val();
+            var ex_quota = $("#ex_quota").val();
+            var ex_api_key_vhat = $("#ex_api_key_vhat").val();
+            var ex_secret_key_vhat = $("#ex_secret_key_vhat").val();
+            var ex_sms_provider = $("#ex_sms_provider").val();
+            var ex_sms_type = $("#ex_sms_type").val();
+            if (sms_provider_select == "INCOM") {
+                $("#incom_div").show();
+                $("#other_incom_div").hide();
+                $("#setting_branchname_vinaphone").hide();
+                $("#setting_ghd").hide();
+                $("#setting_brandname_viettel").hide();
+            } else if(sms_provider_select == "VINAPHONE"){
+                $("#incom_div").hide();
+                $("#other_incom_div").hide();
+                $("#setting_branchname_vinaphone").show();
+                $("#setting_ghd").hide();
+                $("#setting_brandname_viettel").hide();
+            }
+            else if(sms_provider_select == "GHD"){
+                $("#incom_div").hide();
+                $("#other_incom_div").hide();
+                $("#setting_branchname_vinaphone").hide();
+                $("#setting_ghd").show();
+                $("#setting_brandname_viettel").hide();
+            }
+            else if(sms_provider_select == "VIETTEL"){
+                $("#incom_div").hide();
+                $("#other_incom_div").hide();
+                $("#setting_branchname_vinaphone").hide();
+                $("#setting_ghd").hide();
+                $("#setting_brandname_viettel").show();
+            }
+
+           
+             else {
+                $("#setting_ghd").hide();
+                $("#incom_div").hide();
+                $("#other_incom_div").show();
+                $("#setting_branchname_vinaphone").hide();
+                $("#setting_brandname_viettel").hide();
+            }
+            ;
+            if (sms_provider_select == ex_sms_provider) {
+                if (sms_provider_select == "VHAT") {
+                    $("#api_key_").show();
+                    $("#api_key").val(ex_api_key_vhat);
+                    $("#secret_key_").show();
+                    $("#secret_key").val(ex_secret_key_vhat);
+                    $("#user_sms_").hide();
+                    $("#pass_sms_").hide();
+                    $("#quota_").hide();
+                    $("#brand_name_").show();
+                    $("#brand_name").val(ex_brand_name);
+                    $("#sms_type_").show();
+                    $("#sms_type").val(ex_sms_type);
+                } else {
+                    $("#api_key_").hide();
+                    $("#secret_key_").hide();
+                    $("#user_sms_").show();
+                    $("#pass_sms_").show();
+                    $("#quota_").show();
+                    $("#user_sms").val(ex_user_sms);
+                    $("#pass_sms").val(ex_pass_sms);
+                    $("#brand_name").val(ex_brand_name);
+                    $("#quota").val(ex_quota);
+                    $("#sms_type_").hide();
+                }
+            } else {
+                if (sms_provider_select == "VHAT") {
+                    $("#api_key_").show();
+                    $("#api_key_vhat").val('');
+                    $("#secret_key_").show();
+                    $("#secret_key_vhat").val('');
+                    $("#user_sms_").hide();
+                    $("#pass_sms_").hide();
+                    $("#quota_").hide();
+                    $("#brand_name_").show();
+                    $("#brand_name").val('');
+                    $("#sms_type_").show();
+                    $("#sms_type").val('');
+                } else {
+                    $("#api_key_").hide();
+                    $("#secret_key_").hide();
+                    $("#user_sms").val('');
+                    $("#pass_sms").val('');
+                    $("#brand_name").val('');
+                    $("#quota").val('');
+                    $("#user_sms_").show();
+                    $("#pass_sms_").show();
+                    $("#quota_").show();
+                    $("#sms_type_").hide();
+                }
+            }
+        })
+
+
+        $("#request_integration_brandname").on('click', function () {
+            var brand_name = $("#brand_name_register").val();
+            var sms_provider = $("#sms_provider_register").val();
+
+            if (brand_name.length == 0 || sms_provider.length == 0) {
+                swal('{{ gettext("Thong_tin_dang_ky_khong_duoc_de_trong") }}', " ", "error");
+                return false;
+            } else {
+
+                var data = {
+                    'brand_name': brand_name,
+                    'sms_provider': sms_provider
+                };
+                $.ajax({
+                    type: 'post',
+                    url: '/request_integration_brandname',
+                    data: data,
+                    success: function () {
+                        swal('{{ gettext("Cap_nhat_thanh_cong") }}', " ", "success");
+                        $(location).href('/setting_integration');
+                    }
+                });
+
+
+            }
+
+        });
+        if ($("#ex_sms_provider").length > 0) {
+            $("#sms_provider").val($("#ex_sms_provider").val()).trigger('change');
+        }
+        if ($("#ex_sms_type").length > 0) {
+            $("#sms_type").val($("#ex_sms_type").val()).trigger('change');
+        }
+        if ($("#ex_sms_type_incom").length > 0) {
+            $("#sms_type_incom").val($("#ex_sms_type_incom").val()).trigger('change');
+        }
+        if ($("#ex_vina_contract_type_id").length > 0) {
+            $("#vina_contract_type_id").val($("#ex_vina_contract_type_id").val()).trigger('change');
+        }
+        $("#save_sms_config").on('click', function () {
+            var brand_name = $("#sms_provider").val()
+            if( brand_name == "VINAPHONE"){
+                var lable_id = $("#vina_label_id").val()
+                if(lable_id.length == 0){
+                    swal('{{ gettext("Chua_nhap_Label_ID") }}', '', 'error');
+                    return false
+                }
+                var contract_id = $("#vina_contract_id").val()
+                if(contract_id.length == 0){
+                    swal('{{ gettext("Chua_nhap_Ma_hop_dong") }}', '', 'error');
+                    return false
+                }
+                var agent_id = $("#vina_agent_id").val()
+                if(agent_id.length == 0){
+                    swal('{{ gettext("Chua_nhap_Agent_Id") }}', '', 'error');
+                    return false
+                }
+                var api_user = $("#vina_api_user").val()
+                if(api_user.length == 0){
+                    swal('{{ gettext("Chua_nhap_Api_User") }}', '', 'error');
+                    return false
+                }
+                var api_pass = $("#vina_api_pass").val()
+                if(api_pass.length == 0){
+                    swal('{{ gettext("Chua_nhap_Api_Pass") }}', '', 'error');
+                    return false
+                }
+                var api_url = $("#vina_api_url").val()
+                if(api_url.length == 0){
+                    swal('{{ gettext("Chua_nhap_Api_URL") }}', '', 'error');
+                    return false
+                }
+                var user_name = $("#vina_user_name").val()
+                if(user_name.length == 0){
+                    swal('{{ gettext("Chua_nhap_Ten_dang_nhap") }}', '', 'error');
+                    return false
+                }
+            }
+            $.ajax({
+                type: 'post',
+                url: $("#fr_sms_config").attr("action"),
+                data: $("#fr_sms_config").serialize(),
+                success: function (response) {
+                    var returnedData = JSON.parse(response);
+                    if ('error' in returnedData) {
+
+                        swal(returnedData['error'], " ", "error");
+                    } else {
+                        swal('{{ gettext("Cap_nhat_thanh_cong") }}', " ", "success");
+                        location.reload();
+
+                    }
+                }
+            });
+
+        });
+
+        $("#register_brandname").on('click', function () {
+            var brand_name = $("#name_brand_name").val();
+            var categories = [];
+            $('#categories input:checked').each(function () {
+                categories.push($(this).val());
+            });
+            var telcos = [];
+            $('#telcos input:checked').each(function () {
+                telcos.push($(this).val());
+            });
+            if (brand_name.length == 0 || categories.length == 0 || telcos.length == 0) {
+                swal('{{ gettext("Thong_tin_dang_ky_khong_duoc_de_trong") }}', " ", "error");
+                return false;
+            } else {
+                var data = {
+                    'brand_name': brand_name,
+                    'categories': JSON.stringify(categories),
+                    'telcos': JSON.stringify(telcos)
+                };
+                $.ajax({
+                    type: 'post',
+                    url: '/request_register_brandname',
+                    data: data,
+                    success: function () {
+                        swal('{{ gettext("Cap_nhat_thanh_cong") }}', " ", "success");
+                        $(location).href('/setting_integration');
+                    }
+                });
+
+
+            }
+
+
+        });
+    });
+</script>
+{% endblock %}

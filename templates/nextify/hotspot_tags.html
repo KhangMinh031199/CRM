@@ -1,0 +1,695 @@
+{% extends 'nextify/manage_hotspot.html' %}
+
+{% block hotspot_item %}
+    <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-12 col-xl-12">
+
+
+                            <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-end">
+                        <div class="col">
+
+                            <h6 class="header-pretitle">
+                               {{ gettext("Trang_chao_theo_tag") }}
+                            </h6>
+                        </div>
+                        <div class="col-auto" style="float: right">
+                          <input type="hidden" name="status" id="status" value="{{ status }}"/>
+                            {% if status == 'true' and pages.count() > 0 %}
+                            <a id="deactive_splash" href="/deactive_splash/{{ shop_id_select }}/tags?status=true" style="color: red">
+                                 <i class="fa fa-ban"></i> {{ gettext("Ngung_hoat_dong_tat_ca_trang_chao") }}
+                             </a>
+                            {% elif status == 'false' and pages.count() > 0 %}
+                            <a id="deactive_splash" href="/deactive_splash/{{ shop_id_select }}/tags?status=false" style="color: green">
+                                <i class="fa fa-check"></i> {{ gettext("Hoat_dong_tat_ca_trang_chao") }}
+                            </a>
+                            {% endif %}
+                            <a data-toggle="modal" href="#new_page_loyal"
+                               class="btn btn-flat d-block d-md-inline-block">
+                                <i class="fa fa-plus"></i> {{ gettext('HotspotNumberofvisitsScreenAddText') }}
+                            </a>
+
+                        </div>
+                    </div>
+
+                            </div>
+                            {%if pages.count() > 0%}
+                                <div class="table-responsive">
+                  <table class="table table-sm card-table">
+                    <thead>
+                      <tr>
+                        <th>
+                          Tag
+                        </th>
+                        <th>
+                          {{ gettext('HotspotNumberofvisitsScreenStatusText') }}
+                        </th>
+                        <th>
+
+                        </th>
+                          <th>
+
+                        </th>
+                          <th></th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for page in pages %}
+                      <tr>
+                        <td>
+
+                        {% set tags_name = page.tag|show_tag_name_splash_page %}
+                        {% if tags_name %}
+                            {% for tag in tags_name %}
+                                   <p  class="badge badge-pill badge-{{ ['success','warning','info']|random }}" style="color: white">{{ tag }} </p>
+
+                                {% endfor %}
+                        {% endif %}
+
+                        </td>
+                        <td>
+                          {% if page.active %}
+                                                   <span class="badge badge-soft-success">{{ gettext('HotspotNumberofvisitsScreenActiveText') }}</span>
+                                                {% else %}
+                                                   <span class="badge badge-soft-secondary">{{ gettext('HotspotNumberofvisitsScreenPendingText') }}</span>
+                                                {% endif %}
+                        </td>
+                        <td>
+                            <a data-toggle="modal" href="#edit_{{ page._id }}" >
+                                <i class="fa fa-edit"></i> {{ gettext('HotspotNumberofvisitsScreenEditText') }}</a>
+                        </td>
+                          <td>
+                              <a href="#view_{{ page._id }}" data-toggle="modal">
+                                <i class="fa fa-mobile"></i> {{ gettext('HotspotNumberofvisitsScreenReviewText') }}</a>
+                                <div class="modal hide fade" id="view_{{ page._id }}" tabindex="-1"
+                               role="dialog" aria-labelledby="new_image" data-backdrop="static"
+                               style="display: none;" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h3 class="modal-title">{{ gettext('HotspotNumberofvisitsScreenReviewText') }}</h3>
+
+                                      <a class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">×</span>
+                                      </a>
+                                  </div>
+                                  <div class="modal-body">
+                                     <div id="preview_{{ page._id }}"></div>
+                                     <script nonce="{{ csp_nonce() }}">
+
+                                      $(document).ready(function () {
+                                        
+                                    var url_preview = '/splash_page/{{shop_id_select}}' + '/preview/' + '{{ page._id }}';
+                                      $("#preview_{{ page._id }}").empty();
+                                      bioMp(document.getElementById('preview_{{ page._id }}'), {
+                                          url: url_preview,
+                                          view: 'front',
+                                          image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                             height:618,
+                    width: 308
+                                      });
+                                      })
+
+                                     </script>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                           <td>
+
+                               <a id="remove_hotspot_{{ page._id }}">
+                                   <i class="fa fa-remove"></i> {{ gettext('HotspotNumberofvisitsScreenDeleteText') }}
+                               </a>
+                           </td>
+                           <script nonce="{{ csp_nonce() }}">
+                           $(document).ready(function () {
+                            $('#remove_hotspot_{{ page._id }}').click(function () {
+                                  var url = "/splash_page/{{ shop_id_select }}/item/{{  page._id }}?card_id={{ page._id }}&action=remove";
+                                  Swal.fire({
+                                          title: '{{ gettext("Ban_co_chac_chan_muon_trang_chao_khong?") }}',
+                                                  
+                                          type: 'warning',
+                                          showCancelButton: true,
+                                          confirmButtonColor: '#3085d6',
+focusCancel: true,
+                                          cancelButtonColor: '#d33',
+                                          confirmButtonText: 'Có!',
+                                          cancelButtonText: '{{ gettext("Khong!")}}'
+                                  }).then((result) => {
+                                  if (result.value) {
+                                  $.ajax({
+                                      type: 'get',
+                                      url: url,
+                                      success: function () {
+                                          swal('{{ gettext("Thao_tac_thanh_cong") }}', " ", "success");
+                                          location.reload();
+
+                                      }
+                                  });
+
+
+                                  }})});})
+                                  </script>
+                      </tr>
+
+                        <div class="modal hide fade" id="edit_{{ page._id }}" tabindex="-1"
+         role="dialog" aria-labelledby="new_image" data-backdrop="static"
+         style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{ gettext('HotspotNumberofvisitsScreenEditText') }}</h3>
+
+                    <a class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </a>
+                </div>
+
+                    <div class="modal-body">
+                     <form method="POST"
+                      action="/splash_page/{{ shop_id_select}}/item/{{ page._id }}"
+                      enctype="multipart/form-data"
+                      id="update_page_{{ page._id }}">
+                      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                              <div class="row">
+                              <div class="col-sm-12 col-md-6 u-mb-medium">
+                                  <div class="form-group">
+                                      <label for="hotspot_method_{{ page._id }}">{{ gettext("Hinh_thuc_hotspot") }}</label>
+                                      <select class="form-control" id="hotspot_method_{{ page._id }}"
+                                          name="hotspot_method">
+                                          <option value="default" {% if page.hotspot_method == 'default' %}selected{% endif %}>{{ gettext("Mac_dinh") }}</option>
+                                          <option value="profile_code" {% if page.hotspot_method == 'profile_code' %}selected{% endif %}>Profile code</option>
+                                      </select>
+                                  </div>
+                              </div>
+                              <input type="hidden" id="ex_hotspot_method_{{ page._id }}" name="ex_hotspot_method" value="{{ page.hotspot_method }}" />
+                              <div id="default_code_div_{{ page._id }}" class="col-sm-12 col-md-6 u-mb-medium">
+                                  <div class="form-group">
+                                      <label>Mã mặc định</label><span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                       aria-label='{{ gettext("Ma_truy_cap_Wifi_mac_dinh") }}'>
+                                     <i class="fa fa-question"></i>
+                                 </span>
+                                      <input type="text" class="form-control method-form-control" id="default_code_{{ page._id }}" name="default_code"
+                                      {% if page.default_code %}
+                                        value="{{ page.default_code }}"
+                                      {% endif %}
+                                      >
+                                  </div>
+                              </div>
+                            </div>
+                              <div class="c-field u-mb-small">
+                                    <label class="c-field__label"
+                                           for="photo">{{gettext('HotspotNumberofvisitsScreenPictureText')}}:</label>
+                                    <h5>{{gettext('HotspotNumberofvisitsScreenRecommendText')}}</h5>
+                                    <p class="help-block">
+                                            <img id="img_new_photo_{{ page._id }}" {% if page.photo %}src="https://files.nextify.vn/{{ page.photo }}" {% endif %} width="200">
+                                    </p>
+
+                                    <input type="file" class="c-input"
+                                           id="new_photo_{{ page._id }}" name="photo"
+                                           {% if not page.photo %}required{% endif %}>
+                                </div>
+                                <script nonce="{{ csp_nonce() }}">
+                                  $(document).ready(function () {
+                                      function readURL(input, input_view) {
+                                          if (input.files && input.files[0]) {
+                                              var reader = new FileReader();
+                                              var view_id = '#' + input_view;
+                                              reader.onload = function (e) {
+                                                  $(view_id).attr('src', e.target.result);
+                                              }
+
+                                              reader.readAsDataURL(input.files[0]);
+                                          }
+                                      }
+
+                                      $("#new_photo_{{ page._id }}").change(function () {
+                                          readURL(this, 'img_new_photo_{{ page._id }}');
+                                      });
+                                  })
+                                </script>
+
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="title">{{gettext('HotspotNumberofvisitsScreenTitleText')}}:</label>
+                                    <input type="text" maxlength="200"
+                                           class="c-input"
+                                           id="title_{{ page._id }}"
+                                           name="title" value="{% if page.title %}{{ page.title }}{% endif %}"
+                                           placeholder='{{ gettext("(Khong_bat_buoc)") }}'>
+                                </div>
+
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label"
+                                           for="content">{{gettext('HotspotNumberofvisitsScreenContentText')}}:</label>
+                                    <textarea class="c-input"
+                                              id="content_{{ page._id }}" name="content"
+                                              rows="6"
+                                              maxlength="1000"
+                                              placeholder='{{ gettext("(Khong_bat_buoc)") }}'>{% if page.content %}
+                                        {{ page.content }}{% endif %}</textarea>
+                                </div>
+                                <div class="c-field u-mb-small">
+                                     <label class="c-field__label"
+                                           for="auto_popup">{{gettext('HotspotNumberofvisitsScreenRedirectText')}}:</label>
+                                    <input type="text"
+                                           class="c-input"
+                                           id="auto_popup_{{ page._id }}"
+                                           name="auto_popup"
+                                           value="{% if page.auto_popup|string != 'None' %}{{ page.auto_popup }}{% endif %}"
+                                           placeholder="">
+                                </div>
+                                <div class="c-field u-mb-small">
+                                        <label class="c-field__label"
+                                               for="tag_select_{{ page._id }}">{{ gettext("Chon_tag_khach_hang:") }}</label>
+                                            <select class="form-control select2" name="tags" id="tag_select_{{ page._id }}" multiple="multiple">
+                                                {% for tag in tags %}
+                                                <option value="{{ tag._id }}">{{ tag.name }}</option>
+                                                {% endfor %}
+                                            </select>   
+                                    </div>
+                                 <input type="hidden" value="tag" name="auto_mar"/>
+                                   <div class="c-choice c-choice--checkbox">
+                                 <input class="c-choice__input"
+                                        type="checkbox"
+                                           name="active"
+                                           id="active_{{ page._id }}"
+                                           {% if page.active %}checked{% endif %}>
+                                    <label class="c-choice__label"
+                                           for="active_{{ page._id }}">{{gettext('HotspotHappyBirthdayScreenActiveText')}}</label>
+                                </div>
+                       <input type="hidden" id="select_tags_filter_{{ page._id }}" name="real_tags_filter"/>
+                <input type="hidden" name="source_tags" id="source_tags_{{ page._id }}" value="{{ page.tag|handle_jinja_list }}"/>
+
+
+                        </form>
+
+                    </div>
+
+                    <div class="modal-footer">
+                       <button id="update_{{ page._id }}_btn" class="c-btn c-btn--info u-float-right">
+                                            {{gettext('HotspotHappyBirthdayScreenUpdateText')}}
+                                        </button>
+                    </div>
+
+
+
+
+            </div><!-- // .c-modal__content -->
+        </div><!-- // .c-modal__dialog -->
+    </div>
+
+                        <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            ex_hotspot_method = $('#ex_hotspot_method_{{ page._id }}').val();
+            if (ex_hotspot_method === 'profile_code') {
+                $("#default_code_div_{{ page._id }}").hide();
+            } else {
+                $("#default_code_div_{{ page._id }}").show();
+            };
+            $('#hotspot_method_{{ page._id }}').select2();
+            $('#hotspot_method_{{ page._id }}').on('change.select2', function (e) {
+                method = $(this).val();
+                if (method === 'profile_code') {
+                    $("#default_code_div_{{ page._id }}").hide();
+                } else {
+                    $("#default_code_div_{{ page._id }}").show();
+                }
+            });
+             $('#tag_select_{{ page._id }}').select2();
+                   $('#tag_select_{{ page._id }}').on("change", function (e) {
+            if($('#tag_select_{{ page._id }}').val()){
+              $('#select_tags_filter_{{ page._id }}').val($('#tag_select_{{ page._id }}').val().toString());
+            }else{
+              $('#select_tags_filter_{{ page._id }}').val("");
+            }
+      });
+
+
+              var source_tags = $("#source_tags_{{ page._id }}").val();
+              if (source_tags.length != 0){
+                var data_soure_tags = JSON.parse(source_tags.replace(/\'/g, '"'));
+              };
+              
+                $("#tag_select_{{ page._id }}").val(data_soure_tags);
+                $('#tag_select_{{ page._id }}').trigger('change');
+
+
+            var shop_id_select = $("#shop_id_select").val();
+
+             $('#update_{{ page._id }}_btn').click(function () {
+               
+                var tag_select = $("#select_tags_filter_{{ page._id }}").val();
+                if (tag_select.length <= 0){
+                  swal('{{ gettext("Ban_chua_chon_tag_khach_hang!") }}', "", "error");
+                  return false;
+                };
+                 var form = $('#update_page_{{ page._id }}')[0];
+                                     var data = new FormData(form);
+                                     var url = $('#update_page_{{ page._id }}').attr('action');
+
+                                      $.ajax({ type: 'post',
+                                               url: url,
+                                          data: data,
+                                          processData: false,
+                                          contentType: false,
+                                          cache: false,
+                                          timeout: 600000,
+                                          success: function (response) {
+                    var returnedData = JSON.parse(response);
+                     if ('error' in returnedData){
+
+                          swal(returnedData['error'], " ", "error");
+                     }else{
+
+
+                          var survey_page = '/splash_page/' + shop_id_select + '/hotspot/tags';
+                          $(location).attr('href', survey_page)
+                     }
+
+
+                  },
+                  error: function(XMLHttpRequest, textStatus, errorThrown) {
+                     swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+                  }});
+
+
+
+             });
+
+
+
+        });
+    </script>
+
+
+                    {% endfor %}
+
+                    </tbody>
+                  </table>
+                </div>
+                     <nav class="c-pagination u-justify-center">
+                        {% if pagination %}
+                            {{ pagination.links }}
+                        {% endif %}
+                    </nav>
+              </div>
+
+
+
+                        </div>
+
+                    </div>
+
+                            {% else %}
+
+                                <div class="card-body">
+                                <div class="row justify-content-center">
+                                     <div class="col-12 col-md-10 col-xl-8 justify-content-center"
+                     style="text-align: center;margin-bottom: 30px; margin-top: 30px">
+                    <!-- Image -->
+                    <img src="/static/nextify/img/happiness.png" alt="..." class="img-fluid mt-n5 mb-4"
+                         style="max-width: 272px;">
+                    <!-- Title -->
+                    <h2>
+                        {{ gettext("Ban_chua_tao_trang_chao_theo_tag._Vui_long_them_loai_trang_chao_theo_tag.") }}
+                    </h2>
+                                          <a data-toggle="modal" href="#new_page_loyal"
+                               class="btn btn-flat d-block d-md-inline-block">
+                                <i class="fa fa-plus"></i> {{ gettext('HotspotNumberofvisitsScreenAddText') }}
+                            </a>
+
+                </div>
+
+                                </div>
+
+
+                                </div>
+
+                            {% endif %}
+
+
+
+
+    <div class="modal hide fade" id="new_page_loyal" tabindex="-1"
+         role="dialog" aria-labelledby="new_page_loyal" data-backdrop="static"
+         style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{ gettext('HotspotNumberofvisitsScreenAddText') }}</h3>
+
+                    <a class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </a>
+                </div>
+
+                    <div class="modal-body">
+                         <form method="POST"
+                      action="/splash_page/{{ shop_id_select}}/item/add"
+                      enctype="multipart/form-data"
+                      id="new_page">
+ <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+ <div class="row">
+                              <div class="col-sm-12 col-md-6 u-mb-medium">
+                                  <div class="form-group">
+                                      <label for="hotspot_method">{{ gettext("Hinh_thuc_hotspot") }}</label>
+                                      <select class="form-control" id="new_hotspot_method"
+                                          name="hotspot_method">
+                                          <option value="default">{{ gettext("Mac_dinh") }}</option>
+                                          <option value="profile_code">Profile code</option>
+                                      </select>
+                                  </div>
+                              </div>
+                              <div id="new_default_code_div" class="col-sm-12 col-md-6 u-mb-medium">
+                                  <div class="form-group">
+                                      <label>Mã mặc định</label><span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                       aria-label='{{ gettext("Ma_truy_cap_Wifi_mac_dinh") }}'>
+                                     <i class="fa fa-question"></i>
+                                 </span>
+                                      <input type="text" class="form-control method-form-control" id="new_default_code" name="default_code">
+                                  </div>
+                              </div>
+                            </div>
+                              <div class="c-field u-mb-small">
+                                    <label class="c-field__label"
+                                           for="photo">{{gettext('HotspotNumberofvisitsScreenPictureText')}}:</label>
+                                    <h5>{{gettext('HotspotNumberofvisitsScreenRecommendText')}}</h5>
+                                    <p class="help-block">
+                                            <img id="img_new_photo" width="200">
+                                    </p>
+
+                                    <input type="file" class="c-input"
+                                           id="new_photo" name="photo">
+                                </div>
+
+
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="title">{{gettext('HotspotNumberofvisitsScreenTitleText')}}:</label>
+                                    <input type="text" maxlength="200"
+                                           class="c-input"
+                                           id="title"
+                                           name="title" 
+                                           placeholder='{{ gettext("(Khong_bat_buoc)") }}'>
+                                </div>
+
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label"
+                                           for="content">{{gettext('HotspotNumberofvisitsScreenContentText')}}:</label>
+                                    <textarea class="c-input"
+                                              id="content" name="content"
+                                              rows="6"
+                                              maxlength="1000"
+                                              placeholder='{{ gettext("(Khong_bat_buoc)") }}'></textarea>
+                                </div>
+                              <div class="c-field u-mb-small">
+                                     <label class="c-field__label"
+                                           for="auto_popup">{{gettext('HotspotNumberofvisitsScreenRedirectText')}}:</label>
+                                    <input type="text"
+                                           class="c-input"
+                                           id="auto_popup"
+                                           name="auto_popup"
+                                           placeholder="">
+                                </div>
+                                <div class="c-field u-mb-small">
+                                        <label class="c-field__label"
+                                               for="new_tags">{{ gettext("Chon_tag_khach_hang:") }}</label>
+                                           <select class="form-control select2" name="tags" id="new_tags" multiple="multiple">
+                                                {% for tag in tags %}
+                                                <option value="{{ tag._id }}">{{ tag.name }}</option>
+                                                {% endfor %}
+                                            </select>   
+                                    </div>
+                          <input type="hidden" id="select_tags_filter"  name="real_tags_filter"/>
+
+                                 <input type="hidden" value="tag" name="auto_mar"/>
+
+                                 <div class="c-field u-mb-small">
+                                   <div class="c-choice c-choice--checkbox">
+                                 <input class="c-choice__input"
+                                        type="checkbox"
+                                           name="active"
+                                           id="active">
+                                    <label class="c-choice__label"
+                                           for="active">{{gettext('HotspotHappyBirthdayScreenActiveText')}}</label>
+                                   </div>
+                                </div>
+
+                              </form>
+                         <script nonce="{{ csp_nonce() }}">
+                                  $(document).ready(function () {
+                                      function readURL(input, input_view) {
+                                          if (input.files && input.files[0]) {
+                                              var reader = new FileReader();
+                                              var view_id = '#' + input_view;
+                                              reader.onload = function (e) {
+                                                  $(view_id).attr('src', e.target.result);
+                                              };
+
+                                              reader.readAsDataURL(input.files[0]);
+                                          }
+                                      }
+
+                                        function validate(photo) {
+                                          var file_size = $(photo)[0].files[0].size;
+                                          var file = $(photo).val();
+                                          var exts = ['jpg', 'png', 'jpeg'];
+                                          if (file) {
+                                            var get_ext = file.split('.');
+                                            get_ext = get_ext.reverse();
+                                            if ($.inArray ( get_ext[0].toLowerCase(), exts) > -1){
+                                              if(file_size > 3670016){
+                                                return "big_file";
+                                              } else{
+                                                return true;
+                                              }
+                                            } else {
+                                              return false;
+                                            }
+                                          }
+
+                                        }
+
+                                      $("#new_photo").change(function () {
+                                        var validate_photo = validate(this);
+                                          if (validate_photo == true){
+                                            swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                                            $('#img_new_photo').show();
+                                          readURL(this, 'img_new_photo');
+                                        } else {
+                                          if (validate_photo = "big_file"){
+                                            swal('{{ gettext("File_co_kich_thuoc_qua_lon!") }}', '', 'error');
+                                            return false
+                                          };
+                                          swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                                          $('#new_photo').val('');
+                                          $('#img_new_photo').hide();
+
+                                        }
+                                      });
+                                        $('#new_tags').select2({
+            dropdownAutoWidth: true
+          });
+               $('#new_tags').on("change", function (e) {
+            if($('#new_tags').val()){
+              $('#select_tags_filter').val($('#new_tags').val().toString());
+            }else{
+              $('#select_tags_filter').val("");
+            }
+      });
+
+
+                                  });
+                                </script>
+                    </div>
+
+                    <div class="modal-footer">
+                       <a href="#" id="new_page_btn" class="c-btn c-btn--info u-float-right">
+                                            {{ gettext("Tao_trang_chao") }}
+                                        </a>
+                    </div>
+
+
+            </div><!-- // .c-modal__content -->
+        </div><!-- // .c-modal__dialog -->
+    </div>
+{% endblock %}
+{% block js %}
+
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('#new_hotspot_method').select2();
+            $('#new_hotspot_method').on('change.select2', function (e) {
+                method = $(this).val();
+                if (method === 'profile_code') {
+                    $("#new_default_code_div").hide();
+                } else {
+                    $("#new_default_code_div").show();
+                }
+            });
+          $("#deactive_splash").click(function(){
+                swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+            })
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            var shop_id_select = $("#shop_id_select").val();
+
+             $('#new_page_btn').click(function () {
+               var select_tags_filter = $("#select_tags_filter").val();
+               var new_photo = $("#new_photo").val();
+               
+               if (new_photo.length <= 0){
+                 swal('{{ gettext("Hinh_anh_khong_duoc_bo_trong") }}', "", "error");
+                 return false;
+               };
+               if (select_tags_filter.length <= 0){
+                 swal('{{ gettext("Ban_chua_chon_tag_khach_hang!") }}', "", "error");
+                 return false;
+               };
+                 var form = $('#new_page')[0];
+                                     var data = new FormData(form);
+                                     var url = $('#new_page').attr('action');
+
+                                      $.ajax({ type: 'post',
+                                               url: url,
+                                          data: data,
+                                          processData: false,
+                                          contentType: false,
+                                          cache: false,
+                                          timeout: 600000,
+                                          success: function (response) {
+                    var returnedData = JSON.parse(response);
+                     if ('error' in returnedData){
+
+                          swal(returnedData['error'], " ", "error");
+                     }else{
+
+
+                          var survey_page = '/splash_page/' + shop_id_select + '/hotspot/tags';
+                          $(location).attr('href', survey_page)
+                     }
+
+
+                  },
+                  error: function(XMLHttpRequest, textStatus, errorThrown) {
+                     swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+                  }});
+
+
+
+             });
+
+
+
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,47 @@
+<div class="chart">
+    <canvas id="daysChart" class="chart-canvas"></canvas>
+  </div>
+  <input type="hidden" value="{{label}}" id="label_data_days" />
+  <input type="hidden" value="{{dataset}}" id="dataset_data_days" />
+  <script>
+    var label_data_days = document.getElementById("label_data_days").value;
+    var dataset_data_days = document.getElementById("dataset_data_days").value;
+    var label_data_days = JSON.parse(label_data_days);
+    var dataset_data_days = JSON.parse(dataset_data_days);
+    var config = {
+        type: 'horizontalBar',
+        data: {
+            labels: label_data_days,
+            datasets: [{
+                backgroundColor: "rgba(235, 29, 29, 0.7)",
+                data: dataset_data_days,
+            }]
+        },
+        options: {
+            // responsive: true,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                mode: 'single',
+                callbacks: {
+                    label: function(tooltipItems, data) {
+                        return  tooltipItems.xLabel + ' lượt đến';
+                    }
+                }
+            }
+        }
+    };
+    var ctx = document.getElementById("daysChart").getContext("2d");
+    new Chart(ctx, config);
+  </script>

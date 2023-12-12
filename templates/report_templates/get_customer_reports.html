@@ -1,0 +1,23 @@
+<div class="panel-header-stats">
+  <div class="row">
+    <div class="col-md-3 col-xs-12" style="text-align: center">
+      <p class="lead"><i class="icon-users"></i> Tổng</p>
+      <p style="font-size: 25px;"><b>{{ total_customers }}</b></p>
+    </div>
+    <div class="col-md-3 col-xs-12" style="text-align: center">
+      <p class="lead"><i class="icon-user"></i> Khách mới</p>
+      <p style="font-size: 25px;"><b>{{ new_customers }}</b></p>
+    </div>
+    <div class="col-md-3 col-xs-12" style="text-align: center">
+      <p class="lead"><i class="icon-user-female"></i> Quay lại</p>
+      <p style="font-size: 25px;"><b>{{ return_customers }}</b></p>
+    </div>
+    <div class="col-md-3 col-xs-12" style="text-align: center">
+      <p class="lead"><i class="icon-user-female"></i> Lượt đến</p>
+      <p style="font-size: 25px;"><b>{{ visit_total }}</b></p>
+    </div>
+  </div>
+</div>
+<div>
+            {% line_chart visit_by_date with id='chart-visit-by-date' %}
+</div>

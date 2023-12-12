@@ -1,0 +1,390 @@
+{% extends 'nextify/base.html' %}
+
+{% block body %}
+<style>
+    .preview {
+        max-height: 256px;
+        height: auto;
+        width: auto;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 5px;
+    }
+
+    .img_container {
+        border-radius: 5px;
+        margin-top: 20px;
+        width: auto;
+    }
+
+    .imgInp {
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #d3d3d3;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row mb-4 align-items-center justify-content-center">
+        <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-lg-block my-5">
+
+
+            <div class="card card-body p-5">
+
+                <div class="row mb-4">
+                    <div class="col text-center">
+
+                        <h1 class="mb-2">
+                            {{ gettext('Cau_hinh_trang_chao_dang_ky') }}
+                        </h1>
+
+
+
+                    </div>
+                </div> <!-- / .row mb-4 -->
+
+                {##}
+                <form method="POST" id="login_form_settings" action="/login_form_settings/{{ shop_id_select }}"
+                    enctype="multipart/form-data">
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+                    <div class="row mb-2">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+
+                                <label class="mb-1" for="logo">Logo</label>
+                                <small class="form-text text-muted">
+                                    {{
+                                    gettext('De_hinh_anh_hien_thi_dep_nhat_vui_long_su_dung_kich_thuoc_2048_x_2048_px.')
+                                    }}
+                                </small>
+                                <div class='img_container'>
+                                    {% if shop_select.logo %}
+                                    <img class="preview" id="view_logo"
+                                        src="//files.nextify.vn/{{ shop_select.logo }}"
+                                        style="width: 168px; height: 168px">
+
+                                    {% endif %}
+                                </div>
+                                <input type="file" class="imgInp" id="logo" name="logo">
+
+                            </div>
+                            <div class="form-group">
+
+                                <label class="mb-1" for="background">{{ gettext('Anh') }} Cover</label>
+                                <small class="form-text text-muted">
+                                    {{
+                                    gettext('De_hinh_anh_hien_thi_dep_nhat_vui_long_su_dung_kich_thuoc_1958_x_745_px.')
+                                    }}
+                                </small>
+                                <div class='img_container'>
+                                    {% if shop_select.background %}
+                                    <img class="preview" id="view_background"
+                                        src="//files.nextify.vn/{{ shop_select.background }}"
+                                        style="width: 502px; height: 197px">
+
+                                    {% endif %}
+
+                                </div>
+                                <input type="file" class="imgInp" id="background" name="background">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+
+
+                            <div class="card bg-light border ml-md-4">
+                                <div class="card-header">{{ gettext('Hinh_thuc_ket_noi') }}</div>
+
+                                <div class="card-body">
+
+                                    <div class="form-group form-inline">
+                                        <input class="form-control" id="checkbox1" name="phone_visible" type="checkbox"
+                                            {% if login_form.phone and login_form.phone|lower=="true" %}checked{% endif
+                                            %}>
+                                        <label style="margin-left: 5px" for="checkbox1"> {{
+                                            gettext('Ket_noi_qua_so_dien_thoai') }}</label>
+                                    </div>
+                                    <div class="form-group form-inline">
+                                        <input class="form-control" id="checkbox2" name="email_visible" type="checkbox"
+                                            {% if login_form.email and login_form.email|lower=="true" %}checked{% endif
+                                            %}>
+                                        <label style="margin-left: 5px" for="checkbox2"> {{ gettext('Ket_noi_qua_Email')
+                                            }}</label>
+                                    </div>
+                                    <div class="form-group form-inline">
+                                        <input class="form-control" id="checkbox10" name="connect_with_facebook"
+                                            type="checkbox" {% if login_form.connect_with_facebook and
+                                            login_form.connect_with_facebook|lower=="true" %}checked{% endif %}>
+                                        <label style="margin-left: 5px" for="checkbox10">{{
+                                            gettext('Ket_noi_qua_Facebook') }}</label>
+                                    </div>
+                                    <!-- <div class="form-group form-inline">
+                                            <input class="form-control" id="checkbox10" name="connect_with_messenger" type="checkbox" {% if login_form.connect_with_messenger and login_form.connect_with_messenger|lower=="true" %}checked{% endif %}>
+                                           <label style="margin-left: 5px" for="checkbox10">{{ gettext('Ket_noi_qua_Facebook_Messenger') }}</label>
+                                        </div> -->
+
+                                </div>
+
+
+                            </div>
+
+
+
+
+                            <div class="card bg-light border ml-md-4">
+                                <div class="card-header">
+                                    {{ gettext('Moi_khach_hang_bo_dung_thong_tin') }}
+                                </div>
+                                <div class="card-body">
+
+                                    <div class="form-group form-inline">
+                                        <input class="form-control" id="checkbox3" name="name_visible" type="checkbox"
+                                            {% if login_form .name and login_form.name|lower=="true" %}checked{% endif
+                                            %}>
+                                        <label style="margin-left: 5px" for="checkbox3">{{
+                                            gettext('HotspotRegisterScreenNameText')}}</label>
+                                    </div>
+                                    <div class="form-group form-inline">
+                                        <input class="form-control" id="checkbox4" name="birthday_visible"
+                                            type="checkbox" {% if login_form.birthday and
+                                            login_form.birthday|lower=="true" %}checked{% endif %}>
+                                        <label style="margin-left: 5px" for="checkbox4">{{
+                                            gettext('HotspotRegisterScreendayofbirthText')}}</label>
+                                    </div>
+                                    <div class="form-group form-inline">
+                                        <input class="form-control" id="checkbox6" name="gender_visible" type="checkbox"
+                                            {% if login_form.gender and login_form.gender|lower=="true" %}checked{%
+                                            endif %}>
+                                        <label style="margin-left: 5px" for="checkbox6">{{
+                                            gettext('HotspotRegisterScreenGenderText')}}</label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label class="mb-1">{{ gettext('HotspotRegisterScreenWelcomemessageText')}}</label>
+                                <textarea class="form-control" id="welcome_text" name="welcome_text" row mb-4s="6">
+                                                              {% if login_form.welcome_text|length > 1 %}
+                                                                  {{ login_form.welcome_text }}
+                                                              {% else %}
+                                                                  {{ gettext('Dang_ky_khach_hang_than_thiet_de_nhan_cac_uu_dai_hap_dan.') }} <br/>
+                                                                  Get connected with FREE WIFI
+                                                              {% endif %}
+                                                        </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label class="mb-1">{{ gettext('HotspotRegisterScreenBirthdaymessageText')}}</label>
+                                <textarea class="form-control" id="birthday_text" name="birthday_text" row mb-4s="6">
+                                                              {% if login_form.birthday_text|length > 1 %}
+                                                                  {{ login_form.birthday_text }}
+                                                              {% else %}
+                                                                  {{ gettext('Dung_quen_nhap_ngay_sinh_nhat_de_nhan_qua_tu_chung_toi_nhe') }}
+                                                              {% endif %}
+                                                        </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label class="mb-1">{{ gettext('HotspotRegisterScreenConnectbuttonText')}}</label>
+                                <textarea class="form-control" id="welcome_button" name="welcome_button" row mb-4s="2">
+                                                      {% if login_form.welcome_button and login_form.welcome_button|length > 1 %}
+                                                          {{ login_form.welcome_button }}
+                                                      {% else %}
+                                                      {{ gettext('Ket_noi_wi-Fi/Go_Online') }}
+                                                      {% endif %}
+                                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+                <div class="row mb-4">
+                    <div class="col text-center">
+                        <a href="/welcome/init_automation/{{shop_id_select}}">
+                            <button class="btn btn-lg btn-primary btn-block text-uppercase">{{
+                                gettext('Tiep_tuc:_Trang_chao_mac_dinh') }}</button>
+                        </a>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+
+        </div>
+        <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-9">
+            <div id="preview"></div>
+
+        </div>
+    </div>
+</div>
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id" />
+{% endblock %}
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        });
+        $('input').each(function () {
+            $(this).val($(this).val().trim());
+        });
+        function readURL(input, input_view) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                var view_id = '#' + input_view;
+                reader.onload = function (e) {
+                    $(view_id).attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#logo").change(function () {
+            readURL(this, 'view_logo');
+        });
+        $("#background").change(function () {
+            readURL(this, 'view_background');
+        });
+
+        var shop_id = $('#shop_id').val();
+        var url_preview = '/preview/' + shop_id + '/register';
+        $("#preview").empty();
+        bioMp(document.getElementById('preview'), {
+            url: url_preview,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+
+
+        function validate(photo) {
+            var file_size = $(photo)[0].files[0].size;
+            var file = $(photo).val();
+            var exts = ['jpg', 'png', 'jpeg'];
+            if (file) {
+                var get_ext = file.split('.');
+                get_ext = get_ext.reverse();
+                if ($.inArray(get_ext[0].toLowerCase(), exts) > -1) {
+                    if (file_size > 3670016) {
+                        return "big_file";
+                    } else {
+                        return true;
+                    }
+                } else {
+                    return false;
+                }
+            }
+
+        }
+        $("#logo").change(function () {
+            var validate_photo = validate(this);
+            if (validate_photo == true) {
+                swal('{{ gettext("Chon_File_thanh_cong") }}', '', 'success');
+                $('#view_logo').show();
+                // readURL(this, 'view_logo');
+            } else {
+                if (validate_photo == "big_file") {
+                    swal('{{ gettext("File_co_kich_thoc_qua_lon") }}', '', 'error');
+                    return false
+                };
+                swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                $('#logo').val('');
+                $('#view_logo').hide();
+            }
+        });
+
+        $("#background").change(function () {
+            if (validate(this) == true) {
+                swal('{{ gettext("Chon_File_thanh_cong") }}', '', 'success');
+                $('#view_background').show();
+                // readURL(this, 'view_background');
+            } else {
+                swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                $('#background').val('');
+                $('#view_background').hide();
+            }
+        });
+
+        $('#login_form_settings').on('change paste', ':input', function (e) {
+            var form = $("#login_form_settings");
+            var formData = new FormData(form[0]);
+
+            $.ajax({
+                type: "POST",
+                url: $('#login_form_settings').prop("action"),
+                //dataType: 'json', //not sure but works for me without this
+                data: formData,
+                contentType: false, //this is requireded please see answers above
+                processData: false, //this is requireded please see answers above
+                //cache: false, //not sure but works for me without this
+                error: function (e) {
+                    swal("{{ gettext('Co_loi_xay_ra,_thu_lai_sau') }}", " ", "error");
+                },
+                success: function (response) {
+                    var shop_id = $('#shop_id').val();
+                    var url_preview = '/preview/' + shop_id + '/register';
+                    $("#preview").empty();
+                    bioMp(document.getElementById('preview'), {
+                        url: url_preview,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 618,
+                        width: 308
+                    });
+                }
+            });
+
+        });
+
+        $('#login_form_settings').on('keyup', ':input', function (e) {
+            if ($(this).val() != $(this).data('val')) {
+                var form = $("#login_form_settings");
+                var formData = new FormData(form[0]);
+
+                $.ajax({
+                    type: "POST",
+                    url: $('#login_form_settings').prop("action"),
+                    //dataType: 'json', //not sure but works for me without this
+                    data: formData,
+                    contentType: false, //this is requireded please see answers above
+                    processData: false, //this is requireded please see answers above
+                    //cache: false, //not sure but works for me without this
+                    error: function (e) {
+                        swal("{{ gettext('Co_loi_xay_ra,_thu_lai_sau') }}", " ", "error");
+                    },
+                    success: function (response) {
+                        var shop_id = $('#shop_id').val();
+                        var url_preview = '/preview/' + shop_id + '/register';
+                        $("#preview").empty();
+                        bioMp(document.getElementById('preview'), {
+                            url: url_preview,
+                            view: 'front',
+                            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                            height: 618,
+                            width: 308
+                        });
+                    }
+                });
+            }
+        });
+
+    });
+</script>
+{% endblock %}

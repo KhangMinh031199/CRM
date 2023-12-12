@@ -1,0 +1,58 @@
+{% extends "v2/base.html" %} {% block right_content %}
+
+  <div class="row">
+
+    <div class="panel panel-white">
+      <div class="panel-heading clearfix">
+        <h4 class="title">Coupons/Vouncher</h4>
+      </div>
+
+       <div class="panel-body">
+
+        <table class="table table-hover table-striped">
+          <thead>
+          <th>ID</th>
+          <th>{{ gettext("Name") }}</th>
+          <th>{{ gettext("Notes") }}</th>
+          <th>{{ gettext("Discount Percent") }}</th>
+          <th>{{ gettext("Discount_Amount") }}</th>
+          <th>{{ gettext("Expire_Date") }}</th>
+          <th>{{ gettext("Active") }}</th>
+          </thead>
+          <tbody>
+          {% for voun in vounchers %}
+            <tr>
+              <td><a
+                href="/vounchers/{{ voun.CouponSeriesId }}">{{ voun.CouponSeriesId }}</a>
+              </td>
+              <td><a
+                href="/vounchers/{{ voun.CouponSeriesId }}">{{ voun.CouponSeriesName }}</a>
+              </td>
+              <td>{{ voun.Notes }}</td>
+              <td>{{ voun.DiscountPercent }}</td>
+              <td>{{ voun.DiscountAmount }}</td>
+              <td>{{ voun.ExpireDate }}</td>
+              <td>{{ voun.Active }}</td>
+            </tr>
+          {% endfor %}
+
+          </tbody>
+        </table>
+        {% if pagination %}
+          <center>
+            {{ pagination.links }}
+          </center>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}
+{% block js %}
+   <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+      $('#vouchers').collapse('show');
+    });
+  </script>
+{% endblock %}

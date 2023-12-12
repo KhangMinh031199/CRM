@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<!-- include css file -->
+	<link rel="stylesheet" href="/static/wifi_portal/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/wifi_portal/css/fonts.css">
+	<link rel="stylesheet" href="/static/wifi_portal/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/static/wifi_portal/css/styles.css?v3">
+	<!-- end include css file -->
+</head>
+<body class="{% if card.photo %}wifi_app_event {% else %}wifi_app_comback {%endif %}">
+
+            {% if card.photo %}
+                <div class="container main_event">
+		<div class="row" style="height: 100%;">
+			<div class="col-sm col-md-8 col-lg-6 mg-auto box_layout"
+           style="background-image: url('//files.nextify.vn/{{ card.photo}}')">
+				<div class="box_content">
+					<h3 class="title">
+					{{ content|safe }}
+					</h3>
+
+          <center>
+        <h3>
+            <i class="fe fe-wifi" aria-hidden="true"></i>Kết nối thành công
+          </h3>
+          </center>
+
+					<div id="wftimer">
+						<div><p>Please Wait <span>5</span> seconds</p></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+            {% else %}
+
+	<div class="container">
+        <!-- header -->
+		<div class="row">
+			<div class="col-md-8 col-lg-6 mg-auto">
+				<div class="box_logo">
+					<div class="logo">
+						<img src="//files.nextify.vn/{{ shop.logo }}" alt="">
+					</div>
+				</div>
+				<div class="box_circle">
+					<div class="title_wc">
+						<h3>Chào mừng quay lại!</h3>
+					</div>
+					<div class="box_circle_image">
+						<div class="box_avatar">
+               {% if user.avatar and user.avatar|length > 0 %}
+
+            <img src="{{ user.avatar }}" alt="">
+          {% else %}
+            <img src="/static/v2/assets/img/medium-default-avatar.png" alt="">
+          {% endif %}
+
+							<div class="dot"></div>
+							<div class="dot_one"></div>
+							<div class="dot_two"></div>
+							<div class="dot_three"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- end header -->
+
+		<!-- footer -->
+		<div class="row">
+			<div class="col-md-6 col-lg-4 mg-auto" style="text-align:center">
+				<div class="btn_action">
+
+          <div class="box_text_intro">
+                        <h3><i
+                class="fe fe-wifi font_size_24" aria-hidden="true"></i>Kết nối thành công</h3>
+
+        </div>
+
+				</div>
+			</div>
+		</div>
+		<!-- end footer -->
+	</div>
+            {% endif %}
+	<!-- include js file -->
+	<script src="/static/wifi_portal/js/jquery-3.3.1.min.js"></script>
+	<script src="/static/wifi_portal/js/bootstrap.min.js"></script>
+	<!-- end include js file -->
+   <script nonce="{{ csp_nonce() }}">
+    jQuery(document).ready(function() {
+        {% if card.photo %}
+      var sec = 5
+      var timer = setInterval(function() {
+         $("#wftimer span").text(sec--);
+            if (sec == -2) {
+            $("#makingdifferenttimer").delay(500).show();
+            $("#wftimer").hide(1000).css("display", "none");
+          }
+        },1000);
+        {% endif %}
+
+      });
+  </script>
+
+</body>
+</html>

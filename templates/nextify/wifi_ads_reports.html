@@ -1,0 +1,365 @@
+{% extends 'nextify/base.html' %}
+{% block css %}
+<link rel="stylesheet" href="/static/daterangepicker/daterangepicker.css" />
+<link href="/static/css/table.css" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/calendar.css">
+{% endblock %}
+{% block main_content %}
+<div class="container-fluid">
+  <div class="header">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">
+            Chiến dịch
+          </h6>
+          <!-- Title -->
+          <h1 class="header-title">
+            Báo cáo chiến dịch WIFI
+          </h1>
+        </div>
+
+
+        <div class="col-auto">
+          <div id="reportrange"
+            style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+            <i class="fa fa-calendar"></i>&nbsp;
+            <span></span> <i class="fa fa-caret-down"></i>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 col-xl-6">
+      <!-- Traffic -->
+      <div class="card">
+        <div class="card-header">
+          <!-- Title -->
+          <h4 class="card-header-title">
+            Chiến dịch
+          </h4>
+        </div>
+        <div class="card-body">
+          <!-- Chart -->
+          <input type="hidden" name="type_camp_chart" value="{{ type_camp_chart }}" id="type_camp_chart">
+          <div class="chart chart-appended">
+            <canvas id="campaignChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-12 col-xl-6">
+
+      <!-- Traffic -->
+      <div class="card">
+        <div class="card-header">
+
+          <!-- Title -->
+          <input type="hidden" name="result_chart" value="{{ result_chart }}" id="result_chart">
+          <h4 class="card-header-title">
+            Kết quả
+          </h4>
+
+        </div>
+        <div class="card-body">
+          <!-- Chart -->
+          <div class="chart chart-appended">
+            <canvas id="resultChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-3">
+      <div class="card">
+        <div class="card-header">
+          Bộ lọc
+        </div>
+        <div class="card-body">
+          <form id="form_filter_camp" action="/wifi_ads/reports" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <div class="form-group">
+              <label>{{ gettext("Dia_diem") }}:</label>
+              <select id="loc_filter" class="custom-select control-container" name="loc_filter" multiple>
+                {% for shop in shop_in_mer %}
+                <option value="{{ shop._id }}">{{ shop.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Tags:</label>
+              <select id="tags_filter" class="custom-select control-container" name="tags_filter" data-toggle="select" multiple>
+                {% for tag in tags %}
+                  <option value="{{ tag._id }}">{{ tag.name }}</option>
+                  {% endfor %}
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer text-right">
+          <a href="#!" class="btn btn-primary" id="filter_campaign">
+            Xem
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-9">
+      <div class="card table-card">
+        <div class="card-header">
+          <div class="col">
+            <form>
+              <div class="input-group input-group-flush input-group-merge input-group-reverse">
+                <input class="form-control list-search" type="search" autofocus
+                  placeholder="Tìm kiếm theo tên chiến dịch hoặc địa điểm">
+                <span class="input-group-text">
+                  <i class="fe fe-search"></i>
+                </span>
+              </div>
+            </form>
+
+          </div>
+          <div class="col-auto">
+            <div class="nav btn-group d-inline-flex" role="tablist">
+              <button class="btn btn-dark active" id="contactsListTab" data-bs-toggle="tab"
+                data-bs-target="#contactsListPane" role="tab" aria-controls="contactsListPane" aria-selected="true">
+                <span class="fe fe-list"></span>
+              </button>
+              <button class="btn btn-dark" id="contactsCardsTab" data-bs-toggle="tab"
+                data-bs-target="#contactsCardsPane" role="tab" aria-controls="contactsCardsPane" aria-selected="false">
+                <span class="fe fe-grid"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="table campaigns-table v2" id="list_data" style="display: none;">
+          <table class="table v2">
+            <thead>
+              <tr>
+                <th data-field="campaignName"><span class="th-contents"><span class="text">Chiến
+                      dịch</span></span></th>
+                <th data-field="estWalk"><span class="th-contents"><span class="text">Trạng thái</span></span></th>
+
+
+                <th data-field="impressions"><span class="th-contents"><span class="text">Lượt hiển thị</span></span>
+                </th>
+                <th data-field="clicks">
+                  <span class="text">Số địa điểm</span>
+
+                </th>
+                <th data-field="estWalk"><span class="th-contents"><span class="text">Kết quả</span></span></th>
+                <th data-field="actionIcons"><span class="th-contents"><span class="text"></span></span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for camp in campaigns %}
+              <tr>
+                <td data-field="campaignName"><span class="th-contents"><span class="text">Campaign</span></span>
+                  <div class="campaign-name-row">
+                    <div class="campaign-thumb is-clickable">
+                      <i class="fe fe-wifi fa-lg" style="display:inline-block;text-align: center;
+                                     vertical-align: bottom;"></i>
+                    </div>
+                    <div class="campaign-name">{{ camp.name }}</div>
+                    <div class="campaign-dates">Cập nhật
+                      lúc {{ camp.update_at|get_human_time }}</div>
+                  </div>
+                </td>
+                <td data-field="status">
+                  <div class="custom-control custom-switch">
+                    <input camp_id="{{ camp._id }}" class="custom-control-input" id="active_status_{{ camp._id }}"
+                      status_id="active_status_{{ camp._id }}" type="checkbox" {% if camp.status and
+                      camp.status|lower=="true" %}checked{% endif %}>
+                    <label class="custom-control-label" for="active_status_{{ camp._id }}"></label>
+                  </div>
+                </td>
+
+                <td data-field="impressions"><span class="th-contents"><span class="text">Lượt hiển thị</span></span>
+
+                  <div class="campaign-metric"><span>{{ camp.total_access }}</span></div>
+                </td>
+                <td data-field="impressions"><span class="th-contents"><span class="text">Số địa điểm</span></span>
+
+                  <div class="campaign-metric"><span>{{ camp.total_shops }}</span></div>
+                </td>
+                <td data-field="impressions"><span class="th-contents"><span class="text">Kết quả</span></span>
+
+                  <div class="campaign-metric"><span class="badge badge-soft-{{ ['success','warning','info']|random }}">
+                    {% if camp.result and
+                      camp.result|string=="True" %} Hoàn thành
+                      {% else %} Chưa hoàn thành
+                      {% endif %}
+                  </span></div>
+                </td>
+              </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="card-body mt-3" id="calendar_data" style="display: none;">
+          <div class="table campaigns-table v2" >
+            <input type="hidden" name="events" value="{{ events }}" id="events" />
+            <div id="calendar"></div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+{% block js %}
+<script src="{{ url_for('static', filename='daterangepicker/daterangepicker.js') }}"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#loc_filter').select2();
+    var start = moment().subtract(29, 'days');
+    var end = moment();
+
+    function cb(start, end) {
+      $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    }
+
+    $('#reportrange').daterangepicker({
+      startDate: start,
+      endDate: end,
+      ranges: {
+        'Hôm nay': [moment(), moment()],
+        'Hôm qua': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        '7 ngày gần nhất': [moment().subtract(6, 'days'), moment()],
+        '30 ngày gần nhất': [moment().subtract(29, 'days'), moment()],
+        'Tháng này': [moment().startOf('month'), moment().endOf('month')],
+        'Tháng trước': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+      }
+    }, cb);
+
+    cb(start, end);
+    var result_chart = $('#result_chart').val();
+    arr_result_chart = JSON.parse(result_chart);
+    var config = {
+      type: 'pie',
+      data: {
+        labels: [
+          'Hoàn thành',
+          'Chưa hoàn thành'
+        ],
+        datasets: [{
+          label: 'My First Dataset',
+          data: arr_result_chart,
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)'
+
+          ],
+          hoverOffset: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+      }
+    };
+    var ctx = document.getElementById("resultChart").getContext("2d");
+
+    new Chart(ctx, config);
+    var data_chart_camp = $('#type_camp_chart').val();
+    arr_camp_chart = JSON.parse(data_chart_camp);
+    var config_camp = {
+      type: 'pie',
+      data: {
+        labels: [
+          'Độc quyền',
+          'Chia sẻ',
+          'Mặc định',
+          'Đối tác'
+        ],
+        datasets: [{
+          label: 'My First Dataset',
+          data: arr_camp_chart,
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)',
+            'rgb(86, 255, 125)'
+
+          ],
+          hoverOffset: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+      }
+    };
+    var ctx_camp = document.getElementById("campaignChart").getContext("2d");
+    new Chart(ctx_camp, config_camp);
+
+    $('#contactsListTab').addClass("active");
+    $("#contactsCardsTab").removeClass("active");
+    $('#list_data').show();
+    $('#calendar_data').hide();
+
+    $("#contactsListTab").click(function () {
+      $('#contactsListTab').addClass("active");
+      $("#contactsCardsTab").removeClass("active");
+      $('#list_data').show();
+      $('#calendar_data').hide();
+    });
+
+    $("#contactsCardsTab").click(function () {
+      $('#contactsListTab').removeClass("active");
+      $("#contactsCardsTab").addClass("active");
+      $('#list_data').hide();
+      $('#calendar_data').show();
+      var events = $('#events').val();
+      events = JSON.parse(events);
+      var calendarEl = document.getElementById('calendar');
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        initialDate: '2021-11-23',
+        headerToolbar: {
+
+        },
+
+        events: events
+      });
+
+      calendar.render();
+    });
+
+    $("#filter_campaign").click(function (e) {
+        e.preventDefault();
+        var loc_filter = $("#loc_filter").val().toString();
+        var tags_filter = $("#tags_filter").val().toString();
+        var data = {
+          'tags_filter': tags_filter,
+          'loc_filter': loc_filter
+        }
+        $("#list_data").empty();
+        $.ajax({
+            type: "POST",
+            url: $("#form_filter_camp").attr("action"),
+            data: data,
+            success: function (data) {
+              $("#list_data").html(data);
+            }
+        });
+    });
+  });
+
+</script>
+
+{% endblock %}

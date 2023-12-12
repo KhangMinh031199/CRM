@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7 ]>
+<html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>
+<html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>
+<html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en"> <!--<![endif]-->
+
+    <head>
+
+        <meta charset="utf-8">
+        <title>Login - WifiMan</title>
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/layout.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/splash.css') }}">
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/background-overlay.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+
+        <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="javascript"></script>
+        <![endif]-->
+
+        <link rel="shortcut icon" href="/static/favicon.ico">
+    </head>
+    <body>
+        <div id="background-image" style="background: url('//files.nextify.vn/9832a841bea9842403a0ad75cdb9fef0.jpg') no-repeat bottom center; background-size: cover; -webkit-background-size: cover;-moz-background-size: cover; -o-background-size: cover;"></div>
+        <div id="background-overlay"></div>
+
+        <div class="splash-main-block">
+            <div class="splash-logo">
+                <img src="/static/favicon.png" alt="WifiMan"/>
+            </div>
+
+            <div class="splash-headline"></div>
+
+            {% if error %}
+              <div class="alert alert-danger">
+                {{ error }}
+              </div>
+            {% elif phone %}
+              <div class="alert alert-success">
+                  SMS chứa mã xác thực vừa được gửi đến số <strong>{{ phone }}</strong>
+              </div>
+            {% else %}
+              <div class="alert alert-success">
+                {%if session.is_emps%} Nhập số điện thoại thu ngân {%else%} Nhập số điện thoại quản lý cửa hàng {%endif%}
+              </div>
+            {% endif %}
+
+            <form method="POST" action="/login">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                <input type="hidden" name="is_emps" value="{{session.is_emps}}"/>
+                {% if session.phone_verification_hash %}
+                <div class="form-group">
+                    <label for="name">Nhập mã xác thực:</label>
+                    <input type="tel" maxlength="5" class="form-control" id="name" name="phone_verification_code" autofocus required>
+                    <p class="help-block">{{ session.phone_verification_hint | safe }}</p>
+                </div>
+                <div class="checkbox">
+                    <label>
+                    <input type="checkbox" name="remember" checked> Ghi nhớ trạng thái đăng nhập
+                    </label>
+                </div>
+                <input type="hidden" name="phone" value="{{ phone }}">
+                <input type="hidden" name="is_manage" value="{{ is_manage }}">
+
+                <button type="submit" class="button btn-block">Xác nhận</button>
+                {% else %}
+                <div class="form-group">
+                    <label for="phone">Số điện thoại:</label>
+                    <input type="tel" maxlength="15" class="form-control" id="phone" name="phone" required value="{{ session.phone }}">
+                </div>
+                <div class="checkbox">
+                    <label>
+                    <input type="checkbox" name="is_manage"> Quản lý chuỗi
+                    </label>
+                </div>
+
+                <button type="submit" class="button btn-block">Gửi mã xác thực</button>
+                {% endif %}
+            </form>
+          </div>
+
+
+     <script nonce="{{ csp_nonce() }}">
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-77263576-1', 'auto');
+      ga('send', 'pageview');
+
+      {% if phone %}
+        ga('send', 'event', 'Login: Step 2');
+      {% else %}
+        ga('send', 'event', 'Login: Step 1');
+      {% endif %}
+   </script>
+
+    </body>
+</html>

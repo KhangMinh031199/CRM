@@ -1,0 +1,71 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="c-toolbar u-mb-medium">
+        <h3 class="c-toolbar__title has-divider">{{ shop_select.name }}</h3>
+        <h5 class="c-toolbar__meta u-mr-auto">{{ gettext('Thiet_lap_chien_dich_quang-cao') }}</h5>
+        <div class="c-field c-field--inline has-icon-right u-hidden-down@tablet">
+            <div class="c-search-form__section">
+                <input type="hidden" value="{{ shop_id_select }}"
+                       id="current_shops"/>
+                <select class="c-select"
+                        style="width: 100%;" id="locations_selects">
+                    <option value="all">{{ gettext('Thiet_lap_chuoi') }}</option>
+                    {% for shop_mer in shop_in_mer %}
+                        <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                    {% endfor %}
+
+                </select>
+            </div>
+        </div>
+
+    </div>
+    <div class="container">
+        <div class="row u-mb-large">
+            <div class="col-lg-12">
+                <div class="card u-p-medium">
+                    <div class="c-table-responsive@desktop">
+                        <div id="view_data"></div>
+                        <nav class="c-pagination u-justify-center">
+                            {% if pagination %}
+                                {{ pagination.links }}
+                            {% endif %}
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+    <input type="hidden" value="{{ page }}" id="page"/>
+
+{% endblock %}
+{% block js %}
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            var data_soure_shops = $("#current_shops").val();
+            $('#locations_selects').select2().val(data_soure_shops)
+                .trigger("change");
+            $('#locations_selects').on("change", function (e) {
+                var location_href = $('#locations_selects').val();
+                var href = '/marketing_campaign/' + location_href;
+                $(location).attr('href', href);
+            });
+            var url = "/get_sms_marketing/"+ $("#shop_id_select").val() +"?page="+$("#page").val();
+            $.ajax({
+                url: url,
+                success: function (data) {
+                    $("#view_data").html(data);
+                }
+            });
+        });
+    </script>
+{% endblock %}

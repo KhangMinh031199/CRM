@@ -1,0 +1,25 @@
+<table class="table table-hover table-striped">
+                        <thead>
+                        <th>{{ gettext("So_tien") }}</th>
+                        <th>{{ gettext("Loai") }}</th>
+              <th>{{ gettext("Dia_diem") }}</th>
+              <th>{{ gettext("Thoi_gian") }}</th>
+                        </thead>
+                        <tbody>
+                        {% for his in history_trans %}
+                        <tr>
+                           <td>{{ his.credit|format_price }}</td>
+                        <td>{% if his.type=='add' %}Tích{% else %}Trừ{% endif
+                          %}</td>
+                  <td>{% if his.shop and his.shop|length>0 %}
+                    {{ his.shop.name }}{% endif %}</td>
+                  <td>{% if his.sale %}{% if his.sale.UpdateDate %}{{ his
+                  .sale.UpdateDate|human_time_string }}{% else %}{{ his
+                  .when|human_time_string }}{% endif %}{% else %}{{ his
+                  .when|human_time_string }}{% endif %}</td>
+                        </tr>
+                         {% endfor %}
+                         </tbody>
+                    </table>
+<input type="hidden" id="credit_page" value="{{page}}"/>
+<input type="hidden" id="credit_total_page" value="{{total_page}}"/>

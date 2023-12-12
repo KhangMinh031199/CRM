@@ -1,0 +1,481 @@
+{% extends 'nextify/base.html' %}
+{% block css %}
+<link rel="stylesheet" href="/static/daterangepicker/daterangepicker.css" />
+<link href="/static/css/table.css" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/calendar.css">
+{% endblock %}
+{% block main_content %}
+<div class="container-fluid">
+    <div class="header">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+                    <div class="col">
+                        <a href="#new_tag_modal" data-toggle="modal" class="btn btn-danger mb-3">
+                            <i class="fe fe-plus"></i> {{ gettext("Them_moi") }}
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <form>
+                        <div class="input-group mb-3">
+                            <input class="form-control" type="search"
+                                placeholder="Tìm kiếm theo tên chiến dịch hoặc địa điểm">
+                            <span class="input-group-text border-0" id="">
+                                <i class="fa fa-search"></i>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+
+
+                <div class="col-auto">
+                    <select class="custom-select control-container" id="range_time">
+                        <option value="7">7 ngày gần nhất</option>
+                        <option value="31">31 ngày gần nhất</option>
+                        <option value="365">12 tháng gần nhất</option>
+                        <option value="all">Toàn thời gian</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-3">
+                    <select class="custom-select control-container" id="shop_in_mer">
+                        <option value="all">{{ gettext("Tat_ca_dia_diem") }}</option>
+                        {% for shop_mer in shop_in_mer %}
+                        <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-xl-3">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items">
+                        <div class="col">
+                            <h4 class="card-header-title">
+                                {{ gettext("Bo_loc") }}
+                            </h4>
+                        </div>
+                        <div class="col-auto">
+                            <h4 class="card-header-title">
+                                <a href="#" id="reset_filter" class="btn btn-flat d-block d-md-inline-block"><i
+                                        class="fa fa-undo"></i> </a>
+                            </h4>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <form id="form_cus" action="/customers" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <input type="hidden" name="page" value="{{ page }}" />
+                        <input type="hidden" name="loc_id" value="{{ loc_id }}" />
+                        <div class="form-group">
+                            <label>{{ gettext("Sap_xep") }}</label>
+                        </div>
+                        <div class="form-group row">
+
+                            <input type="hidden" value="{% if sort %}{{ sort }}{% endif %}" id="cus_filter" />
+                            <div class="col-12">
+                                <div class="custom-control custom-switch">
+
+                                    <input type="radio" class="custom-control-input" id="customSwitch2" name="sort"
+                                        value="time_asc" {% if sort=='time_asc' %}checked="checked" {% endif %}>
+                                    <label class="custom-control-label" for="customSwitch2">{{ gettext("Thoi_gian")
+                                        }}</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-12" style="margin-top:10px">
+                                <div class="custom-control custom-switch">
+
+                                    <input type="radio" class="custom-control-input" id="customSwitch1" name="sort"
+                                        value="visit_asc" {% if sort=='visit_asc' %}checked="checked" {% endif %}>
+                                    <label class="custom-control-label" for="customSwitch1">{{ gettext("Luot_den")
+                                        }}</label>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <hr>
+                        <div class="form-group">
+
+                            <label>{{ gettext("Gioi_tinh") }}</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" value="{% if gender %}{{ gender }}{% endif %}" id="ex_gender" />
+
+                            {% if not gender or gender|string == 'None' %}
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox1" name="gender" value="1" type="checkbox"
+                                    checked>
+                                <label class="c-choice__label" for="checkbox1">{{ gettext("Nam") }}</label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox2" name="gender" value="2" type="checkbox">
+                                <label class="c-choice__label" for="checkbox2">{{ gettext("Nu") }}</label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox3" name="gender" value="0" type="checkbox">
+                                <label class="c-choice__label" for="checkbox3">{{ gettext("Chua_xac_dinh") }}</label>
+                            </div>
+                            {% else %}
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox1" name="gender" value="1" type="checkbox" {%
+                                    if '1' in gender %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox1">{{ gettext("Nam") }}</label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox2" name="gender" value="2" type="checkbox" {%
+                                    if '2' in gender %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox2">{{ gettext("Nu") }}</label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox3" name="gender" value="0" type="checkbox" {%
+                                    if '0' in gender %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox3">{{ gettext("Chua_xac_dinh") }}</label>
+                            </div>
+                            {% endif %}
+
+                        </div>
+                        <hr>
+
+                        <div class="form-group">
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox4" name="employee" id="employee_check" {% if
+                                    employee and 'on' in employee %}checked{% endif %} type="checkbox">
+                                <label class="c-choice__label" for="checkbox4">{{ gettext("Nhan_vien") }}</label>
+                            </div>
+                            <input type="hidden" id="ex_employee" value="{% if employee %}{{ employee }}{% endif %}" />
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label>Tags</label>
+                        </div>
+                        <div class="col">
+                            <select class="custom-select control-container" id="shop_in_mer">
+                                <option value="all">{{ gettext("Tat_ca_dia_diem") }}</option>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label>{{ gettext("Thoi_gian_den") }}</label>
+                        </div>
+
+                        <div class="form-group row">
+
+                            <div class="col-6">
+
+                                <input id="from_date" name="from_date" type="text"
+                                    placeholder='{{ gettext("Tu_ngay") }}..' class="form-control">
+                            </div>
+                            <div class="col-6">
+
+                                <input id="to_date" name="to_date" type="text" placeholder='{{ gettext("Den_ngay") }}..'
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label>{{ gettext("Sinh_nhat") }}</label>
+                        </div>
+                        <div class="form-group row">
+
+                            <div class="col-6">
+
+                                <input id="bday_from_date" name="bday_from_date" type="text"
+                                    placeholder='{{ gettext("Tu_ngay") }}..' class="form-control">
+                            </div>
+                            <div class="col-6">
+
+                                <input id="bday_to_date" name="bday_to_date" type="text"
+                                    placeholder='{{ gettext("Den_ngay") }}..' class="form-control">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label>{{ gettext("Luot_den") }}</label>
+                        </div>
+                        <div class="form-group row">
+
+                            <div class="col-6">
+                                <input type="text" id="min_visit" name="min_visit"
+                                    placeholder='{{ gettext("Lon_hon") }}' class="form-control"
+                                    value="{% if min_visit and min_visit!='None' %}{{ min_visit }}{% endif %}" />&nbsp;<span
+                                    id="errmsgn"></span>
+                            </div>
+                            <div class="col-6">
+                                <input type="text" id="max_visit" name="max_visit"
+                                    placeholder='{{ gettext("Nho_hon") }}' class="form-control"
+                                    value="{% if max_visit and max_visit!='None' %}{{ max_visit }}{% endif %}" />&nbsp;<span
+                                    id="errmsgx"></span>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div class="form-group">
+                            <label>{{ gettext("So_ngay_chua_quay_lai") }}</label>
+                            <input type="text" id="lost_day" name="lost_day" placeholder="30" class="form-control"
+                                value="{% if lost_day and lost_day!='None' %}{{ lost_day }}{% endif %}" />&nbsp;<span
+                                id="errmsg1"></span>
+                        </div>
+
+
+                        <hr>
+
+                        <div class="form-group">
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox1" name="phone_filter" type="checkbox" {% if
+                                    phone_filter and 'on' in phone_filter %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox1">{{ gettext("So_dien_thoai") }}</label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox2" name="email_filter" type="checkbox" {% if
+                                    email_filter and 'on' in email_filter %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox2">Email</label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox3" name="zalo_filter" type="checkbox" {% if
+                                    zalo_filter and 'on' in zalo_filter %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox3">Zalo</label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox3" name="fb_filter" type="checkbox" {% if
+                                    fb_filter and 'on' in fb_filter %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox3">Facebook Messenger</label>
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label>{{ gettext("Xuat_file_cho_quang_cao") }}</label>
+                        </div>
+
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <div class="c-choice c-choice--checkbox">
+                                    <input class="c-choice__input" id="checkbox_ads" name="is_ads" value="facebook"
+                                        type="checkbox">
+                                    <label class="c-choice__label" for="checkbox_ads">facebook</label>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="c-choice c-choice--checkbox">
+                                    <input class="c-choice__input" id="checkbox_ads_1" name="is_ads" value="zalo"
+                                        type="checkbox">
+                                    <label class="c-choice__label" for="checkbox_ads_1">zalo</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+
+                </div>
+                <div class="card-footer text-center">
+                    <a class="btn btn-outline-primary" id="view_data">
+                        {{ gettext("Xem") }}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-xl-9">
+
+            <div id="customers_load" class="loader_avg"></div>
+
+
+            <div class="card" id="lists" data-toggle="lists">
+                <div class="card-body text-center" id="customers_loading_view" style="display: none;">
+                    <div class="spinner-border text-danger" role="status">
+                        <span class="visually-hidden"></span>
+                    </div>
+
+                </div>
+                <div id="list_data">
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+                            <table class="table table-hover table-sm table-nowrap card-table">
+                                <thead>
+                                    <tr>
+                                        <th>
+
+                                        </th>
+                                        <th>
+                                            <h3 class="mb-1" style="font-weight: 700;">{{ gettext("Khach_hang") }} ({{
+                                                total }}) </h3>
+                                        </th>
+                                        <th>
+                                            <h3 class="mb-1" style="font-weight: 700;">{{ gettext("Luot_den") }}</h3>
+                                        </th>
+                                        <th>
+                                            <h3 class="mb-1" style="font-weight: 700;">{{ gettext("Lan_cuoi") }}</h3>
+                                        </th>
+                                        <th>
+
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody class="list">
+                                    {% for cus in customers %}
+                                    <tr>
+
+                                        <td>
+                                            <a href="#" user_id="{{ cus.user._id }}" class="avatar detail_customer">
+                                                {% if cus.user.avatar and cus.user.avatar|length > 0 %}
+                                                <img class="avatar-img rounded-circle"
+                                                    src="{{ cus.user.avatar.replace('http:', 'https:') }}" />
+                                                {% else %}
+                                                {% set avatar = cus.user|human_avatar %}
+                                                <img class="avatar-img rounded-circle" src="{{ avatar }}" />
+
+                                                {% endif %}
+                                            </a>
+                                        </td>
+                                        <td class="orders-product detail_customer" user_id="{{ cus.user._id }}">
+
+
+                                            <h4 class="mb-1">
+                                                {% if cus.user.phone and cus.user.phone|string != 'None' and
+                                                cus.user.phone|length != 0 %}
+
+                                                {{ cus.user.phone }}
+
+                                                {% else %}
+                                                {% if cus.user.email | string != 'None' %}
+                                                {{ cus.user.email }}{% endif %}
+
+                                                {% endif %}
+
+                                            </h4>
+
+                                            {% if (not cus.user.name and not cus.user.phone and not cus.user.email) or
+                                            (cus.user.phone | string == 'None' and cus.user.name|string == 'None' and
+                                            cus.user.phone|length == 0 and cus.user.email | string == 'None' and
+                                            cus.user.client_mac|string != 'None') and cus.user.client_mac | length > 0
+                                            %}
+                                            <div class="name">
+                                                {%if 'client_mac' in cus.user %}
+                                                {{ cus.user.client_mac[0] if cus.user.client_mac[0] |string != 'None'
+                                                else '' }}
+                                                {%else%}
+
+                                                {%endif%}
+                                            </div>
+                                            {% endif %}
+                                            <div class="contact">
+                                                {% if cus.user.name and cus.user.name|string != 'None' and
+                                                cus.user.name|length != 0 %}
+                                                {{ cus.user.name }} {% endif %}
+                                            </div>
+                                        </td>
+                                        <td class="orders-date">
+                                            {{ cus.total_visit }}
+                                        </td>
+                                        <td class="orders-total">
+                                            {{ cus.last_visit|human_time }}
+                                        </td>
+                                        <td class="orders-status">
+                                            <a href="#" user_id="{{ cus.user._id }}"
+                                                class="btn btn-flat d-block d-md-inline-block detail_customer"><i
+                                                    class="fa fa-eye" data-toggle="tooltip"
+                                                    title="Chi tiết"></i></a>
+                                            <a href="#" user_id="{{ cus.user._id }}"
+                                                class="btn btn-flat d-block d-md-inline-block visit_log"><i
+                                                    class="fa fa-map-marker-alt" data-toggle="tooltip"
+                                                    title="Hành trình"></i></a>
+
+                                            <a href="#" user_id="{{ cus.user._id }}"
+                                                class="btn btn-flat d-block d-md-inline-block remove_customer">
+                                                <i class="fa fa-minus-circle" data-toggle="tooltip"
+                                                title="Xoá"></i> </a>
+
+                                        </td>
+
+                                    </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- List group -->
+
+
+                    </div>
+                    <div class="card-footer">
+
+                        <ul class="pagination justify-content-center">
+                            {% if pagination %}
+                            {{ pagination.links }}
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <input type="hidden" value="{{merchant_id}}" id="merchant_id">
+</div>
+
+{% endblock %}
+{% block js %}
+<script src="{{ url_for('static', filename='nextify/js/overview.js') }}"></script>
+<script src="{{ url_for('static', filename='daterangepicker/daterangepicker.js') }}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#loc_filter').select2();
+        var start = moment().subtract(29, 'days');
+        var end = moment();
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Hôm nay': [moment(), moment()],
+                'Hôm qua': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                '7 ngày gần nhất': [moment().subtract(6, 'days'), moment()],
+                '30 ngày gần nhất': [moment().subtract(29, 'days'), moment()],
+                'Tháng này': [moment().startOf('month'), moment().endOf('month')],
+                'Tháng trước': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+    });
+
+</script>
+
+{% endblock %}

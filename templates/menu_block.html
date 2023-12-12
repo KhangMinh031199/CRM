@@ -1,0 +1,36 @@
+<div class="container" style="margin-bottom: 5px;">
+    <div class="row row-centered">
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+            <div class="div-square{% if request.path.startswith('/cards') or request.path.startswith('/card/') or request.path.startswith('/events') or request.path.startswith('/events/')%}-select{% endif %}">
+                <a href="/cards">
+                    <i class="fa fa-tablet fa-5x" aria-hidden="true"></i>
+                    <h4>Trang chào</h4>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+            <div class="div-square{% if request.path.startswith('/sms_announcement') or request.path.startswith('/sms_announcement/') %}-select{% endif %}">
+                <a href="/sms_announcement">
+                    <i class="fa fa-magic fa-5x" aria-hidden="true"></i>
+                    <h4>Marketing</h4>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+            <div class="div-square{% if request.path.startswith('/coupons') or request.path.startswith('/coupons/') %}-select{% endif %}">
+                <a href="/coupons">
+                    <i class="fa fa-tags fa-5x" aria-hidden="true"></i>
+                    <h4>Coupons</h4>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+            <div class="div-square{% if request.path.startswith('/reports') or request.path.startswith('/reports/') %}-select{% endif %}">
+                <a href="/reports">
+                    <i class="fa fa-pie-chart fa-5x"></i>
+                    <h4>Thống kê</h4>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

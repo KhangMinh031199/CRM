@@ -1,0 +1,183 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<form class="form" method="GET" action="/vcall_history" enctype="multipart/form-data" id="form_get_cus">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"/>
+    <input type="hidden" id="ex_from_date" value="{{ from_date }}">
+    <input type="hidden" id="ex_to_date" value="{{ to_date }}">
+</form>
+<div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+
+                       {{ gettext("Ung_dung") }}
+                    </h6>
+                    <!-- Title -->
+                    <h1 class="header-title">
+                        {{ gettext("Quan_ly_ung_dung") }}
+                    </h1>
+                </div>
+            </div> <!-- / .row -->
+            <div class="row align-items-center">
+                <div class="col">
+                    <!-- Nav -->
+                    <ul class="nav nav-tabs nav-overflow header-tabs">
+                        <li class="nav-item">
+                            <a href="/apps/vcall" class="nav-link">
+                                {{ gettext("Cau_hinh_chung") }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/vcall_history" class="nav-link active">
+                                {{ gettext("Lich_su_cuoc_goi") }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row u-mb-large">
+        <div class="col-12 col-xl-2">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/vcall_history" id="call_filter"
+                          enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"/>
+                        <div class="form-group">
+                            <label>{{ gettext("HUONG_CUOC_GOI") }}</label>
+                            <select id="call_type" name="call_type"
+                                    class="form-control">
+                                <option selected value="all">{{ gettext("Tat_ca") }}</option>
+                                <option value="call_out">{{ gettext("Goi_ra") }}</option>
+                                <option value="call_in">{{ gettext("Goi_vao") }}</option>
+                                <option value="call_local">{{ gettext("Goi_noi_bo") }}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>{{ gettext("GOI_TU_SO") }}</label>
+                            <input name="from_phone" id="from_phone" type="text"
+                                   class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>{{ gettext("GOI_DEN_SO") }}</label>
+                            <input name="to_phone" id="to_phone" type="text"
+                                   class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <input id="from_date" name="from_date" type="text" placeholder='{{ gettext("Tu_ngay...") }}'
+                                   class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <input id="to_date" name="to_date" type="text" placeholder='{{ gettext("Den_ngay...") }}' class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label> </label>
+                            <button type="submit" class="btn btn-block btn-primary mt-auto" id="view_filter">{{ gettext("Xem") }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-xl-10">
+            <div class="card">
+                <div class="col-md-12">
+                    {% if calls|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-sm card-table">
+                            <thead>
+                            <th>{{ gettext("HUONG") }}</th>
+                            <th>{{ gettext("TU_MAY_NHANH") }}</th>
+                            <th>{{ gettext("GOI_TU_SO") }}</th>
+                            <th>{{ gettext("DEN_MAY_NHANH") }}</th>
+                            <th>{{ gettext("GOI_DEN_SO") </th>
+                            <th>{{ gettext("THOI_GIAN_BAT_DAU") }}</th>
+                            <th>{{ gettext("THOI_GIAN_KET_THUC") }}</th>
+                            <th>{{ gettext("THOI_LUONG") }}</th>
+                            <th>{{ gettext("GHI_AM") }}</th>
+                            </thead>
+                            <tbody>
+                            {% for call in calls %}
+                            <tr>
+                                <td>
+                                    {% if call.direction == 1 %}
+                                    Gọi vào
+                                    {% elif call.direction == 3 %}
+                                    Gọi ra
+                                    {% endif %}
+                                </td>
+                                <td>{{ call.from_extension }}</td>
+                                <td>{{ call.from_number }}</td>
+                                <td>{{ call.to_extension }}</td>
+                                <td>{{ call.to_number }}</td>
+                                <td>{{ call.time_start }}</td>
+                                <td>{{ call.time_end }}</td>
+                                <td>
+                                    {% if call.recording_url %}
+                                        {{ call.time_call }}
+                                    {% endif %}
+                                </td>                                   
+                                <td>
+                                    {% if call.recording_url %}
+                                        <a href={{ call.recording_url }} target="_blank">{{ gettext("Mo_file") }}</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav class="c-pagination u-justify-center">
+                        {% if pagination %}
+                            {{ pagination.links }}
+                        {% endif %}
+                    </nav>
+                    {% else %}
+                    <div class="card-body">
+                        <div class="row u-justify-center">
+                            <h4>{{ gettext("Hien_khong_co_du_lieu_nao._Ban_co_the_thu_tim_kiem_voi_tu_khoa_khac.") }}</h4>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        if ($("#ex_from_date").length > 0 && $("#ex_from_date").val().length > 0 && $("#ex_from_date").val() != 'None') {
+            flatpickr("#from_date", {
+                enableTime: false,
+                defaultDate: $("#ex_from_date").val(),
+                dateFormat: "d-m-Y"
+            });
+            } else {
+                flatpickr("#from_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+                });
+            }
+        if ($("#ex_to_date").length > 0 && $("#ex_to_date").val().length > 0 && $("#ex_to_date").val() != 'None') {
+            flatpickr("#to_date", {
+                enableTime: false,
+                defaultDate: $("#ex_to_date").val(),
+                dateFormat: "d-m-Y"
+            });
+            } else {
+                flatpickr("#to_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+                });
+            }
+    });
+</script>
+{% endblock %}

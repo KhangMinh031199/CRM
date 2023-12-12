@@ -1,0 +1,59 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+    <div class="c-toolbar u-mb-medium">
+        <h3 class="c-toolbar__title has-divider">{{ gettext("Phan_hoi") }}</h3>
+        <h5 class="c-toolbar__meta u-mr-auto">{{ gettext("Phan_hoi_cua_khach_hang") }}</h5>
+
+    </div>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="c-card u-p-medium">
+                    <div class="c-table-responsive@desktop">
+                       <table class="c-table c-table--zebra u-mb-small">
+                             <thead class="c-table__head">
+                              <tr class="c-table__row">
+                            <th class="c-table__cell c-table__cell--head">{{ gettext("Ten") }}</th>
+                            <th class="c-table__cell c-table__cell--head">Phone</th>
+                            <th class="c-table__cell c-table__cell--head">{{ gettext("Noi_dung") }}</th>
+                            <th class="c-table__cell c-table__cell--head">{{ gettext("Thoi_diem_gui") }}</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            {% for record in reviews_arr %}
+                                <tr class="c-table__row">
+                                        <td class="c-table__cell">{{ record.name }}</td>
+                                     <td class="c-table__cell">{{ record.phone }}</td>
+                                    <td class="c-table__cell">{{ record.message }}</td>
+                                     <td class="c-table__cell">{{ record.when|human_time }}</td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if pagination %}
+                        <nav class="c-pagination u-justify-center">
+
+                            {{ pagination.links }}
+                        </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block js %}
+
+     <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('#app_content').click();
+        });
+
+    </script>
+{% endblock %}

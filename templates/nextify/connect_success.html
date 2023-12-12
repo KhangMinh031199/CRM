@@ -1,0 +1,124 @@
+{% extends 'nextify/manage_hotspot.html' %}
+
+{% block hotspot_item %}
+    <input type="hidden" value="{{ page_id }}" id="page_id"/>
+    <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-12 col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-end">
+                        <div class="col">
+
+                            <h6 class="header-pretitle">
+                                {{ gettext("Trang_chao_ket_noi_thanh_cong") }}
+                            </h6>
+                        </div>
+                        <div class="col-auto" style="float: right">
+                            <a data-toggle="modal" href="#page_item"
+                               class="btn btn-flat d-block d-md-inline-block">
+                                <i class="fe fe-settings"></i> {{ gettext('HotspotHappyBirthdayScreenSettingText') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                          <div id="preview"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal hide fade" id="page_item" tabindex="-1"
+         role="dialog" aria-labelledby="new_image" data-backdrop="static"
+         style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{ gettext("Trang_chao_ket_noi_thanh_cong") }}</h3>
+
+                    <a class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </a>
+                </div>
+                <form method="POST"
+                      action="/connect_success_settings/{{ shop_id_select}}"
+                      enctype="multipart/form-data"
+                      id="form_new_image">
+                 <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="content">{{ gettext("Noi_dung_trang_chao:") }}</label>
+                            <textarea class="form-control"
+                                id="content"
+                                name="content" rows="2">
+                           {{ connect_success.content or 'Kết nối thành công' }}
+                            </textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="connect_button">{{ gettext("Nut_ket_noi_WIFI:") }}</label>
+                            <textarea class="form-control" id="connect_button"
+                                name="connect_button" rows="2">
+                                  {% if connect_success.connect_button and connect_success.connect_button|length > 1 %}
+                                      {{ connect_success.connect_button }}
+                                  {% else %}
+                                      {{ gettext("Ket_noi_Wi-Fi/Go_Online") }}
+                                  {% endif %}
+                            </textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit"
+                              class="c-btn c-btn--info u-float-right">
+                          {{ gettext('HotspotHappyBirthdayScreenUpdateText') }}
+                        </button>
+                    </div>
+                </form>
+            </div><!-- // .c-modal__content -->
+        </div><!-- // .c-modal__dialog -->
+    </div>
+
+
+{% endblock %}
+{% block js %}
+
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+
+            function readURL(input, input_view) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    var view_id = '#' + input_view;
+                    reader.onload = function (e) {
+                        $(view_id).attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            var shop_id_select = $("#shop_id_select").val();
+            var url_preview = '/splash_page/' + shop_id_select + '/preview/connect_success';
+            $("#preview").empty();
+            bioMp(document.getElementById('preview'), {
+                url: url_preview,
+                view: 'front',
+                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                             height:618,
+                    width: 308
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+    <div class="container ">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card u-p-medium">
+                    <div class="row u-justify-center">
+                        <div class="col-md-8">
+                            <div class="u-mt-large u-text-center">
+                                <h2 class="u-mb-xsmall">{{ gettext("App") }}</h2>
+                                <p class="u-text-mute u-mb-large"></p>
+                            </div>
+                            <div class="row u-p-medium">
+                                <div class="col-sm-6 col-lg-6">
+                                    <a href="/app/blogs/category"
+                                       style="text-decoration: none;">
+                                        <div class="c-state">
+                                            <h3 class="c-state__title"></h3>
+                                            <h4
+                                                    class="c-state__number">
+                                                {{ gettext("Danh_muc_tin") }}</h4>
+                                            <p class="c-state__status">{{ gettext("Danh_muc_tin_tuc") }}
+                                            </p>
+                                            <span class="c-state__indicator">
+                            <i class="fa fa-arrow-circle-o-right"></i>
+                                 </span>
+                                        </div><!-- // c-state -->
+                                    </a>
+                                </div>
+                                <div class="col-sm-6 col-lg-6">
+                                    <a href="/app/blogs/news"
+                                       style="text-decoration: none;">
+                                        <div class="c-state">
+                                            <h3 class="c-state__title"></h3>
+                                            <h4 class="c-state__number">{{ gettext("Tin_tuc") }}</h4>
+                                            <p class="c-state__status">{{ gettext("Tin_khuyen_mai,_hot_deal...") }}
+                                            </p>
+                                            <span class="c-state__indicator">
+                            <i class="fa fa-arrow-circle-o-right"></i>
+                                 </span>
+                                        </div><!-- // c-state -->
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row u-p-medium">
+                                <div class="col-sm-6 col-lg-6">
+                                    <a href="/app_products"
+                                       style="text-decoration: none;">
+                                        <div class="c-state c-state--success">
+                                            <h3 class="c-state__title"></h3>
+                                            <h4 class="c-state__number">{{ gettext("San_pham") }}</h4>
+                                            <p class="c-state__status">{{ gettext("San_pham_dich_vu_cua_he_thong") }}</p>
+                                            <span class="c-state__indicator">
+                            <i class="fa fa-arrow-circle-o-right"></i>
+                        </span>
+                                        </div><!-- // c-state -->
+                                    </a>
+                                </div>
+
+
+                                <div class="col-sm-6 col-lg-6">
+                                    <a href="/app/reviews"
+                                       style="text-decoration: none;">
+                                        <div class="c-state c-state--warning">
+                                            <h3 class="c-state__title"></h3>
+                                            <h4 class="c-state__number">
+                                                {{ gettext("Phan_hoi") }}</h4>
+                                            <p class="c-state__status">{{ gettext("Phan_hoi_cua_khach_hang") }}
+                                            </p>
+                                            <span class="c-state__indicator">
+                                                <i class="fa fa-arrow-circle-o-right"></i>
+                                            </span>
+                                        </div>
+                                    </a>
+
+                                </div>
+                            </div>
+                            <div class="row u-p-medium">
+
+                                <div class="col-sm-6 col-lg-6">
+
+                                   <a href="/orders"
+                                       style="text-decoration: none;">
+                                       <div class="c-state c-state--danger">
+                                        <h3 class="c-state__title"></h3>
+                                        <h4 class="c-state__number">
+                                            {{ gettext("Don_hang") }}</h4>
+                                        <p class="c-state__status">{{ gettext("Quan_ly_don_hang") }}</p>
+                                        <span class="c-state__indicator">
+                                        <i class="fa fa-arrow-circle-o-right"></i>
+                                    </span>
+                                    </div><!-- // c-state -->
+                                   </a>
+                                </div>
+                                <div class="col-sm-6 col-lg-6">
+                                     <a href="/booking_table"
+                                       style="text-decoration: none;">
+                                    <div class="c-state c-state--danger">
+                                        <h3 class="c-state__title"></h3>
+                                        <h4 class="c-state__number">
+                                            {{ gettext("Dat_ban") }}</h4>
+                                        <p class="c-state__status">{{ gettext("Quan_ly_dat_ban") }}</p>
+                                        <span class="c-state__indicator">
+                            <i class="fa fa-arrow-circle-o-right"></i>
+                        </span>
+                                    </div><!-- // c-state -->
+                                     </a>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+{% block js %}
+{% endblock %}

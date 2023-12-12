@@ -1,0 +1,230 @@
+{% extends 'nextify/base.html' %}
+
+
+{% block main_content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-8">
+            <div class="header">
+                <div class="container-fluid">
+                    <div class="header-body">
+                        <div class="row align-items-end">
+                            <div class="col">
+
+                                <!-- Pretitle -->
+                                <h6 class="header-pretitle">
+                                    Mini Game
+                                </h6>
+
+                                <!-- Title -->
+                                <h1 class="header-title">
+                                    <a href="/surveys_reports/{{ shop_id_select }}">{{ shop_select.name }}</a>
+                                </h1>
+
+                            </div>
+
+                            <div class="col-lg-3">
+
+                                <select class="custom-select control-container" id="shop_in_mer">
+
+                                    {% for shop_mer in shop_in_mer %}
+                                    <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+                            <div class="col-auto">
+                                <a href="/mini_game/{{ shop_id_select }}/add" class="btn btn-danger btn-block">
+                                    {{ gettext('Tao_Game') }}
+                                </a>
+                            </div>
+
+                        </div> <!-- / .row -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                {% if total > 0 %}
+
+                {% for game in list_mini_game %}
+                <div class="col-12 col-lg-6 d-flex flex-column" style="height: auto">
+
+                    <!-- Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col">
+                                    <h2 class="card-title mb-1">
+                                        {{ game.info.name }}
+
+                                    </h2>
+                                    <p class="card-text small text-muted">
+                                        {{ gettext('Tao') }} {{ game.when|human_time }}
+                                    </p>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="/mini_game/{{ shop_id_select }}/reports/{{ game._id }}"
+                                        class="btn  btn-outline-secondary">
+                                        {{ gettext('Ket_qua') }}
+                                    </a>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body text-center">
+                            <div class="row" style="justify-content: center; display: flex; align-items: center;">
+
+                                <div class="detail" id="preview_{{ game._id }}" page_id="{{ game._id }}"></div>
+
+
+                            </div>
+
+
+                        </div>
+                        <div class="card-footer">
+                            <div class="row align-items-center justify-content-between">
+                                <div class="col-auto">
+
+                                    <a href="#" class="remove_camp" camp_id="{{ game._id }}">
+                                        <small>{{ gettext('Xoa') }}</small>
+                                    </a>
+
+                                </div>
+                                <div class="col-auto">
+
+                                    <!-- Link -->
+                                    <a href="/mini_game/{{ shop_id_select }}/results/{{ game._id }}"
+                                        class="btn btn-sm btn-primary">
+                                        {{ gettext('Chi_tiet') }}
+                                    </a>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+                {% endfor %}
+
+                <ul class="pagination justify-content-center">
+                    {% if pagination %}
+                    {{ pagination.links }}
+                    {% endif %}
+                </ul>
+
+
+
+                {% else %}
+
+                <div class="col-12 col-md-6 col-xl-4" style="height: auto">
+
+                    <!-- Card -->
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Image -->
+                            <img src="/static/nextify/img/happiness.png" alt="..." class="img-fluid mt-n5 mb-4"
+                                style="max-width: 272px;">
+
+                            <!-- Title -->
+                            <h2>
+                                {{ gettext('Ban_chua_co_chien_dich_mini_game_nao._Bat_dau_tao_game_ngay.') }}
+                            </h2>
+
+                            <a href="/mini_game/{{ shop_id_select }}/add" class="btn btn-primary btn-block">
+                                {{ gettext('Tao_Game') }}
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+                {% endif %}
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id_select" />
+
+{% endblock %}
+{% block js %}
+
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        function isNormalInteger(str) {
+            var n = Math.floor(Number(str));
+            return n !== Infinity && String(n) === str && n >= 0;
+        }
+
+        $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+        $('input').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+
+        var shop_id_select = $('#shop_id_select').val();
+        $('#shop_in_mer').select2();
+        $('#shop_in_mer').val(shop_id_select).trigger('change');
+        $('#shop_in_mer').on("change", function (e) {
+            var shop_id = $('#shop_in_mer').val();
+            var url = "/mini_game/" + shop_id;
+            $(location).attr('href', url);
+        });
+
+
+        $('.detail').each(function () {
+            var game_id = $(this).attr('id');
+            var page_id = $(this).attr('page_id');
+            $("#" + game_id).empty();
+            bioMp(document.getElementById(game_id), {
+                url: '/game/' + page_id,
+                view: 'front',
+                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                width: 200
+            });
+
+        });
+        $(".remove_camp").click(function () {
+            var camp_id = $(this).attr('camp_id');
+            Swal.fire({
+                title: '{{ gettext("Ban_co_chac_chan_muon_xoa_khong?") }}',
+                type: 'warning',
+                showCancelButton: true,
+                focusCancel: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '{{ gettext("Co!") }}',
+                cancelButtonText: '{{ gettext("Khong!")}}'
+            }).then((result) => {
+                if (result.value) {
+                    var url_submit = '/mini_game/' + shop_id_select + '/remove/' + camp_id;
+                    $.ajax({
+                        url: url_submit,
+                        type: 'GET',
+                        success: function (data) {
+                            swal('{{ gettext("Xoa_thanh_cong") }}', '', 'success');
+                            location.reload();
+                        }
+                    });
+                }
+            })
+        });
+
+
+    });
+</script>
+{% endblock %}

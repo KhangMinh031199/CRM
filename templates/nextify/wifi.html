@@ -1,0 +1,366 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            Trang chào
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                          <a href="/wifi/{{ shop_id_select }}">{{ shop_select.name }}</a>
+                        </h1>
+
+                    </div>
+                    <div class="col-auto">
+                        <a href="/splash_page/apply_merchant/{{ merchant_id }}" class="btn btn-fancy">
+                            Áp dụng chuỗi
+                        </a>
+                        <a  class="btn btn-primary" href="/wifi/{{ shop_id_select }}/new_hotspot/return">
+                            Tạo mới
+                        </a>
+                        <!-- Button -->
+                        {#                <a href="#!" class="btn btn-primary">#}
+                        {#                  Create Report#}
+                        {#                </a>#}
+
+                    </div>
+                </div> <!-- / .row -->
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-12 col-xl-3">
+
+                <!-- Card -->
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Title -->
+                                <h5 class="mb-0">
+                                    <a href="#" id="list_hotspot">Danh sách trang chào</a>
+                                </h5>
+
+                            </div>
+
+                        </div> <!-- / .row -->
+                         <hr>
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Title -->
+                                <h5 class="mb-0">
+                                     <a href="/wifi/{{ shop_id_select }}/survey" id="">Khảo sát</a>
+                                </h5>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Divider -->
+                        <hr>
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Title -->
+                                <h5 class="mb-0">
+                                    <a href="#" id="config_hotspot">Cấu hình</a>
+                                </h5>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-12 col-xl-9">
+
+                <div class="tab-content">
+
+                    <div id="tablisthotspot">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-header-title">
+                                    Danh sách trang chào
+                                </h4>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm card-table">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            Loại
+                                        </th>
+                                        <th>
+                                            Lượt đến
+                                        </th>
+                                        <th>
+                                            Ngày bắt đầu
+                                        </th>
+                                        <th>
+                                            Ngày kết thúc
+                                        </th>
+                                        <th>
+                                            Trạng thái
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for page in pages %}
+                                        <tr>
+                                            <td>
+                                                <h4 class="card-title mb-1">
+
+                                                    {% if page.type_page == 'default' %}
+                                                        Mặc định
+                                                    {% elif page.type_page == 'loyal' %}
+                                                        Theo lượt đến
+                                                    {% elif page.type_page == 'birthday' %}
+                                                        Chúc mừng sinh nhật
+                                                    {% elif page.type_page == 'promotion' %}
+                                                        Khuyến mãi/Sự kiện
+                                                    {% endif %}
+
+                                                </h4>
+                                            </td>
+                                            <td>
+                                                {% if page.type_page == 'loyal' %}{{ page.loyal_count }} -
+                                                    {{ page.loyal_count_max }} {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if page.type_page == 'promotion' %}{{ page.date_from }}{% endif %}
+                                            </td>
+                                            <td>
+                                                {% if page.type_page == 'promotion' %}{{ page.date_to }}{% endif %}
+                                            </td>
+                                            <td>
+
+                                                {% if page.active %}
+                                                    <span class="c-badge
+                                        c-badge--success">Đang chạy</span>
+                                                {% else %}
+                                                    <span class="c-badge
+                                        c-badge--secondary">Tạm dừng</span>
+                                                {% endif %}
+
+                                            </td>
+                                            <td>
+                                                <a href="/splash_page/{{ shop_select._id }}/item/{{ page._id }}"
+                                                   class="btn btn-sm btn-primary d-none d-md-inline-block">Cài đặt</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div  id="tabconfighotspot">
+                        <div class="card">
+                            <div class="card-body">
+                                <form method="POST"
+                                      action="/wifi_settings/{{ shop_id_select }}"
+                                      enctype="multipart/form-data" id="home">
+                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                    <div class="row u-mb-medium">
+
+                                        <div class="col-lg-12">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+
+                                                    <div class="form-group">
+                                                        <label class="c-field__label"
+                                                               for="auto_popup">Chuyển hướng sau đăng nhập:</label>
+                                                        <input type="text"
+                                                               class="c-input"
+                                                               id="auto_popup"
+                                                               name="auto_popup"
+                                                               value="{% if shop_select.auto_popup|string != 'None' %}{{ shop_select.auto_popup }}{% endif %}"
+                                                               placeholder="//www.facebook.com/nextify">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="welcome_member_text_splash" class="c-field__label">Cấu hình lời chào:</label>
+                                                        <textarea class="c-input"
+                                                                  id="welcome_member_text_splash"
+                                                                  name="welcome_member_text_splash"
+                                                                  rows="2">
+                                                           {{ shop_select.welcome_member_text_splash or 'Chào {{ name }}, cảm ơn bạn đã ghé thăm.'  }}
+
+                                                        </textarea>
+                                                    </div>
+                                                   <div class="form-group">
+                                                       <label for="connect_button" class="c-field__label">Nút kết nối WIFI:</label>
+                                                        <textarea class="c-input"
+                                                                  id="connect_button"
+                                                                  name="connect_button"
+                                                                  rows="2">
+                                                          {% if shop_select.connect_button and shop_select.connect_button|length > 1 %}
+                                                              {{ shop_select.connect_button }}
+                                                          {% else %}
+                                                              Kết nối
+                                                          {% endif %}
+                                                    </textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="c-field__label"
+                                                               style="display:inline-block; padding-right: 20px;">
+                                                            Bỏ qua đăng ký
+                                                        </label>
+
+                                                        <div class="c-switch {% if
+                                                   shop_select.ignore_register and shop_select.ignore_register|lower == "true" %} is-active{% endif %}">
+                                                            <input class="c-switch__input"
+                                                                   id="switch_ignore_register"
+                                                                   type="checkbox"
+                                                                   name="ignore_register"
+                                                                   {% if shop_select.ignore_register and shop_select.ignore_register|lower == "true" %}checked{% endif %}>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="c-field__label"
+                                                               style="display:inline-block; padding-right: 20px;">
+                                                            Yêu cầu nhập mã truy cập WIFI
+                                                        </label>
+                                                        <div class="c-switch {% if
+                                                   shop_select.wifi_access_code and shop_select.wifi_access_code|lower == "true" %} is-active{% endif %}">
+                                                            <input class="c-switch__input"
+                                                                   id="switch_wifi_access_code"
+                                                                   type="checkbox"
+                                                                   name="wifi_access_code"
+                                                                   {% if shop_select.wifi_access_code and shop_select.wifi_access_code|lower == "true" %}checked{% endif %}>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                                <div class="col-lg-6">
+
+                                                    <div class="form-group">
+                                                        <label class="c-field__label"
+                                                               for="page_id">Pixel
+                                                            ID:</label>
+                                                        <input type="text"
+                                                               class="c-input"
+                                                               id="facebook_pixel_id"
+                                                               name="facebook_pixel_id"
+                                                               value="{% if shop_select.facebook_pixel_id|string != 'None' %}{{ shop_select.facebook_pixel_id }}{% endif %}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="c-field__label"
+                                                               for="pixel_code">Pixel
+                                                            Code:</label>
+                                                        <textarea class="c-input"
+                                                                  id="pixel_code"
+                                                                  name="facebook_pixel_code"
+                                                                  rows="6">{% if shop_select.facebook_pixel_code|string != 'None' %}{{ shop_select.facebook_pixel_code }}{% endif %}</textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label
+                                                                class="c-field__label"
+                                                                for="pixel_code">Google
+                                                            Remarketing
+                                                            Code:</label>
+                                                        <textarea class="c-input"
+                                                                  id="google_pixel_code"
+                                                                  name="google_pixel_code"
+                                                                  rows="6">{% if shop_select.google_pixel_code|string != 'None' %}{{ shop_select.google_pixel_code }}{% endif %}</textarea>
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+                                            <div class="c-field"
+                                                 style="padding:20px">
+                                                <button class="c-btn c-btn--info u-float-right"
+                                                        type="submit">Cập nhật
+                                                </button>
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+                                </form>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+{% endblock %}
+{% block js %}
+    <script src="{{ url_for('static', filename='v2/assets/js/biomp.js') }}"></script>
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+
+            $('#tablisthotspot').show();
+            $('#tabconfighotspot').hide();
+            $('#list_hotspot').click(function () {
+
+                $('#tablisthotspot').show();
+                $('#tabconfighotspot').hide();
+
+            });
+                      $('#config_hotspot').click(function () {
+
+                $('#tablisthotspot').hide();
+                $('#tabconfighotspot').show();
+
+            });
+
+
+            var shop_id_select = $("#shop_id_select").val();
+
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+
+
+        });
+
+    </script>
+
+{% endblock %}

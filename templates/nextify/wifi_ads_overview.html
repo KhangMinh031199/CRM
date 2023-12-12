@@ -1,0 +1,1130 @@
+{% extends 'nextify/base.html' %} {% block css %}
+<link rel="stylesheet" href="/static/daterangepicker/daterangepicker.css" />
+<style>
+  #convertleadChart {
+    width: 100%;
+    height: 500px;
+  }
+</style>
+{% endblock %} {% block main_content %}
+<div class="container-fluid">
+  <div class="header">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">Tổng quan</h6>
+          <!-- Title -->
+          <h1 class="header-title">Phân phối quảng cáo WIFI</h1>
+        </div>
+
+        <div class="col-auto">
+          <div
+            id="reportrange"
+            style="
+              background: #fff;
+              cursor: pointer;
+              padding: 0.5rem 0.75rem;
+              border: 1px solid #ccc;
+              width: 100%;
+            "
+          >
+            <i class="fa fa-calendar"></i>&nbsp; <span></span>
+            <i class="fa fa-caret-down"></i>
+          </div>
+        </div>
+      </div>
+      <div class="row align-items-center">
+        <div class="col">
+          <!-- Nav -->
+          <ul class="nav nav-tabs nav-overflow header-tabs">
+            <li class="nav-item">
+              <a href="/wifi_ads/reports" class="nav-link active"> Báo cáo </a>
+            </li>
+            <li class="nav-item">
+              <a href="/wifi_ads/report_settings" class="nav-link">
+                {{ gettext('Cau_hinh_chung') }}
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/wifi_ads/export_report_ads" class="nav-link"> Xuất báo cáo </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-md-5">
+      <div class="col-12 col-lg-12 d-flex flex-column">
+        <div id="convertleadChart"></div>
+      </div>
+    </div>
+    <div class="row mt-md-5">
+      <div class="col-12 col-lg-12 d-flex flex-column">
+        <div class="card">
+          <div class="card-header">Thống kê quảng cáo WIFI</div>
+
+          <div class="card-body">
+            <div class="chart">
+              <canvas class="chart-canvas" id="funnelChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-lg-12 d-flex flex-column">
+        <div class="row mt-5">
+          <div class="chart-container-row col-4">
+            <div class="card">
+              <div class="card-header">
+                <!-- Title -->
+                <h4 class="card-header-title">Loại chiến dịch</h4>
+              </div>
+
+              <div class="card-body">
+                <!-- Chart -->
+                <input
+                  type="hidden"
+                  name="type_camp_chart"
+                  value="{{ type_camp_chart }}"
+                  id="type_camp_chart"
+                />
+                <div class="chart chart-appended">
+                  <canvas id="campaignChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="chart-container-row col-4">
+            <div class="card">
+              <div class="card-header">
+                <!-- Title -->
+                <input
+                  type="hidden"
+                  name="result_chart"
+                  value="{{ result_chart }}"
+                  id="result_chart"
+                />
+                <h4 class="card-header-title">
+                  Hoàn thành / Chưa hoàn thành / Tạm dừng
+                </h4>
+              </div>
+
+              <div class="card-body">
+                <!-- Chart -->
+                <div class="chart chart-appended">
+                  <canvas id="resultChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="chart-container-row col-4">
+            <div class="card">
+              <div class="card-header">
+                <!-- Title -->
+                <input
+                  type="hidden"
+                  name="targetChart"
+                  value="{{ targetChart }}"
+                  id="target_Chart"
+                />
+                <h4 class="card-header-title">Đạt mục tiêu / không đạt</h4>
+              </div>
+
+              <div class="card-body">
+                <!-- Chart -->
+                <div class="chart chart-appended">
+                  <canvas id="targetChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-lg-6 d-flex flex-column">
+        <div class="card">
+          <div class="card-header">
+            Khách hàng mới<span
+              class="fe fe-help-circle"
+              data-toggle="tooltip"
+              title="Số khách hàng mới"
+            ></span>
+          </div>
+
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="new_customers" class="chart-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6 d-flex flex-column">
+        <div class="card">
+          <div class="card-header">
+            Khách hàng quay lại<span
+              class="fe fe-help-circle"
+              data-toggle="tooltip"
+              title="Số khách hàng quay lại"
+            ></span>
+          </div>
+
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="old_customers" class="chart-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-lg-6 d-flex flex-column">
+        <div class="card">
+          <div class="card-header">
+            Top địa điểm<span
+              class="fe fe-help-circle"
+              data-toggle="tooltip"
+              title="Số khách hàng theo địa điểm"
+            ></span>
+          </div>
+
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="top_location" class="chart-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6 d-flex flex-column">
+        <div class="card">
+          <div class="card-header">
+            Top chiến dịch
+            <span
+              class="fe fe-help-circle"
+              data-toggle="tooltip"
+              title=""
+            ></span>
+          </div>
+
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="top_camp" class="chart-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-lg-4 d-flex flex-column">
+        <div class="card">
+          <div class="card-header">
+            Loại thiết bị
+            <span
+              class="fe fe-help-circle"
+              data-toggle="tooltip"
+              title="Số khách hàng theo loại thiết bị"
+            ></span>
+          </div>
+
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="top_device" class="chart-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-4 d-flex flex-column">
+        <div class="card">
+          <div class="card-header">
+            <div class="tooltip-icon">
+              Theo giờ
+              <span
+                class="fe fe-help-circle"
+                data-toggle="tooltip"
+                title=""
+              ></span>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="top_hours" class="chart-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-4 d-flex flex-column">
+        <div class="card">
+          <div class="card-header">
+            <div class="tooltip-icon">
+              Theo ngày
+              <span
+                class="fe fe-help-circle"
+                data-toggle="tooltip"
+                title=""
+              ></span>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="top_day" class="chart-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-lg-6 d-flex flex-column">
+        <div class="card">
+          <div class="card-header">
+            Giới tính
+            <span
+              class="fe fe-help-circle"
+              data-toggle="tooltip"
+              title="Giới tính khách hàng"
+            ></span>
+          </div>
+
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="top_gender" class="chart-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6 d-flex flex-column">
+        <div class="card">
+          <div class="card-header">
+           Độ tuổi
+            <span
+              class="fe fe-help-circle"
+              data-toggle="tooltip"
+              title="Độ tuổi khách hàng"
+            ></span>
+          </div>
+
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="top_age" class="chart-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endblock %} {% block js %}
+  <script src="/static/nextify/js/index.js"></script>
+  <script src="/static/nextify/js/percent.js"></script>
+  <script src="/static/nextify/js/Animated.js"></script>
+  <script src="{{ url_for('static', filename='daterangepicker/daterangepicker.js') }}"></script>
+  <script type="text/javascript">
+    am5.ready(function () {
+      // Create root element
+      // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+      var root = am5.Root.new("convertleadChart");
+
+      // Set themes
+      // https://www.amcharts.com/docs/v5/concepts/themes/
+      root.setThemes([am5themes_Animated.new(root)]);
+
+      // Create chart
+      // https://www.amcharts.com/docs/v5/charts/percent-charts/sliced-chart/
+      var chart = root.container.children.push(
+        am5percent.SlicedChart.new(root, {
+          layout: root.verticalLayout,
+        })
+      );
+
+      // Create series
+      // https://www.amcharts.com/docs/v5/charts/percent-charts/sliced-chart/#Series
+      var series = chart.series.push(
+        am5percent.FunnelSeries.new(root, {
+          alignLabels: false,
+          orientation: "vertical",
+          valueField: "value",
+          categoryField: "category",
+        })
+      );
+
+      // Set data
+      // https://www.amcharts.com/docs/v5/charts/percent-charts/sliced-chart/#Setting_data
+      series.data.setAll([
+        { value: 10, category: "Hiển thị" },
+        { value: 9, category: "Truy cập" },
+        { value: 6, category: "Đăng ký" },
+        { value: 5, category: "Khảo sát" },
+        { value: 4, category: "Xem Video" },
+        { value: 3, category: "Gửi tin" },
+      ]);
+
+      // Play initial series animation
+      // https://www.amcharts.com/docs/v5/concepts/animations/#Animation_of_series
+      series.appear();
+
+      // Create legend
+      // https://www.amcharts.com/docs/v5/charts/percent-charts/legend-percent-series/
+      var legend = chart.children.push(
+        am5.Legend.new(root, {
+          centerX: am5.p50,
+          x: am5.p50,
+          marginTop: 15,
+          marginBottom: 15,
+        })
+      );
+
+      legend.data.setAll(series.dataItems);
+
+      // Make stuff animate on load
+      // https://www.amcharts.com/docs/v5/concepts/animations/
+      chart.appear(1000, 100);
+    }); // end am5.ready()
+    $(document).ready(function () {
+      $("#loc_filter").select2();
+      var start = moment().subtract(29, "days");
+      var end = moment();
+
+     
+      function cb(start, end) {
+        $("#reportrange span").html(
+          start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY")
+        );
+      }
+
+      $("#reportrange").daterangepicker(
+        {
+          startDate: start,
+          endDate: end,
+          ranges: {
+            "Hôm nay": [moment(), moment()],
+            "Hôm qua": [
+              moment().subtract(1, "days"),
+              moment().subtract(1, "days"),
+            ],
+            "7 ngày gần nhất": [moment().subtract(6, "days"), moment()],
+            "30 ngày gần nhất": [moment().subtract(29, "days"), moment()],
+            "Tháng này": [moment().startOf("month"), moment().endOf("month")],
+            "Tháng trước": [
+              moment().subtract(1, "month").startOf("month"),
+              moment().subtract(1, "month").endOf("month"),
+            ],
+          },
+        },
+        cb
+      );
+
+      cb(start, end);
+      // var result_chart = $('#result_chart').val();
+      // console.log(result_chart)
+      // console.log(typeof(result_chart))
+      var result_chart = "[10, 6, 4]";
+      arr_result_chart = JSON.parse(result_chart);
+      var config = {
+        type: "pie",
+        data: {
+          labels: ["Hoàn thành", "Chưa hoàn thành", "Tạm dừng"],
+          datasets: [
+            {
+              label: "My First Dataset",
+              data: arr_result_chart,
+              backgroundColor: [
+                "rgb(255, 99, 132)",
+                "rgb(54, 162, 235)",
+                "rgb(255,127,80)",
+              ],
+              hoverOffset: 2,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        },
+      };
+      var ctx = document.getElementById("resultChart").getContext("2d");
+      new Chart(ctx, config);
+
+      var data_chart_camp = $("#type_camp_chart").val();
+      arr_camp_chart = JSON.parse(data_chart_camp);
+      var config_camp = {
+        type: "pie",
+        data: {
+          labels: ["Độc quyền", "Chia sẻ", "Mặc định", "Đối tác"],
+          datasets: [
+            {
+              data: arr_camp_chart,
+              backgroundColor: [
+                "rgb(255, 99, 132)",
+                "rgb(54, 162, 235)",
+                "rgb(255, 205, 86)",
+                "rgb(86, 255, 125)",
+              ],
+              hoverOffset: 2,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        },
+      };
+      var ctx_camp = document.getElementById("campaignChart").getContext("2d");
+      new Chart(ctx_camp, config_camp);
+
+      var target_chart = "[10, 6]";
+      arr_target_chart = JSON.parse(target_chart);
+      var config_target = {
+        type: "pie",
+        data: {
+          labels: ["Đạt mục tiêu", "Không đạt mục tiêu"],
+          datasets: [
+            {
+              data: arr_target_chart,
+              backgroundColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)"],
+              hoverOffset: 2,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        },
+      };
+      var ctx_target = document.getElementById("targetChart").getContext("2d");
+      new Chart(ctx_target, config_target);
+
+      $("#contactsListTab").addClass("active");
+      $("#contactsCardsTab").removeClass("active");
+      $("#list_data").show();
+      $("#calendar_data").hide();
+
+      $("#contactsListTab").click(function () {
+        $("#contactsListTab").addClass("active");
+        $("#contactsCardsTab").removeClass("active");
+        $("#list_data").show();
+        $("#calendar_data").hide();
+      });
+
+      $("#contactsCardsTab").click(function () {
+        $("#contactsListTab").removeClass("active");
+        $("#contactsCardsTab").addClass("active");
+        $("#list_data").hide();
+        $("#calendar_data").show();
+        var events = $("#events").val();
+        events = JSON.parse(events);
+        var calendarEl = document.getElementById("calendar");
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: "dayGridMonth",
+          initialDate: "2021-11-23",
+          headerToolbar: {},
+
+          events: events,
+        });
+
+        calendar.render();
+      });
+
+      $("#filter_campaign").click(function (e) {
+        e.preventDefault();
+        var loc_filter = $("#loc_filter").val().toString();
+        var tags_filter = $("#tags_filter").val().toString();
+        var data = {
+          tags_filter: tags_filter,
+          loc_filter: loc_filter,
+        };
+        $("#list_data").empty();
+        $.ajax({
+          type: "POST",
+          url: $("#form_filter_camp").attr("action"),
+          data: data,
+          success: function (data) {
+            $("#list_data").html(data);
+          },
+        });
+      });
+
+      window.addEventListener("load", () => {
+        const myConfig = {
+          type: "hfunnel",
+
+          title: {
+            text: "",
+          },
+          scaleY: {
+            placement: "opposite",
+            labels: [
+              "Hiển thị",
+              "Truy cập",
+              "Đăng ký",
+              "Khảo sát",
+              "Xem video",
+              "Tin đã gửi",
+            ],
+            item: {
+              fontColor: "#999999",
+            },
+          },
+          plot: {
+            valueBox: {
+              text: "%v Khách hàng",
+              placement: "left-out", //auto/in, top, bottom, left, right, leftout, or rightout
+              fontColor: "gray",
+              fontSize: 12,
+              fontWeight: "normal",
+            },
+          },
+          series: [
+            {
+              values: [1000],
+              text: "Hiển thị",
+              backgroundColor: "#ff5252",
+            },
+            {
+              values: [800],
+              text: "Truy cập",
+              backgroundColor: "#ffab40",
+            },
+            {
+              values: [700],
+              text: "Đăng ký",
+              backgroundColor: "#eeff41",
+            },
+            {
+              values: [400],
+              text: "Khảo sát",
+              backgroundColor: "#00868B",
+            },
+            {
+              values: [300],
+              text: "Xem video",
+              backgroundColor: "#00FA9A",
+            },
+            {
+              values: [100],
+              text: "Tin đã gửi",
+              backgroundColor: "#b2ff59",
+            },
+          ],
+        };
+      });
+
+      var config_top_camp = {
+        type: "horizontalBar",
+        data: {
+          labels: [
+            "Chiến dịch 1",
+            "Chiến dịch 2",
+            "Chiến dịch 3",
+            "Chiến dịch 4",
+            "Khác",
+          ],
+          datasets: [
+            {
+              backgroundColor: "rgba(235, 29, 29, 0.7)",
+              data: [200, 150, 140, 60, 300],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            xAxes: [
+              {
+                stacked: true,
+              },
+            ],
+            yAxes: [
+              {
+                stacked: true,
+              },
+            ],
+          },
+          legend: {
+            display: false,
+          },
+          tooltips: {
+            enabled: true,
+            mode: "single",
+            callbacks: {
+              label: function (tooltipItems, data) {
+                return tooltipItems.xLabel + " khách hàng";
+              },
+            },
+          },
+        },
+      };
+      var ctx_top_camp = document.getElementById("top_camp").getContext("2d");
+      new Chart(ctx_top_camp, config_top_camp);
+      var config_top_location = {
+        type: "horizontalBar",
+        data: {
+          labels: [
+            "Hoàn Kiếm",
+            "Vương Thừa Vũ",
+            "Hàm Nghi",
+            "Lê Đức Thọ",
+            "Khác",
+          ],
+          datasets: [
+            {
+              backgroundColor: "rgb(255, 205, 86)",
+              data: [200, 150, 140, 60, 300],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            xAxes: [
+              {
+                stacked: true,
+              },
+            ],
+            yAxes: [
+              {
+                stacked: true,
+              },
+            ],
+          },
+          legend: {
+            display: false,
+          },
+          tooltips: {
+            enabled: true,
+            mode: "single",
+            callbacks: {
+              label: function (tooltipItems, data) {
+                return tooltipItems.xLabel + " khách hàng";
+              },
+            },
+          },
+        },
+      };
+      var ctx_top_location = document
+        .getElementById("top_location")
+        .getContext("2d");
+      new Chart(ctx_top_location, config_top_location);
+
+      var config_top_device = {
+        type: "pie",
+        data: {
+          labels: ["Android", "IPhone", "Macbook", "Windows", "Khác"],
+          datasets: [
+            {
+              data: [50, 350, 100, 200, 100],
+              backgroundColor: [
+                "rgb(255, 99, 132)",
+                "rgb(54, 162, 235)",
+                "rgb(255, 205, 86)",
+                "rgb(75, 192, 192)",
+                "rgb(153, 102, 255)",
+              ],
+              hoverOffset: 4,
+            },
+          ],
+        },
+      };
+      var ctx_top_device = document
+        .getElementById("top_device")
+        .getContext("2d");
+      new Chart(ctx_top_device, config_top_device);
+
+      var config_top_hours = {
+        type: "horizontalBar",
+        data: {
+          labels: [
+            "08:00-10:59",
+            "11:00-13:59",
+            "14:00-17:59",
+            "18:00-20:59",
+            "21:00-23:59",
+            "00:00-07:59",
+          ],
+          datasets: [
+            {
+              backgroundColor: "rgb(54, 162, 235)",
+              data: [68, 100, 7225, 7779, 8721, 9618],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            xAxes: [
+              {
+                stacked: true,
+              },
+            ],
+            yAxes: [
+              {
+                stacked: true,
+              },
+            ],
+          },
+          legend: {
+            display: false,
+          },
+          tooltips: {
+            enabled: true,
+            mode: "single",
+            callbacks: {
+              label: function (tooltipItems, data) {
+                return tooltipItems.xLabel + " khách hàng";
+              },
+            },
+          },
+        },
+      };
+      var ctx_top_hours = document.getElementById("top_hours").getContext("2d");
+      new Chart(ctx_top_hours, config_top_hours);
+
+      var config_top_day = {
+        type: "horizontalBar",
+        data: {
+          labels: ["Th\u1ee9 hai", "Th\u1ee9 ba", "Th\u1ee9 t\u01b0"],
+          datasets: [
+            {
+              backgroundColor: "rgb(153, 102, 255)",
+              data: [140, 33339, 32],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            xAxes: [
+              {
+                stacked: true,
+              },
+            ],
+            yAxes: [
+              {
+                stacked: true,
+              },
+            ],
+          },
+          legend: {
+            display: false,
+          },
+          tooltips: {
+            enabled: true,
+            mode: "single",
+            callbacks: {
+              label: function (tooltipItems, data) {
+                return tooltipItems.xLabel + " khách hàng";
+              },
+            },
+          },
+        },
+      };
+      var ctx_top_day = document.getElementById("top_day").getContext("2d");
+      new Chart(ctx_top_day, config_top_day);
+
+      var lineChartData = {
+        labels: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+        ],
+        datasets: [
+          {
+            label: "Hiển thị",
+            borderColor: window.chartColors.red,
+            backgroundColor: window.chartColors.red,
+            fill: false,
+            data: [
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+            ],
+            yAxisID: "y-axis-1",
+          },
+          {
+            label: "Truy cập",
+            borderColor: window.chartColors.blue,
+            backgroundColor: window.chartColors.blue,
+            fill: false,
+            data: [
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+            ],
+            yAxisID: "y-axis-1",
+          },
+          {
+            label: "Đăng ký",
+            borderColor: window.chartColors.green,
+            backgroundColor: window.chartColors.green,
+            fill: false,
+            data: [
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+            ],
+            yAxisID: "y-axis-1",
+          },
+          {
+            label: "Khảo sát",
+            borderColor: window.chartColors.yellow,
+            backgroundColor: window.chartColors.yellow,
+            fill: false,
+            data: [
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+            ],
+            yAxisID: "y-axis-1",
+          },
+          {
+            label: "Xem Video",
+            borderColor: window.chartColors.orange,
+            backgroundColor: window.chartColors.orange,
+            fill: false,
+            data: [
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+            ],
+            yAxisID: "y-axis-1",
+          },
+          {
+            label: "Gửi tin",
+            borderColor: window.chartColors.purple,
+            backgroundColor: window.chartColors.purple,
+            fill: false,
+            data: [
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+            ],
+            yAxisID: "y-axis-1",
+          },
+        ],
+      };
+
+      var ctx = document.getElementById("funnelChart").getContext("2d");
+      window.myLine = Chart.Line(ctx, {
+        data: lineChartData,
+
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          hoverMode: "index",
+          stacked: false,
+          scales: {
+            yAxes: [
+              {
+                type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                display: true,
+                position: "left",
+                id: "y-axis-1",
+              },
+            ],
+          },
+        },
+      });
+
+      var new_customers_data = {
+        labels: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+        ],
+        datasets: [
+          {
+            label: "Khách hàng",
+            borderColor: window.chartColors.red,
+            backgroundColor: window.chartColors.red,
+            fill: false,
+            data: [
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+            ],
+            yAxisID: "y-axis-1",
+          },
+        ],
+      };
+
+      var ctx_new_customers = document
+        .getElementById("new_customers")
+        .getContext("2d");
+      window.myLine = Chart.Line(ctx_new_customers, {
+        data: new_customers_data,
+
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          hoverMode: "index",
+          stacked: false,
+          scales: {
+            yAxes: [
+              {
+                type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                display: true,
+                position: "left",
+                id: "y-axis-1",
+              },
+            ],
+          },
+        },
+      });
+
+      var old_customers_data = {
+        labels: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+        ],
+        datasets: [
+          {
+            label: "Khách hàng",
+            borderColor: window.chartColors.red,
+            backgroundColor: window.chartColors.red,
+            fill: false,
+            data: [
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+              randomScalingFactor(),
+            ],
+            yAxisID: "y-axis-1",
+          },
+        ],
+      };
+
+      var ctx_old_customers = document
+        .getElementById("old_customers")
+        .getContext("2d");
+      window.myLine = Chart.Line(ctx_old_customers, {
+        data: old_customers_data,
+
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          hoverMode: "index",
+          stacked: false,
+          scales: {
+            yAxes: [
+              {
+                type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                display: true,
+                position: "left",
+                id: "y-axis-1",
+              },
+            ],
+          },
+        },
+      });
+
+      var config_top_gender = {
+        type: "pie",
+        data: {
+          labels: ["Nam", "Nu", "Chua xac dinh"],
+          datasets: [
+            {
+              data: [50, 350, 100],
+              backgroundColor: [
+                "rgb(255, 99, 132)",
+                "rgb(54, 162, 235)",
+                "rgb(255, 205, 86)",
+               
+              ],
+              hoverOffset: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        },
+      };
+      var ctx_top_gender = document
+        .getElementById("top_gender")
+        .getContext("2d");
+      new Chart(ctx_top_gender, config_top_gender);
+
+      var config_top_age = {
+        type: "pie",
+        data: {
+          labels: ["20-30", "40-50", "Chua xac dinh"],
+          datasets: [
+            {
+              data: [50, 350, 100],
+              backgroundColor: [
+                "rgb(255, 99, 132)",
+                "rgb(54, 162, 235)",
+                "rgb(255, 205, 86)",
+               
+              ],
+              hoverOffset: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        },
+      };
+      var ctx_top_age = document
+        .getElementById("top_age")
+        .getContext("2d");
+      new Chart(ctx_top_age, config_top_age);
+
+    });
+  </script>
+
+  {% endblock %}
+</div>

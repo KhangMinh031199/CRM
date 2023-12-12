@@ -1,0 +1,2536 @@
+{% extends 'nextify/base.html' %}
+
+
+{% block body %}
+    <style>
+        .pt-100 {
+            padding-top: 100px;
+        }
+
+        .pb-100 {
+            padding-bottom: 100px;
+        }
+
+        .section-title {
+            margin-bottom: 60px;
+        }
+
+        .section-title p {
+            color: #777;
+            font-size: 16px;
+        }
+
+        .section-title h4 {
+            text-transform: capitalize;
+            font-size: 40px;
+            position: relative;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .section-title h4:before {
+            position: absolute;
+            content: "";
+            width: 60px;
+            height: 2px;
+            background-color: #ff3636;
+            bottom: 0;
+            left: 50%;
+            margin-left: -30px;
+        }
+
+        .section-title h4:after {
+            position: absolute;
+            background-color: #ff3636;
+            content: "";
+            width: 10px;
+            height: 10px;
+            bottom: -4px;
+            left: 50%;
+            margin-left: -5px;
+            border-radius: 50%;
+        }
+
+        .fill-bar {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+            flex-direction: row;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            height: 24px;
+            border-radius: 2px;
+            overflow-x: hidden;
+            background-color: #ededed;
+        }
+
+        .fill-bar:hover {
+            background-color: blue;
+            color: white;
+        }
+
+        .fill-bar-graph-circle {
+            width: 8px;
+            height: 8px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .radio {
+
+            display: block;
+            position: relative;
+            padding-left: 30px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none
+        }
+
+        /* Hide the browser's default radio button */
+        .radio input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Create a custom radio button */
+        .checkround {
+
+            position: absolute;
+            top: 6px;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: #fff;
+            border-color: #eb7425ed;
+            border-style: solid;
+            border-width: 2px;
+            border-radius: 50%;
+        }
+
+
+        /* When the radio button is checked, add a blue background */
+        .radio input:checked ~ .checkround {
+            background-color: #fff;
+        }
+
+        /* Create the indicator (the dot/circle - hidden when not checked) */
+        .checkround:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        /* Show the indicator (dot/circle) when checked */
+        .radio input:checked ~ .checkround:after {
+            display: block;
+        }
+
+        /* Style the indicator (dot/circle) */
+        .radio .checkround:after {
+            left: 2px;
+            top: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #eb7425ed;
+        }
+
+        .pagination > .active > a,
+        .pagination > .active > a:focus,
+        .pagination > .active > a:hover,
+        .pagination > .active > span,
+        .pagination > .active > span:focus,
+        .pagination > .active > span:hover {
+            z-index: 3;
+            color: #fff;
+            cursor: default;
+            background-color: #77afe0;
+            border-color: #77afe0;
+        }
+
+        .table td, .table th {
+            vertical-align: middle;
+        }
+
+        .table td, .table th {
+            padding: .7375rem;
+        }
+
+        .text-middle {
+            display: flex;
+            justify-content: right;
+            align-items: center;
+        }
+
+        .pd-t-15 {
+            padding-top: 15px;
+        }
+
+        .box {
+            border-left: 1px solid #edf2f9;
+        }
+
+        .mgl0-mgr0 {
+            margin-right: 0px;
+            margin-left: 0px;
+        }
+
+
+        .btn-primary:hover {
+            border-color: unset;
+        }
+
+        .btn-primary {
+            border-color: unset;
+        }
+
+        .c-choice {
+            margin: 0px;
+        }
+
+        label {
+            margin-bottom: 0px
+        }
+
+        .card {
+            border-radius: unset;
+        }
+
+        .loader_filter,
+        .loader_filter:before,
+        .loader_filter:after {
+            background: #ffffff;
+            -webkit-animation: load1 1s infinite ease-in-out;
+            animation: load1 1s infinite ease-in-out;
+            width: 1em;
+            height: 4em;
+        }
+
+        .loader_filter {
+            color: #f57a33;
+            text-indent: -9999em;
+            margin: 88px auto;
+            position: relative;
+            font-size: 20px;
+            -webkit-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-animation-delay: -0.16s;
+            animation-delay: -0.16s;
+        }
+
+        .loader_filter:before,
+        .loader_filter:after {
+            position: absolute;
+            top: 0;
+            content: '';
+        }
+
+        .loader_filter:before {
+            left: -1.5em;
+            -webkit-animation-delay: -0.32s;
+            animation-delay: -0.32s;
+        }
+
+        .loader_filter:after {
+            left: 1.5em;
+        }
+
+        .modal-card .card-body {
+            max-height: none;
+            overflow-y: none;
+        }
+
+        @-webkit-keyframes load1 {
+            0%,
+            80%,
+            100% {
+                box-shadow: 0 0;
+                height: 4em;
+            }
+            40% {
+                box-shadow: 0 -2em;
+                height: 5em;
+            }
+        }
+
+        @keyframes load1 {
+            0%,
+            80%,
+            100% {
+                box-shadow: 0 0;
+                height: 4em;
+            }
+            40% {
+                box-shadow: 0 -2em;
+                height: 5em;
+            }
+        }
+
+        .display11:hover #display1 {
+            display: block;
+        }
+
+        .display11 #display1 {
+            display: none;
+        }
+
+    </style>
+
+    <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+    <input type="hidden" value="{{ camp._id }}" id="camp_id"/>
+    <input type="hidden" id="is_email_fr" name="is_email" {% if camp.is_email %}value="on" {% endif %}>
+    <input type="hidden" id="design" name="design">
+    <input type="hidden" id="email_content" name="email_content">
+    {% if camp and camp.email_design %}
+        <input type="hidden" value="{{ camp.email_design }}" id="email_ex_design"/>
+    {% endif %}
+
+
+    <div class="container-fluid">
+
+        <div class="row u-mb-large justify-content-center">
+            <div class="col-12 col-md-12 col-xl-12 justify-content-center">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-end">
+
+                            <div class="col-auto">
+                                <a href="/email_marketing/{{ shop_id_select }}" class="btn btn-lg btn-dark">
+                                    {{ gettext("Dong_lai") }}
+                                </a>
+                            </div>
+                            <div class="col md-8">
+                                <input id="name_camp" type="text" autofocus
+                                       class="form-control form-control-flush form-control-auto"
+                                       placeholder='{{ gettext("Nhap_ten_chien_dich_...") }}' style="
+                                    padding: 20px;
+                                    margin: 0px;
+                                    font-size: 20px;" {% if camp %} value="{{ camp.code }}" {% endif %}>
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-lg btn-dark" id="prev_step">{{ gettext("Quay_lai") }}</button>
+                                <button type="button" class="btn btn-lg btn-danger" id="next_step">{{ gettext("Tiep_tuc") }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="steps">
+                    <div id="step_1">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="header-body text-center" style="border-bottom:0px">
+                                    <!-- Title -->
+                                    <h1 class="header-title">
+                                        {{ gettext("Thiet_lap_noi_dung") }}
+                                    </h1>
+                                </div>
+                                <form class="mt-1">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col">
+
+                                            </div>
+
+                                            <div class="col-auto">
+                                                <a href="#" data-target="#select_email_template" data-toggle="modal"
+                                                   class="btn btn-outline-primary u-float-right">{{ gettext("Chon_mau_Email") }}
+                                                </a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                    <textarea class="form-control" id="email_title" name="welcome" rows="2"
+                                              placeholder="{{ gettext('Tieu_de_Email') }}">{% if camp %}
+                                        {% if camp.email_title %}{{ camp.email_title }}{% endif %}{% endif %}</textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div id="editor-container" style="width: 100%; height: 900px"></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="step_2">
+                        <div class="col-xl-10 col-md-10" style="margin: auto">
+                            <div class="card header-body text-center"
+                                 style="border-bottom:0px; margin-bottom: 0px; border-radius: none">
+                                <h1 class="header-title">
+                                    {{ gettext("Thiet_lap_muc_tieu") }}
+                                </h1>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-8 col-md-8" style="padding-right: 0px;">
+                                    <div class="card" style="height: 100%;">
+                                        <div class="row mgl0-mgr0">
+                                            <div class="col-xl-12 col-md-12" style="min-height: 600px;">
+                                                <div style="margin-top: 20px; margin-right: -12px; margin-left: -12px;">
+                                                    <div class="row pd-t-15">
+                                                        <div class="col-xl-2 col-md-2"
+                                                             style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+                                                            <span>{{ gettext("Lua_chon") }}</span>
+                                                        </div>
+                                                        <div class="col-xl-10 col-md-10"
+                                                             style="border-left: 5px solid #edf2f9; margin-bottom: 20px; border-bottom: 1px solid #edf2f9; border-top: 1px solid #edf2f9;">
+                                                            <div class="row"
+                                                                 style="margin-left: 0px;margin-right: 0px; margin-top: 20px; margin-bottom: 20px;">
+                                                                <div class="col-xl-4 col-md-4 text-middle">
+                                                                    <span>{{ gettext("tap_khach_hang") }}</span>
+                                                                </div>
+                                                                <div class="col-xl-4 col-md-4">
+                                                                    <input type="hidden" {% if camp %}
+                                                                           value="{{ camp.all_customers }}" {% else %}
+                                                                           value="" {% endif %} id="ex_all_customers"/>
+                                                                    <select class="form-control" id="all_customers">
+                                                                        {% if camp %}
+                                                                            <option value="on"
+                                                                                    {% if camp.all_customers == 'on' %}selected{% endif %}>
+                                                                                {{ gettext("Tat_ca") }}
+                                                                            </option>
+                                                                            <option value="off"
+                                                                                    {% if camp.all_customers == 'off' %}selected{% endif %}>
+                                                                                {{ gettext("Tuy_chon") }}
+                                                                            </option>
+                                                                        {% else %}
+                                                                            <option value="on">{{ gettext("Tat_ca") }}</option>
+                                                                            <option value="off">{{ gettext("Tuy_chon") }}</option>
+                                                                        {% endif %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div id="filter_customer"
+                                                     style="margin-top: 20px; margin-right: -12px; margin-left: -12px;">
+                                                    <div class="row">
+                                                        <div class="col-xl-2 col-md-2"
+                                                             style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+                                                            <span>{{ gettext("Loc") }}</span>
+                                                        </div>
+                                                        <div class="col-xl-10 col-md-10"
+                                                             style="border-left: 5px solid #edf2f9; margin-bottom: 20px; border-bottom: 1px solid #edf2f9; border-top: 1px solid #edf2f9;">
+                                                            <div class="row"
+                                                                 style="margin-left: 0px;margin-right: 0px; margin-top: 20px;">
+                                                                <div class="col-xl-4 col-md-4 text-middle">
+                                                                    <span>{{ gettext("thoi_gian_den") }}</span>
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 25%;">
+                                                                    <input type="hidden" id="ex_visit_from_date"
+                                                                           value="{{ camp.visit_from_date }}"/>
+                                                                    <input id="from_date" type="text"
+                                                                           placeholder="{{ gettext('Tu_ngay') }}.." class="form-control"
+                                                                           style="text-align: center">
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 25%;">
+                                                                    <input type="hidden" id="ex_visit_to_date"
+                                                                           value="{{ camp.visit_to_date }}"/>
+                                                                    <input id="to_date" type="text"
+                                                                           placeholder="{{ gettext('Den_ngay') }}.." class="form-control"
+                                                                           style="text-align: center">
+                                                                </div>
+                                                                <div style="/*! max-width: 100%; *//*! justify-content: left; */padding-right: 24px;/*! padding-left: 12px; */"
+                                                                     class="col text-middle">
+                                                                    <a href="#" class="btn" id="remove_visit_date">
+                                                                        <i class="fe fe-x"></i>
+                                                                    </a>
+                                                                    <div></div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row"
+                                                                 style="margin-left: 0px;margin-right: 0px; margin-top: 20px;">
+                                                                <div class="col-xl-4 col-md-4 text-middle">
+                                                                    <span>{{ gettext("thoi_gian_trong_ngay") }} </span>
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 25%;">
+                                                                    {% if camp %}
+                                                                        <input id="from_time" type="text"
+                                                                                   placeholder="{{ gettext('Tu_gio..') }}" class="form-control onlyNumber"
+                                                                                   style="text-align: center" value="{{ camp.from_time }}">
+                                                                    {% else %}
+                                                                        <input id="from_time" type="text"
+                                                                               placeholder="{{ gettext('Tu_gio..') }}" class="form-control onlyNumber"
+                                                                               style="text-align: center">
+                                                                    {% endif %}
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 25%;">
+                                                                    {% if camp %}
+                                                                        <input id="to_time" type="text"
+                                                                               placeholder="{{ gettext('Den_gio..') }}" class="form-control onlyNumber"
+                                                                               style="text-align: center" value="{{ camp.to_time }}">
+                                                                    {% else %}
+                                                                        <input id="to_time" type="text"
+                                                                               placeholder="{{ gettext('Den_gio..') }}" class="form-control onlyNumber"
+                                                                               style="text-align: center">
+                                                                    {% endif %}
+                                                                </div>
+                                                                <div style="padding-right: 24px;"
+                                                                     class="col text-middle">
+                                                                    <a href="#" class="btn" id="remove_visit_date">
+                                                                        <i class="fe fe-x"></i>
+                                                                    </a>
+                                                                    <div></div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row pd-t-15"
+                                                                 style="margin-left: 0px;margin-right: 0px;">
+                                                                <div class="col-xl-4 col-md-4 text-middle">
+                                                                    <span>{{ gettext("luot_den") }}</span>
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 13%;">
+                                                                    <input type="hidden" value="{{ camp.min_visit }}"
+                                                                           id="ex_min_visit"/>
+                                                                    <input type="text"
+                                                                           placeholder="{{ gettext('Tu') }} .." class="form-control"
+                                                                           id="min_visit"
+                                                                           value="
+                                                                                   {% if camp.min_visit and camp.min_visit!='None' %}{{ camp.min_visit }}{% endif %}"
+                                                                    >
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 13%;">
+                                                                    <input type="hidden" value="{{ camp.max_visit }}"
+                                                                           id="ex_max_visit"/>
+                                                                    <input type="text"
+                                                                           placeholder="{{ gettext('Den') }}.." class="form-control"
+                                                                           id="max_visit"
+                                                                           value="
+                                                                                   {% if camp.max_visit and camp.max_visit!='None' %}{{ camp.max_visit }}{% endif %}"
+                                                                    >
+                                                                </div>
+                                                                <div style="/*! max-width: 100%; *//*! justify-content: left; */padding-right: 24px;/*! padding-left: 12px; */"
+                                                                     class="col text-middle">
+                                                                    <a href="#" class="btn" id="remove_visit_by_time">
+                                                                        <i class="fe fe-x"></i>
+                                                                    </a>
+                                                                    <div></div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row pd-t-15"
+                                                                 style="margin-left: 0px;margin-right: 0px; margin-bottom: 20px;">
+                                                                <div class="col-xl-4 col-md-4 text-middle">
+                                                                    <span>{{ gettext("so_ngay_chua_quay_lai") }}</span>
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 15%;">
+                                                                    <input type="hidden" value="{{ camp.lost_day }}"
+                                                                           id="ex_lost_day"/>
+                                                                    <input type="text"
+                                                                           placeholder="{{ gettext('Ngay') }}" class="form-control"
+                                                                           id="lost_day"
+                                                                           value="
+                                                                                   {% if camp and camp.lost_day!='None' %}{{ camp.lost_day }}{% endif %}"
+                                                                    >
+                                                                </div>
+                                                                <div style="/*! max-width: 100%; *//*! justify-content: left; */padding-right: 24px;/*! padding-left: 12px; */"
+                                                                     class="col text-middle">
+                                                                    <a href="#" class="btn" id="remove_lost_day">
+                                                                        <i class="fe fe-x"></i>
+                                                                    </a>
+                                                                    <div></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div id="info_customer"
+                                                     style="margin-top: 20px; margin-right: -12px; margin-left: -12px;">
+                                                    <div class="row">
+                                                        <div class="col-xl-2 col-md-2"
+                                                             style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+                                                            <span>{{ gettext("Thong_tin") }}</span>
+                                                        </div>
+                                                        <div class="col-xl-10 col-md-10"
+                                                             style="border-left: 5px solid #edf2f9; margin-bottom: 20px; border-bottom: 1px solid #edf2f9; border-top: 1px solid #edf2f9;">
+                                                            <div class="row"
+                                                                 style="margin-left: 0px;margin-right: 0px; margin-top: 20px;">
+                                                                <div class="col-xl-4 col-md-4 text-middle">
+                                                                    <span>{{ gettext("chon_gioi_tinh") }}</span>
+                                                                </div>
+                                                                <div class="col-xl-8 col-md-8">
+                                                                    <div class="row" style="padding-left: 12px;">
+                                                                        <div class="c-choice c-choice--checkbox text-middle"
+                                                                             style="padding-right: 15px">
+                                                                            <input class="c-choice__input"
+                                                                                   id="gender_male"
+                                                                                    {% if camp and camp.gender %}
+                                                                                   {% if '1' in camp.gender %}checked
+                                                                                   value="1"
+                                                                                   {% else %}
+                                                                                   value="" {% endif %} {% endif %}
+                                                                                   type="checkbox">
+                                                                            <label class="c-choice__label"
+                                                                                   for="gender_male">{{ gettext("Nam") }}</label>
+                                                                        </div>
+                                                                        <div class="c-choice c-choice--checkbox text-middle"
+                                                                             style="padding-right: 15px">
+                                                                            <input class="c-choice__input"
+                                                                                   id="gender_female"
+                                                                                    {% if camp and camp.gender %}
+                                                                                   {% if '2' in camp.gender %}checked
+                                                                                   value="2"
+                                                                                   {% else %}
+                                                                                   value="" {% endif %} {% endif %}
+                                                                                   type="checkbox">
+                                                                            <label class="c-choice__label"
+                                                                                   for="gender_female">{{ gettext("Nu") }}</label>
+                                                                        </div>
+                                                                        <div class="c-choice c-choice--checkbox text-middle"
+                                                                             style="padding-right: 15px">
+                                                                            <input class="c-choice__input"
+                                                                                   id="gender_other"
+                                                                                    {% if camp and camp.gender %}
+                                                                                   {% if '0' in camp.gender %}checked
+                                                                                   value="0"
+                                                                                   {% else %}
+                                                                                   value="" {% endif %} {% endif %}
+                                                                                   type="checkbox">
+                                                                            <label class="c-choice__label"
+                                                                                   for="gender_other">{{ gettext("Chua_xac_dinh") }}</label>
+                                                                        </div>
+                                                                        <div style="/*! max-width: 100%; *//*! justify-content: left; */padding-right: 24px;/*! padding-left: 12px; */"
+                                                                             class="col text-middle">
+                                                                            <a href="#" class="btn" id="remove_gender">
+                                                                                <i class="fe fe-x"></i>
+                                                                            </a>
+                                                                            <div></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row pd-t-15"
+                                                                 style="margin-left: 0px;margin-right: 0px;">
+                                                                <div class="col-xl-4 col-md-4 text-middle">
+                                                                    <span>{{ gettext("sinh_nhat") }}</span>
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 25%;">
+                                                                    <input type="hidden"
+                                                                           value="{{ camp.b_day_from_date }}"
+                                                                           id="ex_b_day_from_date"/>
+                                                                    <input id="bday_from_date" type="text"
+                                                                           placeholder="{{ gettext('Tu_ngay') }}.." class="form-control"
+                                                                           style="text-align: center">
+                                                                </div>
+                                                                <div class="col-auto" style="max-width: 25%;">
+                                                                    <input type="hidden"
+                                                                           value="{{ camp.b_day_to_date }}"
+                                                                           id="ex_b_day_to_date"/>
+                                                                    <input id="bday_to_date" type="text"
+                                                                           placeholder="{{ gettext('Den_ngay') }}.." class="form-control"
+                                                                           style="text-align: center">
+                                                                </div>
+                                                                <div style="/*! max-width: 100%; *//*! justify-content: left; */padding-right: 24px;/*! padding-left: 12px; */"
+                                                                     class="col text-middle">
+                                                                    <a href="#" class="btn" id="remove_birthday">
+                                                                        <i class="fe fe-x"></i>
+                                                                    </a>
+                                                                    <div></div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row pd-t-15"
+                                                                 style="margin-left: 0px;margin-right: 0px; margin-bottom: 20px;">
+                                                                <div class="col-xl-4 col-md-4 text-middle">
+                                                                    <span>tag</span>
+                                                                </div>
+                                                                <div class="col-xl-6 col-md-6">
+                                                                    <input type="hidden" name="source_tags"
+                                                                           id="source_tags_filter"
+                                                                           value="{{ camp.tags }}"/>
+                                                                    <input type="hidden" id="new_select_tags_filter"
+                                                                           name="real_tags_filter"/>
+                                                                    <select class="form-control" data-toggle="select"
+                                                                            name="tags"
+                                                                            style="width: 100%;" id="new_tags_selects"
+                                                                            multiple="multiple">
+                                                                        {% for tag in tags %}
+                                                                            <option value="{{ tag._id }}" {% if tag._id|string in camp.tags %}selected {%  endif %}>{{ tag.name }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                    <input type="hidden" id="select_tags_filter"
+                                                                           name="real_tags_filter"/>
+                                                                </div>
+                                                                <div style="/*! max-width: 100%; *//*! justify-content: left; */padding-right: 24px;/*! padding-left: 12px; */"
+                                                                     class="col text-middle">
+                                                                    <a href="#" class="btn" id="remove_tags">
+                                                                        <i class="fe fe-x"></i>
+                                                                    </a>
+                                                                    <div></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="filter_back"
+                                                     style="/*! margin-top: 20px; */ margin-right: -12px; margin-left: -12px; display: none">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                        </div>
+                                                        <div class="col-auto" style="margin-right: 20px;">
+                                                            <button type="button" class="btn btn-lg btn-primary"
+                                                                    id="btn_filter_back"
+                                                                    style="background-color: #337ab7;">{{ gettext("Duyet_lai") }}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-md-4" style="padding-left: 0px;">
+                                    <div class="card" style="border-left: 0px; height: 100%;">
+                                        <div id="customers_load" class="loader_filter"
+                                             style="display: none; margin-top: auto; margin-bottom: auto"></div>
+                                        <div class="text-center" style="text-align: none; display: none"
+                                             id="real_send_div">
+                                            <!-- Heading -->
+                                            <h6 class="text-uppercase text-muted"
+                                                style="margin-top: 15px;">
+                                                <span class="text-success mr-2" id="real_send_count"></span>
+                                                {{ gettext("khach_hang_thoa_man_tren_tong_so") }} <span class="text-danger mr-2"
+                                                                                       id="total_count"></span> {{ gettext("khach_hang") }}
+                                            </h6>
+                                            <!-- Value -->
+                                        </div>
+                                        <div class="card-body"
+                                             style="display: flex; justify-content: center; align-items: center; background-color: #f4f9f6;"
+                                             id="data_cus_select">
+                                            <div class="text-center">
+                                                <!-- Heading -->
+                                                <h6 class="text-uppercase text-muted"
+                                                    style="margin-bottom: 20px ; display: none" id="preview_back"> {{ gettext("Vui_long_thiet_lap_lai_tap_khach_hang_muc_tieu.") }}</h6>
+                                                <h6 class="text-uppercase text-muted" style="margin-bottom: 20px"
+                                                    id="preview">{{ gettext("Xem_truoc_tap_khach_hang_muc_tieu") }}</h6>
+                                                <!-- Value -->
+                                                <button type="button" class="btn btn-lg btn-primary"
+                                                        id="btn_data_cus_select" style="background-color: #337ab7;">{{ gettext("Xem_truoc") }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="step_3" class="row">
+
+                        <div class="col-md-6">
+
+
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    <h1 class="header-title">
+                                        {{ gettext("Gui_Email_Test") }}
+                                    </h1>
+                                </div>
+                                <div class="card-body">
+                                    <div class="input-group input-group-lg input-group-merge">
+                                        <input type="text" class="form-control" placeholder="Email" id="email_test">
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button class="btn btn-block btn-danger" id="send_email_test">
+                                        {{ gettext("Gui_Email") }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    <h1 class="header-title">
+                                        {{ gettext("Xac_nhan") }}
+                                    </h1>
+                                </div>
+                                <div class="card-body">
+
+
+                                    {% if  camp %}
+                                        {% if camp.date_send %}
+                                            <input type="hidden" value="{{ camp.date_send|format__date_pick }}"
+                                                   id="ex_date_send"/>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    <div class="form-group mt-5">
+                                        <label for="date_send">{{ gettext("Ngay_bat_dau_gui:") }}</label>
+                                        <input type="text" class="form-control" id="date_send" name="date_send"/>
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label>{{ gettext("Tap_khach_hang_da_chon_:") }}</label>
+                                        <h2 class="mt-2 mb-2"><span class="badge badge-soft-primary ml-1 mt-n1"
+                                                                    id="verify_text"></span>
+                                        </h2>
+
+                                    </div>
+
+                                </div>
+                                <div class="card-footer">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <button class="btn btn-block btn-primary" id="save_camp">
+                                                {{ gettext("Luu_chien_dich") }}
+                                            </button>
+
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-block btn-danger" id="send_camp">
+                                                {{ gettext("Gui_khach_hang") }}
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="c-modal c-modal--xlarge modal fade" id="select_email_template" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="c-modal__dialog modal-dialog" style="max-width: 80%; height: auto">
+            <div class="c-modal__content modal-content">
+                <div class="modal-card card" data-toggle="lists" data-lists-values="[&quot;name&quot;]">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <!-- Title -->
+                                <h4 class="card-header-title" id="exampleModalCenterTitle">
+                                    {{ gettext("Chon_mau_Email") }}
+                                </h4>
+                            </div>
+                            <div class="col-12 col-md-6 col-xl-3">
+                                <select class="form-control" style="width: 100%;" id="select_branch">
+                                    <option value="all">{{ gettext("Chon_nganh_kinh_doanh") }}</option>
+                                    <option value="restaurant_coffee">{{ gettext("Nha_hang") }}- Cofee</option>
+                                    <option value="fitness_spa">Fitness- Spa</option>
+                                    <option value="retail">{{ gettext("Ban_le") }}</option>
+                                    <option value="hospital">{{ gettext("Benh_vien-_Phong_kham") }}</option>
+                                    <option value="hotel_resort">{{ gettext("Khach_san-_Resort") }}</option>
+                                    <option value="bar_club">Bar- Club</option>
+
+
+                                </select>
+
+                            </div>
+                            <div class="col-auto">
+                                <!-- Close -->
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                        </div> <!-- / .row -->
+                    </div>
+                    <div class="card-body" id="email_templates">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block js %}
+
+    <script src="/static/nextify/js/jquery.bootpag.min.js"></script>
+
+    <script nonce="{{ csp_nonce() }}">
+
+        $(document).ready(function () {
+            var shop_id_select = $('#shop_id_select').val();
+            var camp_id = $("#camp_id").val();
+            if (!camp_id) {
+                camp_id = "add"
+            }
+            ;
+
+            $("#remove_visit_date").click(function () {
+                const flatpickr_from_date = flatpickr("#from_date", {});
+                const flatpickr_to_date = flatpickr("#to_date", {});
+                flatpickr_from_date.clear();
+                flatpickr_to_date.clear();
+            });
+
+            $("#remove_birthday").click(function () {
+                const flatpickr_bday_to_date = flatpickr("#bday_to_date", {});
+                const flatpickr_bday_from_date = flatpickr("#bday_from_date", {});
+                flatpickr_bday_from_date.clear();
+                flatpickr_bday_to_date.clear();
+            });
+
+            $("#remove_visit_by_time").click(function () {
+                $("#min_visit").val("");
+                $("#max_visit").val("");
+            });
+
+            $("#remove_lost_day").click(function () {
+                $("#lost_day").val("");
+            });
+
+            $("#remove_gender").click(function () {
+                $("#gender_male").val("");
+                $("#gender_male").prop("checked", false);
+                $("#gender_female").val("");
+                $("#gender_female").prop("checked", false);
+                $("#gender_other").val("");
+                $("#gender_other").prop("checked", false);
+            });
+
+            $("#remove_tags").click(function () {
+                $('#new_tags_selects').val('').trigger('change');
+            });
+
+            var ex_all_customers = $("#ex_all_customers").val();
+            if (ex_all_customers === "on") {
+                $("#filter_customer").hide();
+                $("#info_customer").hide();
+            }
+            ;
+
+            if ($("#ex_date_send").length > 0 && $("#ex_date_send").val().length > 0 && $("#ex_date_send").val() != 'None') {
+                flatpickr("#date_send", {
+                    enableTime: true,
+                    defaultDate: $("#ex_date_send").val(),
+                    minDate: 1,
+                    dateFormat: "H:i d-m-Y",
+                });
+            } else {
+                flatpickr("#date_send", {
+                    enableTime: true,
+                    dateFormat: "H:i d-m-Y",
+                    minDate: 1,
+
+                });
+            }
+
+            // $('#new_tags_selects').select2({
+            //     placeholder: "{{ gettext('Chon_tag') }}",
+            //     dropdownAutoWidth: true
+            // });
+
+            $('#new_tags_selects').on("change", function (e) {
+                if ($('#new_tags_selects').val()) {
+                    $('#new_select_tags_filter').val($('#new_tags_selects').val().toString());
+                } else {
+                    $('#new_select_tags_filter').val("");
+                }
+                ;
+            });
+
+            $("#gender_male").click(function () {
+                if ($("#gender_male").prop("checked")) {
+                    $("#gender_male").val("1");
+                } else {
+                    $("#gender_male").val("");
+                }
+            });
+
+            $("#gender_female").click(function () {
+                if ($("#gender_female").prop("checked")) {
+                    $("#gender_female").val("2");
+                } else {
+                    $("#gender_female").val("");
+                }
+            });
+
+            $("#gender_other").click(function () {
+                if ($("#gender_other").prop("checked")) {
+                    $("#gender_other").val("0");
+                } else {
+                    $("#gender_other").val("");
+                }
+            });
+
+            $('#new_tags_selects').on("change", function (e) {
+                if ($('#new_tags_selects').val()) {
+                    $('#new_select_tags_filter').val($('#new_tags_selects').val().toString());
+                } else {
+                    $('#new_select_tags_filter').val("");
+                }
+                ;
+            });
+
+            $('#all_customers').on('change.select2', function (e) {
+                source = $(this).val();
+                if (source === 'on') {
+                    $("#filter_customer").hide();
+                    $("#info_customer").hide();
+                } else {
+                    $("#filter_customer").show();
+                    $("#info_customer").show();
+                }
+            });
+            $("#is_email_fr").val("on");
+
+
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+
+            var divs = $('#steps>div');
+            var now = 1; // currently shown div
+            divs.hide().first().show(); // hide all divs except first
+            $("button[id=prev_step]").hide();
+            $("button[id=next_step]").click(function () {
+                if (now == 1) {
+                    if ($("#name_camp").val().length == 0) {
+                        swal('{{ gettext("Nhap_ten_chien_dich_...") }}', "", "error");
+                        return false;
+                    }
+                    if ($("#email_title").val().length == 0) {
+                        swal('{{ gettext("Vui_long_nhap_tieu_de_Email") }}', "", "error");
+                        return false;
+                    }
+                    if (camp_id && camp_id != 'add') {
+                        load_preview_customers();
+                    }
+
+                }
+                ;
+                divs.eq(now - 1).hide();
+                $("button[id=prev_step]").show();
+                if (now + 1 == divs.length) {
+                    $("button[id=next_step]").hide();
+
+                }
+                ;
+                now = now + 1;
+                divs.eq(now - 1).show(); // show next
+
+                if (now == 3) {
+                    // verify_text_func()
+                    load_preview_customers_step_3()
+                    unlayer.exportHtml(function (data) {
+                        var json = data.design; // design json
+                        var html = data.html; // final html
+                        $("#design").val(JSON.stringify(json));
+                        $("#email_content").val(html);
+                    });
+                }
+
+
+            });
+            $("button[id=prev_step]").click(function () {
+                divs.eq(now - 1).hide();
+                $("button[id=next_step]").show();
+                if (now - 1 == 1) {
+                    $("button[id=prev_step]").hide();
+                }
+                now = now - 1;
+                divs.eq(now - 1).show(); // show next
+
+
+            });
+            var predict_message;
+
+            function load_preview_customers_step_3() {
+                var customers_sources = $('#all_customers').val();
+                var visit_from_date = $("#from_date").val();
+                var visit_to_date = $('#to_date').val();
+                var min_visit = $("#min_visit").val();
+                var max_visit = $("#max_visit").val();
+                var lost_day = $("#lost_day").val();
+                var gender_male = $("#gender_male").prop("checked");
+                var gender_female = $("#gender_female").prop("checked");
+                var gender_other = $("#gender_other").prop("checked");
+                var bday_from_date = $("#bday_from_date").val();
+                var bday_to_date = $("#bday_to_date").val();
+                var tags = $('#new_tags_selects').val().toString();
+                var gender_filter = [];
+                if ($("#gender_male").prop("checked")) {
+                    gender_filter.push("1")
+                }
+                if ($("#gender_female").prop("checked")) {
+                    gender_filter.push("2")
+                }
+                if ($("#gender_other").prop("checked")) {
+                    gender_filter.push("0")
+                }
+                var data = {
+                    'shop_id_select': shop_id_select,
+                    'is_email': $("#is_email_fr").val(),
+                    'gender_filter': gender_filter.toString(),
+                    'gender_male': gender_male,
+                    'gender_female': gender_female,
+                    'gender_other': gender_other,
+                    'real_tags_filter': tags,
+                    'from_date': visit_from_date,
+                    'to_date': visit_to_date,
+                    'bday_from_date': bday_from_date,
+                    'bday_to_date': bday_to_date,
+                    'min_visit': min_visit,
+                    'max_visit': max_visit,
+                    'lost_day': lost_day,
+                    'customers_sources': customers_sources
+                };
+                $.ajax({
+                    url: "/data_create_campaign",
+                    type: 'GET',
+                    data: data,
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        predict_message = data.real_send;
+                        document.getElementById("verify_text").innerHTML = data.real_send + " {{ gettext('khach_hang') }}";
+                    }
+                });
+            };
+
+            function load_preview_customers() {
+                var customers_sources = $('#all_customers').val();
+                var visit_from_date = $("#from_date").val();
+                var visit_to_date = $('#to_date').val();
+                var min_visit = $("#min_visit").val();
+                var max_visit = $("#max_visit").val();
+                var lost_day = $("#lost_day").val();
+                var gender_male = $("#gender_male").prop("checked");
+                var gender_female = $("#gender_female").prop("checked");
+                var gender_other = $("#gender_other").prop("checked");
+                var bday_from_date = $("#bday_from_date").val();
+                var bday_to_date = $("#bday_to_date").val();
+                var tags = $('#new_tags_selects').val().toString();
+                var gender_filter = [];
+                if ($("#gender_male").prop("checked")) {
+                    gender_filter.push("1")
+                }
+                if ($("#gender_female").prop("checked")) {
+                    gender_filter.push("2")
+                }
+                if ($("#gender_other").prop("checked")) {
+                    gender_filter.push("0")
+                }
+                var data = {
+                    'shop_id_select': shop_id_select,
+                    'is_email': $("#is_email_fr").val(),
+                    'gender_filter': gender_filter.toString(),
+                    'gender_male': gender_male,
+                    'gender_female': gender_female,
+                    'gender_other': gender_other,
+                    'real_tags_filter': tags,
+                    'from_date': visit_from_date,
+                    'to_date': visit_to_date,
+                    'bday_from_date': bday_from_date,
+                    'bday_to_date': bday_to_date,
+                    'min_visit': min_visit,
+                    'max_visit': max_visit,
+                    'lost_day': lost_day,
+                    'customers_sources': customers_sources
+                };
+                $.ajax({
+                    url: "/data_create_campaign",
+                    type: 'GET',
+                    data: data,
+                    beforeSend: function () {
+                        $("#data_cus_select").hide();
+                        $('#real_send_div').hide();
+                        $('#customers_load').show();
+                    },
+                    success: function (data) {
+                        document.getElementById("real_send_count").innerHTML = data.real_send;
+                        document.getElementById("total_count").innerHTML = data.total;
+                        $('#real_send_div').show();
+                        if (data.real_send == 0) {
+                            $("#preview_back").show();
+                            $("#preview").hide();
+                            $("#data_cus_select").hide();
+                            $('#filter_back').show();
+                        } else {
+                            $("#data_cus_select").empty();
+                            $("#data_cus_select").append(data.data);
+                            $('#data_cus_select').show();
+                            $("#preview_back").hide();
+                            $('#filter_back').show();
+                        }
+                        ;
+                        $('#customers_load').hide();
+                    }
+                });
+            };
+            $("#btn_data_cus_select").click(function () {
+                load_preview_customers()
+            });
+
+            $("#btn_filter_back").click(function () {
+                load_preview_customers()
+            });
+
+
+            $("#send_email_test").click(function () {
+                 if ($("#email_test").val() == 0) {
+                    swal('{{ gettext("Ban_chua_nhap_email_test") }}', "", "error");
+                    return false
+                 }
+                 var data = {
+                     'email': $("#email_test").val(),
+                      'subject': $("#email_title").val(), // tiêu đề email
+                    'email_content': $("#email_content").val()
+                 }
+                  $.ajax({
+                    url: "/send_email_test/" + shop_id_select ,
+                    data: data,
+                    type: "POST",
+                    success: function (resp) {
+                        resp = JSON.parse(resp);
+                        if ('error' in resp){
+                            var error = resp['error'];
+                            swal(error, '', 'error');
+
+                        }else{
+                             swal('{{ gettext("Gui_Email_thanh_cong") }}', " ", "success");
+
+                        }
+                    },
+                    error: function () {
+                        swal('{{ gettext("Khong_thanh_cong,_vui_long_kiem_tra_lai_cau_hinh_Email.") }}', '', 'error');
+                    }
+                });
+                 return false;
+
+            });
+
+            $("#send_camp").click(function (e) {
+                e.preventDefault();
+                 if ($("#name_camp").val() == 0) {
+                    swal('Nhập tên chiến dịch', "", "error");
+                    return false
+                }
+
+                if ($("#date_send").val() == 0) {
+                    swal('{{ gettext("Nhap_thoi_gian_chay_chien_dich") }}', "", "error");
+                    return false
+                }
+
+
+                var time_start;
+
+                var gender_filter = [];
+                if ($("#gender_male").prop("checked")) {
+                    gender_filter.push("1")
+                }
+                if ($("#gender_female").prop("checked")) {
+                    gender_filter.push("2")
+                }
+                if ($("#gender_other").prop("checked")) {
+                    gender_filter.push("0")
+                }
+
+                var data_save = {
+                    'code_camp': $("#name_camp").val(), // tên chiến dịch
+                    'gender_filter': gender_filter.toString(),
+                    'gender_male': $("#gender_male").prop("checked"),
+                    'gender_female': $("#gender_female").prop("checked"),
+                    'gender_other': $("#gender_other").prop("checked"),// giới tính
+                    'real_tags_filter': $("#new_tags_selects").val().toString(),
+                    'visit_from_date': $("#from_date").val(), // khhách đến từ ngày
+                    'visit_to_date': $("#to_date").val(),   // khhách {{ gettext("den_ngay") }}
+                    'from_date': $("#bday_from_date").val(), // {{ gettext("sinh_nhat") }} trong khoảng
+                    'to_date': $("#bday_to_date").val(),   // {{ gettext("sinh_nhat") }} trong khoảng
+                    'min_visit': $("#min_visit").val(), // lươt đến trong khoảng
+                    'max_visit': $("#max_visit").val(), // lượt ddeeesn trong khoảng
+                    'lost_day': $("#lost_day").val(), // {{ gettext("so_ngay_chua_quay_lai") }}
+                    'all_customers': $("#all_customers").val(),     // tất cả khách hàng
+                    'email_title': $("#email_title").val(), // tiêu đề email
+                    'design': $("#design").val(),       // code email
+                    'email_content': $("#email_content").val(), // nội dung email
+                    'is_email': $("#is_email_fr").val(),    // dùng email
+                    'date_send': $("#date_send").val(),    // ngày gửi
+                    'visit_by': 'merchant',     // theo chuỗi
+                    'desc_camp': $("#name_camp").val(), // mô tả,
+                    // 'ex_manual': $("#ex_manual").val(), // hạn coupon
+                    'camp_id': camp_id,
+                    'predict_message': predict_message,
+                    'send_to_cus': '1'
+                };
+                $.ajax({
+                    url: "/email_marketing/" + shop_id_select + "/" + camp_id,
+                    data: data_save,
+                    type: "POST",
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        if ('error' in data){
+                            var error = data['error'];
+                            swal(error, '', 'error');
+
+                        }else{
+                             swal('{{ gettext("Email_dang_duoc_gui") }}.', " ", "success");
+                            location.href = data.message;
+                        }
+                    },
+                    error: function () {
+                        swal('{{ gettext("Khong_thanh_cong,_vui_long_kiem_tra_lai_cau_hinh_Email.") }}', '', 'error');
+                    }
+                });
+                 return false;
+            });
+
+            $("#save_camp").click(function () {
+                if ($("#name_camp").val() == 0) {
+                    swal('{{ gettext("Nhap_ten_chien_dich_...") }}', "", "error");
+                    return false
+                }
+
+                if ($("#date_send").val() == 0) {
+                    swal('{{ gettext("Nhap_thoi_gian_chay_chien_dich") }}', "", "error");
+                    return false
+                }
+
+
+                var time_start;
+
+                var gender_filter = [];
+                if ($("#gender_male").prop("checked")) {
+                    gender_filter.push("1")
+                }
+                if ($("#gender_female").prop("checked")) {
+                    gender_filter.push("2")
+                }
+                if ($("#gender_other").prop("checked")) {
+                    gender_filter.push("0")
+                }
+
+                // thời gian trong ngày
+                var from_time = $('#from_time').val();
+                var to_time = $('#to_time').val();
+                if (from_time == "" || to_time == ""){
+                    from_time = "";
+                    to_time = "";
+                }
+                if (parseInt(from_time) > parseInt(to_time) && from_time != "" && to_time != ""){
+                    swal({
+                        title: "Từ giờ phải nhỏ hơn đến giờ sau",
+                        text: " ",
+                        type: "error",
+                        timer: 2000
+                    });
+                    return 0;
+                }
+                if(parseInt(from_time) > 24 || parseInt(to_time) > 24){
+                    swal({
+                        title: "Thời gian phải nằm trong khoảng từ 0 đến 24",
+                        text: " ",
+                        type: "error",
+                        timer: 2000
+                    });
+                    return 0;
+                }
+
+                var data_save = {
+                    'code_camp': $("#name_camp").val(), // tên chiến dịch
+                    'gender_filter': gender_filter.toString(),
+                    'gender_male': $("#gender_male").prop("checked"),
+                    'gender_female': $("#gender_female").prop("checked"),
+                    'gender_other': $("#gender_other").prop("checked"),// giới tính
+                    'real_tags_filter': $("#new_tags_selects").val().toString(),
+                    'visit_from_date': $("#from_date").val(), // khhách đến từ ngày
+                    'visit_to_date': $("#to_date").val(),   // khhách {{ gettext("den_ngay") }}
+                    'from_date': $("#bday_from_date").val(), // {{ gettext("sinh_nhat") }} trong khoảng
+                    'to_date': $("#bday_to_date").val(),   // {{ gettext("sinh_nhat") }} trong khoảng
+                    'min_visit': $("#min_visit").val(), // lươt đến trong khoảng
+                    'max_visit': $("#max_visit").val(), // lượt ddeeesn trong khoảng
+                    'lost_day': $("#lost_day").val(), // {{ gettext("so_ngay_chua_quay_lai") }}
+                    'all_customers': $("#all_customers").val(),     // tất cả khách hàng
+                    'email_title': $("#email_title").val(), // tiêu đề email
+                    'design': $("#design").val(),       // code email
+                    'email_content': $("#email_content").val(), // nội dung email
+                    'is_email': $("#is_email_fr").val(),    // dùng email
+                    'date_send': $("#date_send").val(),    // ngày gửi
+                    'visit_by': 'merchant',     // theo chuỗi
+                    'desc_camp': $("#name_camp").val(), // mô tả,
+                    // 'ex_manual': $("#ex_manual").val(), // hạn coupon
+                    'camp_id': camp_id,
+                    'predict_message': predict_message,
+                    'from_time': from_time,
+                    'to_time': to_time
+                };
+                $.ajax({
+                    url: "/email_marketing/" + shop_id_select + "/" + camp_id,
+                    data: data_save,
+                    type: "POST",
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        location.href = data.message;
+                    },
+                    error: function () {
+                        swal('{{ gettext("Co_loi_xay_ra_xin_thu_lai_sau") }}', '', 'error');
+                        return false
+                    }
+                });
+            });
+            $.ajax({
+                url: "/marketing_automation/select_email_template", success: function (result) {
+                    //alert("success"+result);
+                    $("#email_templates").empty();
+                    $("#email_templates").append(result);
+
+                }
+            });
+
+            unlayer.init({id: 'editor-container',
+                            locale: 'vi-VN',
+                            translations: {
+                                'vi-VN': {
+                                    "buttons.add_column": "Thêm cột",
+                                    "buttons.add_content": "Thêm nội dung",
+                                    "buttons.add_display_condition": "Thêm điều kiện hiển thị",
+                                    "buttons.add_field": "Thêm trường",
+                                    "buttons.add_new_field": "Thêm trường mới",
+                                    "buttons.add_new_item": "Thêm ",
+                                    "buttons.add_row": "Thêm dòng",
+                                    "buttons.add_text": "Thêm văn bản",
+                                    "buttons.apply": "Áp dụng",
+                                    "buttons.apply_effects": "Áp dụng hiệu ứng",
+                                    "buttons.back": "Quay lại",
+                                    "buttons.background": "Màu nền",
+                                    "buttons.cancel": "Hủy",
+                                    "buttons.change": "Thay đổi",
+                                    "buttons.change_image": "Thay hình ảnh",
+                                    "buttons.close": "Đóng",
+                                    "buttons.comment": "Bình luận",
+                                    "buttons.corners": "Bo viền",
+                                    "buttons.crop": "Cắt",
+                                    "buttons.delete": "Xóa",
+                                    "buttons.deselect": "Hủy lựa chọn",
+                                    "buttons.desktop": "Máy tính",
+                                    "buttons.done": "Hoàn thành",
+                                    "buttons.draw": "Vẽ",
+                                    "buttons.drawing": "Đang vẽ",
+                                    "buttons.duplicate": "Nhân bản",
+                                    "buttons.duplication_disabled_usage_limit": "Bạn không thể tạo bản sao do có giới hạn sử dụng",
+                                    "buttons.edit": "Chỉnh sửa",
+                                    "buttons.filter": "Bộ lọc",
+                                    "buttons.frame": "Khung",
+                                    "buttons.history": "Lịch sử",
+                                    "buttons.merge": "Gộp",
+                                    "buttons.mobile": "Điện thoại",
+                                    "buttons.more_options": "Thêm tùy chọn",
+                                    "buttons.open": "Mở",
+                                    "buttons.remove_column": "Xóa cột",
+                                    "buttons.reset": "Đặt lại",
+                                    "buttons.reset_value": "Đặt lại Giá trị",
+                                    "buttons.resize": "Đổi kích thước",
+                                    "buttons.save": "Lưu",
+                                    "buttons.select": "Chọn",
+                                    "buttons.shape": "Hình",
+                                    "buttons.shapes": "Hình",
+                                    "buttons.show_fewer_options": "Ẩn các tùy chọn thêm",
+                                    "buttons.show_more_options": "Tùy chọn thêm",
+                                    "buttons.sticker": "Nhãn dán",
+                                    "buttons.stickers": "Nhãn dán",
+                                    "buttons.tablet": "Máy tính bảng",
+                                    "buttons.transform": "Xoay",
+                                    "buttons.update_field": "Cập nhật",
+                                    "buttons.upload": "Tải lên",
+                                    "buttons.upload_image": "Tải lên hình ảnh",
+                                    "buttons.zoom": "Zoom",
+                                    "collaboration.add_comment": "Thêm bình luận",
+                                    "collaboration.empty.subtitle": "Chủ đề của bạn ở đây",
+                                    "collaboration.empty.title": "Cộng tác nhóm trở nên dễ dàng!",
+                                    "collaboration.empty_filtered.subtitle": "phù hợp với bộ lọc của bạn",
+                                    "collaboration.empty_filtered.title": "Không tìm thấy chủ đề",
+                                    "collaboration.exit_mode": "Đóng bình luận",
+                                    "collaboration.filters.all": "Tất cả",
+                                    "collaboration.filters.only_yours": "Chỉ của bạn",
+                                    "collaboration.filters.resolved": "Đã giải quyết",
+                                    "collaboration.follow_docs_to_setup": "Làm theo tài liệu để thiết lập cộng tác nhóm",
+                                    "collaboration.leave_repply": "Để lại câu trả lời",
+                                    "collaboration.login_to_collaborate": "Bạn cần đăng nhập để có thể cộng tác",
+                                    "collaboration.panel.threads": "Chủ đề",
+                                    "collaboration.replies.n": "{n} câu trả lời",
+                                    "collaboration.replies.none": "Không có câu trả lời",
+                                    "collaboration.resolve": "Giải quyết",
+                                    "collaboration.resolved": "Đã giải quyết",
+                                    "collaboration.types.feedback": "Phản hồi",
+                                    "collaboration.types.idea": "Ý kiến",
+                                    "collaboration.types.question": "Câu hỏi",
+                                    "collaboration.types.urgent": "Khẩn cấp",
+                                    "colors.black": "Đen",
+                                    "colors.ruby": "Ruby",
+                                    "colors.white": "Trắng",
+                                    "content_tools.button": "Nút",
+                                    "content_tools.columns": "Cột",
+                                    "content_tools.divider": "Vạch ngăn",
+                                    "content_tools.form": "Form",
+                                    "content_tools.heading": "Tiêu đề",
+                                    "content_tools.html": "HTML",
+                                    "content_tools.image": "Hình ảnh",
+                                    "content_tools.menu": "Danh mục",
+                                    "content_tools.social": "Social",
+                                    "content_tools.text": "Văn bản",
+                                    "content_tools.timer": "Timer",
+                                    "content_tools.video": "Video",
+                                    "editor.action_type.label": "Loại hành động",
+                                    "editor.align.label": "Căn lề",
+                                    "editor.alignment.label": "Căn lề",
+                                    "editor.all_sides.label": "Áp dụng cho tất cả",
+                                    "editor.alternate_text.label": "Văn bản thay thế",
+                                    "editor.anchor.section_already_exists": "Đã tồn tại một mục khác trên trang trùng tên này",
+                                    "editor.background_color.label": "Màu nền",
+                                    "editor.background_image.center": "Giữa",
+                                    "editor.background_image.cover_mode": "Chế độ hiển thị",
+                                    "editor.background_image.full_width": "Chiều rộng tối đa",
+                                    "editor.background_image.label": "Ảnh nền",
+                                    "editor.background_image.repeat": "Lặp lại",
+                                    "editor.border.dashed": "Gạch ngang",
+                                    "editor.border.dotted": "Chấm",
+                                    "editor.border.label": "Khung viền",
+                                    "editor.border.solid": "Nét liền",
+                                    "editor.bottom.label": "Dưới",
+                                    "editor.bottom_left.label": "Góc trái bên dưới",
+                                    "editor.bottom_right.label": "Góc phải bên dưới",
+                                    "editor.button_link.label": "Nút liên kết",
+                                    "editor.color.label": "Màu chữ",
+                                    "editor.colors.label": "Màu",
+                                    "editor.columns_background.label": "Màu cột",
+                                    "editor.container_padding.label": "Phần bao nội dung",
+                                    "editor.content_alignment.label": "Căn lề",
+                                    "editor.content_background_color.label": "Màu nền nội dung",
+                                    "editor.content_width.label": "Chiều rộng",
+                                    "editor.digits_color.label": "Màu số",
+                                    "editor.digits_font.label": "Font số",
+                                    "editor.digits_font_size.label": "Kích thước số",
+                                    "editor.do_not_stack_on_mobile.label": "Không đè lên trên điện thoại",
+                                    "editor.end_time.label": "Thời gian kết thúc",
+                                    "editor.fields.label": "Các trường",
+                                    "editor.font_family.label": "Font chữ",
+                                    "editor.font_size.label": "Cỡ chữ",
+                                    "editor.form.custom": "Tùy chỉnh",
+                                    "editor.form.method": "Method",
+                                    "editor.form_alignment.label": "Căn lề",
+                                    "editor.form_width.label": "Chiều rộng",
+                                    "editor.full_width.label": "Chiều rộng tối đa",
+                                    "editor.heading_type.label": "Kiểu tiêu đề",
+                                    "editor.height.label": "Chiều cao",
+                                    "editor.hide_on_desktop.label": "Ẩn trên máy tính",
+                                    "editor.hide_on_mobile.label": "Ẩn trên điện thoại",
+                                    "editor.hover_background.label": "Màu nền khi di chuột",
+                                    "editor.hover_color.label": "Mà khi di chuột",
+                                    "editor.hover_text.label": "Màu văn bản khi di chuột",
+                                    "editor.hover_underline.label": "Gạch chân khi di chuột",
+                                    "editor.icon_spacing.label": "Khoảng cách Icon",
+                                    "editor.icon_type.label": "Loại Icon",
+                                    "editor.image.added_drawing": "Đã thêm: bản vẽ",
+                                    "editor.image.added_frame": "Đã thêm: khung",
+                                    "editor.image.added_overlay_image": "Đã thêm: lớp phủ",
+                                    "editor.image.added_shape": "Đã thêm: hình",
+                                    "editor.image.added_sticker": "Đã thêm: nhãn dán",
+                                    "editor.image.added_text": "Đã thêm: văn bản",
+                                    "editor.image.applied_crop": "Đã áp dụng: Cắt ảnh",
+                                    "editor.image.applied_filter": "Đã áp dụng: bộ lọc",
+                                    "editor.image.applied_resize": "Đã áp dụng: thay đổi kích thước",
+                                    "editor.image.applied_rounded_corners": "Đã áp dụng: bo tròn góc",
+                                    "editor.image.applied_transform": "Đã áp dụng: xoay ảnh",
+                                    "editor.image.auto": "Tự động",
+                                    "editor.image.auto_width": "Chiều rộng tự động",
+                                    "editor.image.auto_width_switch_off": "Tắt chiều rộng tự động để thay đổi kích thước hình ảnh theo cách thủ công",
+                                    "editor.image.brush_color": "Màu bút",
+                                    "editor.image.brush_size": "Kích thước bút",
+                                    "editor.image.brush_type": "Kiểu bút",
+                                    "editor.image.canvas_background": "Nền Canvas",
+                                    "editor.image.changed_background": "Đã đổi: nền",
+                                    "editor.image.changed_background_image": "Đã đổi: Hình nền",
+                                    "editor.image.changed_style": "Đã đổi: giao diện",
+                                    "editor.image.drop_upload": "Kéo thả hình ảnh hoặc chọn một tệp tin",
+                                    "editor.image.full_width_mobile": "Chiều rộng đầy đủ trên điện thoại",
+                                    "editor.image.image_options": "Cài đặt hình ảnh",
+                                    "editor.image.image_url": "URL Hình ảnh",
+                                    "editor.image.initial": "Khởi tạo",
+                                    "editor.image.label": "Hình ảnh",
+                                    "editor.image.loaded_state": "Đã tải: trạng thái",
+                                    "editor.image.maintain_aspect_ratio": "Duy trì tỷ lệ khung hình",
+                                    "editor.image.main_image": "Hình ảnh chính",
+                                    "editor.image.objects_merged": "Đối tượng: đã gộp",
+                                    "editor.image.offset_x": "Offset X",
+                                    "editor.image.offset_y": "Offset Y",
+                                    "editor.image.outline_width": "Chiều rộng viền",
+                                    "editor.image.uploading": "Đang tải lên",
+                                    "editor.image.upload_error": "Đã xảy ra lỗi khi tải lên hình ảnh. Hãy chắc chắn rằng ảnh của bạn có dung lượng nhỏ hơn 10 MB.",
+                                    "editor.image.use_percentages": "Sử dụng phần trăm",
+                                    "editor.image_link.label": "Đường dẫn ảnh",
+                                    "editor.inherit_body_styles.label": "Giao diện mặc định",
+                                    "editor.labels.web": "Web",
+                                    "editor.labels_color.label": "Màu nhãn",
+                                    "editor.labels_font.label": "Font nhãn",
+                                    "editor.labels_font_size.label": "Kích thước nhãn",
+                                    "editor.layout.label": "Bố cục",
+                                    "editor.left.label": "Trái",
+                                    "editor.line.label": "Dòng",
+                                    "editor.line_height.label": "Chiều cao giữa các dòng",
+                                    "editor.link.body": "Thân",
+                                    "editor.link.call_phone": "Gọi điện",
+                                    "editor.link.mailto": "Gửi mail đến",
+                                    "editor.link.new_tab": "Mở tab mới",
+                                    "editor.link.no_page_sections_found": "Không tìm thấy mục trên trang nào",
+                                    "editor.link.onclick_unsupported": "Không hỗ trợ nhấp vào",
+                                    "editor.link.open_website": "Mở trang Web",
+                                    "editor.link.page_section": "Đi tới Mục trên trang",
+                                    "editor.link.phone": "Điện thoại",
+                                    "editor.link.same_tab": "Tab hiện tại",
+                                    "editor.link.send_email": "Gửi Email",
+                                    "editor.link.send_sms": "Gửi SMS",
+                                    "editor.link.subject": "Chủ đề",
+                                    "editor.link.target": "Đích đến",
+                                    "editor.link.url": "URL",
+                                    "editor.link_color.label": "Màu đường dẫn",
+                                    "editor.margin.label": "Khoảng cách lề",
+                                    "editor.mobile.description": "Bạn hiện đang chỉnh sửa cho thiết bị Di động. Chuyển sang Máy tính để các tùy chỉnh hiển thị chính xác.",
+                                    "editor.offline_mode_is_enabled": "Chế độ ngoại tuyến được bật",
+                                    "editor.padding.label": "Khoảng trống giữa nội dung",
+                                    "editor.placeholder.text": "Chưa có nội dung, hãy kéo các khối tại tab bên phải",
+                                    "editor.placeholder.text.left": "Không có nội dung ở đây. Hãy kéo nội dung từ bên trái.",
+                                    "editor.play_icon_color.label": "Màu Icon Phát",
+                                    "editor.play_icon_size.label": "Kích thước Icon Phát",
+                                    "editor.play_icon_type.label": "Kiểu Icon Phát",
+                                    "editor.preheader_text.description": "Tiêu đề trước là văn bản tóm tắt ngắn sau dòng chủ đề khi xem email từ hộp thư đến.",
+                                    "editor.preheader_text.label": "Văn bản đầu trang",
+                                    "editor.right.label": "Phải",
+                                    "editor.rounded_border.label": "Bo góc",
+                                    "editor.section_name.description": "Tên mục được sử dụng để liên kết trong một trang. Nó giống như một điểm tựa cho các nút hoặc liên kết.",
+                                    "editor.section_name.label": "Tên mục",
+                                    "editor.separator.label": "Dấu phân cách",
+                                    "editor.social_links.label": "Mạng xã hội",
+                                    "editor.space_between_fields.label": "Khoảng cách giữa các trường",
+                                    "editor.submit_action.label": "Hành động submit",
+                                    "editor.text.label": "Văn bản",
+                                    "editor.text_align.label": "Căn chỉnh văn bản",
+                                    "editor.text_color.label": "Màu chữ",
+                                    "editor.top.label": "Trên",
+                                    "editor.top_left.label": "Góc trái bên trên",
+                                    "editor.top_right.label": "Góc phải bên trên",
+                                    "editor.underline.label": "Gạch chân",
+                                    "editor.video.arrow_only": "Chỉ gồm mũi tên",
+                                    "editor.video.video_camera": "Video Camera",
+                                    "editor.video_url.description": "Thêm URL YouTube hoặc Vimeo để tự động tạo hình ảnh xem trước. Hình ảnh sẽ liên kết đến URL được cung cấp.",
+                                    "editor.video_url.label": "URL Video",
+                                    "editor.width.label": "Chiều rộng",
+                                    "editors_panel.title.content": "Nội dung",
+                                    "editors_panel.title.contents": "Nội dung",
+                                    "editors_panel.title.rows": "Dòng",
+                                    "fields.birthday": "Sinh nhật",
+                                    "fields.company": "Công ty",
+                                    "fields.name": "Tên",
+                                    "fields.phone_number": "Số điện thoại",
+                                    "fields.website": "Website",
+                                    "fields.zip_code": "Zip Code",
+                                    "inbox_preview.design_updated": "Thiết kế đã được cập nhật sau lần tạo bản xem trước cuối cùng của bạn",
+                                    "labels.align_text": "Căn chỉnh văn bản",
+                                    "labels.blur": "Làm mờ",
+                                    "labels.category": "Danh mục",
+                                    "labels.color_picker": "Chọn màu",
+                                    "labels.comments": "Bình luận",
+                                    "labels.desktop_preview": "Xem trước trên máy tính",
+                                    "labels.device_override": "Thiết bị này đang ghi đè các giá trị",
+                                    "labels.display_conditions": "Điều kiện hiển thị",
+                                    "labels.editor": "Trình chỉnh sửa",
+                                    "labels.font": "Font",
+                                    "labels.format_text": "Định dạng văn bản",
+                                    "labels.google_fonts": "Google Fonts",
+                                    "labels.gradient": "Gradient",
+                                    "labels.hide": "Ẩn",
+                                    "labels.horizontal": "Ngang",
+                                    "labels.language": "Ngôn ngữ",
+                                    "labels.loading": "Đang tải",
+                                    "labels.loading_images": "Đang tải hình ảnh",
+                                    "labels.load_more": "Xem thêm",
+                                    "labels.menu.links": "Liên kết bảng chọn",
+                                    "labels.merge_tags": "Gộp nhãn",
+                                    "labels.mobile_preview": "Xem trước trên điện thoại",
+                                    "labels.new": "Mới",
+                                    "labels.no_images": "Không có hình ảnh",
+                                    "labels.no_results": "Không có kết quả",
+                                    "labels.objects": "Đối tượng",
+                                    "labels.outline": "Viền ngoài",
+                                    "labels.page": "Trang",
+                                    "labels.radius": "Bo viền",
+                                    "labels.redo": "Khôi phục",
+                                    "labels.safe_search": "Tìm kiếm an toàn",
+                                    "labels.search": "Tìm kiếm",
+                                    "labels.search_images": "Tìm kiếm hàng triệu hình ảnh",
+                                    "labels.section": "Mục",
+                                    "labels.shadow": "Đổ bóng",
+                                    "labels.size": "Kích thước",
+                                    "labels.something_went_wrong": "Đã xảy ra sự cố",
+                                    "labels.special_links": "Liên kết đặc biệt",
+                                    "labels.stock_photos_by": "Bản quyền thuộc về Unsplash, Pexels, Pixabay.",
+                                    "labels.stock_photos_license": "All images licensed under Creative Commons Zero.",
+                                    "labels.stop": "Dừng lại",
+                                    "labels.tags": "Nhãn",
+                                    "labels.texture": "Texture",
+                                    "labels.text_style": "Kiểu chữ",
+                                    "labels.timezone": "Timezone",
+                                    "labels.undo": "Hoàn tác",
+                                    "labels.vertical": "Dọc",
+                                    "modals.category.invalid": "Tên danh mục không hợp lệ",
+                                    "modals.category.placeholder": "Tên danh mục",
+                                    "modals.delete.columns": "Bạn sẽ mất một số cột. Bạn có chắc chắn?",
+                                    "modals.delete.confirmation": "Bạn có chắc chắn muốn xóa, hành động này không thể hoàn tác?",
+                                    "modals.delete.title": "Xóa",
+                                    "modals.display_conditions.title": "Chọn điều kiện hiển thị",
+                                    "modals.preview.inbox_preview.button.generate_previews": "Tạo bản xem trước",
+                                    "modals.preview.inbox_preview.label": "Xem trước Hộp thư đến",
+                                    "modals.preview.inbox_preview.label.generating_again": "Tạo lại",
+                                    "modals.preview.inbox_preview.label.generating_previews": "Đang tạo bản xem trước",
+                                    "modals.preview.inbox_preview.text.generate_previews": "Hãy kiểm tra mẫu của bạn trông như thế nào trong hộp thư đến của các thiết bị và dịch vụ email khác nhau.",
+                                    "modals.preview.title": "Xem trước",
+                                    "modals.save_block.title": "Save Block",
+                                    "modals.tags.description": "Thẻ được sử dụng để tìm kiếm. Các thẻ sẽ được phân cách bởi dấu phẩy.",
+                                    "modals.tags.placeholder": "tag1, tag2",
+                                    "option_groups.action.title": "Hành động",
+                                    "option_groups.all.title": "Tất cả",
+                                    "option_groups.blank.title": "Trống",
+                                    "option_groups.button.title": "Nút",
+                                    "option_groups.button_options.title": "Tùy chọn về Nút",
+                                    "option_groups.colors.title": "Màu sắc",
+                                    "option_groups.columns.title": "Cột",
+                                    "option_groups.column_number.title": "Cột {number}",
+                                    "option_groups.column_properties.title": "Thuộc tính cột",
+                                    "option_groups.countdown.title": "Đếm ngược",
+                                    "option_groups.default.title": "Cài đặt chung",
+                                    "option_groups.display_condition.title": "Điều kiện hiển thị",
+                                    "option_groups.email_settings.title": "Cài đặt Email",
+                                    "option_groups.fields.title": "Trường",
+                                    "option_groups.form.title": "Form",
+                                    "option_groups.html.title": "HTML",
+                                    "option_groups.icons.title": "Icons",
+                                    "option_groups.image.title": "Hình ảnh",
+                                    "option_groups.labels.title": "Nhãn",
+                                    "option_groups.last_saved.title": "Đã lưu lại",
+                                    "option_groups.layout.title": "Bố cục",
+                                    "option_groups.line.title": "Hàng",
+                                    "option_groups.link.title": "Đường dẫn",
+                                    "option_groups.links.title": "Đường dẫn",
+                                    "option_groups.menu_items.title": "Mục lục",
+                                    "option_groups.mobile.title": "Điện thoại",
+                                    "option_groups.responsive_design.title": "Tùy chỉnh trên thiết bị",
+                                    "option_groups.row_properties.title": "Thuộc tính dòng",
+                                    "option_groups.size.title": "Kích thước",
+                                    "option_groups.spacing.title": "Khoảng cách",
+                                    "option_groups.styles.title": "Giao diện",
+                                    "option_groups.text.title": "Văn bản",
+                                    "shapes.circle": "Hình tròn",
+                                    "shapes.rectangle": "Hình tam giác",
+                                    "shapes.round": "Hình vuông bo góc",
+                                    "shapes.square": "Hình vuông",
+                                    "sizes.large": "Lớn",
+                                    "sizes.largest": "Rất lớn",
+                                    "sizes.medium": "Vừa",
+                                    "sizes.small": "Nhỏ",
+                                    "sizes.smallest": "Rất nhỏ",
+                                    "tabs.audit.empty.description": "Kiểm kê là nơi bạn có thể thấy mọi vấn đề trong thiết kế và nội dung của mình.",
+                                    "tabs.audit.empty.subtitle": "Ổn cả rồi!",
+                                    "tabs.audit.empty.title": "HIện không có vấn đề gì",
+                                    "tabs.audit.missing_image_src": "Còn thiếu URL ảnh",
+                                    "tabs.audit.missing_title": "Còn thiếu tiêu đề kiểm kê",
+                                    "tabs.audit.missing_tool_name": "Không tìm thấy tên công cụ",
+                                    "tabs.audit.rules.button.empty_links.description": "Nếu thiếu liên kết, các nút sẽ không hoạt động khi người dùng bấm vào nó. Hãy thêm liên kết cho các nút sau.",
+                                    "tabs.audit.rules.button.empty_links.title": "Liên kết cho nút đang trống",
+                                    "tabs.audit.rules.image.alt_text.description": "Nếu thiếu văn bản thay thế, những người dùng phần mềm đọc màn hình không thể tiếp cận thông tin của hình ảnh. Hãy viết một văn bản thay thế cho những ảnh sau.",
+                                    "tabs.audit.rules.image.alt_text.title": "Còn thiếu văn bản thay thế",
+                                    "tabs.audit.rules.image.url.description": "Nếu thiếu URL ảnh, những hình ảnh sau sẽ không hiện lên được. Hãy đăng một ảnh cho những ảnh sau.",
+                                    "tabs.audit.rules.image.url.title": "Còn thiếu hình ảnh",
+                                    "tabs.audit.rules.menu.empty_links.description": "Nếu thiếu liên kết, bảng chọn sẽ không hoạt động khi người dùng bấm vào nó. Hãy thêm liên kết cho bảng chọn sau.",
+                                    "tabs.audit.rules.menu.empty_links.title": "Liên kết cho bảng chọn đang trống",
+                                    "tabs.audit.take_me_to_fix": "Đưa tôi tới sửa",
+                                    "tools.form.field_label": "Nhãn",
+                                    "tools.form.field_name": "Tên trường",
+                                    "tools.form.field_type": "Loại trường",
+                                    "tools.form.field_value": "Giá trị",
+                                    "tools.form.new_field": "Thêm trường",
+                                    "tools.form.options_one_per_line": "Options (One Per Line)",
+                                    "tools.form.placeholder_text": "Placeholder",
+                                    "tools.form.required_field": "Bắt buộc",
+                                    "tools.form.show_label": "Hiển thị nhãn",
+                                    "tools.form.update_field": "Cập nhật trường",
+                                    "tools.social.click_icons_to_add": "Click vào icon muốn thêm",
+                                    "tools.tabs.audit": "Kiểm kê",
+                                    "tools.tabs.blocks": "Khối",
+                                    "tools.tabs.body": "Thân trang",
+                                    "tools.tabs.content": "Nội dung",
+                                    "tools.tabs.images": "Hình ảnh",
+                                    "tools.tabs.row": "Dòng",
+                                    "tools.tabs.uploads": "Tải lên",
+                                    "tools.text.personalize": "Cá nhân hóa",
+                                    "tools.tooltip.drag_on_canvas": "Kéo trên nền vẽ canvas",
+                                    "tools.tooltip.got_it": "Đã hiểu"
+                                }
+                            }
+                        });
+            var email_ex_design = $("#email_ex_design").val();
+            if (email_ex_design && email_ex_design.length > 0) {
+
+                var design = JSON.parse(email_ex_design);
+                unlayer.loadDesign(design);
+
+            } else {
+
+                var design = {
+                    "body": {
+                        "rows": [{
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "image",
+                                    "values": {
+                                        "maxWidth": "100%",
+                                        "src": {
+                                            "url": "https://a.mailmunch.co/user_data/landing_pages/1500310730675-logosample_03.png",
+                                            "width": 266,
+                                            "height": 62
+                                        },
+                                        "draggable": true,
+                                        "containerPadding": "10px 10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "action": {
+                                            "url": "",
+                                            "target": ""
+                                        },
+                                        "altText": "Image",
+                                        "fullWidth": false,
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 10px 5px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "center",
+                                        "lineHeight": "120%",
+                                        "text": "<div><span style=\"color: #f10693; font-family: Pacifico, cursive; font-size: 14px; line-height: 16.8px;\"><strong><span style=\"font-size: 80px; line-height: 96px;\">Relax &amp; Plan</span></strong></span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "center",
+                                        "lineHeight": "120%",
+                                        "text": "<div><span style=\"color: #6fbb7b; font-family: Pacifico, cursive; font-size: 58px; text-align: center; line-height: 69.6px;\">&nbsp;Your Summer Break</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "20px 10px 9px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "center",
+                                        "lineHeight": "140%",
+                                        "text": "<div><span style=\"font-size: 24px; color: #505050; line-height: 33.6px;\">Time to plan a vacation for your kids?</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "5px 10px 10px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "center",
+                                        "lineHeight": "160%",
+                                        "text": "<div><span style=\"font-size: 18px; line-height: 28.8px;\"><span style=\"color: #505050; font-size: 18px; line-height: 28.8px;\">Check-out our summer break offers for&nbsp;</span><span style=\"color: #505050; font-size: 18px; line-height: 28.8px;\">children who are creative, full of energy,&nbsp;</span><span style=\"color: #505050; font-size: 18px; line-height: 28.8px;\">and can&rsquo;t sit still for a minute.</span></span></div>"
+                                    }
+                                }, {
+                                    "type": "divider",
+                                    "values": {
+                                        "containerPadding": "20px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "width": "100%",
+                                        "border": {
+                                            "borderTopWidth": "1px",
+                                            "borderTopStyle": "solid",
+                                            "borderTopColor": "#CCC"
+                                        },
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "20px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "text": "<div><strong><span style=\"font-size: 30px; font-family: Montserrat, sans-serif; color: #2790d2; line-height: 36px;\">Upcoming Events:</span></strong></div>"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "0px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1, 2],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "image",
+                                    "values": {
+                                        "maxWidth": "100%",
+                                        "src": {
+                                            "url": "https://a.mailmunch.co/user_data/landing_pages/1500313461528-1.png",
+                                            "width": 500,
+                                            "height": 500
+                                        },
+                                        "draggable": true,
+                                        "containerPadding": "0px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "action": {
+                                            "url": "",
+                                            "target": ""
+                                        },
+                                        "altText": "Image",
+                                        "fullWidth": true,
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }, {
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px 8px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#6eba79",
+                                        "textAlign": "left",
+                                        "lineHeight": "160%",
+                                        "text": "<div><span style=\"font-size: 20px; line-height: 32px;\">JET SKI RIDE</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#4f4f4f",
+                                        "textAlign": "left",
+                                        "lineHeight": "150%",
+                                        "text": "<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</div>"
+                                    }
+                                }, {
+                                    "type": "button",
+                                    "values": {
+                                        "buttonColors": {
+                                            "color": "#FFF",
+                                            "backgroundColor": "#fa9302",
+                                            "hoverColor": "#cf7a04"
+                                        },
+                                        "calculatedHeight": 36,
+                                        "calculatedWidth": 132,
+                                        "href": "",
+                                        "border": {},
+                                        "text": "ORDER NOW<br />",
+                                        "draggable": true,
+                                        "containerPadding": "5px 15px",
+                                        "padding": "10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "borderRadius": "20px"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "divider",
+                                    "values": {
+                                        "containerPadding": "1px 20px 5px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "width": "100%",
+                                        "border": {
+                                            "borderTopWidth": "1px",
+                                            "borderTopStyle": "solid",
+                                            "borderTopColor": "#CCC"
+                                        },
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "0px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [2, 1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px 8px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#6eba79",
+                                        "textAlign": "left",
+                                        "lineHeight": "160%",
+                                        "text": "<div><span style=\"font-size: 20px; line-height: 32px;\">BOAT RIDE</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#4f4f4f",
+                                        "textAlign": "left",
+                                        "lineHeight": "150%",
+                                        "text": "<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</div>"
+                                    }
+                                }, {
+                                    "type": "button",
+                                    "values": {
+                                        "buttonColors": {
+                                            "color": "#FFF",
+                                            "backgroundColor": "#fa9302",
+                                            "hoverColor": "#cf7a04"
+                                        },
+                                        "calculatedHeight": 36,
+                                        "calculatedWidth": 132,
+                                        "href": "",
+                                        "border": {},
+                                        "text": "ORDER NOW<br />",
+                                        "draggable": true,
+                                        "containerPadding": "5px 15px",
+                                        "padding": "10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "borderRadius": "20px"
+                                    }
+                                }]
+                            }, {
+                                "contents": [{
+                                    "type": "image",
+                                    "values": {
+                                        "maxWidth": "100%",
+                                        "src": {
+                                            "url": "https://a.mailmunch.co/user_data/landing_pages/1500313783372-2.png",
+                                            "width": 500,
+                                            "height": 500
+                                        },
+                                        "draggable": true,
+                                        "containerPadding": "0px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "action": {
+                                            "url": "",
+                                            "target": ""
+                                        },
+                                        "altText": "Image",
+                                        "fullWidth": true,
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "divider",
+                                    "values": {
+                                        "containerPadding": "1px 20px 5px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "width": "100%",
+                                        "border": {
+                                            "borderTopWidth": "1px",
+                                            "borderTopStyle": "solid",
+                                            "borderTopColor": "#CCC"
+                                        },
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "0px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1, 2],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "image",
+                                    "values": {
+                                        "maxWidth": "100%",
+                                        "src": {
+                                            "url": "https://a.mailmunch.co/user_data/landing_pages/1500314095876-3.png",
+                                            "width": 500,
+                                            "height": 500
+                                        },
+                                        "draggable": true,
+                                        "containerPadding": "0px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "action": {
+                                            "url": "",
+                                            "target": ""
+                                        },
+                                        "altText": "Image",
+                                        "fullWidth": true,
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }, {
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px 8px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#6eba79",
+                                        "textAlign": "left",
+                                        "lineHeight": "160%",
+                                        "text": "<div><span style=\"font-size: 20px; line-height: 32px;\">BEACH DAY</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#4f4f4f",
+                                        "textAlign": "left",
+                                        "lineHeight": "150%",
+                                        "text": "<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</div>"
+                                    }
+                                }, {
+                                    "type": "button",
+                                    "values": {
+                                        "buttonColors": {
+                                            "color": "#FFF",
+                                            "backgroundColor": "#fa9302",
+                                            "hoverColor": "#cf7a04"
+                                        },
+                                        "calculatedHeight": 36,
+                                        "calculatedWidth": 132,
+                                        "href": "",
+                                        "border": {},
+                                        "text": "ORDER NOW<br />",
+                                        "draggable": true,
+                                        "containerPadding": "5px 15px",
+                                        "padding": "10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "borderRadius": "20px"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "divider",
+                                    "values": {
+                                        "containerPadding": "1px 20px 5px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "width": "100%",
+                                        "border": {
+                                            "borderTopWidth": "1px",
+                                            "borderTopStyle": "solid",
+                                            "borderTopColor": "#CCC"
+                                        },
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "0px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "15px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#fa9302",
+                                        "textAlign": "center",
+                                        "lineHeight": "130%",
+                                        "text": "<div><span style=\"font-size: 36px; line-height: 46.8px;\">NEED MORE INFORMATION?</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#4f4f4f",
+                                        "textAlign": "center",
+                                        "lineHeight": "120%",
+                                        "text": "<div><span style=\"font-size: 20px; line-height: 24px;\">Subscribe to get updates.</span></div>"
+                                    }
+                                }, {
+                                    "type": "button",
+                                    "values": {
+                                        "buttonColors": {
+                                            "color": "#FFF",
+                                            "backgroundColor": "#6eba79",
+                                            "hoverColor": "#58a864"
+                                        },
+                                        "calculatedHeight": 52,
+                                        "calculatedWidth": 214,
+                                        "href": "",
+                                        "border": {},
+                                        "text": "<span style=\"font-size: 20px; line-height: 32px;\">SUBSCRIBE NOW</span>",
+                                        "draggable": true,
+                                        "containerPadding": "20px",
+                                        "padding": "10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "textAlign": "center",
+                                        "lineHeight": "160%",
+                                        "borderRadius": "37px"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }],
+                        "values": {
+                            "backgroundColor": "#ffffff",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": true,
+                                "cover": false
+                            },
+                            "contentWidth": "600px",
+                            "fontFamily": {
+                                "label": "Montserrat",
+                                "value": "'Montserrat',sans-serif",
+                                "type": "google",
+                                "weights": "400,700"
+                            }
+                        }
+                    }
+                };
+
+                unlayer.loadDesign(design);
+            }
+
+            function verify_text_func() {
+                var text = '';
+                document.getElementById("verify_text").innerHTML = text;
+                if ($("#all_customers").val() == "on") {
+                    text = '{{ gettext("Tat_ca_khach_hang") }}';
+                    document.getElementById("verify_text").innerHTML = text;
+                } else {
+                    if ($("#gender_male").val().length > 0) {
+                        text += '{{ gettext("Nam") }}, '
+                    }
+                    ;
+                    if ($("#gender_female").val().length > 0) {
+                        text += '{{ gettext("Nu") }}, '
+                    }
+                    ;
+                    if ($("#gender_other").val().length > 0) {
+                        text += '{{ gettext("Gioi_tinh_khac") }}, '
+                    }
+                    ;
+
+                    if ($("#to_date").val().length > 0) {
+                        if ($("#from_date").val().length > 0) {
+                            text += '{{ gettext("Den_trong_khoang_ngay_tu") }} : ' + $("#to_date").val() + ' '+ '{{ gettext("den") }} ' + $("#from_date").val() + ", "
+                        }
+                        ;
+                    }
+                    ;
+                    if ($("#bday_to_date").val().length > 0) {
+                        if ($("#bday_from_date").val().length > 0) {
+                            text += '{{ gettext("Sinh_nhat") }} : ' + $("#bday_to_date").val() + ' ' + '{{ gettext("den") }} ' + $("#bday_from_date").val() + ", "
+                        }
+                        ;
+                    }
+                    ;
+                    if ($("#max_visit").val().length > 0) {
+                        if ($("#min_visit").val().length > 0) {
+                            text += '{{ gettext("Luot_den_từ") }} : ' + $("#min_visit").val() + ' - ' + $("#max_visit").val() + ", "
+                        }
+                        ;
+                    }
+                    ;
+                    if ($("#lost_day").val().length > 0) {
+                        text += $("#lost_day").val() + " {{ gettext('ngay_chua_quay_lai') }}" + ", "
+                    }
+                    ;
+                    text = text.slice(0, -2)
+                    document.getElementById("verify_text").innerHTML = text + ".";
+                }
+            };
+            if ($("#ex_is_spam").length > 0) {
+                $('#is_spam').val($("#ex_is_spam").val()).trigger("change");
+            }
+            ;
+            // var source_tags = $("#source_tags_filter").val();
+            // if (source_tags && source_tags.length > 0 && source_tags.toString() != 'None') {
+            //     var source_tags = source_tags.replace(/\u'/g, "'");
+            //     var source_tags = source_tags.replace(/\'/g, '"');
+            //     var data_soure_tags = JSON.parse(source_tags);
+            //     $("#new_tags_selects").val(data_soure_tags);
+            //     $('#new_tags_selects').trigger('change');
+            // }
+            // thoi gian den
+            if ($("#ex_visit_from_date").length > 0 && $("#ex_visit_from_date").val().length > 0 &&
+                $("#ex_visit_from_date").val() != 'None') {
+                flatpickr("#from_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_visit_from_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#from_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+
+                });
+            }
+            if ($("#ex_visit_to_date").length > 0 && $("#ex_visit_to_date").val().length > 0 && $("#ex_visit_to_date").val() != 'None') {
+                flatpickr("#to_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_visit_to_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#to_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+                });
+            }
+            // sinh nhat
+            if ($("#ex_b_day_from_date").length > 0 && $("#ex_b_day_from_date").val().length > 0 && $("#ex_b_day_from_date").val() != 'None') {
+                flatpickr("#bday_from_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_b_day_from_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#bday_from_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+                });
+            }
+            if ($("#ex_b_day_to_date").length > 0 && $("#ex_b_day_to_date").val().length > 0 && $("#ex_b_day_to_date").val() != 'None') {
+                flatpickr("#bday_to_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_b_day_to_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#bday_to_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+                });
+            }
+            if ($("#ex_type_coupon").length > 0) {
+                $('#type_coupon').select2().val($("#ex_type_coupon").val()).trigger("change");
+                $('#camp_type_coupon').val($('#type_coupon').val().toString());
+            }
+            // only number input
+            $(".onlyNumber").on("keypress keyup blur", function (event) {
+                $(this).val($(this).val().replace(/[^\d].+/, ""));
+                if ((event.which < 48 || event.which > 57)) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+{% endblock %}

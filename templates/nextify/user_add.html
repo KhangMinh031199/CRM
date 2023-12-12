@@ -1,0 +1,227 @@
+{% extends 'nextify/base.html' %}
+{% block header_page %}{{ gettext("Khach_hang") }}{% endblock %}
+{% block main_content %}
+
+     <div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+              <div class="col">
+
+                <!-- Pretitle -->
+                <h6 class="header-pretitle">
+                  {{ gettext("Khach_hang") }}
+                </h6>
+
+                <!-- Title -->
+                <h1 class="header-title">
+               {%if user_id and user_id|length >0 and
+                          user_id!='None' and user_id!='add'%}Cập nhật khách hàng{% else %}{{ gettext("Them_moi_khach_hang") }}{% endif %}
+                </h1>
+
+              </div>
+              <div class="col-auto">
+
+
+              </div>
+            </div> <!-- / .row -->
+          </div>
+    </div>
+      </div>
+
+    <div class="container-fluid">
+        <div class="card u-p-medium u-mb-medium">
+            <form data-toggle="validator" role="form" method="post"
+                  action="/user/edit/{%if user_id and user_id|length >0 and
+                          user_id!='None'%}{{ user_id }}{% else %}add{% endif %}">
+             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                <div class="row u-mb-medium">
+                    <div class="col-lg-6">
+                        <div class="c-avatar c-avatar--xlarge u-inline-block">
+
+                        </div>
+
+                        <div class="c-field u-mb-small">
+                            <label
+                                    class="c-field__label"
+                                    for="firstName">{{ gettext("Ten") }}</label>
+                            <input class="c-input"
+                                   type="text"
+                                   id="firstName"
+                                   name="name"
+                                   placeholder=""
+                                   value="{% if user %}{{ user.name }}{%
+                                           endif %}">
+                        </div>
+
+                        <div class="c-field u-mb-small">
+                            <label
+                                    class="c-field__label"
+                                    for="lastName">{{ gettext("So_dien_thoai") }}</label>
+                            <input class="c-input" type="text"
+                                   id="lastName" placeholder=""
+                                   name="phone"
+                                   id="new_phone"
+                                   value="{% if user %}{{ user.phone }}{% endif %}">
+                        </div>
+                        <div class="c-field u-mb-small">
+                            <label class="c-field__label"
+                                   for="email">E-mail</label>
+                            <input class="c-input" id="email"
+                                   type="email"
+                                   name="email"
+                                   value="{% if user %}{{ user.email }}{% endif%}"
+                                   id="new_email"
+                                   placeholder="">
+                        </div>
+                    <div class="c-field u-mb-small">
+                    <label class="c-field__label"
+                                   for="email">{{ gettext("Sinh_nhat") }}</label>
+                            {% if user.birthday and user.birthday|length > 0 %}
+                            <input type="hidden" value="{{ user.birthday }}" id="ex_birthday" />
+                            {% endif %}
+                            <input type="text" class="c-input" name='birthday' id="birthday" />
+
+                    </div>
+                    <div class="c-field u-mb-small">
+<label class="c-field__label"
+                                   for="email">{{ gettext("Thuoc_nhom") }}</label>
+                        <select class="c-select c-select--multiple"
+                                name="tags" style="width: 100%;" id="tags_selects" multiple="multiple">
+                      {% for tag in tags %}
+                        <option value="{{ tag._id }}">{{ tag.name
+                          }}</option>
+                      {% endfor %}
+
+                     </select>
+                    </div>
+
+                    </div>
+                    <div class="col-lg-6">
+
+                        <div class="c-field u-mb-small">
+                            <label class="c-field__label"
+                                   for="lastName">{{ gettext("Gioi_tinh") }}</label>
+                            <select class="c-select"
+                                    style="width: 100%;" id="gender" name="gender">
+                                <option value="0">{{ gettext("Chua_xac_dinh") }}</option>
+                                <option value="1">{{ gettext("Nam") }}</option>
+                                <option value="2">{{ gettext("Nu") }}</option>
+                            </select>
+                        </div>
+                         {% if user %}
+
+                        <input type="hidden" value="{{ user.gender }}"
+                               id="current_gender"/>
+                        {% endif %}
+
+                        <div class="c-field u-mb-small">
+                            <label
+                                    class="c-field__label"
+                                    for="bio">{{ gettext("Note") }}</label>
+                            <textarea class="c-input"
+                                      id="bio">{% if user %}{{ user.note }}{%endif %}</textarea>
+                        </div>
+
+                        <div class="c-field u-mb-small">
+                            <label
+                                    class="c-field__label"
+                                    for="companyName">Địa
+                                chỉ</label>
+                            <input class="c-input" id="companyName"
+                                   type="text"
+                                   name="address"
+                                   value="{% if user %}{{ user.address }}{%endif %}"
+                                   placeholder="">
+                        </div>
+
+
+                        <label class="c-field__label"
+                               for="socialProfile">{{ gettext("Social_Profiles") }}</label>
+
+                        <div class="c-field has-addon-left u-mb-small">
+                                                                        <span class="c-field__addon u-bg-twitter">
+                                                                            <i class="fa fa-twitter u-color-white"></i>
+                                                                        </span>
+                            <input class="c-input"
+                                   id="socialProfile" type="text"
+                                   name="twitter"
+                                   value="{% if user %}{{ user.twitter }}{%endif %}"
+                                   placeholder="">
+                        </div>
+
+                        <div class="c-field has-addon-left">
+                                                                        <span class="c-field__addon u-bg-facebook">
+                                                                            <i class="fa fa-facebook u-color-white"></i>
+                                                                        </span>
+                            <input class="c-input" type="text"
+                                   name="facebook"
+                                   value="{% if user %}{{ user.facebook }}{%endif %}"
+                                   placeholder="">
+                        </div>
+                        <div class="c-field" style="padding:20px">
+                        <button class="c-btn c-btn--info u-float-right"
+                                 type="submit">{{ gettext("Cap_nhat") }}</button>
+                        </div>
+
+                    </div>
+
+
+                </div>
+              <input type="hidden" id="select_tags_filter"
+                          name="real_tags_filter"/>
+     <input type="hidden" name="source_tags" id="source_tags" value="{{
+                            source_tags }}"/>
+
+            </form>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+{% block js %}
+    <script  nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        if ($("#ex_birthday").length > 0) {
+            var from_date_arr = $("#ex_birthday").val();
+            flatpickr("#birthday", {
+                enableTime: false,
+                defaultDate: from_date_arr,
+                dateFormat: "d-m"
+            });
+        } else {
+            flatpickr("#birthday", {
+                enableTime: false,
+                dateFormat: "d-m"
+            });
+        }
+        if ($("#current_gender").length>0){
+            $("#gender").val($("#current_gender").val());
+            $('#gender').trigger('change');
+        }
+      $('#tags_selects').select2({
+        dropdownAutoWidth: true
+      });
+
+         $('#tags_selects').on("change", function (e) {
+            if($('#tags_selects').val()){
+              $('#select_tags_filter').val($('#tags_selects').val().toString());
+            }else{
+              $('#select_tags_filter').val("");
+            }
+      });
+           if ($("#source_tags").length > 0){
+            var source_tags = $("#source_tags").val();
+        var data_soure_tags = JSON.parse(source_tags.replace(/\'/g, '"'));
+
+        $("#tags_selects").val(data_soure_tags);
+        $('#tags_selects').trigger('change');
+           }
+       
+      
+    });
+
+    </script>
+
+{% endblock %}

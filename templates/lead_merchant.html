@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block styles %}
+    {{ super() }}
+    <link href="{{ url_for('static', filename='styles/shop.css') }}" rel="stylesheet">
+{%endblock%}
+{% block content %}
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+          <th class="col-md-3">Tên</th>
+          <th class="col-md-3">Số điện thoại</th>
+          <th class="col-md-3">store</th>
+          <th class="col-md-3">Email</th>
+          <th class="col-md-3">When</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for merchant in merchants %}
+      <tr>
+          <td>{{merchant.info.name}}</td>
+          <td>{{merchant.info.phone}}</td>
+          <td>{{merchant.info.store}}</td>
+          <td>{{merchant.info.email}}</td>
+          <td>{{ merchant.timestamp_str }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<center>
+    {{ pagination.links }}
+</center>
+
+{%endblock%}

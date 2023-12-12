@@ -1,0 +1,366 @@
+{% extends 'nextify/manage_hotspot.html' %}
+
+{% block hotspot_item %}
+    <input type="hidden" value="{{ page_id }}" id="page_id"/>
+    <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-12 col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-end">
+                        <div class="col">
+
+                            <h6 class="header-pretitle">
+                                {{ gettext('HotspotHappyBirthdayScreenText') }}
+                            </h6>
+                        </div>
+                        <div class="col-auto" style="float: right">
+                            {% if page_id and page_id|string != 'None' and page_id|string != 'add'%}
+                                <a data-toggle="modal" href="#page_item"
+                                   class="btn btn-flat d-block d-md-inline-block">
+                                    <i class="fe fe-settings"></i> {{ gettext('HotspotHappyBirthdayScreenSettingText') }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                         {% if page_id and page_id|string != 'None' and page_id|string != 'add' %}
+                          <div id="preview"></div>
+                        {% else %}
+                               {% if error %}
+                                <div class="alert alert-danger">
+                                    {{ error | safe }}
+                                </div>
+                            {% endif %}
+                            {% if message %}
+                                <div class="alert alert-success">
+                                    {{ message | safe }}
+                                </div>
+                            {% endif %}
+
+                            <form method="POST"
+                                  action="/splash_page/{{ shop_id_select}}/item/{{ page_id }}"
+                                  enctype="multipart/form-data">
+                             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                <div class="row">
+                              <div class="col-sm-12 col-md-6 u-mb-medium">
+                                  <div class="form-group">
+                                      <label for="hotspot_method">{{ gettext('Hinh_thuc_hotspot') }}</label>
+                                      <select class="form-control" id="hotspot_method"
+                                          name="hotspot_method">
+                                          <option value="default">{{ gettext('Mac_dinh') }}</option>
+                                          <option value="profile_code">Profile code</option>
+                                      </select>
+                                  </div>
+                              </div>
+                              <div id="default_code_div" class="col-sm-12 col-md-6 u-mb-medium">
+                                  <div class="form-group">
+                                      <label>{{ gettext('Ma_mac_dinh') }}</label><span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                       aria-label="{{ gettext('Ma_truy_cap_Wifi_mac_dinh') }}">
+                                     <i class="fa fa-question"></i>
+                                 </span>
+                                      <input type="text" class="form-control method-form-control" id="default_code" name="default_code">
+                                  </div>
+                              </div>
+                            </div>
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label"
+                                           for="photo">{{ gettext('HotspotHappyBirthdayScreenPictureText') }}:</label>
+                                    <h5>{{ gettext('HotspotHappyBirthdayScreenRecommendText') }}</h5>
+
+                                        <p class="help-block">
+                                            <img id="img_new_photo" {% if page.photo %}src="https://files.nextify.vn/{{ page.photo }}" {% endif %} width="200">
+                                        </p>
+
+                                    <input type="file" class="c-input"
+                                           id="new_photo" name="photo"
+                                           {% if not page.photo %}required{% endif %}>
+                                </div>
+
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="title">{{ gettext('HotspotHappyBirthdayScreenTitleText') }}:</label>
+                                    <input type="text" maxlength="200"
+                                           class="c-input"
+                                           id="title"
+                                           name="title" value="{% if page.title %}{{ page.title }}{% endif %}"
+                                           placeholder="{{ gettext('(Khong_bat_buoc)') }}">
+                                </div>
+
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label"
+                                           for="content">{{ gettext('HotspotHappyBirthdayScreenContentText') }}:</label>
+                                    <textarea class="c-input"
+                                              id="content" name="content"
+                                              rows="6"
+                                              maxlength="1000"
+                                              placeholder="{{ gettext('(Khong_bat_buoc)') }}">{% if page.content %}
+                                        {{ page.content }}{% endif %}</textarea>
+                                </div>
+                                <div class="c-field u-mb-small">
+                                     <label class="c-field__label"
+                                           for="auto_popup">{{ gettext('HotspotHappyBirthdayScreenRedirectText') }}:</label>
+                                    <input type="text"
+                                           class="c-input"
+                                           id="auto_popup"
+                                           name="auto_popup"
+                                           value="{% if page.auto_popup|string != 'None' %}{{ page.auto_popup }}{% endif %}"
+                                           placeholder="">
+                                </div>
+
+                                <input type="hidden" value="birthday" name="auto_mar"/>
+                                <div class="c-choice c-choice--checkbox">
+                                 <input class="c-choice__input"
+                                        type="checkbox"
+                                           name="active"
+                                           id="active"
+                                           {% if page.active %}checked{% endif %}>
+                                    <label class="c-choice__label"
+                                           for="active">{{ gettext('HotspotHappyBirthdayScreenActiveText') }}</label>
+                                </div>
+                            
+
+                                <div class="btn-toolbar pull-right">
+                                    <div class="btn-group">
+                                        <button type="submit"
+                                                class="c-btn c-btn--info u-float-right">
+                                           {{ gettext('HotspotHappyBirthdayScreenUpdateText') }}
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </form>
+
+
+                        {% endif %}
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="modal hide fade" id="page_item" tabindex="-1"
+         role="dialog" aria-labelledby="new_image" data-backdrop="static"
+         style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{ gettext('HotspotHappyBirthdayScreenText') }}</h3>
+
+                    <a class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </a>
+                </div>
+                <form method="POST"
+                      action="/splash_page/{{ shop_id_select}}/item/{{ page_id }}"
+                      enctype="multipart/form-data"
+                      id="form_new_image">
+                 <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    <div class="modal-body">
+                       <div class="c-field u-mb-small">
+                        <div class="row">
+                              <div class="col-sm-12 col-md-6 u-mb-medium">
+                                  <div class="form-group">
+                                      <label for="hotspot_method">{{ gettext('Hinh_thuc_hotspot') }}</label>
+                                      <select class="form-control" id="hotspot_method"
+                                          name="hotspot_method">
+                                          <option value="default" {% if page.hotspot_method == 'default' %}selected{% endif %}>{{ gettext('Mac_dinh') }}</option>
+                                          <option value="profile_code" {% if page.hotspot_method == 'profile_code' %}selected{% endif %}>{{ gettext('Profile_code') }}</option>
+                                      </select>
+                                  </div>
+                              </div>
+                              <input type="hidden" id="ex_hotspot_method" name="ex_hotspot_method" value="{{ page.hotspot_method }}" />
+                              <div id="default_code_div" class="col-sm-12 col-md-6 u-mb-medium">
+                                  <div class="form-group">
+                                      <label>Mã mặc định</label><span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                       aria-label="{{ gettext('Ma_truy_cap_Wifi_mac_dinh') }}">
+                                     <i class="fa fa-question"></i>
+                                 </span>
+                                      <input type="text" class="form-control method-form-control" id="default_code" name="default_code"
+                                      {% if page.default_code %}
+                                        value="{{ page.default_code }}"
+                                      {% endif %}
+                                      >
+                                  </div>
+                              </div>
+                            </div>
+                                    <label class="c-field__label"
+                                           for="photo">{{ gettext('HotspotHappyBirthdayScreenPictureText') }}:</label>
+                                    <h5>{{ gettext('HotspotHappyBirthdayScreenRecommendText') }}</h5>
+
+                                        <p class="help-block">
+                                            <img id="img_new_photo" {% if page.photo %}src="https://files.nextify.vn/{{ page.photo }}" {% endif %} width="200">
+                                        </p>
+
+                                    <input type="file" class="c-input"
+                                           id="new_photo" name="photo"
+                                           {% if not page.photo %}required{% endif %}>
+                                </div>
+
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="title">{{ gettext('HotspotHappyBirthdayScreenTitleText') }}:</label>
+                                    <input type="text" maxlength="200"
+                                           class="c-input"
+                                           id="title"
+                                           name="title" value="{% if page.title %}{{ page.title }}{% endif %}"
+                                           placeholder="{{ gettext('(Khong_bat_buoc)') }}">
+                                </div>
+
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label"
+                                           for="content">{{ gettext('HotspotHappyBirthdayScreenContentText') }}:</label>
+                                    <textarea class="c-input"
+                                              id="content" name="content"
+                                              rows="6"
+                                              maxlength="1000"
+                                              placeholder="{{ gettext('(Khong_bat_buoc)') }}">{% if page.content %}
+                                        {{ page.content }}{% endif %}</textarea>
+                                </div>
+                     <div class="c-field u-mb-small">
+                                     <label class="c-field__label"
+                                           for="auto_popup">{{ gettext('HotspotHappyBirthdayScreenRedirectText') }}:</label>
+                                    <input type="text"
+                                           class="c-input"
+                                           id="auto_popup"
+                                           name="auto_popup"
+                                           value="{% if page.auto_popup|string != 'None' %}{{ page.auto_popup }}{% endif %}">
+                                </div>
+
+                                 <input type="hidden" value="birthday" name="auto_mar"/>
+                                   <div class="c-choice c-choice--checkbox">
+                                 <input class="c-choice__input"
+                                        type="checkbox"
+                                           name="active"
+                                           id="active"
+                                           {% if page.active %}checked{% endif %}>
+                                    <label class="c-choice__label"
+                                           for="active">{{ gettext('HotspotHappyBirthdayScreenActiveText') }}</label>
+                                </div>
+
+
+
+
+                    </div>
+
+                    <div class="modal-footer">
+                       <button type="submit"
+                                                class="c-btn c-btn--info u-float-right">
+                                            {{ gettext('HotspotHappyBirthdayScreenUpdateText') }}
+                                        </button>
+                    </div>
+                </form>
+
+            </div><!-- // .c-modal__content -->
+        </div><!-- // .c-modal__dialog -->
+    </div>
+    
+
+{% endblock %}
+{% block js %}
+
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            ex_hotspot_method = $('#ex_hotspot_method').val();
+            if (ex_hotspot_method === 'profile_code') {
+                $("#default_code_div").hide();
+            } else {
+                $("#default_code_div").show();
+            };
+            $('#hotspot_method').select2();
+            $('#hotspot_method').on('change.select2', function (e) {
+                method = $(this).val();
+                if (method === 'profile_code') {
+                    $("#default_code_div").hide();
+                } else {
+                    $("#default_code_div").show();
+                }
+            });
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+
+            function readURL(input, input_view) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    var view_id = '#' + input_view;
+                    reader.onload = function (e) {
+                        $(view_id).attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+              function validate(photo) {
+                              var file_size = $(photo)[0].files[0].size;
+                              var file = $(photo).val();
+                              var exts = ['jpg', 'png', 'jpeg'];
+                              if (file) {
+                                var get_ext = file.split('.');
+                                get_ext = get_ext.reverse();
+                                if ($.inArray ( get_ext[0].toLowerCase(), exts) > -1){
+                                  if(file_size > 3670016){
+                                    return "big_file";
+                                  } else{
+                                    return true;
+                                  }
+                                } else {
+                                  return false;
+                                }
+                              }
+
+                            }                            
+
+                                      $("#new_photo").change(function () {
+                                          var validate_photo = validate(this);
+                                          if (validate_photo == true){
+                                            swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                                            $('#img_new_photo').show();
+                                          readURL(this, 'img_new_photo');
+                                        } else {
+                                            if (validate_photo == "big_file"){
+                                                swal('{{ gettext("File_co_kich_thuoc_qua_lon!") }}', '', 'error');
+                                                return false;
+                                            };
+                                          swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                                          $('#new_photo').val('');
+                                          $('#img_new_photo').hide();
+
+                                        }
+                                      });
+
+
+            var page_id = $("#page_id").val();
+            var shop_id_select = $("#shop_id_select").val();
+            var url_preview = '/splash_page/' + shop_id_select + '/preview/' + page_id;
+            $("#preview").empty();
+
+            bioMp(document.getElementById('preview'), {
+                url: url_preview,
+                view: 'front',
+                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                             height:618,
+                    width: 308
+            });
+
+            $("#new_image_submit").click(function () {
+                $("#form_new_image").submit();
+            });
+
+            $(".update_image_submit").click(function () {
+                var id_page = $(this).attr('page_id');
+                $("#form_update_image" + "_" + id_page).submit();
+            });
+
+        });
+    </script>
+{% endblock %}

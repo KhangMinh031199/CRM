@@ -1,0 +1,637 @@
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id_select" />
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-12 col-xl-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-end">
+                    <div class="col">
+                        <h6 class="header-pretitle">
+                            {{ gettext("Trang_chao_theo_khoang_ngay") }}
+                        </h6>
+                    </div>
+                    <div class="col-auto">
+                        <a data-toggle="modal" href="#new_page_loyal" class="btn btn-flat d-block d-md-inline-block">
+                            <i class="fa fa-plus"></i> {{ gettext("Them_moi") }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {%if pages|length > 0%}
+            <div class="table-responsive">
+                <table class="table table-sm card-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for page in pages %}
+                        <tr>
+                            <td>
+                                {{ page.date_from }} <i class="fa fa-arrow-right"></i> {{ page.date_to }}
+                            </td>
+                            <td>
+                                {% if page.active %}
+                                <a id="active_splash_{{ page._id }}">
+                                    <span class="badge badge-soft-success">{{ gettext("Hoat_dong") }}</span>
+                                </a>
+                                {% else %}
+                                <a id="active_splash_{{ page._id }}">
+                                    <span class="badge badge-soft-secondary">{{ gettext("Tam_ngung") }}</span>
+                                </a>
+                                {% endif %}
+                                <script nonce="{{ csp_nonce() }}">
+                                    $(document).ready(function () {
+                                        $('#active_splash_{{ page._id }}').click(function () {
+                                            var url = '/{{ shop_id_select }}/promotion/{{ page._id }}/active';
+                                            $.ajax({
+                                                type: 'GET',
+                                                url: url,
+                                                success: function () {
+                                                    $.ajax({
+                                                        url: "/hotspot_type/promotion",
+                                                        type: 'GET',
+                                                        data: {
+                                                            'shop_id_select': '{{ shop_id_select }}'
+                                                        },
+                                                        beforeSend: function () {
+                                                            $(".detail-splash").empty();
+                                                        },
+                                                        success: function (data) {
+                                                            $(".detail-splash").append(data);
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        });;
+                                    });
+                                </script>
+                            </td>
+                            <td>
+                                <a data-toggle="modal" href="#edit_{{ page._id }}">
+                                    <i class="fa fa-edit"></i> {{ gettext("Chinh_sua") }}</a>
+                            </td>
+                            <td>
+                                <a href="#view_{{ page._id }}" data-toggle="modal">
+                                    <i class="fa fa-mobile"></i> {{ gettext("Xem_truoc") }}</a>
+                                <div class="modal hide fade" id="view_{{ page._id }}" tabindex="-1" role="dialog" aria-labelledby="new_image" data-backdrop="static" style="display: none;" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3 class="modal-title">{{gettext('HotspotNumberofvisitsScreenReviewText')}}</h3>
+                                                <a class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </a>
+                                            </div>
+                                            <div class="modal-body" style="margin: auto">
+                                                <div id="preview_{{ page._id }}"></div>
+                                                <script nonce="{{ csp_nonce() }}">
+                                                    $(document).ready(function () {
+                                                        var url_preview = '/splash_page/{{shop_id_select}}' + '/preview/' + '{{ page._id }}';
+                                                        $("#preview_{{ page._id }}").empty();
+                                                        bioMp(document.getElementById('preview_{{ page._id }}'), {
+                                                            url: url_preview,
+                                                            view: 'front',
+                                                            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                            height:618,
+                                                            width: 308
+                                                        });
+                                                    });
+
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <a id="remove_page_{{ page._id }}" style="color: #5387e5;">
+                                    <i class="fa fa-remove"></i> {{ gettext("Xoa") }}</a>
+                                    <script nonce="{{ csp_nonce() }}">
+                                    $(document).ready(function () {
+                                        $('#remove_page_{{ page._id }}').click(function () {
+                                            var url = '/{{ shop_id_select }}/promotion/{{ page._id }}/remove';
+                                            $.ajax({
+                                                type: 'GET',
+                                                url: url,
+                                                success: function () {
+                                                    $.ajax({
+                                                        url: "/hotspot_type/promotion",
+                                                        type: 'GET',
+                                                        data: {
+                                                            'shop_id_select': '{{ shop_id_select }}'
+                                                        },
+                                                        beforeSend: function () {
+                                                            $(".detail-splash").empty();
+                                                        },
+                                                        success: function (data) {
+                                                            $(".detail-splash").append(data);
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
+                            </td>
+                        </tr>
+                        <div class="modal hide fade" id="edit_{{ page._id }}" tabindex="-1" role="dialog" aria-labelledby="new_image" data-backdrop="static" style="display: none;" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title">{{ gettext("Chinh_sua") }}</h3>
+                                        <a class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </a>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="POST" action="/new_splash_page/{{ shop_id_select}}/item/{{ page._id }}" enctype="multipart/form-data" id="update_page_{{ page._id }}">
+                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                            {# <div class="row">
+                                                <div class="col-sm-12 col-md-6 u-mb-medium">
+                                                    <div class="form-group">
+                                                        <label for="hotspot_method_{{ page._id }}">{{ gettext("Hinh_thuc_hotspot") }}</label>
+                                                        <select class="form-control" id="hotspot_method_{{ page._id }}" name="hotspot_method">
+                                                            <option value="default" {% if page.hotspot_method=='default' %}selected{% endif %}>{{ gettext("Mac_dinh") }}</option>
+                                                            <option value="profile_code" {% if page.hotspot_method=='profile_code' %}selected{% endif %}>{{ gettext("Profile_code") }}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" id="ex_hotspot_method_{{ page._id }}" name="ex_hotspot_method" value="{{ page.hotspot_method }}" />
+                                                <div id="default_code_div_{{ page._id }}" class="col-sm-12 col-md-6 u-mb-medium">
+                                                    <div class="form-group">
+                                                        <label>{{ gettext("Ma_mac_dinh") }}</label><span class="c-badge c-badge--info c-tooltip c-tooltip--top" aria-label="Mã truy cập Wifi mặc định">
+                                                            <i class="fa fa-question"></i>
+                                                        </span>
+                                                        <input type="text" class="form-control method-form-control" id="default_code_{{ page._id }}" name="default_code" {% if page.default_code %} value="{{ page.default_code }}" {% endif %}>
+                                                    </div>
+                                                </div>
+                                            </div> #}
+                                            <div class="form-group">
+                                                <label class="" for="photo">{{gettext('HotspotEventScreenPictureText')}}:</label>
+                                                <h5>{{gettext('HotspotEventScreenRecommendText')}}</h5>
+                                                <p class="help-block">
+                                                    <img id="img_new_photo_{{ page._id }}" {% if page.photo %}src="https://files.nextify.vn/{{ page.photo }}" {% endif %} width="200">
+                                                </p>
+                                                <input type="file" class="form-control" id="new_photo_{{ page._id }}" name="photo" {% if not page.photo %}required{% endif %}>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="" for="title">{{gettext('HotspotNumberofvisitsScreenTitleText')}}:</label>
+                                                <input type="text" maxlength="200" class="form-control" id="title_{{ page._id }}" name="title" value="{% if page.title %}{{ page.title }}{% endif %}" placeholder='( {{ gettext("Khong_bat_buoc") }} )'>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="" for="content">{{gettext('HotspotNumberofvisitsScreenContentText')}}:</label>
+                                                <textarea class="form-control" id="content_{{ page._id }}" name="content" rows="6" maxlength="1000" placeholder='( {{ gettext("Khong_bat_buoc") }} )'>{% if page.content %}
+                                        {{ page.content }}{% endif %}</textarea>
+                                            </div>
+                                            {% if page.date_from %}
+                                            <input type="hidden" class="form-control" value="{{ page.date_from }}" id="ex_date_from_{{ page._id }}" />
+                                            {% endif %}
+                                            <div class="form-group">
+                                                <label class="" for="date_from_{{ page._id }}">{{gettext('HotspotEventScreenFromText')}}:</label>
+                                                <input type="text" class="form-control" id="date_from_{{ page._id }}" name="date_from" value="" />
+                                            </div>
+                                            <div class="form-group">
+                                                {% if page.date_to %}
+                                                <input type="hidden" value="{{ page.date_to }}_{{ page._id }}" id="ex_date_to_{{ page._id }}" />
+                                                {% endif %}
+                                                <label class="" for="date_to_{{ page._id }}">{{gettext('HotspotEventScreenToText')}}:</label>
+                                                <input type="text" class="form-control" id="date_to_{{ page._id }}" name="date_to" />
+                                            </div>
+                                            {# <div class="form-group">
+                                                <label class="" for="auto_popup">{{gettext('HotspotEventScreenRedirectText')}}:</label>
+                                                <input type="text" class="form-control" id="auto_popup_{{ page._id }}" name="auto_popup" value="{% if page.auto_popup|string != 'None' %}{{ page.auto_popup }}{% endif %}" placeholder="">
+                                            </div> #}
+                                            <div class="form-group">
+                                                <label class="">{{ gettext("Nut_ket_noi") }} WIFI</label>
+                                                <input type="text" class="form-control method-form-control" id="connect_button_{{ page._id }}" name="connect_button"
+                                                    value="{% if page.connect_button|string != 'None' %}{{ page.connect_button }}{% else %}Kết nối WIFI/Go Online{% endif %}"
+                                                >
+                                            </div>
+                                            <input type="hidden" value="promotion" name="auto_mar" />
+                                            <div class="c-choice c-choice--checkbox">
+                                                <input class="c-choice__input" type="checkbox" name="active" id="active_{{ page._id }}" {% if page.active %}checked{% endif %}>
+                                                <label class="c-choice__label" for="active_{{ page._id }}">{{gettext('HotspotHappyBirthdayScreenActiveText')}}</label>
+                                            </div>
+                                            <script nonce="{{ csp_nonce() }}">
+                                                $(document).ready(function () {
+                                      function readURL(input, input_view) {
+                                          if (input.files && input.files[0]) {
+                                              var reader = new FileReader();
+                                              var view_id = '#' + input_view;
+                                              reader.onload = function (e) {
+                                                  $(view_id).attr('src', e.target.result);
+                                              };
+
+                                              reader.readAsDataURL(input.files[0]);
+                                          }
+                                      }
+
+                                      $("#new_photo_{{ page._id }}").change(function () {
+                                          readURL(this, 'img_new_photo_{{ page._id }}');
+                                      });
+                                      var d = new Date();
+                                    var strDate = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+                                    if ($("#ex_date_from_{{ page._id }}").length > 0 && $("#ex_date_from_{{ page._id }}").val()
+                                            .length > 0 && $("#ex_date_from").val() != 'None') {
+                                        flatpickr("#date_from_{{ page._id }}", {
+                                            enableTime: false,
+                                            defaultDate: $("#ex_date_from_{{ page._id }}").val(),
+                                            dateFormat: "d-m-Y"
+                                        });
+                                    } else {
+                                        flatpickr("#date_from_{{ page._id }}", {
+                                            enableTime: false,
+                                            dateFormat: "d-m-Y"
+
+                                        });
+                                    }
+                                    if ($("#ex_date_to_{{ page._id }}").length > 0 && $("#ex_date_to_{{ page._id }}").val()
+                                            .length > 0 && $("#ex_date_to_{{ page._id }}").val() != 'None') {
+                                        flatpickr("#date_to_{{ page._id }}", {
+                                            enableTime: false,
+                                            defaultDate: $("#ex_date_to_{{ page._id }}").val(),
+                                            dateFormat: "d-m-Y"
+                                        });
+                                    } else {
+                                        flatpickr("#date_to_{{ page._id }}", {
+                                            enableTime: false,
+                                            dateFormat: "d-m-Y"
+
+                                        });
+                                    }
+                                  });
+                                </script>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="col-3" style="float:right">
+                                            <button id="update_{{ page._id }}_btn" class="btn btn-lg btn-block btn-primary">{{gettext('HotspotHappyBirthdayScreenUpdateText')}}</button>
+                                    </div>
+                                </div>
+                                </div><!-- // .c-modal__content -->
+                            </div><!-- // .c-modal__dialog -->
+                        </div>
+                        <script nonce="{{ csp_nonce() }}">
+                            $(document).ready(function () {
+                                // ex_hotspot_method = $('#ex_hotspot_method_{{ page._id }}').val();
+                                // if (ex_hotspot_method === 'profile_code') {
+                                //     $("#default_code_div_{{ page._id }}").hide();
+                                // } else {
+                                //     $("#default_code_div_{{ page._id }}").show();
+                                // };
+                                // $('#hotspot_method_{{ page._id }}').select2();
+                                // $('#hotspot_method_{{ page._id }}').on('change.select2', function (e) {
+                                //     method = $(this).val();
+                                //     if (method === 'profile_code') {
+                                //         $("#default_code_div_{{ page._id }}").hide();
+                                //     } else {
+                                //         $("#default_code_div_{{ page._id }}").show();
+                                //     }
+                                // });
+                                var shop_id_select = $("#shop_id_select").val();
+
+                                 $('#update_{{ page._id }}_btn').click(function () {
+                                     var form = $('#update_page_{{ page._id }}')[0];
+                                     var data = new FormData(form);
+                                     var url = $('#update_page_{{ page._id }}').attr('action');
+
+                                     var title = $('#title_{{ page._id }}').val();
+                                    var content = $('#content_{{ page._id }}').val();
+                                    var date_from = $('#date_from_{{ page._id }}').val();
+                                    var date_to = $('#date_to_{{ page._id }}').val();
+                                    var active = $('#active_{{ page._id }}').is(":checked");
+                                    var auto_popup = $('#auto_popup_{{ page._id }}').val();
+                                    // var hotspot_method = $('#hotspot_method_{{ page._id }}').val();
+                                    // var default_code = $('#default_code_{{ page._id }}').val();
+
+                                    var connect_button = $('#connect_button_{{ page._id }}').val();
+
+                                    var file = $('#new_photo_{{ page._id }}')[0].files[0];
+
+                                    if (file){
+                                        data.append('photo', file);
+                                    };
+
+                                    data.append('auto_mar', 'promotion');
+                                    data.append('title', title);
+                                    data.append('content', content);
+                                    data.append('date_from', date_from);
+                                    data.append('date_to', date_to);
+                                    data.append('active', active);
+                                    data.append('auto_popup', auto_popup);
+                                    // data.append('hotspot_method', hotspot_method);
+                                    // data.append('default_code', default_code);
+
+                                    data.append('connect_button', connect_button);
+
+                                      $.ajax({
+                                        headers: { "X-CSRFToken": '{{ csrf_token() }}' },
+                                        type: 'post',
+                                       url: url,
+                                          data: data,
+                                          processData: false,
+                                          contentType: false,
+                                          success: function (response) {
+                                        var returnedData = JSON.parse(response);
+                                         if ('error' in returnedData){
+
+                                              swal(returnedData['error'], " ", "error");
+                                         }else{
+                                            $('#edit_{{ page._id }}').modal('hide');
+                                            $('body').removeClass('modal-open');
+                                            $('.modal-backdrop').remove();
+                                            $.ajax({
+                                                url: "/hotspot_type/promotion",
+                                                type: 'GET',
+                                                data: {
+                                                    'shop_id_select': shop_id_select
+                                                },
+                                                beforeSend: function() {
+                                                    $(".detail-splash").empty();
+                                                },
+                                                success: function(data) {
+                                                    $(".detail-splash").append(data);
+                                                }
+                                            });
+                                         }
+
+
+                                      },
+                                      error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                         swal(' {{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+                                      }});
+
+
+
+                                 });
+
+
+
+                            });
+                        </script>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="card-body">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-xl-8 justify-content-center" style="text-align: center;margin-bottom: 30px; margin-top: 30px">
+            <!-- Title -->
+            <h2>
+                {{ gettext("Ban_chua_tao_trang_chao_theo_khoang_ngay._Vui_long_them_moi.") }}
+            </h2>
+            <a data-toggle="modal" href="#new_page_loyal" class="btn btn-flat d-block d-md-inline-block">
+                <i class="fa fa-plus"></i> {{ gettext("Them_moi") }}
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="modal hide fade" id="new_page_loyal" tabindex="-1" role="dialog" aria-labelledby="new_page_loyal" data-backdrop="static" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">{{gettext('HotspotEventScreenAddText')}}</h3>
+                <a class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </a>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="/new_splash_page/{{ shop_id_select}}/item/add" enctype="multipart/form-data" id="new_page">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    {# <div class="row">
+                        <div class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="form-group">
+                                <label for="new_hotspot_method">{{ gettext("Hinh_thuc") }} hotspot</label>
+                                <select class="form-control" id="new_hotspot_method" name="hotspot_method">
+                                    <option value="default">{{ gettext("Mac_dinh") }}</option>
+                                    <option value="profile_code">{{ gettext("Profile_code") }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="new_default_code_div" class="col-sm-12 col-md-6 u-mb-medium">
+                            <div class="form-group">
+                                <label>{{ gettext("Ma_mac_dinh") }}</label><span class="c-badge c-badge--info c-tooltip c-tooltip--top" aria-label="Mã truy cập Wifi mặc định">
+                                    <i class="fa fa-question"></i>
+                                </span>
+                                <input type="text" class="form-control method-form-control" id="new_default_code" name="default_code">
+                            </div>
+                        </div>
+                    </div> #}
+                    <div class="form-group">
+                        <label class="" for="photo">{{gettext('HotspotEventScreenPictureText')}}:</label>
+                        <h5>{{gettext('HotspotEventScreenRecommendText')}}</h5>
+                        <p class="help-block">
+                            <img id="img_new_photo" width="200">
+                        </p>
+                        <input type="file" class="form-control" id="new_photo" name="photo">
+                    </div>
+                    <script nonce="{{ csp_nonce() }}">
+                        $(document).ready(function () {
+                                                    function readURL(input, input_view) {
+                                          if (input.files && input.files[0]) {
+                                              var reader = new FileReader();
+                                              var view_id = '#' + input_view;
+                                              reader.onload = function (e) {
+                                                  $(view_id).attr('src', e.target.result);
+                                              }
+
+                                              reader.readAsDataURL(input.files[0]);
+                                          }
+                                      }
+                            function validate(photo) {
+                              var file_size = $(photo)[0].files[0].size;
+                              var file = $(photo).val();
+                              var exts = ['jpg', 'png', 'jpeg'];
+                              if (file) {
+                                var get_ext = file.split('.');
+                                get_ext = get_ext.reverse();
+                                if ($.inArray ( get_ext[0].toLowerCase(), exts) > -1){
+                                  if(file_size > 3670016){
+                                    return "big_file";
+                                  } else{
+                                    return true;
+                                  }
+                                } else {
+                                  return false;
+                                }
+                              }
+
+                            }                            
+
+                                      $("#new_photo").change(function () {
+                                          var validate_photo = validate(this);
+                                          if (validate_photo == true){
+                                            swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                                            $('#img_new_photo').show();
+                                          readURL(this, 'img_new_photo');
+                                        } else {
+                                            if (validate_photo == "big_file"){
+                                                swal('{{ gettext("File_co_kich_thuoc_qua_lon!") }}', '', 'error');
+                                                return false
+                                            }
+                                          swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                                          $('#new_photo').val('');
+                                          $('#img_new_photo').hide();
+
+                                        }
+                                      });
+                                  });
+                                </script>
+                    <div class="form-group">
+                        <label class="" for="title">{{gettext('HotspotNumberofvisitsScreenTitleText')}}:</label>
+                        <input type="text" maxlength="200" class="form-control" id="title" name="title" placeholder='( {{ gettext("Khong_bat_buoc") }} )'>
+                    </div>
+                    <div class="form-group">
+                        <label class="" for="content">{{gettext('HotspotNumberofvisitsScreenContentText')}}:</label>
+                        <textarea class="form-control" id="content" name="content" rows="6" maxlength="1000" placeholder='( {{ gettext("Khong_bat_buoc") }} )'></textarea>
+                    </div>
+                    <input type="hidden" value="promotion" name="auto_mar" />
+                    <div class="form-group">
+                        <label class="" for="date_from">{{gettext('HotspotEventScreenFromText')}}:</label>
+                        <input type="text" class="form-control" id="date_from" name="date_from" value="" />
+                    </div>
+                    <div class="form-group">
+                        <label class="" for="date_to">{{gettext('HotspotEventScreenToText')}}:</label>
+                        <input type="text" class="form-control" id="date_to" name="date_to" />
+                    </div>
+                    {# <div class="form-group">
+                        <label class="" for="auto_popup">{{gettext('HotspotEventScreenRedirectText')}}:</label>
+                        <input type="text" class="form-control" id="auto_popup" name="auto_popup" placeholder="">
+                    </div> #}
+                    <div class="form-group">
+                        <label class="">{{ gettext("Nut_ket_noi") }} WIFI</label>
+                        <input type="text" class="form-control method-form-control" id="connect_button" name="connect_button">
+                    </div>
+                    <input type="hidden" value="promotion" name="auto_mar" />
+                    <div class="c-choice c-choice--checkbox">
+                        <input class="c-choice__input" type="checkbox" name="active" id="active">
+                        <label class="c-choice__label" for="active">{{gettext('HotspotHappyBirthdayScreenActiveText')}}</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="col-3" style="float:right">
+                    <a href="#" id="new_page_btn" class="btn btn-lg btn-block btn-primary">
+                        {{gettext('HotspotHappyBirthdayScreenUpdateText')}}
+                    </a>
+                </div>
+            </div>
+        </div><!-- // .c-modal__content -->
+    </div><!-- // .c-modal__dialog -->
+</div>
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+$(document).ready(function() {
+    // $('#new_hotspot_method').select2();
+    // $('#new_hotspot_method').on('change.select2', function(e) {
+    //     method = $(this).val();
+    //     if (method === 'profile_code') {
+    //         $("#new_default_code_div").hide();
+    //     } else {
+    //         $("#new_default_code_div").show();
+    //     }
+    // });
+    $("#deactive_splash").click(function() {
+        swal("Thao tác thành công", '', 'success');
+    })
+    $('textarea').each(function() {
+        $(this).val($(this).val().trim());
+    });
+    $('input').each(function() {
+        $(this).val($(this).val().trim());
+    });
+    var shop_id_select = $("#shop_id_select").val();
+
+    $('#new_page_btn').click(function() {
+        var form = $('#new_page')[0];
+        var data = new FormData(form);
+        var url = $('#new_page').attr('action');
+
+        $.ajax({
+            type: 'post',
+            url: url,
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function(response) {
+                var returnedData = JSON.parse(response);
+                if ('error' in returnedData) {
+
+                    swal(returnedData['error'], " ", "error");
+                } else {
+                    $('#new_page_loyal').modal('hide');
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
+                    $.ajax({
+                        url: "/hotspot_type/promotion",
+                        type: 'GET',
+                        data: {
+                            'shop_id_select': shop_id_select
+                        },
+                        beforeSend: function() {
+                            $(".detail-splash").empty();
+                        },
+                        success: function(data) {
+                            $(".detail-splash").append(data);
+                        }
+                    });
+                }
+
+
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                swal(' {{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+            }
+        });
+
+
+
+    });
+
+    flatpickr("#date_from", {
+        enableTime: false,
+        dateFormat: "d-m-Y"
+
+    });
+    flatpickr("#date_to", {
+        enableTime: false,
+        dateFormat: "d-m-Y"
+
+    });
+    var page_active_random = '{{ page_active_random }}';
+    if (page_active_random) {
+        var url_preview = '/splash_page/' + shop_id_select + '/preview/' + page_active_random;
+        $("#preview").empty();
+        bioMp(document.getElementById('preview'), {
+            url: url_preview,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                         height:618,
+                width: 308
+        });
+    } else {
+        var url_preview = '/hotspot_type/0?shop_id_select=' + shop_id_select;
+        $("#preview").empty();
+        bioMp(document.getElementById('preview'), {
+            url: url_preview,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+    };
+});
+</script>
+{% endblock %}

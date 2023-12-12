@@ -1,0 +1,553 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-8">
+
+            <!-- Header -->
+            <div class="header mt-md-5">
+                <div class="header-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Pretitle -->
+                            <h6 class="header-pretitle">
+                                {{ gettext('Tai_khoan') }}
+                            </h6>
+
+                            <!-- Title -->
+                            <h1 class="header-title">
+                                {{ gettext('Cau_hinh_tai_khoan') }}
+                            </h1>
+
+
+                        </div>
+                      
+                    </div> <!-- / .row -->
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Nav -->
+                            <ul class="nav nav-tabs nav-overflow header-tabs">
+                                <li class="nav-item">
+                                    <a href="/settings" class="nav-link active">
+                                        {{ gettext('Cau_hinh_chung') }}
+                                    </a>
+                                </li>
+                                {% if merchant._id|package_merchant != "Brand" and merchant._id|package_merchant !=
+                                "Basic" %}
+                                <li class="nav-item">
+                                    <a href="/accounts" class="nav-link">
+                                        {{ gettext('Tai_khoan_truy_cap') }}
+                                    </a>
+                                </li>
+                                <!-- <li class="nav-item">
+                                        <a href="/payment" class="nav-link">
+                                            {{ gettext('Thanh_toan') }}
+                                        </a>
+                                    </li> -->
+                                <!-- <li class="nav-item">
+                                        <a href="/setting_integration" class="nav-link">
+                                            {{ gettext('Tich_hop') }}
+                                        </a>
+                                    </li> -->
+                                <li class="nav-item">
+                                    <a href="/setting_detection_employee" class="nav-link">
+                                        {{ gettext('Nhan_dien_nhan_vien') }}
+                                    </a>
+                                </li>
+                                {% endif %}
+                                <li class="nav-item">
+                                    <a href="/create_QR_code" class="nav-link">
+                                        {{ gettext('Tao_ma_QR') }}
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/logout" class="nav-link" style="color:#3232c8">
+                                        {{ gettext("Dang_xuat") }}
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-12">
+                    <form action="/settings" method="post" id="merchant_update_imformation"
+                        enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+                        {% if error %}
+                        <div class="alert alert-danger">
+                            {{ error | safe }}
+                        </div>
+                        {% endif %} {% if message %}
+                        <div class="alert alert-success">
+                            {{ message | safe }}
+                        </div>
+                        {% endif %}
+                        <input type="hidden" value="{{ merchant._id }}" name="merchant_id" />
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label>{{ gettext('Anh_dai_dien:') }}</label>
+                                    <img id="preview"
+                                        src="{% if merchant.avatar %}//files.nextify.vn/{{ merchant.avatar }}{% else %}static/images/no-profile-image.png{% endif %}"
+                                        style="display: block; margin-left: auto; margin-right: auto; border-radius:50%; width: 80px; height: 80px;">
+
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input"  name="avatar" id="avatar_int" autofocus>
+                                        <label class="custom-file-label">{{ gettext('Click_chon_file') }}</label>
+                                      </div>
+                    
+                                    <!-- <input class="form-control child_photo" id="avatar_int" type="file" name="avatar" autofocus> -->
+
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ gettext('Ten') }}(<font color="red">*</font>):</label>
+                                    <input type="text" class="form-control" id="name" name="name" 
+                                        value="{{ merchant.name }}">
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ gettext('Duong_dan:') }}</label>
+                                    <input type="text" id="url_access" class="form-control"
+                                        value="{% if 'viettel.vn' in request.url %}https://crm.vmarketing.viettel.vn/{{ merchant.slug }}{% else %}https://crm.nextify.vn/{{ merchant.slug }}{% endif %}"
+                                        readonly />
+                                </div>
+                                <div class="form-group">
+                                    <label>Email:</label>
+                                    <input type="email" class="form-control" id="email" name="email" 
+                                        value="{{ merchant.email }}">
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label>{{ gettext('So_dien_thoai') }}(<font color="red">*</font>):</label>
+                                    <input type="text" class="form-control" name="phone" value="{{ merchant.phone }}">
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ gettext('Ma_so_thue/CMND:') }}</label>
+                                    <input type="text" class="form-control" name="identity"
+                                        value="{{ merchant.identity }}">
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ gettext('Nguoi_dai_dien:') }}</label>
+                                    <input type="text" class="form-control" name="agent" value="{{ merchant.agent }}">
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ gettext('Chuc_vu:') }}</label>
+                                    <input type="text" class="form-control" name="role" value="{{ merchant.role }}">
+                                </div>
+
+
+
+                                <div class="form-group">
+                                    <label>{{ gettext('Thoi_gian_tinh_luot_den:') }}</label>
+                                    <p class="small text-muted mb-1">{{
+                                        gettext('So_tieng_truy_cap_duoc_tinh_la_1_luot_den:') }}</p>
+                                    <p class="small text-muted mb-1" style="color: red;" id="errmsg2"></p>
+                                    <input type="text" name="time_per_visit" id="time_per_visit" class="form-control"
+                                        value="{{ merchant.time_per_visit|default('4', true) }}">
+
+                                </div>
+
+                                <div class="orm-group">
+
+                                    <label>{{ gettext('Ngon_ngu') }}</label>
+                                    <select id="language" name="language" class="custom-select control-container">
+                                        <option value="vi">Vietnamese</option>
+                                        <option value="en">English</option>
+                                        <option value="lo">Laos</option>
+                                    </select>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="c-field u-mb-small">
+                            {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                            {% for message in messages %}
+                            <small style="color: #fa5d31"><i>{{ message }}</i></small>
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+
+                        <div class="c-field u-mb-small">
+
+                        </div>
+
+
+                        <button id="update_information_btn" type="submit" class="btn btn-primary float-right mt-3">
+                            {{ gettext('Luu_thon_tin') }}
+                        </button>
+                    </form>
+                </div>
+
+
+            </div> <!-- / .row -->
+
+            <hr class="mt-4 mb-5">
+            <h2>{{ gettext("Doi_mat_khau") }}</h2>
+            <div class="row">
+                <div class="col-12 col-md-6 order-md-2">
+
+                    <!-- Card -->
+                    <div class="card bg-light border ml-md-4">
+                        <div class="card-body">
+
+                            <p class="mb-2">
+                                {{ gettext('Yeu_cau_bao_mat') }}
+                            </p>
+
+                            <p class="small text-muted mb-2">
+                                {{
+                                gettext('Đe_tao_mat_khau_bao_mat_va_đam_bao_an_toan,_vui_long_đat_mat_khau_theo_quy_đinh_sau:')
+                                }}
+                            </p>
+
+                            <ul class="small text-muted pl-4 mb-0">
+                                <li>
+                                    {{ gettext('Toi_thieu_8_ky_tu') }}
+                                </li>
+                                <li>
+                                    {{ gettext('Mat_khau_can_it_nhat_1_ky_tu_viet_hoa') }}
+                                </li>
+                                <li>
+                                    {{ gettext('Mat_khau_can_it_nhat_1_ky_tu_viet_thuong') }}
+                                </li>
+                                <li>
+                                    {{ gettext('Toi_thieu_1_ky_tu_dac_biet') }}
+                                </li>
+                                <li>
+                                    {{ gettext('Toi_thieu_1_ky_tu_dang_so') }}
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-12 col-md-6" style="margin-bottom: 10px">
+                    <form action="/settings/update_password" method="post" id="merchant_update_password">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-group">
+
+                            <!-- Label -->
+                            <label>
+                                {{ gettext('Mat_khau_cu') }} (<font color="red">*</font>)
+                            </label>
+
+                            <!-- Input -->
+                            <input type="password" class="form-control" name="old_password">
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <!-- Label -->
+                            <label>
+                                {{ gettext('Mat_khau_moi') }} (<font color="red">*</font>)
+                            </label>
+
+                            <!-- Input -->
+                            <input type="password" class="form-control" name="new_password">
+
+                        </div>
+
+                        <!-- Confirm new password -->
+                        <div class="form-group">
+
+                            <!-- Label -->
+                            <label>
+                                {{ gettext('Nhap_lai_mat_khau_moi') }} (<font color="red">*</font>)
+                            </label>
+
+                            <!-- Input -->
+                            <input type="password" class="form-control" name="re_new_password">
+
+                        </div>
+
+
+                    </form>
+
+                    <!-- Submit -->
+                    <button id="update_password_btn" class="btn btn-primary float-right">
+                        {{ gettext('Cap_nhat_mat_khau') }}
+                    </button>
+
+                </div>
+            </div> <!-- / .row -->
+
+        </div>
+    </div> <!-- / .row -->
+</div>
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id_select" />
+
+{% endblock %}
+{% block js %}
+
+<script type="text/javascript" src="/static/nextify/js/qrcode.min.js"></script>
+<script nonce="{{ csp_nonce() }}">
+
+    $(document).ready(function () {
+        var lang_cookie = Cookies.get('langs');
+        if (lang_cookie) {
+            $("#language").val(lang_cookie).trigger("change");
+            Cookies.set('langs', lang_cookie);
+        } else {
+
+            $("#language").val('vi').trigger("change");
+            Cookies.set('langs', 'vi');
+        }
+
+
+        $("#language").change(function () {
+            var lang = $("#language").val();
+            Cookies.set('langs', lang);
+            location.reload();
+            return false;
+        });
+        // Jquery Dependency
+
+        $("#average_earnings").on({
+            keyup: function () {
+                formatCurrency($(this));
+            },
+            blur: function () {
+                formatCurrency($(this), "blur");
+            }
+        });
+
+        $("#time_user_connect").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                $("#errmsg1").html("{{ gettext('Chi_duoc_nhap_so') }} ").show().fadeOut("slow");
+                return false;
+            }
+        });
+
+        $("#time_per_visit").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                $("#errmsg2").html("{{ gettext('Chi_duoc_nhap_so') }} ").show().fadeOut("slow");
+                return false;
+            }
+        });
+
+        function formatNumber(n) {
+            // format number 1000000 to 1,234,567
+            return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        }
+
+
+        function formatCurrency(input, blur) {
+            // appends $ to value, validates decimal side
+            // and puts cursor back in right position.
+
+            // get input value
+            var input_val = input.val();
+
+            // don't validate empty input
+            if (input_val === "") { return; }
+
+            // original length
+            var original_len = input_val.length;
+
+            // initial caret position 
+            var caret_pos = input.prop("selectionStart");
+
+            // check for decimal
+            if (input_val.indexOf(".") >= 0) {
+
+                // get position of first decimal
+                // this prevents multiple decimals from
+                // being entered
+                var decimal_pos = input_val.indexOf(".");
+
+                // split number by decimal point
+                var left_side = input_val.substring(0, decimal_pos);
+                var right_side = input_val.substring(decimal_pos);
+
+                // add commas to left side of number
+                left_side = formatNumber(left_side);
+
+                // validate right side
+                right_side = formatNumber(right_side);
+
+                // On blur make sure 2 numbers after decimal
+
+                // Limit decimal to only 2 digits
+                right_side = right_side.substring(0, 2);
+
+                // join number by .
+                input_val = left_side + "." + right_side;
+
+            } else {
+                // no decimal entered
+                // add commas to number
+                // remove all non-digits
+                input_val = formatNumber(input_val);
+                input_val = input_val;
+
+                // final formatting
+
+            }
+
+            // send updated string to input
+            input.val(input_val);
+
+            // put caret back in the right position
+            var updated_len = input_val.length;
+            caret_pos = updated_len - original_len + caret_pos;
+            input[0].setSelectionRange(caret_pos, caret_pos);
+        }
+
+        //------
+        $("#average_earnings").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                $("#errmsg").html("{{ gettext('Chi_duoc_nhap_so') }} ").show().fadeOut("slow");
+                return false;
+            }
+        });
+        $("#time_after_send").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                $("#errmsg_time").html("{{ gettext('Chi_duoc_nhap_so') }} ").show().fadeOut("slow");
+                return false;
+            }
+        });
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#preview')
+                        .attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function validate(photo) {
+            var file_size = $(photo)[0].files[0].size;
+            var file = $(photo).val();
+            var exts = ['jpg', 'png', 'jpeg'];
+            if (file) {
+                var get_ext = file.split('.');
+                get_ext = get_ext.reverse();
+                if ($.inArray(get_ext[0].toLowerCase(), exts) > -1) {
+                    if (file_size > 1048576) {
+                        return "big_file";
+                    } else {
+                        return true;
+                    }
+                } else {
+                    return false;
+                }
+            }
+
+        }
+        $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+        $('input').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+        $("#avatar_int").change(function () {
+            var validate_photo = validate(this);
+            if (validate_photo == true) {
+                swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                $('#preview').show();
+                readURL(this, 'avatar_int');
+            } else {
+                if (validate_photo == "big_file") {
+                    swal('{{ gettext("Kich_thuoc_file_phai_duoi_1MB") }}', '', 'error');
+                    return false
+                };
+                swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                $('#avatar_int').val('');
+                $('#preview').hide();
+
+            }
+        })
+
+        $("#update_information_btn").click(function () {
+            $.ajax({
+                type: 'post',
+                url: $("#merchant_update_imformation").attr('action'),
+                data: $("#merchant_update_imformation").serialize(),
+                success: function (response) {
+                    var returnedData = JSON.parse(response);
+                    if ('error' in returnedData) {
+                        swal(returnedData['error'], '', 'error');
+                        return false;
+                    } else {
+                        swal('{{ gettext("Cap_nhat_thanh_cong") }}', '', 'success');
+                        location.reload();
+
+                    }
+
+                }
+
+            });
+
+        });
+        $("#update_password_btn").click(function () {
+            $.ajax({
+                type: 'post',
+                url: $("#merchant_update_password").attr('action'),
+                data: $("#merchant_update_password").serialize(),
+                success: function (response) {
+                    var returnedData = JSON.parse(response);
+                    if ('error' in returnedData) {
+
+                        swal(returnedData['error'], " ", "error");
+                    } else {
+                        swal('{{ gettext("Cap_nhat_mat_khau_thanh_cong") }}', '', 'success');
+                        location.reload();
+
+                    }
+
+                }
+            });
+
+        });
+        var shop_id_select = $('#shop_id_select').val();
+        if (shop_id_select === null || shop_id_select.length > 0) {
+            shop_id_select = 'all';
+        }
+        $('#shop_in_mer').select2();
+        $('#shop_in_mer').val(shop_id_select).trigger('change');
+        $('#shop_in_mer').on("change", function (e) {
+            var shop_id = $('#shop_in_mer').val();
+            var url = "/settings/locations/" + shop_id;
+            $(location).attr('href', url);
+        });
+
+
+
+    });
+</script>
+{% endblock %}

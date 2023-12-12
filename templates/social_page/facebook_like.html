@@ -1,0 +1,59 @@
+{% extends "welcome.html" %} {%block container%}
+<div class="row" style="background:white; margin-right: 0px; margin-left: 0px">
+    <h3 style="color:black">Chào mừng bạn đến với <br/>{{shop.name}}</h3>
+    {% if user %} {% if message %}
+    <div class="text-center welcome-message">
+        {{ message }}
+    </div>
+    {% else %}
+    <div class="text-center welcome-message">
+        Chào <strong>{{ user.name }}</strong>, hãy like Fanpage để truy cập Wifi 👍🏻
+    </div>
+    {% endif %} {% endif %}
+    <input type="hidden" id="redirect_page" value="{{redirect_page}}" />
+    <div id="fb-root"></div>
+     <script nonce="{{ csp_nonce() }}">
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s);
+            js.id = id;
+            js.async = true;
+            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=999289033481098";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <div class="fb-page" data-href="{{ shop.facebook_page }}" data-width="500" data-hide-cover="false" data-show-facepile="true"></div>
+
+    <div class="clearfix"></div>
+    <p></p>
+</div>
+{%endblock%} {%block welcome_js%}
+<script type="text/javascript">
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId: '999289033481098',
+            xfbml: true,
+            version: 'v2.8'
+        });
+
+        FB.getLoginStatus(function(response) {
+            if (response.status === 'connected') {
+                 FB.api("/{{ shop.facebook_page }}", function(response) {
+                    // if ( response.data.length === 1 ) { //there should only be a single value inside "data"
+                    //     console.log('You like it');
+                    // } else {
+                    //     console.log("You don't like it");
+                    // }
+                    console.log("ha ha");
+                    console.log(response);
+                });
+            } else {
+                console.log("Connect Fb");
+               
+            }
+        }, true);
+
+    }
+</script>
+{%endblock%}

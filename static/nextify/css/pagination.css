@@ -1,0 +1,50 @@
+.pagination {
+    --bs-pagination-padding-x: 0.75rem;
+    --bs-pagination-padding-y: 0.5rem;
+    --bs-pagination-font-size: 0.9375rem;
+    --bs-pagination-color: var(--bs-black);
+    --bs-pagination-bg: #fff;
+    --bs-pagination-border-width: 1px;
+    --bs-pagination-border-color: #e3ebf6;
+    --bs-pagination-border-radius: 0.375rem;
+    --bs-pagination-hover-color: var(--bs-dark);
+    --bs-pagination-hover-bg: var(--bs-gray-100);
+    --bs-pagination-hover-border-color: var(--bs-gray-300);
+    --bs-pagination-focus-color: var(--bs-link-hover-color);
+    --bs-pagination-focus-bg: #edf2f9;
+    --bs-pagination-focus-box-shadow: none;
+    --bs-pagination-active-color: #fff;
+    --bs-pagination-active-bg: #2c7be5;
+    --bs-pagination-active-border-color: var(--bs-pagination-active-bg);
+    --bs-pagination-disabled-color: #95aac9;
+    --bs-pagination-disabled-bg: #fff;
+    --bs-pagination-disabled-border-color: #e3ebf6;
+    display: flex;
+    list-style: none;
+    padding-left: 0
+}
+
+.pagination li {
+    list-style: none;
+}
+
+.pagination li > a{
+    border-radius: 0 !important;
+
+margin-top: -1px;
+padding: 1.25rem .75rem;
+font-size: .9375rem;
+line-height: 1.25;
+}
+
+.pagination li.active{
+    background-color: transparent;
+    border-color: #2c7be5;
+    color: #12263f;
+}
+
+.pagination li > a:active{
+    background-color: transparent;
+    border-color: #2c7be5;
+    color: #12263f;
+}

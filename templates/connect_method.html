@@ -1,0 +1,48 @@
+{% extends "welcome.html" %}
+{% block welcome_css %}
+<style>
+body>.container {
+    padding-top: 10px;
+    margin-top: 10px;
+    text-align: center;
+    margin-bottom: 80px;
+}
+</style>
+{% endblock %}
+{%block connect_method%}
+
+    <div class="row" style="background:white; margin-right: 0px; margin-left: 0px;">
+<h4 style="color:black;line-height: 24px;">Chào mừng bạn đến với <br/>{{shop.name}}</h4>
+    </div>
+   <div class="row" style="background:white; margin-right: 0px; margin-left: 0px;padding:5px">
+ <button id="facebook_connect" class="btn btn-md btn-success col-xs-12" style="margin: 0px; background-color: #4c69ba">
+    <i class="fa fa-facebook" aria-hidden="true" style="float:left;padding-top:15px;padding-left: 5px"></i>Kết nối qua Facebook</button>
+       <button id="sms_connect" class="btn btn-md btn-success col-xs-12" style="margin: 0px; margin-top:5px">
+           <span class="glyphicon glyphicon-phone" style="float:left;padding-top:15px;padding-left: 5px"></span>Kết nối qua SMS</button>
+   <form id="facebook_form" action="/fb_register" method="POST">
+        <input type="hidden" id="email" name="email" />
+        <input type="hidden" id="birthday" name="birthday" />
+        <input type="hidden" id="fb_id" name="fb_id" />
+        <input type="hidden" id="name" name="name" />
+        <input type="hidden" id="age_range" name="age_range" />
+        <input type="hidden" id="home_town" name="home_town" />
+        <input type="hidden" id="relationship_status" name="relationship_status" />
+        <input type="hidden" id="gender" name="gender" />
+        <input type="hidden" name="client_mac" value="{{ session.client_mac }}">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+    </form>
+   </div>
+
+      <div id="fb-root"></div>
+     <script nonce="{{ csp_nonce() }}">(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+       js.async=true;js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=999289033481098";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+{% endblock %}
+ {%block welcome_script%}
+<script type="text/javascript" src="/static/scripts/new_register.js"></script>
+ {%endblock%}

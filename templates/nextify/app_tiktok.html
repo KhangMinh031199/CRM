@@ -1,0 +1,97 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                        {{ gettext("Ung_dung") }}
+                    </h6>
+
+                    <!-- Title -->
+                    <h1 class="header-title">
+                        Tiktok
+                    </h1>
+
+                </div>
+            </div> <!-- / .row -->
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="header-title">
+                        {{ gettext("Cau_hinh") }}
+                    </h1>
+                </div>
+                <div class="card-body">
+                    <form method="POST" id="save_client_key_fr" action="/update_client_key"
+                        enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-group">
+                            <label for="pixel_code">Tiktok Pixel Code:</label>
+                            <textarea class="form-control" id="tiktok_pixel_code" name="tiktok_pixel_code" autofocus
+                                rows="6">{% if shop_select and shop_select.tiktok_pixel_code|string != 'None' %}{{ shop_select.tiktok_pixel_code }}{% endif %}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <select id="redirect_shop_select" class="custom-select">
+                                {% if shop_select and shop_select._id %}
+                                <option disabled selected>{{ shop_select.name }}</option>
+                                {% else %}
+                                <option disabled selected>{{ gettext("Chon_dia_diem") }}</option>
+                                {% endif %}
+                                {% for shop in shop_in_mer %}
+                                <option value="{{ shop._id }}">{{ shop.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col">
+
+                        </div>
+                        <div class="col">
+                            <button id="save_client_key" class="btn btn-lg btn-block btn-primary">
+                                {{ gettext("Luu_cau_hinh") }}
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div> <!-- / .row -->
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+        $('input').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+
+
+    });
+</script>
+{% endblock %}

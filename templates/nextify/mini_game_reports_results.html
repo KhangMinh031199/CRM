@@ -1,0 +1,117 @@
+{% extends 'nextify/base.html' %}
+
+
+{% block main_content %}
+
+ <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            Mini Game
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                          {{ item.info.name }}
+                        </h1>
+
+                    </div>
+
+
+                </div> <!-- / .row -->
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                      <thead>
+                        <tr>
+                          <th scope="col">{{ gettext("Nguoi_dung") }}({{ total }})</th>
+                          <th scope="col">{{ gettext("Thong_tin") }}</th>
+                          <th scope="col">{{ gettext("Qua") }}</th>
+                            <th scope="col">{{ gettext("Dia_diem") }}</th>
+                          <th scope="col">{{ gettext("Thoi_gian") }}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% for report in list_reports %}
+                        <tr>
+                          <th scope="row">{{ report.client_mac }}</th>
+                          <td class="orders-product detail_customer">
+                          {% if report.user %}
+
+
+                                                <div class="name" style="font-size: 16px;
+                                                                         font-weight: 700;
+                                                                         text-overflow: ellipsis;
+                                                                         overflow: hidden;">
+                                                    {% if report.user.phone and report.user.phone|string != 'None' and report.user.phone|length != 0 %}
+                                                        {{ report.user.phone }}
+                                                    {% else %}
+                                                        {% if report.user.email | string != 'None' %}{{ report.user.email }}{% endif %}
+                                                    {% endif %}
+
+                                                </div>
+
+                                                {% if (not report.user.name and not report.user.phone and not report.user.email) or (report.user.phone | string == 'None' and report.user.name|string == 'None' and report.user.phone|length == 0 and report.user.email | string == 'None' and report.user.client_mac|string != 'None') and report.user.client_mac | length > 0%}
+                                                    <div class="name">
+                                                        {{ report.user.client_mac[0] if report.user.client_mac[0] |string != 'None' else ''}}
+                                                    </div>
+                                                {% endif %}
+                                                <div class="contact">
+                                                    {% if report.user.name and report.user.name|string != 'None' and report.user.name|length != 0 %}
+                                                        {{ report.user.name }}
+                                                    {% else %}{% endif %}
+                                                </div>
+                          {% endif %}
+                                            </td>
+                         <td class="orders-date">
+                                                {% if report.old_reward|get_old_reward and report.old_reward.is_reward|string != 'False' %}
+                                               {{ report.old_reward|get_old_reward }}
+                                                    <span class="avatar avatar-lg avatar-4by3">
+                                                        <img src="{% if report.old_reward|get_old_reward_img|length == 12 %}//files.nextify.vn/{{ report.old_reward|get_old_reward_img }} {% else %}//files.nextify.vn/{{ report.old_reward|get_old_reward_img }}{% endif %}
+                                                        " class="avatar-img rounded" />
+
+                                                    </span>
+
+                                                {% else %}
+                                                    <span style="font-size: small;" class="badge badge-soft-danger ml-auto"> {{ gettext("Khong_trung_thuong") }}</span>
+                                                {% endif %}
+                                            </td>
+                             <td class="orders-status">
+                                                {{ report.shop_id|shop_name }}
+                                            </td>
+
+
+                         <td class="orders-total">
+                                                {{ report.spin_log|get_human_time }}
+                                            </td>
+                        </tr>
+                      {% endfor %}
+
+                      </tbody>
+                    </table>
+                  </div>
+
+            </div>
+            <div class="card-footer">
+                <ul class="pagination mb-0 u-justify-center">
+                    {% if pagination %}
+                    {{ pagination.links }}
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

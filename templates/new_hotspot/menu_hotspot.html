@@ -1,0 +1,262 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <link rel="stylesheet" href="/static/nextify/css/bs-pagination.min.css">
+    <link rel="stylesheet" href="/static/css/sort_camp.css">
+    <style>
+
+        .loader1 {
+            border: 6px solid #f3f3f3;
+            border-radius: 60%;
+            border-top: 6px solid orange;
+            width: 50px;
+            height: 50px;
+            -webkit-animation: spin 1s linear infinite;
+            animation: spin 0.7s linear infinite;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            display: inline-block;
+            /* position: fixed; */
+        }
+
+    </style>
+    <div class="container-fluid">
+        <div class="header">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            {{ gettext('WifisettingLocationText') }}
+                        </h6>
+                        <!-- Title -->
+                        <h1 class="header-title">
+                            {{ gettext("Cau_hinh_trang_chao") }}
+                        </h1>
+                    </div>
+                    <div class="col-auto">
+                        {% if merchant._id|get_dealer_id == "5e08b40054ccdaca2d24ca86" %}
+                            <!---MOBIO -->
+                            <a href="#new_location" class="btn btn-flat d-block d-md-inline-block" data-toggle="modal">
+                                <i class="fa fa-location-arrow"></i>{{ gettext("Them_dia_diem") }}
+                            </a>
+                        {% endif %}
+                        {% if 'wifi' in request.path %}
+                        <a href="/hotspot" class="btn btn-flat d-block d-md-inline-block">
+                            <i class="fe fe-align-justify u-mr-xsmall"></i>New Version
+                        </a>
+                            <a href="/wifi_profiles" class="btn btn-flat d-block d-md-inline-block">
+                                <i class="fa fa-id-badge u-mr-xsmall"></i>Profiles
+                            </a>
+                            <a href="/devices_shop" class="btn btn-flat d-block d-md-inline-block">
+                                <i class="fa fa-box u-mr-xsmall"></i>{{ gettext('WifisettingDeviceText') }}
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" style="width: 100%" id="select_shop">
+                            {% for shop_mer in shop_in_mer %}
+                                <option value="{{ shop_mer._id }}"
+                                        {% if shop_id_select == shop_mer._id %}selected{% endif %}>{{ shop_mer.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div> <!-- / .row -->
+            </div>
+        </div>
+        <div class="modal fade fixed-right" id="new_location" tabindex="-1" role="dialog" aria-labelledby="new_image"
+             data-backdrop="static" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-vertical" role="document">
+                <div class="modal-content">
+                    <div class="modal-body" data-toggle="lists" data-lists-values="[&quot;name&quot;]">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <!-- Title -->
+                                    <h4 class="card-header-title" id="exampleModalCenterTitle">
+                                        {{ gettext("Them_dia_diem") }}
+                                    </h4>
+                                </div>
+                                <div class="col-auto">
+                                    <!-- Close -->
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                            </div> <!-- / .row -->
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" enctype="multipart/form-data" action="/create_locations"
+                                  id="create_locations_form">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"/>
+                                <input type="hidden" value="{{ merchant._id }}" name="merchant_id"/>
+                                {% for err in error %}
+                                    <div class="alert alert-danger">* {{ err }}</div>
+                                {% endfor %}
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="name">{{ gettext("Ten_dia_diem:") }} <font color="red">*</font></label>
+                                    <input type="text" maxlength="50" class="c-input" id="name" name="name"/>
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="name">{{ gettext("Dia_chi:") }} <font color="red">*</font></label>
+                                    <input type="text" maxlength="50" class="c-input" id="address" name="address"/>
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="logo">{{ gettext("Logo:") }} <font color="red">*</font></label>
+                                    <input type="file" class="c-input" id="logo" name="logo">
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="background">{{ gettext("Hinh_nen:") }} <font color="red">*</font></label>
+                                    <input type="file" class="c-input" id="background" name="background">
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="facebook-page">Link Facebook Page:</label>
+                                    <input type="text" class="c-input" id="facebook-page" name="facebook_page"
+                                           placeholder="//www.facebook.com/nextify/">
+                                </div>
+                                <button id="new_location_submit" type="submit" class="c-btn c-btn--info u-float-right">
+                                    {{ gettext("Luu_thong_tin") }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+        
+        <div id="campaigns">
+        </div>
+    </div>
+
+
+    {% if shop_id_select %}
+        <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+        <input type="hidden" value="{{ package_merchant }}" name="package_merchant"/>
+    {% endif %}
+{% endblock %}
+{% block js %}
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            // $('#select_shop').select2();
+            var shop_id_select = $('#select_shop').val();
+
+            if ($('#shop_id_select').length > 0) {
+                shop_id_select = $('#shop_id_select').val();
+                $('select_shop').val(shop_id_select).change();
+            }
+            $.ajax({
+                type: 'GET',
+                url: '/hotspot_campaign_shop',
+                data: {
+                    'shop_id_select': shop_id_select
+                },
+                success: function (response) {
+                    if (typeof response == 'string') {
+                        $('#campaigns').empty();
+                        $.ajax({
+                            type: 'GET',
+                            url: '/hotspot_campaign_shop',
+                            data: {
+                                'shop_id_select': shop_id_select
+                            },
+                            success: function (response1) {
+                                var cards = response1.cards;
+                                $('#campaigns').append(response1.data);
+                            },
+                            timeout: 1000
+                        })
+                    } else {
+                        $('#campaigns').empty();
+                        var cards = response.cards;
+                        $('#campaigns').append(response.data);
+                    }
+                }
+            });
+
+            $('#select_shop').on('change', function (e) {
+                var shop_id = $(this).val();
+                $.ajax({
+                    type: 'GET',
+                    url: '/wifi',
+                    data: {
+                        'shop_id_select': shop_id,
+                        'priority': 1
+                    },
+                    success: function (response) {
+                        $('#campaign_sort_priority').empty();
+                        $('#campaign_sort_priority').append(response);
+                    }
+                });
+                $.ajax({
+                    type: 'GET',
+                    url: '/hotspot_campaign_shop',
+                    data: {
+                        'shop_id_select': shop_id
+                    },
+                    success: function (response) {
+                        if (typeof response == 'string') {
+                            $('#campaigns').empty();
+
+                            $.ajax({
+                                type: 'GET',
+                                url: '/hotspot_campaign_shop',
+                                data: {
+                                    'shop_id_select': shop_id
+                                },
+                                success: function (response1) {
+                                    var cards = response1.cards;
+                                    $('#campaigns').append(response1.data);
+                                },
+                                timeout: 1000
+                            });
+                        } else {
+                            $('#campaigns').empty();
+                            var cards = response.cards;
+                            $('#campaigns').append(response.data);
+                        }
+                    }
+                });
+            });
+       
+
+            
+
+        });
+
+        // Campaign Priority
+        $('.saved_priority').click(function(){
+            data = [];
+            $("li.sortable-item").each(function(index){
+                data.push($(this).find('input.campaign_id').val());
+            });
+            $.ajax({
+                type: 'post',
+                url: '/update_priority',
+                data:{
+                    'camp_id': JSON.stringify(data)
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success == 1){
+                        swal({
+                            title: '{{ gettext("Thanh_cong!") }}',
+                            text: " ",
+                            type: "success"
+                        });
+                        location.reload();
+                    }
+                }
+            });
+
+        });
+    </script>
+    <script src="/static/nextify/js/jquery-ui.min.js"></script>
+    <script>
+        $(function  () {
+            $("#sortable").sortable();
+        });
+    </script>
+{% endblock %}

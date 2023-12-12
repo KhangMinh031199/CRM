@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+     {% if 'viettel.vn' in request.url %}
+        <title>Viettel | vmarketing</title>
+        {% include 'portal_v2/viettel_meta_tags.html' %}
+    {% elif 'crmx' in request.url %}
+        <title>CRMX | Better eXperience fo Wi-Fi</title>
+        {% include 'portal_v2/crmx_meta_tags.html' %}
+    {% else %}
+        <title>Nextify | The Next Generation of Loyalty</title>
+        {% include 'portal_v2/nextify_meta_tags.html' %}
+    {% endif %}
+        <link rel="stylesheet" type="text/css" href="/static/portal_v2/default/css/bootstrap.min.css">
+    <style>
+       * {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+*:focus {
+  outline: none !important;
+}
+
+body,
+html {
+  height: 100%;
+}
+/* poppins-300 - latin */
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 300;
+  src: url("../fonts/poppins/poppins-v5-latin-300.eot");
+  /* IE9 Compat Modes */
+  src: local("Poppins Light"), local("Poppins-Light"), url("../fonts/poppins/poppins-v5-latin-300.eot?#iefix") format("embedded-opentype"), url("../fonts/poppins/poppins-v5-latin-300.woff2") format("woff2"), url("../fonts/poppins/poppins-v5-latin-300.woff") format("woff"), url("../fonts/poppins/poppins-v5-latin-300.ttf") format("truetype"), url("../fonts/poppins/poppins-v5-latin-300.svg#Poppins") format("svg");
+  /* Legacy iOS */ }
+/* poppins-300italic - latin */
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 300;
+  src: url("../fonts/poppins/poppins-v5-latin-300italic.eot");
+  /* IE9 Compat Modes */
+  src: local("Poppins Light Italic"), local("Poppins-LightItalic"), url("../fonts/poppins/poppins-v5-latin-300italic.eot?#iefix") format("embedded-opentype"), url("../fonts/poppins/poppins-v5-latin-300italic.woff2") format("woff2"), url("../fonts/poppins/poppins-v5-latin-300italic.woff") format("woff"), url("../fonts/poppins/poppins-v5-latin-300italic.ttf") format("truetype"), url("../fonts/poppins/poppins-v5-latin-300italic.svg#Poppins") format("svg");
+  /* Legacy iOS */ }
+/* poppins-regular - latin */
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/poppins/poppins-v5-latin-regular.eot");
+  /* IE9 Compat Modes */
+  src: local("Poppins Regular"), local("Poppins-Regular"), url("../fonts/poppins/poppins-v5-latin-regular.eot?#iefix") format("embedded-opentype"), url("../fonts/poppins/poppins-v5-latin-regular.woff2") format("woff2"), url("../fonts/poppins/poppins-v5-latin-regular.woff") format("woff"), url("../fonts/poppins/poppins-v5-latin-regular.ttf") format("truetype"), url("../fonts/poppins/poppins-v5-latin-regular.svg#Poppins") format("svg");
+  /* Legacy iOS */ }
+/* poppins-italic - latin */
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 400;
+  src: url("../fonts/poppins/poppins-v5-latin-italic.eot");
+  /* IE9 Compat Modes */
+  src: local("Poppins Italic"), local("Poppins-Italic"), url("../fonts/poppins/poppins-v5-latin-italic.eot?#iefix") format("embedded-opentype"), url("../fonts/poppins/poppins-v5-latin-italic.woff2") format("woff2"), url("../fonts/poppins/poppins-v5-latin-italic.woff") format("woff"), url("../fonts/poppins/poppins-v5-latin-italic.ttf") format("truetype"), url("../fonts/poppins/poppins-v5-latin-italic.svg#Poppins") format("svg");
+  /* Legacy iOS */ }
+/* poppins-500 - latin */
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  src: url("../fonts/poppins/poppins-v5-latin-500.eot");
+  /* IE9 Compat Modes */
+  src: local("Poppins Medium"), local("Poppins-Medium"), url("../fonts/poppins/poppins-v5-latin-500.eot?#iefix") format("embedded-opentype"), url("../fonts/poppins/poppins-v5-latin-500.woff2") format("woff2"), url("../fonts/poppins/poppins-v5-latin-500.woff") format("woff"), url("../fonts/poppins/poppins-v5-latin-500.ttf") format("truetype"), url("../fonts/poppins/poppins-v5-latin-500.svg#Poppins") format("svg");
+  /* Legacy iOS */ }
+/* poppins-500italic - latin */
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 500;
+  src: url("../fonts/poppins/poppins-v5-latin-500italic.eot");
+  /* IE9 Compat Modes */
+  src: local("Poppins Medium Italic"), local("Poppins-MediumItalic"), url("../fonts/poppins/poppins-v5-latin-500italic.eot?#iefix") format("embedded-opentype"), url("../fonts/poppins/poppins-v5-latin-500italic.woff2") format("woff2"), url("../fonts/poppins/poppins-v5-latin-500italic.woff") format("woff"), url("../fonts/poppins/poppins-v5-latin-500italic.ttf") format("truetype"), url("../fonts/poppins/poppins-v5-latin-500italic.svg#Poppins") format("svg");
+  /* Legacy iOS */ }
+/* poppins-600 - latin */
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  src: url("../fonts/poppins/poppins-v5-latin-600.eot");
+  /* IE9 Compat Modes */
+  src: local("Poppins SemiBold"), local("Poppins-SemiBold"), url("../fonts/poppins/poppins-v5-latin-600.eot?#iefix") format("embedded-opentype"), url("../fonts/poppins/poppins-v5-latin-600.woff2") format("woff2"), url("../fonts/poppins/poppins-v5-latin-600.woff") format("woff"), url("../fonts/poppins/poppins-v5-latin-600.ttf") format("truetype"), url("../fonts/poppins/poppins-v5-latin-600.svg#Poppins") format("svg");
+  /* Legacy iOS */ }
+/* poppins-700 - latin */
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  src: url("../fonts/poppins/poppins-v5-latin-700.eot");
+  /* IE9 Compat Modes */
+  src: local("Poppins Bold"), local("Poppins-Bold"), url("../fonts/poppins/poppins-v5-latin-700.eot?#iefix") format("embedded-opentype"), url("../fonts/poppins/poppins-v5-latin-700.woff2") format("woff2"), url("../fonts/poppins/poppins-v5-latin-700.woff") format("woff"), url("../fonts/poppins/poppins-v5-latin-700.ttf") format("truetype"), url("../fonts/poppins/poppins-v5-latin-700.svg#Poppins") format("svg");
+  /* Legacy iOS */ }
+/* poppins-700italic - latin */
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 700;
+  src: url("../fonts/poppins/poppins-v5-latin-700italic.eot");
+  /* IE9 Compat Modes */
+  src: local("Poppins Bold Italic"), local("Poppins-BoldItalic"), url("../fonts/poppins/poppins-v5-latin-700italic.eot?#iefix") format("embedded-opentype"), url("../fonts/poppins/poppins-v5-latin-700italic.woff2") format("woff2"), url("../fonts/poppins/poppins-v5-latin-700italic.woff") format("woff"), url("../fonts/poppins/poppins-v5-latin-700italic.ttf") format("truetype"), url("../fonts/poppins/poppins-v5-latin-700italic.svg#Poppins") format("svg");
+  /* Legacy iOS */ }
+/* poppins-800 - latin */
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 800;
+  src: url("../fonts/poppins/poppins-v5-latin-800.eot");
+  /* IE9 Compat Modes */
+  src: local("Poppins ExtraBold"), local("Poppins-ExtraBold"), url("../fonts/poppins/poppins-v5-latin-800.eot?#iefix") format("embedded-opentype"), url("../fonts/poppins/poppins-v5-latin-800.woff2") format("woff2"), url("../fonts/poppins/poppins-v5-latin-800.woff") format("woff"), url("../fonts/poppins/poppins-v5-latin-800.ttf") format("truetype"), url("../fonts/poppins/poppins-v5-latin-800.svg#Poppins") format("svg");
+  /* Legacy iOS */ }
+/* poppins-800italic - latin */
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 800;
+  src: url("../fonts/poppins/poppins-v5-latin-800italic.eot");
+  /* IE9 Compat Modes */
+  src: local("Poppins ExtraBold Italic"), local("Poppins-ExtraBoldItalic"), url("../fonts/poppins/poppins-v5-latin-800italic.eot?#iefix") format("embedded-opentype"), url("../fonts/poppins/poppins-v5-latin-800italic.woff2") format("woff2"), url("../fonts/poppins/poppins-v5-latin-800italic.woff") format("woff"), url("../fonts/poppins/poppins-v5-latin-800italic.ttf") format("truetype"), url("../fonts/poppins/poppins-v5-latin-800italic.svg#Poppins") format("svg");
+  /* Legacy iOS */ }
+/* poppins-900 - latin */
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 900;
+  src: url("../fonts/poppins/poppins-v5-latin-900.eot");
+  /* IE9 Compat Modes */
+  src: local("Poppins Black"), local("Poppins-Black"), url("../fonts/poppins/poppins-v5-latin-900.eot?#iefix") format("embedded-opentype"), url("../fonts/poppins/poppins-v5-latin-900.woff2") format("woff2"), url("../fonts/poppins/poppins-v5-latin-900.woff") format("woff"), url("../fonts/poppins/poppins-v5-latin-900.ttf") format("truetype"), url("../fonts/poppins/poppins-v5-latin-900.svg#Poppins") format("svg");
+  /* Legacy iOS */ }
+body {
+  background: white;
+  margin: 0;
+  font-family: "Poppins", "Source Sans Pro", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+  color: #32325d;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  background: white;
+  height: 100%;
+}
+main aside {
+  position: relative;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  height: calc(100% / 3);
+  padding: 12px;
+  background: #f57a33 no-repeat center center/cover;
+}
+main aside div:empty {
+  opacity: 0.5;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #f57a33 url("//files.nextify.vn/{{ shop.background }}") no-repeat center center/cover;
+}
+main aside svg {
+  position: relative;
+  margin-top: -24px;
+  width: 150px;
+  height: 150px;
+}
+main aside div:not(:empty) {
+  position: relative;
+  width: 100%;
+  margin-top: -24px;
+}
+main aside p {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  color: white;
+  font-size: 18px;
+  line-height: 1.2;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(133, 117, 103, 0.5);
+}
+main aside p strong {
+  font-weight: 700;
+}
+main aside p:nth-child(2) {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+main aside p.active {
+  visibility: visible;
+  opacity: 1;
+  -webkit-transform: none;
+          transform: none;
+}
+main aside p:not(.active) {
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transform: translateY(100px);
+          transform: translateY(100px);
+}
+main section {
+  position: relative;
+  height: calc(100% / 3 * 2);
+}
+main section h1 {
+  justify-content: center;
+  padding: 12px;
+  color: #f57a33;
+  font-size: 18px;
+  line-height: 1;
+  text-align: center;
+  text-transform: lowercase;
+}
+main section h1 a {
+  display: block;
+  margin: 0 6px;
+  cursor: pointer;
+  -webkit-transform: none;
+          transform: none;
+}
+main section h1 a:hover, main section h1 a:focus {
+  color: #976a36;
+}
+main section h1 a:active {
+  color: #32325d;
+}
+main section h1 a.active {
+  font-weight: 500;
+}
+main section h1 a:not(.active) {
+  font-weight: 300;
+}
+main section form {
+  display: flex;
+  flex-flow: row wrap;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 40px);
+}
+main section form > div,
+main section form > ul {
+  width: 100%;
+  padding: 6px;
+}
+main section form fieldset {
+  padding: 6px;
+    border: 0px
+}
+main section form fieldset div {
+  display: block;
+  border-radius: 2px;
+  overflow: hidden;
+}
+main section form fieldset div label {
+  display: block;
+  margin: 0;
+  padding: 6px 9px;
+  background: #f57a33;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 25px;
+}
+main section form fieldset div input, select {
+  display: block;
+  background: white;
+  border: 1px solid #f57a33;
+  border-radius: 0 2px 2px 0;
+  box-shadow: none;
+  margin: 0;
+  padding: 10px 10px;
+  width: 100%;
+  color: #32325d;
+  font-family: "Poppins", "Source Sans Pro", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+}
+main section form fieldset div input::-webkit-input-placeholder {
+  color: rgba(133, 117, 103, 0.4);
+}
+main section form fieldset div input:-ms-input-placeholder {
+  color: rgba(133, 117, 103, 0.4);
+}
+main section form fieldset div input::-ms-input-placeholder {
+  color: rgba(133, 117, 103, 0.4);
+}
+main section form fieldset div input::placeholder {
+  color: rgba(133, 117, 103, 0.4);
+}
+main section form fieldset div input:focus {
+  background: rgba(233, 226, 213, 0.5);
+}
+main section form fieldset div input:focus::-webkit-input-placeholder {
+  color: rgba(133, 117, 103, 0.6);
+}
+main section form fieldset div input:focus:-ms-input-placeholder {
+  color: rgba(133, 117, 103, 0.6);
+}
+main section form fieldset div input:focus::-ms-input-placeholder {
+  color: rgba(133, 117, 103, 0.6);
+}
+main section form fieldset div input:focus::placeholder {
+  color: rgba(133, 117, 103, 0.6);
+}
+main section form li {
+  padding: 6px;
+}
+main section form li button {
+  display: block;
+  margin: 0 auto;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  font-family: "Poppins", "Source Sans Pro", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+  border: 0;
+  border-radius: 100px;
+  color: white;
+  font-size: 16px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+main section form li button.fb {
+  background: #3b5998;
+}
+main section form li button.fb:hover, main section form li button.fb:focus {
+  background: #5f7ec1;
+}
+main section form li button.fb:active {
+  background: #263961;
+}
+main section form li button.tw {
+  background: #00aced;
+}
+main section form li button.tw:hover, main section form li button.tw:focus {
+  background: #3bc9ff;
+}
+main section form li button.tw:active {
+  background: #0074a1;
+}
+main section form input[type="submit"] {
+  display: block;
+  align-self: flex-end;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  font-family: "Poppins", "Source Sans Pro", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+  font-size: 24px;
+  line-height: 2;
+  background: #f57a33;
+  color: white;
+  cursor: pointer;
+}
+main section form input[type="submit"]:hover, main section form input[type="submit"]:focus {
+  background: #976a36;
+}
+main section form input[type="submit"]:active {
+  background: #32325d;
+}
+main section form.active {
+  opacity: 1;
+  z-index: 1;
+}
+main section form.active fieldset,
+main section form.active li,
+main section form.active input[type="submit"] {
+  -webkit-transform: translateY(0px);
+          transform: translateY(0px);
+  opacity: 1;
+}
+main section form:not(.active) {
+  opacity: 0;
+  z-index: 0;
+}
+main section form:not(.active) fieldset,
+main section form:not(.active) li,
+main section form:not(.active) input[type="submit"] {
+  -webkit-transform: translateY(100px);
+          transform: translateY(100px);
+  opacity: 0;
+}
+
+main.pre-enter aside {
+  -webkit-transform-origin: center top;
+          transform-origin: center top;
+  -webkit-transform: scaleY(0);
+          transform: scaleY(0);
+  visibility: hidden;
+}
+main.pre-enter aside svg {
+  -webkit-transform-origin: center center;
+          transform-origin: center center;
+  -webkit-transform: scale(0) rotate(90deg);
+          transform: scale(0) rotate(90deg);
+  visibility: hidden;
+}
+main.pre-enter aside p.active {
+  opacity: 0;
+  -webkit-transform: translateY(100px);
+          transform: translateY(100px);
+  visibility: hidden;
+}
+main.pre-enter section h1 a {
+  visibility: hidden;
+  opacity: 0;
+}
+main.pre-enter section h1 a:first-child {
+  -webkit-transform-origin: right center;
+          transform-origin: right center;
+  -webkit-transform: translateX(200px) scaleX(0);
+          transform: translateX(200px) scaleX(0);
+}
+main.pre-enter section h1 a:last-child {
+  -webkit-transform-origin: left center;
+          transform-origin: left center;
+  -webkit-transform: translateX(-200px) scaleX(0);
+          transform: translateX(-200px) scaleX(0);
+}
+main.pre-enter section form fieldset,
+main.pre-enter section form li {
+  opacity: 0;
+  -webkit-transform: translateY(100px);
+          transform: translateY(100px);
+  visibility: hidden;
+}
+main.pre-enter section form input[type="submit"] {
+  -webkit-transform-origin: center bottom;
+          transform-origin: center bottom;
+  -webkit-transform: scaleY(0);
+          transform: scaleY(0);
+  color: #f57a33;
+  visibility: hidden;
+}
+main.on-enter aside {
+  -webkit-animation: scaleYIn 1000ms linear forwards;
+          animation: scaleYIn 1000ms linear forwards;
+  visibility: visible;
+}
+main.on-enter aside svg {
+  -webkit-animation: bounceIn-rotate 1000ms linear forwards 250ms;
+          animation: bounceIn-rotate 1000ms linear forwards 250ms;
+  visibility: visible;
+}
+main.on-enter aside p.active {
+  -webkit-animation: slideInUp-fadeIn 1000ms linear forwards 500ms;
+          animation: slideInUp-fadeIn 1000ms linear forwards 500ms;
+  visibility: visible;
+}
+main.on-enter section h1 a {
+  visibility: visible;
+}
+main.on-enter section h1 a:first-child {
+  -webkit-animation: scaleX-slideInRight 1000ms linear forwards 750ms;
+          animation: scaleX-slideInRight 1000ms linear forwards 750ms;
+}
+main.on-enter section h1 a:last-child {
+  -webkit-animation: scaleX-slideInLeft 1000ms linear forwards 750ms;
+          animation: scaleX-slideInLeft 1000ms linear forwards 750ms;
+}
+main.on-enter section form fieldset,
+main.on-enter section form li {
+  -webkit-animation: slideInUp-fadeIn 1000ms linear forwards;
+          animation: slideInUp-fadeIn 1000ms linear forwards;
+  visibility: visible;
+}
+main.on-enter section form fieldset:nth-child(1) {
+  -webkit-animation-delay: 1250ms;
+          animation-delay: 1250ms;
+}
+main.on-enter section form fieldset:nth-child(2) {
+  -webkit-animation-delay: 1350ms;
+          animation-delay: 1350ms;
+}
+main.on-enter section form fieldset:nth-child(3) {
+  -webkit-animation-delay: 1450ms;
+          animation-delay: 1450ms;
+}
+main.on-enter section form li:nth-child(1) {
+  -webkit-animation-delay: 1550ms;
+          animation-delay: 1550ms;
+}
+main.on-enter section form li:nth-child(2) {
+  -webkit-animation-delay: 1650ms;
+          animation-delay: 1650ms;
+}
+main.on-enter section form input[type="submit"] {
+  -webkit-animation: scaleYIn 1000ms linear forwards 1750ms, lemon-white 250ms linear forwards 2150ms;
+          animation: scaleYIn 1000ms linear forwards 1750ms, lemon-white 250ms linear forwards 2150ms;
+  visibility: visible;
+}
+
+
+.login100-form-btn {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  width: 100%;
+  height: 50px;
+  border-radius: 10px;
+  background: #6675df;
+  font-size: 12px;
+  color: #fff;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  -webkit-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  transition: all 0.4s;
+     border: 0;
+ background: none;
+ box-shadow: none;
+ border-radius: 0px;
+}
+
+.login100-form-btn:hover {
+  background: #333333;
+}
+
+
+
+@media only screen and (min-width: 624px) {
+  body {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    background: #52504e;
+  }
+
+  main {
+    display: flex;
+    border-radius: 2px;
+    overflow: hidden;
+    height: 100%;
+    max-height: 500px;
+    box-shadow: 0 0 10px rgba(56, 54, 53, 0.5);
+  }
+  main aside,
+  main section {
+    height: 100%;
+    width: 400px;
+  }
+  main.pre-enter {
+    opacity: 0;
+    visibility: hidden;
+  }
+  main.pre-enter aside {
+    -webkit-transform: none;
+            transform: none;
+  }
+  main.on-enter {
+    -webkit-animation: slideDown-fadeIn 1000ms linear forwards;
+            animation: slideDown-fadeIn 1000ms linear forwards;
+    visibility: visible;
+  }
+  main.on-enter aside {
+    -webkit-animation: none;
+            animation: none;
+  }
+}
+@-webkit-keyframes lemon-white {
+  0% {
+    color: #f57a33;
+  }
+  100% {
+    color: white;
+  }
+}
+@keyframes lemon-white {
+  0% {
+    color: #f57a33;
+  }
+  100% {
+    color: white;
+  }
+}
+/* https://goo.gl/U6p2Ra */
+@-webkit-keyframes slideDown-fadeIn {
+  0% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -400, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -400, 0, 1);
+    opacity: 0;
+  }
+  4% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -227.213, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -227.213, 0, 1);
+  }
+  7.91% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -44.516, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -44.516, 0, 1);
+  }
+  11.91% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 75.765, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 75.765, 0, 1);
+  }
+  15.82% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 110.328, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 110.328, 0, 1);
+    opacity: 1;
+  }
+  20.42% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 78.474, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 78.474, 0, 1);
+  }
+  24.92% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 23.745, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 23.745, 0, 1);
+  }
+  29.53% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -16.119, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -16.119, 0, 1);
+  }
+  34.03% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -27.704, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -27.704, 0, 1);
+  }
+  43.14% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -5.859, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -5.859, 0, 1);
+  }
+  52.15% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 6.958, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 6.958, 0, 1);
+  }
+  70.37% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -1.747, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -1.747, 0, 1);
+  }
+  88.59% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0.439, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0.439, 0, 1);
+  }
+  100% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    opacity: 1;
+  }
+}
+@keyframes slideDown-fadeIn {
+  0% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -400, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -400, 0, 1);
+    opacity: 0;
+  }
+  4% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -227.213, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -227.213, 0, 1);
+  }
+  7.91% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -44.516, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -44.516, 0, 1);
+  }
+  11.91% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 75.765, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 75.765, 0, 1);
+  }
+  15.82% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 110.328, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 110.328, 0, 1);
+    opacity: 1;
+  }
+  20.42% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 78.474, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 78.474, 0, 1);
+  }
+  24.92% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 23.745, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 23.745, 0, 1);
+  }
+  29.53% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -16.119, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -16.119, 0, 1);
+  }
+  34.03% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -27.704, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -27.704, 0, 1);
+  }
+  43.14% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -5.859, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -5.859, 0, 1);
+  }
+  52.15% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 6.958, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 6.958, 0, 1);
+  }
+  70.37% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -1.747, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -1.747, 0, 1);
+  }
+  88.59% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0.439, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0.439, 0, 1);
+  }
+  100% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    opacity: 1;
+  }
+}
+/* https://goo.gl/gsBg5l */
+@-webkit-keyframes scaleYIn {
+  0% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  4% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 0.432, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 0.432, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  7.91% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 0.889, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 0.889, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  11.91% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1.189, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1.189, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  15.82% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1.276, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1.276, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  20.42% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1.196, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1.196, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  24.92% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1.059, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1.059, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  29.53% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 0.96, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 0.96, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  34.03% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 0.931, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 0.931, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  43.14% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 0.985, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 0.985, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  52.15% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1.017, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1.017, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  70.37% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 0.996, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 0.996, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  88.59% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1.001, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1.001, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  100% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+}
+@keyframes scaleYIn {
+  0% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  4% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 0.432, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 0.432, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  7.91% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 0.889, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 0.889, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  11.91% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1.189, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1.189, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  15.82% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1.276, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1.276, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  20.42% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1.196, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1.196, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  24.92% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1.059, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1.059, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  29.53% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 0.96, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 0.96, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  34.03% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 0.931, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 0.931, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  43.14% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 0.985, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 0.985, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  52.15% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1.017, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1.017, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  70.37% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 0.996, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 0.996, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  88.59% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1.001, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1.001, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  100% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+}
+/* https://goo.gl/XC1o6q */
+@-webkit-keyframes scaleX-slideInLeft {
+  0% {
+    -webkit-transform: matrix3d(0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    opacity: 0;
+  }
+  5.71% {
+    -webkit-transform: matrix3d(0.354, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -44.297, 0, 0, 1);
+            transform: matrix3d(0.354, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -44.297, 0, 0, 1);
+  }
+  6.31% {
+    -webkit-transform: matrix3d(0.384, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -45.449, 0, 0, 1);
+            transform: matrix3d(0.384, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -45.449, 0, 0, 1);
+  }
+  11.31% {
+    -webkit-transform: matrix3d(0.583, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -42.536, 0, 0, 1);
+            transform: matrix3d(0.583, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -42.536, 0, 0, 1);
+  }
+  12.51% {
+    -webkit-transform: matrix3d(0.621, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -39.889, 0, 0, 1);
+            transform: matrix3d(0.621, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -39.889, 0, 0, 1);
+  }
+  17.02% {
+    -webkit-transform: matrix3d(0.735, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -28.059, 0, 0, 1);
+            transform: matrix3d(0.735, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -28.059, 0, 0, 1);
+  }
+  18.82% {
+    -webkit-transform: matrix3d(0.771, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -23.316, 0, 0, 1);
+            transform: matrix3d(0.771, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -23.316, 0, 0, 1);
+  }
+  22.62% {
+    -webkit-transform: matrix3d(0.832, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -14.419, 0, 0, 1);
+            transform: matrix3d(0.832, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -14.419, 0, 0, 1);
+  }
+  25.03% {
+    -webkit-transform: matrix3d(0.862, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -9.822, 0, 0, 1);
+            transform: matrix3d(0.862, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -9.822, 0, 0, 1);
+  }
+  28.33% {
+    -webkit-transform: matrix3d(0.895, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -4.859, 0, 0, 1);
+            transform: matrix3d(0.895, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -4.859, 0, 0, 1);
+  }
+  33.93% {
+    -webkit-transform: matrix3d(0.935, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.401, 0, 0, 1);
+            transform: matrix3d(0.935, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.401, 0, 0, 1);
+    opacity: 1;
+  }
+  37.54% {
+    -webkit-transform: matrix3d(0.952, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2.162, 0, 0, 1);
+            transform: matrix3d(0.952, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2.162, 0, 0, 1);
+  }
+  45.15% {
+    -webkit-transform: matrix3d(0.975, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 3.335, 0, 0, 1);
+            transform: matrix3d(0.975, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 3.335, 0, 0, 1);
+  }
+  50.05% {
+    -webkit-transform: matrix3d(0.984, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 3.109, 0, 0, 1);
+            transform: matrix3d(0.984, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 3.109, 0, 0, 1);
+  }
+  72.57% {
+    -webkit-transform: matrix3d(0.998, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.773, 0, 0, 1);
+            transform: matrix3d(0.998, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.773, 0, 0, 1);
+  }
+  75.08% {
+    -webkit-transform: matrix3d(0.999, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.613, 0, 0, 1);
+            transform: matrix3d(0.999, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.613, 0, 0, 1);
+  }
+  100% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    opacity: 1;
+  }
+}
+@keyframes scaleX-slideInLeft {
+  0% {
+    -webkit-transform: matrix3d(0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    opacity: 0;
+  }
+  5.71% {
+    -webkit-transform: matrix3d(0.354, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -44.297, 0, 0, 1);
+            transform: matrix3d(0.354, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -44.297, 0, 0, 1);
+  }
+  6.31% {
+    -webkit-transform: matrix3d(0.384, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -45.449, 0, 0, 1);
+            transform: matrix3d(0.384, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -45.449, 0, 0, 1);
+  }
+  11.31% {
+    -webkit-transform: matrix3d(0.583, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -42.536, 0, 0, 1);
+            transform: matrix3d(0.583, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -42.536, 0, 0, 1);
+  }
+  12.51% {
+    -webkit-transform: matrix3d(0.621, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -39.889, 0, 0, 1);
+            transform: matrix3d(0.621, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -39.889, 0, 0, 1);
+  }
+  17.02% {
+    -webkit-transform: matrix3d(0.735, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -28.059, 0, 0, 1);
+            transform: matrix3d(0.735, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -28.059, 0, 0, 1);
+  }
+  18.82% {
+    -webkit-transform: matrix3d(0.771, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -23.316, 0, 0, 1);
+            transform: matrix3d(0.771, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -23.316, 0, 0, 1);
+  }
+  22.62% {
+    -webkit-transform: matrix3d(0.832, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -14.419, 0, 0, 1);
+            transform: matrix3d(0.832, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -14.419, 0, 0, 1);
+  }
+  25.03% {
+    -webkit-transform: matrix3d(0.862, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -9.822, 0, 0, 1);
+            transform: matrix3d(0.862, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -9.822, 0, 0, 1);
+  }
+  28.33% {
+    -webkit-transform: matrix3d(0.895, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -4.859, 0, 0, 1);
+            transform: matrix3d(0.895, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -4.859, 0, 0, 1);
+  }
+  33.93% {
+    -webkit-transform: matrix3d(0.935, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.401, 0, 0, 1);
+            transform: matrix3d(0.935, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.401, 0, 0, 1);
+    opacity: 1;
+  }
+  37.54% {
+    -webkit-transform: matrix3d(0.952, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2.162, 0, 0, 1);
+            transform: matrix3d(0.952, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2.162, 0, 0, 1);
+  }
+  45.15% {
+    -webkit-transform: matrix3d(0.975, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 3.335, 0, 0, 1);
+            transform: matrix3d(0.975, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 3.335, 0, 0, 1);
+  }
+  50.05% {
+    -webkit-transform: matrix3d(0.984, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 3.109, 0, 0, 1);
+            transform: matrix3d(0.984, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 3.109, 0, 0, 1);
+  }
+  72.57% {
+    -webkit-transform: matrix3d(0.998, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.773, 0, 0, 1);
+            transform: matrix3d(0.998, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.773, 0, 0, 1);
+  }
+  75.08% {
+    -webkit-transform: matrix3d(0.999, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.613, 0, 0, 1);
+            transform: matrix3d(0.999, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.613, 0, 0, 1);
+  }
+  100% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    opacity: 1;
+  }
+}
+/* https://goo.gl/4dYUn6 */
+@-webkit-keyframes scaleX-slideInRight {
+  0% {
+    -webkit-transform: matrix3d(0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    opacity: 0;
+  }
+  5.71% {
+    -webkit-transform: matrix3d(0.354, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 44.297, 0, 0, 1);
+            transform: matrix3d(0.354, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 44.297, 0, 0, 1);
+  }
+  6.31% {
+    -webkit-transform: matrix3d(0.384, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 45.449, 0, 0, 1);
+            transform: matrix3d(0.384, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 45.449, 0, 0, 1);
+  }
+  11.31% {
+    -webkit-transform: matrix3d(0.583, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 42.536, 0, 0, 1);
+            transform: matrix3d(0.583, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 42.536, 0, 0, 1);
+  }
+  12.51% {
+    -webkit-transform: matrix3d(0.621, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 39.889, 0, 0, 1);
+            transform: matrix3d(0.621, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 39.889, 0, 0, 1);
+  }
+  17.02% {
+    -webkit-transform: matrix3d(0.735, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 28.059, 0, 0, 1);
+            transform: matrix3d(0.735, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 28.059, 0, 0, 1);
+  }
+  18.82% {
+    -webkit-transform: matrix3d(0.771, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 23.316, 0, 0, 1);
+            transform: matrix3d(0.771, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 23.316, 0, 0, 1);
+  }
+  22.62% {
+    -webkit-transform: matrix3d(0.832, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 14.419, 0, 0, 1);
+            transform: matrix3d(0.832, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 14.419, 0, 0, 1);
+  }
+  25.03% {
+    -webkit-transform: matrix3d(0.862, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 9.822, 0, 0, 1);
+            transform: matrix3d(0.862, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 9.822, 0, 0, 1);
+  }
+  28.33% {
+    -webkit-transform: matrix3d(0.895, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 4.859, 0, 0, 1);
+            transform: matrix3d(0.895, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 4.859, 0, 0, 1);
+  }
+  33.93% {
+    -webkit-transform: matrix3d(0.935, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.401, 0, 0, 1);
+            transform: matrix3d(0.935, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.401, 0, 0, 1);
+    opacity: 1;
+  }
+  37.54% {
+    -webkit-transform: matrix3d(0.952, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -2.162, 0, 0, 1);
+            transform: matrix3d(0.952, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -2.162, 0, 0, 1);
+  }
+  45.15% {
+    -webkit-transform: matrix3d(0.975, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -3.335, 0, 0, 1);
+            transform: matrix3d(0.975, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -3.335, 0, 0, 1);
+  }
+  50.05% {
+    -webkit-transform: matrix3d(0.984, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -3.109, 0, 0, 1);
+            transform: matrix3d(0.984, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -3.109, 0, 0, 1);
+  }
+  72.57% {
+    -webkit-transform: matrix3d(0.998, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.773, 0, 0, 1);
+            transform: matrix3d(0.998, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.773, 0, 0, 1);
+  }
+  75.08% {
+    -webkit-transform: matrix3d(0.999, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.613, 0, 0, 1);
+            transform: matrix3d(0.999, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.613, 0, 0, 1);
+  }
+  100% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    opacity: 1;
+  }
+}
+@keyframes scaleX-slideInRight {
+  0% {
+    -webkit-transform: matrix3d(0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    opacity: 0;
+  }
+  5.71% {
+    -webkit-transform: matrix3d(0.354, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 44.297, 0, 0, 1);
+            transform: matrix3d(0.354, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 44.297, 0, 0, 1);
+  }
+  6.31% {
+    -webkit-transform: matrix3d(0.384, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 45.449, 0, 0, 1);
+            transform: matrix3d(0.384, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 45.449, 0, 0, 1);
+  }
+  11.31% {
+    -webkit-transform: matrix3d(0.583, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 42.536, 0, 0, 1);
+            transform: matrix3d(0.583, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 42.536, 0, 0, 1);
+  }
+  12.51% {
+    -webkit-transform: matrix3d(0.621, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 39.889, 0, 0, 1);
+            transform: matrix3d(0.621, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 39.889, 0, 0, 1);
+  }
+  17.02% {
+    -webkit-transform: matrix3d(0.735, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 28.059, 0, 0, 1);
+            transform: matrix3d(0.735, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 28.059, 0, 0, 1);
+  }
+  18.82% {
+    -webkit-transform: matrix3d(0.771, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 23.316, 0, 0, 1);
+            transform: matrix3d(0.771, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 23.316, 0, 0, 1);
+  }
+  22.62% {
+    -webkit-transform: matrix3d(0.832, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 14.419, 0, 0, 1);
+            transform: matrix3d(0.832, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 14.419, 0, 0, 1);
+  }
+  25.03% {
+    -webkit-transform: matrix3d(0.862, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 9.822, 0, 0, 1);
+            transform: matrix3d(0.862, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 9.822, 0, 0, 1);
+  }
+  28.33% {
+    -webkit-transform: matrix3d(0.895, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 4.859, 0, 0, 1);
+            transform: matrix3d(0.895, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 4.859, 0, 0, 1);
+  }
+  33.93% {
+    -webkit-transform: matrix3d(0.935, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.401, 0, 0, 1);
+            transform: matrix3d(0.935, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.401, 0, 0, 1);
+    opacity: 1;
+  }
+  37.54% {
+    -webkit-transform: matrix3d(0.952, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -2.162, 0, 0, 1);
+            transform: matrix3d(0.952, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -2.162, 0, 0, 1);
+  }
+  45.15% {
+    -webkit-transform: matrix3d(0.975, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -3.335, 0, 0, 1);
+            transform: matrix3d(0.975, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -3.335, 0, 0, 1);
+  }
+  50.05% {
+    -webkit-transform: matrix3d(0.984, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -3.109, 0, 0, 1);
+            transform: matrix3d(0.984, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -3.109, 0, 0, 1);
+  }
+  72.57% {
+    -webkit-transform: matrix3d(0.998, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.773, 0, 0, 1);
+            transform: matrix3d(0.998, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.773, 0, 0, 1);
+  }
+  75.08% {
+    -webkit-transform: matrix3d(0.999, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.613, 0, 0, 1);
+            transform: matrix3d(0.999, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.613, 0, 0, 1);
+  }
+  100% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    opacity: 1;
+  }
+}
+/* https://goo.gl/lNPiqQ */
+@-webkit-keyframes slideInUp-fadeIn {
+  0% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 100, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 100, 0, 1);
+    opacity: 0;
+  }
+  5.81% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 51.656, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 51.656, 0, 1);
+  }
+  11.61% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 11.991, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 11.991, 0, 1);
+  }
+  17.42% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -8.985, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -8.985, 0, 1);
+  }
+  23.12% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -14.246, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -14.246, 0, 1);
+  }
+  30.33% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -9.789, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -9.789, 0, 1);
+  }
+  37.44% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -3.262, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -3.262, 0, 1);
+  }
+  44.54% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0.625, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0.625, 0, 1);
+    opacity: 1;
+  }
+  51.65% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.624, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.624, 0, 1);
+  }
+  80.28% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -0.185, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -0.185, 0, 1);
+  }
+  100% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    opacity: 1;
+  }
+}
+@keyframes slideInUp-fadeIn {
+  0% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 100, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 100, 0, 1);
+    opacity: 0;
+  }
+  5.81% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 51.656, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 51.656, 0, 1);
+  }
+  11.61% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 11.991, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 11.991, 0, 1);
+  }
+  17.42% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -8.985, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -8.985, 0, 1);
+  }
+  23.12% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -14.246, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -14.246, 0, 1);
+  }
+  30.33% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -9.789, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -9.789, 0, 1);
+  }
+  37.44% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -3.262, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -3.262, 0, 1);
+  }
+  44.54% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0.625, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0.625, 0, 1);
+    opacity: 1;
+  }
+  51.65% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.624, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.624, 0, 1);
+  }
+  80.28% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -0.185, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -0.185, 0, 1);
+  }
+  100% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    opacity: 1;
+  }
+}
+/* https://goo.gl/mrRSVv */
+@-webkit-keyframes bounceIn-rotate {
+  0% {
+    -webkit-transform: matrix3d(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  4% {
+    -webkit-transform: matrix3d(0.174, -0.395, 0, 0, 0.395, 0.174, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.174, -0.395, 0, 0, 0.395, 0.174, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  6.31% {
+    -webkit-transform: matrix3d(0.405, -0.588, 0, 0, 0.588, 0.405, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.405, -0.588, 0, 0, 0.588, 0.405, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  7.91% {
+    -webkit-transform: matrix3d(0.583, -0.67, 0, 0, 0.67, 0.583, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.583, -0.67, 0, 0, 0.67, 0.583, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  11.91% {
+    -webkit-transform: matrix3d(0.965, -0.695, 0, 0, 0.695, 0.965, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.965, -0.695, 0, 0, 0.695, 0.965, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  12.51% {
+    -webkit-transform: matrix3d(1.006, -0.681, 0, 0, 0.681, 1.006, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.006, -0.681, 0, 0, 0.681, 1.006, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  15.82% {
+    -webkit-transform: matrix3d(1.145, -0.564, 0, 0, 0.564, 1.145, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.145, -0.564, 0, 0, 0.564, 1.145, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  18.82% {
+    -webkit-transform: matrix3d(1.159, -0.435, 0, 0, 0.435, 1.159, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.159, -0.435, 0, 0, 0.435, 1.159, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  20.42% {
+    -webkit-transform: matrix3d(1.137, -0.371, 0, 0, 0.371, 1.137, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.137, -0.371, 0, 0, 0.371, 1.137, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  24.92% {
+    -webkit-transform: matrix3d(1.034, -0.23, 0, 0, 0.23, 1.034, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.034, -0.23, 0, 0, 0.23, 1.034, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  25.03% {
+    -webkit-transform: matrix3d(1.032, -0.227, 0, 0, 0.227, 1.032, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.032, -0.227, 0, 0, 0.227, 1.032, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  29.53% {
+    -webkit-transform: matrix3d(0.949, -0.142, 0, 0, 0.142, 0.949, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.949, -0.142, 0, 0, 0.142, 0.949, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  34.03% {
+    -webkit-transform: matrix3d(0.926, -0.095, 0, 0, 0.095, 0.926, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.926, -0.095, 0, 0, 0.095, 0.926, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  37.54% {
+    -webkit-transform: matrix3d(0.941, -0.071, 0, 0, 0.071, 0.941, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.941, -0.071, 0, 0, 0.071, 0.941, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  43.14% {
+    -webkit-transform: matrix3d(0.984, -0.045, 0, 0, 0.045, 0.984, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.984, -0.045, 0, 0, 0.045, 0.984, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  50.05% {
+    -webkit-transform: matrix3d(1.016, -0.025, 0, 0, 0.025, 1.016, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.016, -0.025, 0, 0, 0.025, 1.016, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  52.15% {
+    -webkit-transform: matrix3d(1.017, -0.021, 0, 0, 0.021, 1.017, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.017, -0.021, 0, 0, 0.021, 1.017, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  70.37% {
+    -webkit-transform: matrix3d(0.996, -0.003, 0, 0, 0.003, 0.996, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.996, -0.003, 0, 0, 0.003, 0.996, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  75.08% {
+    -webkit-transform: matrix3d(0.997, -0.002, 0, 0, 0.002, 0.997, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.997, -0.002, 0, 0, 0.002, 0.997, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  88.59% {
+    -webkit-transform: matrix3d(1.001, 0, 0, 0, 0, 1.001, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.001, 0, 0, 0, 0, 1.001, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  100% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+}
+@keyframes bounceIn-rotate {
+  0% {
+    -webkit-transform: matrix3d(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  4% {
+    -webkit-transform: matrix3d(0.174, -0.395, 0, 0, 0.395, 0.174, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.174, -0.395, 0, 0, 0.395, 0.174, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  6.31% {
+    -webkit-transform: matrix3d(0.405, -0.588, 0, 0, 0.588, 0.405, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.405, -0.588, 0, 0, 0.588, 0.405, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  7.91% {
+    -webkit-transform: matrix3d(0.583, -0.67, 0, 0, 0.67, 0.583, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.583, -0.67, 0, 0, 0.67, 0.583, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  11.91% {
+    -webkit-transform: matrix3d(0.965, -0.695, 0, 0, 0.695, 0.965, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.965, -0.695, 0, 0, 0.695, 0.965, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  12.51% {
+    -webkit-transform: matrix3d(1.006, -0.681, 0, 0, 0.681, 1.006, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.006, -0.681, 0, 0, 0.681, 1.006, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  15.82% {
+    -webkit-transform: matrix3d(1.145, -0.564, 0, 0, 0.564, 1.145, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.145, -0.564, 0, 0, 0.564, 1.145, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  18.82% {
+    -webkit-transform: matrix3d(1.159, -0.435, 0, 0, 0.435, 1.159, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.159, -0.435, 0, 0, 0.435, 1.159, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  20.42% {
+    -webkit-transform: matrix3d(1.137, -0.371, 0, 0, 0.371, 1.137, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.137, -0.371, 0, 0, 0.371, 1.137, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  24.92% {
+    -webkit-transform: matrix3d(1.034, -0.23, 0, 0, 0.23, 1.034, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.034, -0.23, 0, 0, 0.23, 1.034, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  25.03% {
+    -webkit-transform: matrix3d(1.032, -0.227, 0, 0, 0.227, 1.032, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.032, -0.227, 0, 0, 0.227, 1.032, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  29.53% {
+    -webkit-transform: matrix3d(0.949, -0.142, 0, 0, 0.142, 0.949, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.949, -0.142, 0, 0, 0.142, 0.949, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  34.03% {
+    -webkit-transform: matrix3d(0.926, -0.095, 0, 0, 0.095, 0.926, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.926, -0.095, 0, 0, 0.095, 0.926, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  37.54% {
+    -webkit-transform: matrix3d(0.941, -0.071, 0, 0, 0.071, 0.941, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.941, -0.071, 0, 0, 0.071, 0.941, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  43.14% {
+    -webkit-transform: matrix3d(0.984, -0.045, 0, 0, 0.045, 0.984, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.984, -0.045, 0, 0, 0.045, 0.984, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  50.05% {
+    -webkit-transform: matrix3d(1.016, -0.025, 0, 0, 0.025, 1.016, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.016, -0.025, 0, 0, 0.025, 1.016, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  52.15% {
+    -webkit-transform: matrix3d(1.017, -0.021, 0, 0, 0.021, 1.017, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.017, -0.021, 0, 0, 0.021, 1.017, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  70.37% {
+    -webkit-transform: matrix3d(0.996, -0.003, 0, 0, 0.003, 0.996, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.996, -0.003, 0, 0, 0.003, 0.996, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  75.08% {
+    -webkit-transform: matrix3d(0.997, -0.002, 0, 0, 0.002, 0.997, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(0.997, -0.002, 0, 0, 0.002, 0.997, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  88.59% {
+    -webkit-transform: matrix3d(1.001, 0, 0, 0, 0, 1.001, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1.001, 0, 0, 0, 0, 1.001, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  100% {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+}
+     .loader {
+          border: 6px solid #f3f3f3;
+          border-radius: 60%;
+          border-top: 6px solid orange;
+          width: 40px;
+          height: 40px;
+          -webkit-animation: spin 1s linear infinite; /* Safari */
+          animation: spin 0.7s linear infinite;
+         margin: 0 auto;
+        }
+        .loader_avg {
+          border: 2px solid #f3f3f3;
+          border-radius: 60%;
+          border-top: 2px solid orange;
+          width: 10px;
+          height: 10px;
+          -webkit-animation: spin 1s linear infinite; /* Safari */
+          animation: spin 0.7s linear infinite;
+        }
+
+        /* Safari */
+        @-webkit-keyframes spin {
+          0% { -webkit-transform: rotate(0deg); }
+          100% { -webkit-transform: rotate(360deg); }
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+    </style>
+<link rel="stylesheet" href="/static/nextify/css/sweetalert.css">
+<script src="/static/wifi_portal/js/jquery-3.3.1.min.js"></script>
+<script src="/static/wifi_portal/js/bootstrap.min.js"></script>
+<script src="/static/nextify/js/bootstrap-validate.js"></script>
+<script src="/static/nextify/js/sweetalert.js"></script>
+</head>
+<body>
+
+<main class="with-hover">
+	<aside>
+		<div></div>
+	<img src="//files.nextify.vn/{{ shop.logo }}" style="width: 120px; height: 120px; border-radius: 60px " alt="AVATAR">
+	</aside>
+	<section style="overflow:scroll">
+
+						 <h1>{% if login_form.welcome_text and login_form.welcome_text|length > 0 %}
+                    {{ login_form.welcome_text|safe }}
+                {% else %}
+                    Đăng ký <strong>khách hàng thân
+                        thiết</strong> để nhận
+                    các ưu đãi hấp dẫn
+                    <br/> Get connected with FREE WIFI
+                {% endif %}</h1>
+             {% if error %}
+                        <p style="line-height: 1px;margin: 15px 0;color: red">
+                            {{ error }}
+                        </p>{% endif %}
+        <div id="register_load" class="loader"></div>
+		<form id="form-signup" class="active" method="post" action="/register_post?gateway_mac={{ gateway_mac }}&client_mac={{ client_mac }}"  data-toggle="validator" role="form">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />        
+      <input type="hidden" value="{{ gateway_mac }}"
+                           name="gateway_mac"/>
+                    <input type="hidden" value="{{ client_mac }}"
+                           name="client_mac"/>
+                    <input type="hidden" value="{{ device_type }}"
+                           name="device_type"/>
+                    <input type="hidden" value="{{ nas_id }}"
+                           name="nas_id"/>
+                    <input type="hidden" value="{{ auth_target }}"
+                           name="auth_target"/>
+                    <input type="hidden" value="{{ profile_id }}"
+                               name="profile_id"/>
+                               <input type="hidden" value="{{ magic_fortinet }}"
+                               name="magic_fortinet"/>
+			<div>
+
+				 {% if login_form.name and login_form.name|lower == "true" %}
+                          <fieldset>
+                              <div>
+                                <input type="text" id="name"
+                                       name="name" class="input100"
+                                       placeholder="Tên của bạn/Your name"
+                                        {% if login_form.name_require and login_form.name_require|lower == "true" %} required{% endif %}/>
+                                {% if login_form.name_require and login_form.name_require|lower == "true" %}
+                                    <input type="hidden" value="{{ login_form.name_require }}" name="name_require" />
+                                    <script>
+                                      // Basic Example
+                                      bootstrapValidate(['#name'], 'required');
+                                    </script>
+
+                                {% endif %}
+
+                            </div>
+
+                          </fieldset>
+
+                            {% endif %}
+                        {% if login_form.phone and login_form.phone|lower == "true" %}
+                             <fieldset>
+					<div>
+                            <input type="tel"
+                                   class="input100" id="phone" name="phone" {% if login_form.phone_require and login_form.phone_require|lower == "true" %}required{% endif %} placeholder="Số điện thoại/Phone number">
+
+
+                            {% if login_form.phone_require and login_form.phone_require|lower == "true" %}
+                                <input type="hidden" value="{{ login_form.phone_require }}" name="phone_require"/>
+                                   <script>
+                                      // Basic Example
+                                      bootstrapValidate(['#phone'], 'required');
+                                    </script>
+                            {% endif %}
+                               </div>
+                             </fieldset>
+
+
+                        {% endif %}
+
+                        {% if login_form.email and login_form.email|lower == "true" %}
+                            <fieldset>
+					<div>
+                            <input type="text" class="input100" id="email" name="email" placeholder="Email của bạn/Your email">
+                            {% if login_form.email_require and login_form.email_require|lower == "true" %}
+                                <input type="hidden" value="{{ login_form.email_require }}" name="email_require"/>
+                                   <script>
+                                      // Basic Example
+                                      bootstrapValidate(['#email'], 'email|required');
+                                    </script>
+                            {% endif %}
+                               </div>
+                            </fieldset>
+
+
+                        {% endif %}
+                        {% if login_form.gender and login_form.gender|lower == "true" %}
+
+                          <fieldset>
+					<div>
+                                <select id="gender" name="gender" >
+                                        <option value="">Chọn giới tính/Gender</option>
+                                        <option value="1">Nam/Male</option>
+                                        <option value="2">Nữ/Female</option>
+                                        <option value="0">Khác</option>
+                                    </select>
+                         {% if login_form.gender_require and login_form.gender_require|lower == "true" %}
+                                <input type="hidden" value="{{ login_form.gender_require }}" name="gender_require"/>
+                                  <script>
+                                      // Basic Example
+                                      bootstrapValidate(['#gender'], 'required');
+                                    </script>
+                            {% endif %}
+
+                            </div>
+                          </fieldset>
+
+
+                        {% endif %}
+                 {% if login_form.birthday and login_form.birthday|lower == "true" or login_form.year_birthday and login_form.year_birthday|lower == "true"%}
+                 {% if login_form.birthday_text and login_form.birthday_text|length > 0 %}
+                                   <fieldset>
+					<div>
+                                          <span class="tx3"> {{ login_form.birthday_text }}</span></div>
+                                   </fieldset>
+                                {% else %}
+                                      <fieldset>
+					<div>
+						 <span class="tx3"> Đừng quên
+                                    nhập ngày
+                                    sinh để
+                                    nhận
+                             quà từ chúng tôi nhé</span></div>
+                                      </fieldset>
+                                {% endif %}
+                         {% endif %}
+
+                        {% if login_form.birthday and login_form.birthday|lower == "true" %}
+
+
+                            <input type="hidden" value="{{ login_form.birthday }}" id="birthday"/>
+
+
+
+
+<fieldset>
+					<div>
+							<select  name="day" id="day_birth" {% if login_form.birthday_require and login_form.birthday_require|lower == "true" %} required{% endif %} >
+                                            <option>Ngày/Day</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                            <option value="13">13</option>
+                                            <option value="14">14</option>
+                                            <option value="15">15</option>
+                                            <option value="16">16</option>
+                                            <option value="17">17</option>
+                                            <option value="18">18</option>
+                                            <option value="19">19</option>
+                                            <option value="20">20</option>
+                                            <option value="21">21</option>
+                                            <option value="22">22</option>
+                                            <option value="23">23</option>
+                                            <option value="24">24</option>
+                                            <option value="25">25</option>
+                                            <option value="26">26</option>
+                                            <option value="27">27</option>
+                                            <option value="28">28</option>
+                                            <option value="29">29</option>
+                                            <option value="30">30</option>
+                                            <option value="31">31</option>
+                                        </select>
+
+						</div>
+</fieldset>
+						<fieldset>
+					<div>
+						    <select name="month" id="month_birth" {% if login_form.birthday_require and login_form.birthday_require|lower == "true" %} required{% endif %}>
+                                            <option value="">Tháng/Month</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+						</div>
+                        </fieldset>
+                            {% if login_form.birthday_require and login_form.birthday_require|lower == "true" %}
+                                <input type="hidden" value="{{ login_form.birthday_require }}" id="birthday_require"/>
+                                  <script>
+                                      // Basic Example
+                                      bootstrapValidate(['#day_birth', '#month_birth'], 'required');
+                                    </script>
+
+                            {% endif %}
+
+                        {% endif %}
+                {% if login_form.year_birthday and login_form.year_birthday|lower == "true" %}
+						<fieldset>
+					<div>
+                                        <select name="year" id="year_birth"  {% if login_form.year_birthday_require and login_form.year_birthday_require|lower == "true" %} required{% endif %} >
+                                            <option value="">Năm/Year</option>
+                                            <option value="2013">2013</option>
+                                            <option value="2012">2012</option>
+                                            <option value="2011">2011</option>
+                                            <option value="2010">2010</option>
+                                            <option value="2009">2009</option>
+                                            <option value="2008">2008</option>
+                                            <option value="2007">2007</option>
+                                            <option value="2006">2006</option>
+                                            <option value="2005">2005</option>
+                                            <option value="2004">2004</option>
+                                            <option value="2003">2003</option>
+                                            <option value="2002">2002</option>
+                                            <option value="2001">2001</option>
+                                            <option value="2000">2000</option>
+                                            <option value="1999">1999</option>
+                                            <option value="1998">1998</option>
+                                            <option value="1997">1997</option>
+                                            <option value="1996">1996</option>
+                                            <option value="1995">1995</option>
+                                            <option value="1994">1994</option>
+                                            <option value="1993">1993</option>
+                                            <option value="1992">1992</option>
+                                            <option value="1991">1991</option>
+                                            <option value="1990">1990</option>
+                                            <option value="1989">1989</option>
+                                            <option value="1988">1988</option>
+                                            <option value="1987">1987</option>
+                                            <option value="1986">1986</option>
+                                            <option value="1985">1985</option>
+                                            <option value="1984">1984</option>
+                                            <option value="1983">1983</option>
+                                            <option value="1982">1982</option>
+                                            <option value="1981">1981</option>
+                                            <option value="1980">1980</option>
+                                            <option value="1979">1979</option>
+                                            <option value="1978">1978</option>
+                                            <option value="1977">1977</option>
+                                            <option value="1976">1976</option>
+                                            <option value="1975">1975</option>
+                                            <option value="1974">1974</option>
+                                            <option value="1973">1973</option>
+                                            <option value="1972">1972</option>
+                                            <option value="1971">1971</option>
+                                            <option value="1970">1970</option>
+                                            <option value="1969">1969</option>
+                                            <option value="1968">1968</option>
+                                            <option value="1967">1967</option>
+                                            <option value="1966">1966</option>
+                                            <option value="1965">1965</option>
+                                            <option value="1964">1964</option>
+                                            <option value="1963">1963</option>
+                                            <option value="1962">1962</option>
+                                            <option value="1961">1961</option>
+                                            <option value="1960">1960</option>
+                                            <option value="1959">1959</option>
+                                            <option value="1958">1958</option>
+                                            <option value="1957">1957</option>
+                                            <option value="1956">1956</option>
+                                            <option value="1955">1955</option>
+                                            <option value="1954">1954</option>
+                                            <option value="1953">1953</option>
+                                            <option value="1952">1952</option>
+                                            <option value="1951">1951</option>
+                                            <option value="1950">1950</option>
+                                            <option value="1949">1949</option>
+                                            <option value="1948">1948</option>
+                                            <option value="1947">1947</option>
+                                            <option value="1946">1946</option>
+                                            <option value="1945">1945</option>
+                                            <option value="1944">1944</option>
+                                            <option value="1943">1943</option>
+                                            <option value="1942">1942</option>
+                                            <option value="1941">1941</option>
+                                            <option value="1940">1940</option>
+                                            <option value="1939">1939</option>
+                                            <option value="1938">1938</option>
+                                            <option value="1937">1937</option>
+                                            <option value="1936">1936</option>
+                                            <option value="1935">1935</option>
+                                            <option value="1934">1934</option>
+                                            <option value="1933">1933</option>
+                                            <option value="1932">1932</option>
+                                            <option value="1931">1931</option>
+                                            <option value="1930">1930</option>
+                                            <option value="1929">1929</option>
+                                            <option value="1928">1928</option>
+                                            <option value="1927">1927</option>
+                                            <option value="1926">1926</option>
+                                            <option value="1925">1925</option>
+                                            <option value="1924">1924</option>
+                                            <option value="1923">1923</option>
+                                            <option value="1922">1922</option>
+                                            <option value="1921">1921</option>
+                                            <option value="1920">1920</option>
+                                            <option value="1919">1919</option>
+                                            <option value="1918">1918</option>
+                                            <option value="1917">1917</option>
+                                            <option value="1916">1916</option>
+                                            <option value="1915">1915</option>
+                                            <option value="1914">1914</option>
+                                            <option value="1913">1913</option>
+                                            <option value="1912">1912</option>
+                                            <option value="1911">1911</option>
+                                            <option value="1910">1910</option>
+                                            <option value="1909">1909</option>
+                                            <option value="1908">1908</option>
+                                            <option value="1907">1907</option>
+                                            <option value="1906">1906</option>
+                                            <option value="1905">1905</option>
+
+                                        </select>
+                     {% if login_form.year_birthday_require and login_form.year_birthday_require|lower == "true" %}
+                                <input type="hidden" value="{{ login_form.year_birthday_require }}" id="year_birthday_require"/>
+                                         <script>
+                                      // Basic Example
+                                      bootstrapValidate(['#year_birth'], 'required');
+                                    </script>
+                            {% endif %}
+                    </div></fieldset>
+
+                        {% endif %}
+                        {% if login_form.company and login_form.company|lower == "true" %}
+                          <fieldset>
+					<div>
+                                <input type="text" id="company" name="company"
+                                       class="input100" placeholder="Công ty"/>
+
+                                {% if login_form.company_require and login_form.company_require|lower == "true" %}
+                                    <input type="hidden" value="{{ login_form.company_require }}" name="company_require"/>
+                                                 <script>
+                                      // Basic Example
+                                      bootstrapValidate(['#company'], 'required');
+                                    </script>
+                                {% endif %}
+
+                            </div>
+                          </fieldset>
+
+                            {% endif %}
+
+                {% if login_form.company_role and login_form.company_role|lower == "true" %}
+                          <fieldset>
+					<div>
+                                <input type="text" id="company_role" name="company_role"
+                                       class="input100" placeholder="Chức vụ"/>
+
+                                {% if login_form.company_role_require and login_form.company_role_require|lower == "true" %}
+                                    <input type="hidden" value="{{ login_form.company_role_require }}" name="company_role_require"/>
+                              <script>
+                                      // Basic Example
+                                      bootstrapValidate(['#company_role'], 'required');
+                                    </script>
+                                {% endif %}
+
+                            </div>
+                          </fieldset>
+
+                            {% endif %}
+               <fieldset>
+					<div>
+            <a href="#" id="register_submit" class="login100-form-btn"
+                    style="background-image: linear-gradient(90deg,#f65e38 0,#f68a39 51%,#f65e38);">
+                {% if shop.connect_button %}{{ shop.connect_button }}{% else %}Kết nối Wi-Fi/Go Online{% endif %}
+            </a>
+
+
+                    </div>
+               </fieldset>
+			</div>
+
+
+        </form>
+
+	</section>
+</main>
+
+
+
+<script>
+    jQuery(document).ready(function () {
+         $('#register_load').hide();
+         $("#register_submit").click(function () {
+                var action = $('#form-signup').attr('action');
+                $.ajax(
+                    {
+                        type: 'post',
+                        url: action,
+                        data: $('#form-signup').serialize(),
+                        beforeSend: function()
+                        {
+                            $('#register_load').show();
+                            $('#form-signup').hide();
+                        },
+                        success: function(data)
+                        {
+                            var json = $.parseJSON(data);
+                            var result = json['result'];
+                            if (result.toString() == 'false'){
+                                var message = json['message'];
+                                 $('#register_load').hide();
+                                $('#form-signup').show();
+                                swal(message, " " , 'error');
+                                return false;
+                            }else{
+                                var url =  json['message'];
+                                location.href = url;
+
+                            }
+
+                        },
+                        error: function()
+                        {
+                            swal("Có lỗi xảy ra, thử lại sau", " ", "error");
+                             $('#register_load').hide();
+                              $('#form-signup').show();
+                              return false;
+                        }
+                    });
+
+
+         });
+
+
+    })
+
+</script>
+
+</body>
+</html>

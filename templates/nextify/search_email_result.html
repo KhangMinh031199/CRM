@@ -1,0 +1,81 @@
+<div class="table-responsive">                                       
+    <table class="table table-sm table-hover table-nowrap card-table">
+        <thead>
+        <tr>
+
+            <th>
+                <a class="list-sort text-muted" data-sort="item-name"
+                href="#">Tên</a>
+            </th>
+            <th>
+                <a class="list-sort text-muted" data-sort="item-email" href="#">Email</a>
+            </th>
+            <th>
+                <a class="list-sort text-muted" data-sort="item-verify" href="#">Verify</a>
+            </th>
+            <th>
+                <a class="list-sort text-muted" data-sort="item-result" href="#">Đã gửi</a>
+            </th>
+            <th>
+                <a class="list-sort text-muted" data-sort="item-time" href="#">Thời
+                    gian</a>
+            </th>
+            <th>
+                <a class="list-sort text-muted" data-sort="item-resend" href="#">Gửi lại</a>
+            </th>
+        </tr>
+        </thead>
+        <tbody class="list fs-base">
+        {% for log in logs %}
+        <tr>
+            <td>
+
+                <span class="item-name text-reset" href="">{{ log.name }}</span>
+
+            </td>
+
+            <td>
+
+                <!-- Email -->
+                <span class="item-email text-reset" href="">{{ log.reception }}</span>
+
+            </td>
+
+            <td>
+
+                <!-- Badge -->
+                <span class="item-score badge bg-danger-soft">{{ log.verify_email }}</span>
+
+            </td>
+            <td>
+
+                <!-- Badge -->
+                <span class="item-score badge bg-danger-soft">{{ log.result }}</span>
+
+            </td>
+            <td>
+                <!-- Link -->
+                <span class="item-score badge bg-danger-soft"
+                >{{ log.when|human_time }}</span>
+
+            </td>
+            <td>
+                <a class="item-score badge bg-danger-soft resend-email" log_id="{{ log._id }}" href="#" >Gửi lại</a>
+
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    
+</div>
+<div class="card-footer">
+
+    <ul class="pagination justify-content-center">
+        {% if pagination %}
+        {{ pagination.links }}
+        {% endif %}
+    </ul>
+    
+
+</div>

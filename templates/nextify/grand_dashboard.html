@@ -1,0 +1,105 @@
+{% extends 'nextify/base.html' %}
+
+{% block main_content %}
+<div class="container-fluid">
+
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="header">
+                <div class="header-body">
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <!-- Pretitle -->
+                            <h6 class="header-pretitle">
+                                {{ gettext('Thiet_bb') }}
+                            </h6>
+                            <!-- Title -->
+                            <h1 class="header-title">
+                                {{ gettext('Quan_ly_thiet_bi_WIFI') }}
+                            </h1>
+                        </div>
+                        <div class="col-3">
+                            <select class="custom-select control-container" id="shop_in_mer">
+                                <option value="all">Tất cả</option>
+                                {% for shop_mer in shop_in_mer %}
+                                <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+            <style>
+                .overlay {  
+                  position:absolute;
+                  left:0;
+                  width:100%;
+                  height:100%;
+                  z-index:1000;
+                  background-color: rgb(250, 250, 250);
+                }
+            </style>
+            <div class="row align-items-center justify-content-center modal_loading">
+                <div class="spinner-border text-danger" role="status">
+                <span class=" sr-only">Loading...</span>
+                </div>
+            </div>
+            <!-- bao cao chi tiet -->
+            <div id=over_land class="overlay"></div>
+            <div id="detail_report" >
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="embed-responsive embed-responsive-1by1">
+                            <iframe class="embed-responsive-item" id="iframeSummary" 
+                                src="https://grandstream.nextify.vn:8443/dashboard"></iframe>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+
+{%endblock%}
+
+{% block js %}
+
+<script nonce="{{ csp_nonce() }}">
+
+
+    setTimeout(function () {
+        var frame = document.getElementById('iframeSummary');
+        frame.contentWindow.postMessage("regular_remove", '*');
+        frame.contentWindow.postMessage("dashboard", '*');
+        $('.modal_loading').hide();
+        $('#over_land').hide();
+    }, 3000);
+
+    $(document).ready(function () {
+        $('.modal_loading').show();
+        $('#shop_in_mer').select2();
+        var shop_id_select = $("#shop_in_mer").val();
+        $('#shop_in_mer').val(shop_id_select).trigger('change');
+        $('#shop_in_mer').on("change", function (e) {
+            var shop_id_select = $('#shop_in_mer').val();
+            if (shop_id_select != "all") {
+                var url = "/grandstream_report/" + shop_id_select;
+                $(location).attr('href', url);
+            }
+
+        });
+    });
+
+</script>
+
+{%endblock%}

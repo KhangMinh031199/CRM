@@ -1,0 +1,1010 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="container-fluid">
+    <div class="header">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                        {{ gettext("Khach_hang") }}
+                    </h6>
+                    <h1 class="header-title">
+                        {{ shop_select_name }}
+                    </h1>
+                    <!-- Title -->
+
+                </div>
+                <div class="col-auto">
+                    <select class="form-select" id="shop_in_mer">
+                        <option value="all">{{ gettext("Tat_ca_dia_diem") }}</option>
+                        {% for shop_mer in shop_in_mer %}
+                        <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+            </div> <!-- / .row -->
+        </div>
+    </div>
+
+</div>
+
+<div class="container-fluid">
+
+    <div class="row mt-4 mt-md-5">
+
+
+        <div class="col-12 col-md-3 col-xl-3">
+            <!-- Card -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Title -->
+                            <h6 class="text-uppercase text-muted mb-2">
+                                {{ gettext("So_dien_thoai") }}
+                            </h6>
+
+                            <!-- Heading -->
+                            <span class="h2 mb-0" id="count_total_phone">
+                                {{ total_phone }}
+                            </span>
+
+                            <!-- Badge -->
+                            <span class="badge badge-soft-success mt-n1" id="count_total_phone_percent">
+                                {{ phone_percent }} %
+                            </span>
+                        </div>
+                        <div class="col-auto">
+
+                            <!-- Icon -->
+                            <span class="h2 fe fe-phone text-muted mb-0"></span>
+
+                        </div>
+                    </div> <!-- / .row -->
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-3 col-xl-3">
+            <!-- Card -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Title -->
+                            <h6 class="text-uppercase text-muted mb-2">
+                                Email
+                            </h6>
+
+                            <!-- Heading -->
+                            <span class="h2 mb-0" id="count_total_email">
+                                {{ total_email }}
+                            </span>
+
+                            <!-- Badge -->
+                            <span class="badge badge-soft-success mt-n1" id="count_total_email_percent">
+                                {{ email_percent }} %
+                            </span>
+                        </div>
+                        <div class="col-auto">
+
+                            <!-- Icon -->
+                            <span class="h2 fe fe-mail text-muted mb-0"></span>
+
+                        </div>
+                    </div> <!-- / .row -->
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-3 col-xl-3">
+            <!-- Card -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Title -->
+                            <h6 class="text-uppercase text-muted mb-2">
+                                Zalo
+                            </h6>
+
+                            <!-- Heading -->
+                            <span class="h2 mb-0" id="count_total_zalo">
+                                {{ total_zalo }}
+                            </span>
+
+                            <!-- Badge -->
+                            <span class="badge badge-soft-success mt-n1" id="count_total_zalo_percent">
+                                {{ zalo_percent }} %
+                            </span>
+                        </div>
+                        <div class="col-auto">
+
+                            <!-- Icon -->
+                            <span class="h2 fe fe-message-circle text-muted mb-0"></span>
+
+                        </div>
+                    </div> <!-- / .row -->
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-12 col-md-3 col-xl-3">
+            <!-- Card -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Title -->
+                            <h6 class="text-uppercase text-muted mb-2">
+                                Facebook Messenger
+                            </h6>
+
+                            <!-- Heading -->
+                            <span class="h2 mb-0" id="count_total_facebook">
+                                {{ total_messenger_id }}
+                            </span>
+
+                            <!-- Badge -->
+                            <span class="badge badge-soft-success mt-n1" id="count_total_facebook_percent">
+                                {{ mess_percent }} %
+                            </span>
+                        </div>
+                        <div class="col-auto">
+
+                            <!-- Icon -->
+                            <span class="h2 fe fe-facebook text-muted mb-0"></span>
+
+                        </div>
+                    </div> <!-- / .row -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="customers_content">
+
+        <div class="col-12 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Title -->
+                            <h5 class="mb-0">
+                                <a data-toggle="modal" href="#new_customers_modal" autofocus
+                                    class="btn btn-flat d-block d-md-inline-block">
+                                    <i class="fa fa-plus"></i> {{ gettext("Them_moi") }}
+                                </a>
+                            </h5>
+
+                        </div>
+
+                    </div> <!-- / .row -->
+
+                    <!-- Divider -->
+                    <hr>
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Title -->
+                            <h5 class="mb-0">
+                                <a href="/import_files" class="btn btn-flat d-block d-md-inline-block">
+                                    <i class="fa fa-file-import"></i> {{ gettext("Import") }}
+                                </a>
+                            </h5>
+
+                        </div>
+
+                    </div> <!-- / .row -->
+                    <hr>
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Title -->
+                            <h5 class="mb-0">
+                                <a class="btn btn-flat d-block d-md-inline-block" href="/customer_files">
+                                    <i class="fa fa-download"></i> {{ gettext("Tai_files") }}</a>
+                            </h5>
+
+                        </div>
+
+                    </div> <!-- / .row -->
+
+                    <!-- Divider -->
+
+
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items">
+                        <div class="col">
+                            <h4 class="card-header-title">
+                                {{ gettext("Bo_loc") }}
+                            </h4>
+                        </div>
+                        <div class="col-auto">
+                            <h4 class="card-header-title">
+                                <a href="#" id="reset_filter" class="btn btn-flat d-block d-md-inline-block"><i
+                                        class="fa fa-undo"></i> </a>
+                            </h4>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <form id="form_cus" action="/customers" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <input type="hidden" name="page" value="{{ page }}" />
+                        <input type="hidden" name="loc_id" value="{{ loc_id }}" />
+                        <div class="form-group">
+                            <label>{{ gettext("Sap_xep") }}</label>
+                        </div>
+                        <div class="form-group row">
+
+                            <input type="hidden" value="{% if sort %}{{ sort }}{% endif %}" id="cus_filter" />
+                            <div class="col-12">
+                                <div class="custom-control custom-switch">
+
+                                    <input type="radio" class="custom-control-input" id="customSwitch2" name="sort"
+                                        value="time_asc" {% if sort=='time_asc' %}checked="checked" {% endif %}>
+                                    <label class="custom-control-label" for="customSwitch2">{{ gettext("Thoi_gian")
+                                        }}</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-12" style="margin-top:10px">
+                                <div class="custom-control custom-switch">
+
+                                    <input type="radio" class="custom-control-input" id="customSwitch1" name="sort"
+                                        value="visit_asc" {% if sort=='visit_asc' %}checked="checked" {% endif %}>
+                                    <label class="custom-control-label" for="customSwitch1">{{ gettext("Luot_den")
+                                        }}</label>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <hr>
+                        <div class="form-group">
+
+                            <label>{{ gettext("Gioi_tinh") }}</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" value="{% if gender %}{{ gender }}{% endif %}" id="ex_gender" />
+
+                            {% if not gender or gender|string == 'None' %}
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox1" name="gender" value="1" type="checkbox">
+                                <label class="c-choice__label" for="checkbox1">{{ gettext("Nam") }}</label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox2" name="gender" value="2" type="checkbox">
+                                <label class="c-choice__label" for="checkbox2">{{ gettext("Nu") }}</label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox3" name="gender" value="0" type="checkbox">
+                                <label class="c-choice__label" for="checkbox3">{{ gettext("Chua_xac_dinh") }}</label>
+                            </div>
+                            {% else %}
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox1" name="gender" value="1" type="checkbox" {%
+                                    if '1' in gender %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox1">{{ gettext("Nam") }}</label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox2" name="gender" value="2" type="checkbox" {%
+                                    if '2' in gender %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox2">{{ gettext("Nu") }}</label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox3" name="gender" value="0" type="checkbox" {%
+                                    if '0' in gender %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox3">{{ gettext("Chua_xac_dinh") }}</label>
+                            </div>
+                            {% endif %}
+
+                        </div>
+                        <hr>
+
+                        <div class="form-group">
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox4" name="employee" id="employee_check" {% if
+                                    employee and 'on' in employee %}checked{% endif %} type="checkbox">
+                                <label class="c-choice__label" for="checkbox4">{{ gettext("Nhan_vien") }}</label>
+                            </div>
+                            <input type="hidden" id="ex_employee" value="{% if employee %}{{ employee }}{% endif %}" />
+                        </div>
+                        <hr>
+                        <div class="form-group">
+
+                            <label>Tags</label>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control form-control-lg custom-select" name="tags" id="tags_selects"
+                                multiple="multiple">
+
+                                {% for tag in tags %}
+                                <option value="{{ tag._id }}">{{ tag.name }}</option>
+                                {% endfor %}
+
+                            </select>
+
+                            <input type="hidden" id="select_tags_filter" name="real_tags_filter" />
+                            <input type="hidden" id="source_tags_filter" name="source_tags_filter"
+                                value="{{ filter_tags }}" />
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label>{{ gettext("Thoi_gian_den") }}</label>
+                        </div>
+
+                        <div class="form-group row">
+
+                            <div class="col-6">
+
+                                <input id="from_date" name="from_date" type="text"
+                                    placeholder='{{ gettext("Tu_ngay") }}..' class="form-control">
+                            </div>
+                            <div class="col-6">
+
+                                <input id="to_date" name="to_date" type="text" placeholder='{{ gettext("Den_ngay") }}..'
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label>{{ gettext("Sinh_nhat") }}</label>
+                        </div>
+                        <div class="form-group row">
+
+                            <div class="col-6">
+
+                                <input id="bday_from_date" name="bday_from_date" type="text"
+                                    placeholder='{{ gettext("Tu_ngay") }}..' class="form-control">
+                            </div>
+                            <div class="col-6">
+
+                                <input id="bday_to_date" name="bday_to_date" type="text"
+                                    placeholder='{{ gettext("Den_ngay") }}..' class="form-control">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label>{{ gettext("Luot_den") }}</label>
+                        </div>
+                        <div class="form-group row">
+
+                            <div class="col-6">
+                                <input type="text" id="min_visit" name="min_visit"
+                                    placeholder='{{ gettext("Lon_hon") }}' class="form-control"
+                                    value="{% if min_visit and min_visit!='None' %}{{ min_visit }}{% endif %}" />&nbsp;<span
+                                    id="errmsgn"></span>
+                            </div>
+                            <div class="col-6">
+                                <input type="text" id="max_visit" name="max_visit"
+                                    placeholder='{{ gettext("Nho_hon") }}' class="form-control"
+                                    value="{% if max_visit and max_visit!='None' %}{{ max_visit }}{% endif %}" />&nbsp;<span
+                                    id="errmsgx"></span>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div class="form-group">
+                            <label>{{ gettext("So_ngay_chua_quay_lai") }}</label>
+                            <input type="text" id="lost_day" name="lost_day" placeholder="30" class="form-control"
+                                value="{% if lost_day and lost_day!='None' %}{{ lost_day }}{% endif %}" />&nbsp;<span
+                                id="errmsg1"></span>
+                        </div>
+
+
+                        <hr>
+
+                        <div class="form-group">
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox1" name="phone_filter" type="checkbox" {% if
+                                    phone_filter and 'on' in phone_filter %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox1">{{ gettext("So_dien_thoai") }}</label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox2" name="email_filter" type="checkbox" {% if
+                                    email_filter and 'on' in email_filter %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox2">Email</label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox3" name="zalo_filter" type="checkbox" {% if
+                                    zalo_filter and 'on' in zalo_filter %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox3">Zalo</label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" id="checkbox3" name="fb_filter" type="checkbox" {% if
+                                    fb_filter and 'on' in fb_filter %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox3">Facebook Messenger</label>
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label>{{ gettext("Xuat_file_cho_quang_cao") }}</label>
+                        </div>
+
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <div class="c-choice c-choice--checkbox">
+                                    <input class="c-choice__input" id="checkbox_ads" name="is_ads" value="facebook"
+                                        type="checkbox">
+                                    <label class="c-choice__label" for="checkbox_ads">facebook</label>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="c-choice c-choice--checkbox">
+                                    <input class="c-choice__input" id="checkbox_ads_1" name="is_ads" value="zalo"
+                                        type="checkbox">
+                                    <label class="c-choice__label" for="checkbox_ads_1">zalo</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+
+                </div>
+                <div class="card-footer text-center">
+                    <a class="btn btn-outline-primary" id="view_data">
+                        {{ gettext("Xem") }}
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-12 col-xl-9">
+
+            <div id="customers_load" class="loader_avg"></div>
+
+
+            <div class="card" id="lists" data-toggle="lists">
+
+                <div class="card-header">
+                    <div class="row align-items-end">
+
+                        <div class="col">
+                            <form>
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                <div class="input-group input-group-flush input-group-merge">
+                                    <input type="search" class="form-control form-control-prepended search"
+                                        id="customer_input"
+                                        placeholder='{{ gettext("Tim_theo_ten,_so_dien_thoai_hoac_email") }}'>
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <span class="fe fe-search"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="col-12 col-md-auto">
+                            {% if merchant._id|package_merchant != "Basic" %}
+                            <a class="btn btn-outline-primary" id="export_customers">
+                                {{ gettext("Xuat_File") }}
+                            </a>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-body text-center" id="customers_loading_view" style="display: none;">
+                    <div class="spinner-border text-danger" role="status">
+                        <span class="visually-hidden"></span>
+                    </div>
+
+                </div>
+                <div id="list_data">
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+                            <table class="table table-hover table-sm table-nowrap card-table">
+                                <thead>
+                                    <tr>
+                                        <th>
+
+                                        </th>
+                                        <th>
+                                            <h3 class="mb-1" style="font-weight: 700;">{{ gettext("Khach_hang") }} ({{
+                                                total }}) </h3>
+                                        </th>
+                                        <th>
+                                            <h3 class="mb-1" style="font-weight: 700;">{{ gettext("Luot_den") }}</h3>
+                                        </th>
+                                        <th>
+                                            <h3 class="mb-1" style="font-weight: 700;">{{ gettext("Lan_cuoi") }}</h3>
+                                        </th>
+                                        <th>
+
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody class="list">
+                                    {% for cus in customers %}
+                                    <tr>
+
+                                        <td>
+                                            <a href="#" user_id="{{ cus.user._id }}" class="avatar detail_customer">
+                                                {% if cus.user.avatar and cus.user.avatar|length > 0 %}
+                                                <img class="avatar-img rounded-circle"
+                                                    src="{{ cus.user.avatar.replace('http:', 'https:') }}" />
+                                                {% else %}
+                                                {% set avatar = cus.user|human_avatar %}
+                                                <img class="avatar-img rounded-circle" src="{{ avatar }}" />
+
+                                                {% endif %}
+                                            </a>
+                                        </td>
+                                        <td class="orders-product detail_customer" user_id="{{ cus.user._id }}">
+
+
+                                            <h4 class="mb-1">
+                                                {% if cus.user.phone and cus.user.phone|string != 'None' and
+                                                cus.user.phone|length != 0 %}
+
+                                                {{ cus.user.phone }}
+
+                                                {% else %}
+                                                {% if cus.user.email | string != 'None' %}
+                                                {{ cus.user.email }}{% endif %}
+
+                                                {% endif %}
+
+                                            </h4>
+
+                                            {% if (not cus.user.name and not cus.user.phone and not cus.user.email) or
+                                            (cus.user.phone | string == 'None' and cus.user.name|string == 'None' and
+                                            cus.user.phone|length == 0 and cus.user.email | string == 'None' and
+                                            cus.user.client_mac|string != 'None') and cus.user.client_mac | length > 0
+                                            %}
+                                            <div class="name">
+                                                {%if 'client_mac' in cus.user %}
+                                                {{ cus.user.client_mac[0] if cus.user.client_mac[0] |string != 'None'
+                                                else '' }}
+                                                {%else%}
+
+                                                {%endif%}
+                                            </div>
+                                            {% endif %}
+                                            <div class="contact">
+                                                {% if cus.user.name and cus.user.name|string != 'None' and
+                                                cus.user.name|length != 0 %}
+                                                {{ cus.user.name }} {% endif %}
+                                            </div>
+                                        </td>
+                                        <td class="orders-date">
+                                            {{ cus.total_visit }}
+                                        </td>
+                                        <td class="orders-total">
+                                            {{ cus.last_visit|human_time }}
+                                        </td>
+                                        <td class="orders-status">
+                                            <a href="#" user_id="{{ cus.user._id }}"
+                                                class="btn btn-flat d-block d-md-inline-block detail_customer"><i
+                                                    class="fa fa-eye" data-toggle="tooltip"
+                                                    title="Chi tiết"></i></a>
+                                            <a href="#" user_id="{{ cus.user._id }}"
+                                                class="btn btn-flat d-block d-md-inline-block visit_log"><i
+                                                    class="fa fa-map-marker-alt" data-toggle="tooltip"
+                                                    title="Hành trình"></i></a>
+
+                                            <a href="#" user_id="{{ cus.user._id }}"
+                                                class="btn btn-flat d-block d-md-inline-block remove_customer">
+                                                <i class="fa fa-minus-circle" data-toggle="tooltip"
+                                                title="Xoá"></i> </a>
+
+                                        </td>
+
+                                    </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- List group -->
+
+
+                    </div>
+                    <div class="card-footer">
+
+                        <ul class="pagination justify-content-center">
+                            {% if pagination %}
+                            {{ pagination.links }}
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="modal fade" id="new_customers_modal" tabindex="-1" role="dialog" style="display: none;"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ gettext("Them_khach_hang") }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                        data-target="#new_customers_modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <form role="form" id="new_customer_fr" method="post" action="/user/edit/add">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="row u-mb-medium">
+                            <div class="col-lg-6">
+                                <!-- {% if error_box %}
+                      <div class="alert alert-danger" role="alert">
+                          {{error_box}}
+                      </div>
+                      {% endif %} -->
+                                <div class="form-group">
+                                    <label for="firstName">{{ gettext("Dia_diem") }}(<span>
+                                            <font color="red">*</font>
+                                        </span> {{ gettext("bat_buoc") }})</label>
+                                    <select class="custom-select control-container" style="width: 100%;"
+                                        name="location_id" id="location_id">
+                                        {% for shop_mer in shop_in_mer %}
+                                        <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="firstName">{{ gettext("Ten") }} (<span>
+                                            <font color="red">*</font>
+                                        </span> {{ gettext("bat_buoc") }})</label>
+                                    <input class="form-control" type="text" id="firstName" name="name" placeholder="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="lastName">{{ gettext("So_dien_thoai") }} (<span>
+                                            <font color="red">*</font>
+                                        </span> {{ gettext("bat_buoc") }})</label>
+                                    <input class="form-control" type="text" placeholder="" name="phone" id="new_phone">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">E-mail (<span>
+                                            <font color="red">*</font>
+                                        </span> {{ gettext("bat_buoc") }})</label>
+                                    <input class="form-control" type="email" name="email" id="new_email" placeholder="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">{{ gettext("Sinh_nhat") }}</label>
+
+                                    <input type="text" class="form-control" name='birthday' id="birthday" />
+
+                                </div>
+                                <div class="form-group">
+                                    <select name="year_birth" id="year_birth" class="custom-select control-container">
+                                        <option value="">{{ gettext("Nam_Year") }}</option>
+                                        <option value="2013">2013</option>
+                                        <option value="2012">2012</option>
+                                        <option value="2011">2011</option>
+                                        <option value="2010">2010</option>
+                                        <option value="2009">2009</option>
+                                        <option value="2008">2008</option>
+                                        <option value="2007">2007</option>
+                                        <option value="2006">2006</option>
+                                        <option value="2005">2005</option>
+                                        <option value="2004">2004</option>
+                                        <option value="2003">2003</option>
+                                        <option value="2002">2002</option>
+                                        <option value="2001">2001</option>
+                                        <option value="2000">2000</option>
+                                        <option value="1999">1999</option>
+                                        <option value="1998">1998</option>
+                                        <option value="1997">1997</option>
+                                        <option value="1996">1996</option>
+                                        <option value="1995">1995</option>
+                                        <option value="1994">1994</option>
+                                        <option value="1993">1993</option>
+                                        <option value="1992">1992</option>
+                                        <option value="1991">1991</option>
+                                        <option value="1990">1990</option>
+                                        <option value="1989">1989</option>
+                                        <option value="1988">1988</option>
+                                        <option value="1987">1987</option>
+                                        <option value="1986">1986</option>
+                                        <option value="1985">1985</option>
+                                        <option value="1984">1984</option>
+                                        <option value="1983">1983</option>
+                                        <option value="1982">1982</option>
+                                        <option value="1981">1981</option>
+                                        <option value="1980">1980</option>
+                                        <option value="1979">1979</option>
+                                        <option value="1978">1978</option>
+                                        <option value="1977">1977</option>
+                                        <option value="1976">1976</option>
+                                        <option value="1975">1975</option>
+                                        <option value="1974">1974</option>
+                                        <option value="1973">1973</option>
+                                        <option value="1972">1972</option>
+                                        <option value="1971">1971</option>
+                                        <option value="1970">1970</option>
+                                        <option value="1969">1969</option>
+                                        <option value="1968">1968</option>
+                                        <option value="1967">1967</option>
+                                        <option value="1966">1966</option>
+                                        <option value="1965">1965</option>
+                                        <option value="1964">1964</option>
+                                        <option value="1963">1963</option>
+                                        <option value="1962">1962</option>
+                                        <option value="1961">1961</option>
+                                        <option value="1960">1960</option>
+                                        <option value="1959">1959</option>
+                                        <option value="1958">1958</option>
+                                        <option value="1957">1957</option>
+                                        <option value="1956">1956</option>
+                                        <option value="1955">1955</option>
+                                        <option value="1954">1954</option>
+                                        <option value="1953">1953</option>
+                                        <option value="1952">1952</option>
+                                        <option value="1951">1951</option>
+                                        <option value="1950">1950</option>
+                                        <option value="1949">1949</option>
+                                        <option value="1948">1948</option>
+                                        <option value="1947">1947</option>
+                                        <option value="1946">1946</option>
+                                        <option value="1945">1945</option>
+                                        <option value="1944">1944</option>
+                                        <option value="1943">1943</option>
+                                        <option value="1942">1942</option>
+                                        <option value="1941">1941</option>
+                                        <option value="1940">1940</option>
+                                        <option value="1939">1939</option>
+                                        <option value="1938">1938</option>
+                                        <option value="1937">1937</option>
+                                        <option value="1936">1936</option>
+                                        <option value="1935">1935</option>
+                                        <option value="1934">1934</option>
+                                        <option value="1933">1933</option>
+                                        <option value="1932">1932</option>
+                                        <option value="1931">1931</option>
+                                        <option value="1930">1930</option>
+                                        <option value="1929">1929</option>
+                                        <option value="1928">1928</option>
+                                        <option value="1927">1927</option>
+                                        <option value="1926">1926</option>
+                                        <option value="1925">1925</option>
+                                        <option value="1924">1924</option>
+                                        <option value="1923">1923</option>
+                                        <option value="1922">1922</option>
+                                        <option value="1921">1921</option>
+                                        <option value="1920">1920</option>
+                                        <option value="1919">1919</option>
+                                        <option value="1918">1918</option>
+                                        <option value="1917">1917</option>
+                                        <option value="1916">1916</option>
+                                        <option value="1915">1915</option>
+                                        <option value="1914">1914</option>
+                                        <option value="1913">1913</option>
+                                        <option value="1912">1912</option>
+                                        <option value="1911">1911</option>
+                                        <option value="1910">1910</option>
+                                        <option value="1909">1909</option>
+                                        <option value="1908">1908</option>
+                                        <option value="1907">1907</option>
+                                        <option value="1906">1906</option>
+                                        <option value="1905">1905</option>
+
+                                    </select>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="new_tags_selects">Tags</label>
+                                    <select name="new_tags_selects" class="custom-select control-container"
+                                        multiple="multiple" id="new_tags_selects">
+                                        {% for tag in tags %}
+                                        <option value="{{ tag._id }}">{{ tag.name }}</option>
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6">
+
+                                <div class="form-group">
+                                    <label for="gender">{{ gettext("Gioi_tinh") }} </label>
+                                    <select class="custom-select control-container" style="width: 100%;" id="gender"
+                                        name="gender">
+                                        <option value="0">{{ gettext("Chua_xac_dinh") }}</option>
+                                        <option value="1">{{ gettext("Nam") }}</option>
+                                        <option value="2">{{ gettext("Nu") }}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="companyName">{{ gettext("Dia_chi") }}</label>
+                                    <input class="form-control" id="companyName" type="text" name="address"
+                                        placeholder="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="company">{{ gettext("Cong_ty") }}</label>
+                                    <input class="form-control" type="text" name="company" placeholder="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="company">{{ gettext("Chuc_vu") }}</label>
+                                    <input class="form-control" type="text" name="company_role" placeholder="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="bio">{{ gettext("Note") }}</label>
+                                    <textarea class="form-control" name="note" id="bio"></textarea>
+                                </div>
+                                <div class="form-group">
+
+                                    <label for="socialProfile">{{ gettext("Social_Profiles") }}</label>
+
+                                    <div class="input-group input-group-merge" style="margin-bottom: .9375rem;">
+
+                                        <input class="form-control form-control-prepended" id="socialProfile"
+                                            type="text" name="twitter" placeholder="">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <span class="fe fe-twitter mr-4"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="input-group input-group-merge">
+                                        <input class="form-control form-control-prepended" type="text" name="facebook"
+                                            placeholder="">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <span class="fe fe-facebook mr-4"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+                        <input type="hidden" id="new_select_tags_filter" name="real_tags_filter" />
+
+                    </form>
+                    <div class="row row-centered">
+                        <div class="col-12" style="text-align: center;">
+                            <div class="form-group">
+                                <button class="btn btn-primary" id="new_customer">{{ gettext("Them_khach_hang")
+                                    }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="{{ loc_id }}" id="shop_id_select" />
+    <div aria-labelledby="customer_details" class="modal fade" data-backdrop="static" id="customer_details"
+        role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content card">
+                <div class="card-header">
+                    <h3 class="modal-title" id="customer_details_title">Khách hàng</h3>
+
+                    <a aria-label="Close" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center justify-content-center modal_loading">
+                        <div class="spinner-border text-danger" role="status">
+                            <span class=" sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    <div id="customer_details_body"></div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div aria-labelledby="visits_details" class="modal fade" data-backdrop="static" id="visits_details" role="dialog"
+        tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content card">
+                <div class="card-header">
+                    <h3 class="modal-title" id="visits_details_title">Hành trình</h3>
+
+                    <a aria-label="Close" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center justify-content-center modal_loading">
+                        <div class="spinner-border text-danger" role="status">
+                            <span class=" sr-only">Loading...</span>
+                        </div>
+                    </div>
+
+                    <div id="visits_details_body">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div aria-labelledby="edit_user_modal" class="modal fade" data-backdrop="static" id="edit_user_modal" role="dialog"
+        tabindex="-1" style="overflow-y: auto;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ gettext("Cap_nhat_khach_hang") }}</h4>
+                    <a class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </a>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row align-items-center justify-content-center modal_loading">
+                        <div class="spinner-border text-danger" role="status">
+                            <span class=" sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    <div id="edit_user_modal_content"></div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="{{merchant_id}}" id="merchant_id">
+</div>
+{% endblock %}
+{% block js %}
+<script src="{{ url_for('static', filename='js/customers.js') }}"></script>
+<script nonce="{{ csp_nonce() }}">
+    $('#new_customers_modal').on('shown.bs.modal', function () {
+        $('#location_id').trigger('focus');
+    });
+</script>
+{% endblock %}

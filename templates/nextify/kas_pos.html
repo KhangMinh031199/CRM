@@ -1,0 +1,214 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">
+            {{ gettext('Ung_dung') }}
+          </h6>
+
+          <!-- Title -->
+          <h1 class="header-title">
+            {{ gettext('Quan_ly_ung_dung') }}
+          </h1>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row align-items-center">
+    <div class="col-12 col-md-4 offset-xl-1 offset-md-1 order-md-2 mb-5 mb-md-0">
+
+      <!-- Image -->
+      <div class="text-center">
+        <img src="/static/nextify/img/happiness.svg" alt="..." class="img-fluid">
+      </div>
+
+    </div>
+
+    <div class="col-12 col-md-5 col-xl-6 order-md-1 my-5">
+      <div class="card u-p-medium">
+          <div class="row u-justify-center" style="margin-bottom: 20px;">
+              <h1 class="header-title">
+                  KAS POS
+                </h1>
+              </div>
+        <div class="row u-justify-center">
+          <div class="col-12">
+            <!-- Heading -->
+
+            <!-- Form -->
+            <form id="ipos_connect" method="post" action="/save_merchant_id_KAS">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+              <!-- Email address -->
+              <div class="form-group">
+
+                <!-- Label -->
+                <label>ID merchant app Kas</label>
+
+                <!-- Input -->
+                <input type="text" id="id_mer_kas" name="id_mer_kas" class="form-control"
+                  placeholder="5960943847dd46c51416abcd" {% if id_mer_kas %} value="{{ id_mer_kas }}" {% endif %}>
+
+              </div>
+              <div class="form-group">
+                <div class="c-switch {% if status=='True' %}is-active{% endif %}">
+                  <input class="c-switch__input" name="status" id="status" type="checkbox"
+                    {% if status=="True" %}checked="checked" {% endif %}>
+                  {{ gettext('Kich_hoat') }}
+                </div>
+
+              </div>
+
+            </form>
+
+            <div class="col-9" style="float:right">
+              <button class="btn btn-lg btn-block btn-primary" id="save_info_API">
+                {{ gettext('Luu_thong_tin') }}
+
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+  <div class="row align-items-center">
+    <div class="col-12 col-md-5 col-xl-6 order-md-1 my-5">
+      <div class="card u-p-medium">
+          <div class="row u-justify-center" style="margin-bottom: 20px;">
+              <h1 class="header-title">
+                  {{ gettext('Thiet_lap_ID_dia_diem') }}
+                </h1>
+              </div>
+        <div class="row u-justify-center">
+          <div class="col-12">
+            <!-- Heading -->
+
+            <!-- Form -->
+            <form id="save_id_location" method="post" action="/apps/kas_pos?shop_id={{ shop_select._id }}">
+
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+              <div class="form-group">
+                <select id="redirect_shop_select" class="browser-default custom-select">
+                  {% if shop_select._id %}
+                  <option disabled selected>{{ shop_select.name }}</option>
+                  {% else %}
+                  <option disabled selected>{{ gettext('Chon_dia_diem') }}</option>
+                  {% endif %}
+                  {% for shop in shop_in_mer %}
+                  <option value="{{ shop._id }}">{{ shop.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <input type="text" id="id_loc" name="id_loc" class="form-control" placeholder="{{ gettext('ID_dia_diem') }}"
+                  value="{{ shop_select.pos_id }}">
+
+              </div>
+
+            </form>
+
+            <div class="col-9" style="float:right">
+              <button class="btn btn-lg btn-block btn-primary" id="save_id_loc">
+                {{ gettext('Luu_thong_tin') }}
+
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div> <!-- / .container -->
+
+<script nonce="{{ csp_nonce() }}">
+  $(document).ready(function () {
+    $("#redirect_shop_select").select2();
+    $('#redirect_shop_select').on('change.select2', function (e) {
+      var shop_id = $(this).val();
+      var url = "/apps/kas_pos" + "?shop_id=" + shop_id;
+      location.replace(url);
+    })
+    $("#save_id_loc").click(function () {
+      $.ajax({
+        url: $("#save_id_location").attr("action"),
+        type: $("#save_id_location").attr("method"),
+        data: $("#save_id_location").serialize(),
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ('error' in returnedData) {
+            swal(returnedData['error'], " ", "error");
+            return false;
+          }
+          else {
+            swal("{{ gettext('Thao_tac_thanh_cong') }}", " ", "success");
+            location.reload();
+          }
+
+        },
+        error: function (xhr, desc, err) {
+          swal("{{ gettext('Co_lo_xay_ra,_thu_lai_sau') }}", " ", "error");
+
+
+
+        }
+
+      })
+    })
+
+    $("#save_info_API").click(function () {
+      var id_mer_kas = $("#id_mer_kas").val();
+
+      if (id_mer_kas.length == 0) {
+        swal("{{ gettext('ID_khong_duoc_de_trong') }}", " ", "error");
+        return false;
+      }
+
+      $.ajax({
+        url: $("#ipos_connect").attr("action"),
+        type: $("#ipos_connect").attr("method"),
+        data: $("#ipos_connect").serialize(),
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ('error' in returnedData) {
+            swal(returnedData['error'], " ", "error");
+            return false;
+          }
+          else {
+            swal("{{ gettext('Thao_tac_thanh_cong') }}", " ", "success");
+            location.reload();
+          }
+
+        },
+        error: function (xhr, desc, err) {
+          swal("{{ gettext('ID_khong_duoc_de_trong') }}", " ", "error");
+
+
+
+        }
+      });
+
+      return false;
+    })
+
+  });
+</script>
+
+{% endblock %}
+{% block js %}
+{% endblock %}

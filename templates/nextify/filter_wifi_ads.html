@@ -1,0 +1,210 @@
+<table class="table v2">
+    <thead>
+        <tr>
+            <th data-field="campaignName"><span class="th-contents"><span class="text">Tên chiến
+                        dịch</span></span></th>
+
+            <th data-field="estWalk"><span class="th-contents"><span class="text">Thời gian
+                    </span></span></th>
+            <th data-field="impressions"><span class="th-contents"><span class="text">Lượt hiển
+                        thị</span></span></th>
+            <th data-field="clicks"><span style="font-size: 14px; margin-bottom: 0rem;">Mục
+                    tiêu</span>
+            </th>
+            <th data-field="clicks"><span style="font-size: 14px; margin-bottom: 0rem;">Loại chiến
+                    dịch</span>
+            </th>
+            <th data-field="status"><span class="th-contents"><span class="text">Trạng
+                        thái</span></span>
+            </th>
+            <th data-field="actionIcons"><span class="th-contents"><span class="text"></span></span>
+            </th>
+            <th data-field="actionIcons"><span class="th-contents"><span class="text"></span></span>
+            </th>
+            <th data-field="actionIcons"><span class="th-contents"><span class="text"></span></span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for camp in campaigns %}
+        <tr>
+            <td data-field="campaignName"><span class="th-contents"><span
+                        class="text">Campaign</span></span>
+                <div class="campaign-name-row">
+                    <div class="campaign-thumb is-clickable">
+                        <i class="fe fe-wifi fa-lg" style="display:inline-block;text-align: center;
+                   vertical-align: bottom;"></i>
+                    </div>
+                    <div class="campaign-name">{{ camp.name }}</div>
+                    <div class="campaign-dates">Cập nhật
+                        lúc {{ camp.update_at|get_human_time }}</div>
+                </div>
+            </td>
+
+            <td data-field="estWalk"><span class="th-contents"><span class="text">Thời
+                        gian</span><span>
+                        <div class="with-tooltip-v2">
+                            <div>
+                                <div class="info-icon"></div>
+                            </div>
+                        </div>
+                    </span></span>
+                <div class="campaign-metric bold"><span>{{ camp.update_at|get_human_time }}</span>
+                </div>
+            </td>
+            <td data-field="impressions"><span class="th-contents"><span class="text">Lượt hiển
+                        thị</span></span>
+
+                <div class="campaign-metric"><span>{{ camp.total_access }}</span></div>
+            </td>
+            <td data-field="impressions"><span class="th-contents"><span class="text">Mục
+                        tiêu</span></span>
+
+                <div class="campaign-metric"><span>{{ camp.target_campaign }}</span></div>
+            </td>
+            <td data-field="impressions"><span class="th-contents"><span class="text">Loại chiến
+                        dịch</span></span>
+
+                <div class="campaign-metric"><span
+                        class="badge badge-soft-{{ ['success','warning','info']|random }}">
+                        {% if camp.type_campaign and
+                        camp.type_campaign|string=="monopoly" %}Độc quyền
+                        {% elif camp.type_campaign and
+                        camp.type_campaign|string=="share" %} Chia sẻ
+                        {% elif camp.type_campaign and
+                        camp.type_campaign|string=="default" %} Mặc định
+                        {% elif camp.type_campaign and
+                        camp.type_campaign|string=="partner" %} Đối tác
+                        {% endif %}</span></div>
+            </td>
+            <td data-field="status">
+                <div class="custom-control custom-switch">
+                    <input camp_id="{{ camp._id }}" class="custom-control-input"
+                        id="active_status_{{ camp._id }}" status_id="active_status_{{ camp._id }}"
+                        type="checkbox" {% if camp.status and camp.status|lower=="true" %}checked{%
+                        endif %}>
+                    <label class="custom-control-label" for="active_status_{{ camp._id }}"></label>
+                </div>
+            </td>
+            <td data-field="actionIcons"><span class="th-contents"><span class="text"></span></span>
+                <div class="action-icons visible-on-hover">
+                    <div class="action-icon">
+                        <a aria-haspopup="true" camp_id="{{ camp._id }}" camp_name="{{ camp.name }}"
+                            class="preview_campaign" data-toggle="modal" href="#"
+                            style="color: inherit;text-decoration: none;">
+                            <span class="fe fe-eye mr-4"></span>
+                        </a>
+                    </div>
+                </div>
+            </td>
+            <td data-field="actionIcons"><span class="th-contents"><span class="text"></span></span>
+                <div class="action-icons visible-on-hover">
+                    <div class="action-icon">
+                        <a href="/wifi_ads_detail?campaign_id={{ camp._id }}&init=False"
+                            style="color: inherit;text-decoration: none;">
+                            <span class="fe fe-edit mr-4"></span>
+                        </a>
+                    </div>
+                </div>
+            </td>
+
+            <td data-field="actionIcons"><span class="th-contents"><span class="text"></span></span>
+                <div class="action-icons visible-on-hover">
+                    <div class="action-icon">
+                        <a id="remove_{{ camp._id }}">
+                            <span class="fe fe-x-circle mr-4"></span>
+                        </a>
+                    </div>
+                </div>
+                <script nonce="{{ csp_nonce() }}">
+                    $(document).ready(function () {
+                        $('#active_status_{{ camp._id }}').change(function () {
+                            var _id = $('#active_status_{{ camp._id }}').attr('status_id');
+                            var camp_id = $('#active_status_{{ camp._id }}').attr('camp_id');
+                            var status = $('#' + _id).is(":checked");
+                            var url = '/wifi_ads/active/' + camp_id + '/' + $('#' + _id).is(":checked");
+
+                            $.ajax({
+                                type: 'GET',
+                                url: url,
+                                success: function (response) {
+
+                                    if (JSON.parse(response).result == true) {
+                                        swal({
+                                            title: '{{ gettext("Thanh_cong!") }}',
+                                            text: " ",
+                                            type: "success"
+                                        });
+                                    } else {
+                                        swal('Vui lòng thử lại', " ", "error");
+                                    }
+                                }
+
+                            })
+                        });
+
+                        $('#active_birthday_{{ camp._id }}').change(function () {
+                            var _id = $('#active_birthday_{{ camp._id }}').attr('status_id');
+                            var camp_id = $('#active_birthday_{{ camp._id }}').attr('camp_id');
+
+                            var url = '/wifi_ads/birthday/' + camp_id + '/' + $('#' + _id).is(":checked");
+
+                            $.ajax({
+                                type: 'GET',
+                                url: url,
+                                success: function (response) {
+                                    swal({
+                                        title: '{{ gettext("Thanh_cong!") }}',
+                                        text: " ",
+                                        type: "success"
+                                    });
+                                }
+                            })
+                        });
+                        $("#remove_{{ camp._id }}").click(function (e) {
+                            Swal.fire({
+                                title: '{{ gettext("Ban_co_chac_chan_muon_xoa_khong?") }}',
+                                type: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+focusCancel: true,
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: '{{ gettext("Co") }}!',
+                                cancelButtonText: '{{ gettext("Khong") }}!'
+                            }).then((result) => {
+                                if (result.value) {
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '/wifi_ads',
+                                        data: {
+                                            'campaign_id': '{{ camp._id }}',
+                                            'merchant_id': '{{ merchant_id }}',
+                                            'action': 'remove'
+                                        },
+                                        success: function (response) {
+                                            swal({
+                                                title: '{{ gettext("Thanh_cong!") }}',
+                                                text: " ",
+                                                type: "success"
+                                            });
+                                        }
+
+                                    });
+                                }
+                                location.href = '/wifi_ads';
+                            })
+                        });
+
+
+                    });
+                </script>
+            </td>
+
+
+        </tr>
+
+        {% endfor %}
+    </tbody>
+    <tfoot></tfoot>
+</table>

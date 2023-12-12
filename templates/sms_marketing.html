@@ -1,0 +1,472 @@
+{% extends "v2/base.html" %}
+
+{% block right_content %}
+
+  <div class="row">
+
+    <div class="col-md-12 col-sm-3 col-xs-12">
+      <div class="panel panel-white" style="width: 100%;display: inline-block;">
+
+        <div class="panel-body">
+          {% if error %}
+            <div class="alert alert-danger">
+              {{ error | safe }}
+            </div>
+          {% endif %} {% if message %}
+          <div class="alert alert-success">
+            {{ message | safe }}
+          </div>
+        {% endif %}
+
+          <form method="POST" class="form-horizontal" action="/auto_marketing" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <div class="header">
+                    <h3 class="panel-title">Khách đến lần đầu</h3>
+                    <div class="form-group form-inline">
+                      <label>Kích hoạt</label>
+                      <input type="checkbox" name="enable_welcome" style="margin-top:10px"
+                             {% if shop.sms.welcome %}{% if shop.sms.welcome.enable %}checked
+                             {% endif %}{% endif %}>
+                    </div>
+
+                  </div>
+                  <div class="content">
+                    <label>Thông điệp : </label>
+                    <textarea class="form-control form-input" style="margin-top:10px" id="welcome-sms"
+                              name="welcome" rows="2"
+                              title="SMS sẽ được gửi sau khoảng 1 phút khách hàng kết nối wifi">{% if shop.sms.welcome %}
+                      {{ shop.sms.welcome.mess | default('') }}{% endif %}</textarea>
+                    <label>Chi tiết : </label>
+                    <textarea class="form-control form-input" style="margin-top:10px" id="welcome-info"
+                              name="info_welcome" rows="2">{% if shop.sms.welcome %}
+                      {{ shop.sms.welcome.info | default('') }}{% endif %}</textarea>
+                    <label>Tự động gửi SMS</label><input type="checkbox" name="active_welcome"
+                                                         style="margin-left: 5px;margin-top:10px"
+                                                         {% if shop.sms.welcome %}{% if shop.sms.welcome.active %}checked {% endif %}{% endif %}>
+                    <label>ZALO</label><input type="checkbox" name="zalo_welcome"
+                                              style="margin-left: 5px;margin-top:10px"
+                                              {% if shop.sms.welcome %}{% if shop.sms.welcome.zalo %}checked
+                                              {% endif %}{% endif %}>
+                    <div class="from-group form-inline">
+                      <label for="welcome_type_coupon">Loại Coupon:</label>
+                      {% if shop.sms.welcome %}{% if shop.sms.welcome.type_coupon %}
+                        <input type="hidden" id="ex_welcome_type_coupon"
+                               value="{{ shop.sms.welcome.type_coupon }}"/>
+                      {% endif %}{% endif %}
+                      <select name="welcome_type_coupon" class="form-control form-input"
+                              style="width: auto" id="welcome_type_coupon">
+                        <option value="no">Không</option>
+                        {% for coup in coupons_type_select %}
+                          <option value="{{ coup._id }}">{{ coup.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="form-group form-inline">
+                      <label>Hạn dùng Coupon (nếu có) : </label>
+
+                      <input type="text" class="form-control" style="width: 50px" value="{% if shop.sms.welcome %}{% if shop.sms.welcome.expire %}{{ shop.sms.welcome.expire }}{% endif %}{% endif %}"
+                             name="ex_welcome"/> ngày
+                    </div>
+                  </div>
+                </div>
+                <hr>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <div class="header">
+                    <h3 class="panel-title">Khách quay lại</h3>
+                    <div class="form-group form-inline">
+                      <label>Kích hoạt</label>
+                      <input type="checkbox"  style="margin-top:10px" name="enable_return"
+                             {% if shop.sms.return %}{% if shop.sms.return.enable %}checked
+                             {% endif %}{% endif %}>
+                    </div>
+                  </div>
+                  <div class="content">
+                    <div class="form-group form-inline">
+                      <label>Lần thứ: </label>
+                      <input type="text" class="form-control" style="width: 50px" value="{% if shop.sms.return %}{% if shop.sms.return.count %}{{ shop.sms.return.count }}{% endif %}{% endif %}"
+                             name="return_count"/>
+                      <label>Đến: </label>
+                    <input type="text" class="form-control" style="width: 50px" value="{% if shop.sms.return %}{% if shop.sms.return.count_max %}{{ shop.sms.return.count_max }}{% endif %}{% endif %}"
+                             name="return_count_max"/>
+                    </div>
+                    <label>Thông điệp : </label>
+                    <textarea class="form-control form-input" id="returning-sms" name="returning"
+                              rows="2">{% if shop.sms.return %}
+                      {{ shop.sms.return.mess | default('') }}{% endif %}</textarea>
+
+                    <label>Chi tiết : </label>
+                    <textarea class="form-control form-input" style="margin-top:10px"
+                              name="info_returning" rows="2">{% if shop.sms.return %}
+                      {{ shop.sms.return.info | default('') }}{% endif %}</textarea>
+                    <label>Tự động gửi SMS </label><input type="checkbox"
+                                                          style="margin-left: 5px;margin-top:10px" name="active_returning"
+                                                          {% if shop.sms.return %}{% if shop.sms.return.active %}checked
+                                                          {% endif %}{% endif %}>
+                    <label>ZALO</label><input type="checkbox"
+                                              style="margin-left: 5px;margin-top:10px" name="zalo_return"
+                                              {% if shop.sms.return %}{% if shop.sms.return.zalo %}checked
+                                              {% endif %}{% endif %}>
+                    <div class="from-group form-inline">
+                      <label for="returning_type_coupon">Loại Coupon:</label>
+                      {% if shop.sms.return %}{% if shop.sms.return.type_coupon %}
+                        <input type="hidden" id="ex_returning_type_coupon"
+                               value="{{ shop.sms.return.type_coupon }}"/>
+                      {% endif %}{% endif %}
+                      <select name="returning_type_coupon" class="form-control form-input"
+                              style="width: auto" id="returning_type_coupon">
+                        <option value="no">Không</option>
+                        {% for coup in coupons_type_select %}
+                          <option value="{{ coup._id }}">{{ coup.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="form-group form-inline">
+                      <label>Hạn dùng Coupon (nếu có) : </label>
+                      <input type="text" class="form-control" style="width: 50px" value="{% if shop.sms.return %}{% if shop.sms.return.expire %}{{ shop.sms.return.expire }}{% endif %}{% endif %}"
+                             name="ex_returning"/> ngày
+                    </div>
+                  </div>
+                </div>
+                <hr>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group" title="Khách đến nhiều lần trong tháng">
+                  <div class="header">
+                    <h3 class="panel-title">Khách hàng thân thiết</h3>
+                    <p class="category">Khách đến nhiều lần trong tháng</p>
+                    <div class="form-group form-inline">
+                      <label>Kích hoạt</label>
+                      <input type="checkbox" name="enable_loyal" style="margin-top:10px"
+                             {% if shop.sms.loyal %}{% if shop.sms.loyal.enable %}checked
+                             {% endif %}{% endif %}>
+                    </div>
+                  </div>
+                  <div class="content">
+                    <div class="form-group form-inline">
+                      <label>Số lần : </label>
+                      <input type="text" class="form-control" style="width: 50px" value="{% if shop.sms.loyal %}{% if shop.sms.loyal.count %}{{ shop.sms.loyal.count }}{% endif %}{% endif %}"
+                             name="loyal_count"/>
+                     <label> Đến:</label>
+                        <input type="text" class="form-control" style="width: 50px" value="{% if shop.sms.loyal %}{% if shop.sms.loyal.count_max %}{{ shop.sms.loyal.count_max }}{% endif %}{% endif %}" name="loyal_count_max" />
+                    </div>
+                     <label>Giới tính : </label>
+                    <div class="form-group form-inline">
+                      <label>Chưa xác định : </label>
+                      <input type="checkbox" name="gender_unknow"
+                                              style="margin-left: 5px;margin-top:10px"
+                                              {% if shop.sms.lost %}{% if shop.sms.lost.gender %}{% if shop.sms.lost.gender.unknow %}checked
+                                              {% endif %}{% endif %}{% endif %}>
+                    <label>Name : </label>
+                      <input type="checkbox" name="gender_male"
+                                              style="margin-left: 5px;margin-top:10px"
+                                              {% if shop.sms.lost %}{% if shop.sms.lost.gender %}{% if shop.sms.lost.gender.male %}checked
+                                              {% endif %}{% endif %}{% endif %}>
+                    <label>Nữ : </label>
+                      <input type="checkbox" name="gender_female"
+                                              style="margin-left: 5px;margin-top:10px"
+                                              {% if shop.sms.lost %}{% if shop.sms.lost.gender %}{% if shop.sms.lost.gender.female %}checked
+                                              {% endif %}{% endif %}{% endif %}>
+                    </div>
+                    <label>Thông điệp : </label>
+                    <textarea class="form-control form-input" id="regular-customer-sms"
+                              name="regular_customer" rows="2"
+                              title="SMS sẽ được gửi sau khoảng 1 phút khách hàng kết nối wifi"
+                              placeholder="Ví dụ: Chào {{ name }}, đừng quên đọc số điện thoại khi thanh toán để được giảm 10% cho khách hàng thân thiết nhé.">{% if shop.sms.loyal %}
+                      {{ shop.sms.loyal.mess | default('') }}{% endif %}</textarea>
+                    <label>Chi tiết : </label>
+                    <textarea class="form-control form-input" style="margin-top:10px"
+                              name="info_regular_customer" rows="2">{% if shop.sms.loyal %}
+                      {{ shop.sms.loyal.info | default('') }}{% endif %}</textarea>
+                    <label>Tự động gửi SMS </label><input type="checkbox" name="active_regular_cus"
+                                                          style="margin-left: 5px;margin-top:10px"
+                                                          {% if shop.sms.loyal %}{% if shop.sms.loyal.active %}checked
+                                                          {% endif %}{% endif %}>
+                    <label>ZALO</label><input type="checkbox" name="zalo_loyal"
+                                              style="margin-left: 5px;margin-top:10px"
+                                              {% if shop.sms.loyal %}{% if shop.sms.loyal.zalo %}checked
+                                              {% endif %}{% endif %}>
+                    <div class="from-group form-inline">
+                      <label for="regular_customer_type_coupon">Loại Coupon:</label>
+                      {% if shop.sms.loyal %}{% if shop.sms.loyal.type_coupon %}
+                        <input type="hidden" id="ex_regular_customer_type_coupon"
+                               value="{{ shop.sms.loyal.type_coupon }}"/>
+                      {% endif %}{% endif %}
+                      <select name="regular_customer_type_coupon" class="form-control form-input"
+                              style="width: auto" id="regular_customer_type_coupon">
+                        <option value="no">Không</option>
+                        {% for coup in coupons_type_select %}
+                          <option value="{{ coup._id }}">{{ coup.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="form-group form-inline">
+                      <label>Hạn dùng Coupon (nếu có) : </label>
+
+                      <input type="text" class="form-control" style="width: 50px" value=" {% if shop.sms.loyal %}{% if shop.sms.loyal.expire %}{{ shop.sms.loyal.expire }}{% endif %}{% endif %}"
+                             name="ex_regular_customer"/> ngày
+                    </div>
+
+                  </div>
+                </div>
+                <hr>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <div class="header">
+                    <h3 class="panel-title">Khách lâu chưa quay lại quán</h3>
+                    <div class="form-group form-inline">
+                      <label>Kích hoạt</label>
+                      <input type="checkbox" style="margin-top:10px" name="enable_lost"
+                             {% if shop.sms.lost %}{% if shop.sms.lost.enable %}checked{% endif %}{% endif %}>
+                    </div>
+                  </div>
+                  <div class="content">
+                    <div class="form-group form-inline">
+                      <label>Số ngày : </label>
+
+                      <input type="text" class="form-control" style="width: 50px" value="
+                      {% if shop.sms.lost %}{% if shop.sms.lost.count %}{{ shop.sms.lost.count }}{% endif %}{% endif %}"
+                             name="lost_count"/> ngày
+                    </div>
+                    <label>Thông điệp : </label>
+                    <textarea class="form-control" id="30day-sms" name="one_month" rows="2"
+                              placeholder="Ví dụ: Hi {{ name }}, đã lâu bạn chưa quay lại, chúng tôi gửi tặng bạn coupon OFF20 cho lần ghé thăm tới. Hẹn gặp lại bạn.">{% if shop.sms.lost %}
+                      {{ shop.sms.lost.mess| default('') }}{% endif %}</textarea>
+                    <label>Chi tiết : </label>
+                    <textarea class="form-control" style="margin-top:10px" name="info_one_month"
+                              rows="2">{% if shop.sms.lost %}{{ shop.sms.lost.info| default('') }}{% endif %}</textarea>
+                    <label>Tự động gửi SMS </label><input type="checkbox" name="active_one_month"
+                                                          style="margin-left: 5px;margin-top:10px"
+                                                          {% if shop.sms.lost %}{% if shop.sms.lost.active %}checked
+                                                          {% endif %}{%
+                                                            endif %}/>
+                    <label>ZALO</label><input type="checkbox" name="zalo_lost"
+                                              style="margin-left: 5px;margin-top:10px"
+                                              {% if shop.sms.lost %}{% if shop.sms.lost.zalo %}checked
+                                              {% endif %}{% endif %}>
+                    <div class="from-group form-inline">
+                      <label for="one_month_type_coupon">Loại Coupon:</label>
+                      {% if shop.sms.lost %}{% if shop.sms.lost.type_coupon %}
+                        <input type="hidden" id="ex_one_month_type_coupon"
+                               value="{{ shop.sms.lost.type_coupon }}"/>
+                      {% endif %}{% endif %}
+                      <select name="one_month_type_coupon" class="form-control form-input"
+                              style="width: auto" id="one_month_type_coupon">
+                        <option value="no">Không</option>
+                        {% for coup in coupons_type_select %}
+                          <option value="{{ coup._id }}">{{ coup.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="form-group form-inline">
+                      <label>Hạn dùng Coupon (nếu có) : </label>
+
+                      <input type="text" class="form-control" style="width: 50px" value="{% if shop.sms.lost %}{% if shop.sms.lost.expire %}{{ shop.sms.lost.expire }}{% endif %}{% endif %}"
+                             name="ex_one_month"/> ngày
+                    </div>
+
+                  </div>
+                </div>
+                <hr>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <div class="header">
+                    <h3 class="panel-title">Chúc mừng sinh nhật</h3>
+                    <div class="form-group form-inline">
+                      <label>Kích hoạt</label>
+                      <input type="checkbox" style="margin-top:10px" name="enable_birthday"
+                             {% if  shop.sms.happy_birthday %}{% if  shop.sms.happy_birthday.enable %}checked
+                             {% endif %}{% endif %}>
+                    </div>
+                  </div>
+                  <div class="content">
+                    <b><p style="margin-top:10px">Thông điệp : </p></b>
+                    <textarea class="form-control" id="happy-birthday-sms" name="happy_birthday"
+                              rows="2">{% if shop.sms.happy_birthday %}
+                      {{ shop.sms.happy_birthday.message | default('') }}{% endif %}</textarea>
+                    <label>Chi tiết : </label>
+                    <textarea class="form-control" style="margin-top:10px" name="info_birthday"
+                              rows="2">{% if shop.sms.happy_birthday %}
+                      {{ shop.sms.happy_birthday.info | default('') }}{% endif %}</textarea>
+                    <label>Tự động gửi SMS </label><input type="checkbox"
+                                                          style="margin-left: 5px;margin-top:10px" name="active_birthday"
+                                                          {% if shop.sms.happy_birthday %}{% if shop.sms.happy_birthday.active %}checked
+                                                          {% endif %}{% endif %}>
+                    <label>ZALO</label><input type="checkbox"
+                                              style="margin-left: 5px;margin-top:10px" name="zalo_happy_birthday"
+                                              {% if shop.sms.happy_birthday %}{% if shop.sms.happy_birthday.zalo %}checked
+                                              {% endif %}{% endif %}>
+                    <div class="from-group form-inline">
+                      <label for="happy_birthday_type_coupon">Loại Coupon:</label>
+                      {% if shop.sms.happy_birthday %}
+                        {% if shop.sms.happy_birthday.type_coupon %}
+                          <input type="hidden" id="ex_happy_birthday_type_coupon"
+                                 value="{{ shop.sms.happy_birthday.type_coupon }}"/>
+                        {% endif %}{% endif %}
+                      <select name="happy_birthday_type_coupon" class="form-control form-input"
+                              style="width: auto" id="happy_birthday_type_coupon">
+                        <option value="no">Không</option>
+                        {% for coup in coupons_type_select %}
+                          <option value="{{ coup._id }}">{{ coup.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+
+                    <div class="form-group form-inline">
+                      <label>Hạn dùng Coupon (nếu có) : </label>
+
+                      <input type="text" class="form-control" style="width: 50px" value="
+
+
+
+                        {% if shop.sms.happy_birthday %}{% if shop.sms.happy_birthday.expire %}{{ shop.sms.happy_birthday.expire }}{% endif %}{% endif %}"
+                             name="ex_happy_birthday"/> ngày
+                    </div>
+                    <div class="form-group form-inline">
+                      <label>Gửi tin nhắn trước : </label>
+
+                      <input type="text" class="form-control" style="width: 50px" value="
+
+
+
+                        {% if shop.sms.happy_birthday %}{% if shop.sms.happy_birthday.date_send %}{{ shop.sms.happy_birthday.date_send }}{% endif %}{% endif %}"
+                             name="bday_date_send"/> ngày
+
+                    </div>
+                    <div class="form-group form-inline">
+                      <input type="checkbox" name="reminder_bday" style="margin-top:10px"
+                             {% if shop.sms.happy_birthday %}{% if shop.sms.happy_birthday.reminder %}checked
+                             {% endif %}{% endif %}> <label>Tin nhắn nhắc lại vào ngày sinh
+                      nhật</label>
+                    </div>
+                  </div>
+                </div>
+                <hr>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <div class="header">
+                    <h3 class="panel-title">Khuyến mãi chung</h3>
+                    <p class="category">Chiến dịch marketing tuỳ chọn: 30/4, 2/9, 8/3 ngày lễ tết
+                      ...</p>
+                    <div class="form-group form-inline">
+                      <label>Kích hoạt</label>
+                      <input type="checkbox" name="enable_announ" style="margin-top:10px"
+                             {% if  shop.sms.announcement %}{% if  shop.sms.announcement.enable %}checked
+                             {% endif %}{% endif %}>
+                    </div>
+                  </div>
+                  <div class="content">
+                    <label>Thông điệp : </label>
+                    <textarea class="form-control form-input" id="announcement" name="announcement"
+                              rows="2"
+                              placeholder="Ví dụ: Nhân dịp 8/3 chúng tôi giảm giá 10% cho hoá đơn nhóm 3 bạn gái.">{% if shop.sms.announcement %}
+                      {{ shop.sms.announcement.mess | default('') }}{% endif %}</textarea>
+
+                    <label>Chi tiết : </label>
+                    <textarea class="form-control form-input" style="margin-top:10px"
+                              name="info_announcement" rows="2">{% if shop.sms.announcement %}
+                      {{ shop.sms.announcement.info| default('') }}{% endif %}</textarea>
+                    <label>Tự động gửi SMS </label><input type="checkbox" name="active_announ"
+                                                          style="margin-left: 5px;margin-top:10px"
+                                                          {% if shop.sms.announcement %}{% if shop.sms.announcement.active %}checked
+                                                          {% endif %}{% endif %}>
+                    <label>ZALO</label><input type="checkbox" name="zalo_announcement"
+                                              style="margin-left: 5px;margin-top:10px"
+                                              {% if shop.sms.announcement %}{% if shop.sms.announcement.zalo %}checked
+                                              {% endif %}{% endif %}>
+                    <div class="from-group form-inline">
+                      <label for="announ_type_coupon">Loại Coupon:</label>
+                      {% if shop.sms.announcement %}{% if shop.sms.announcement.type_coupon %}
+                        <input type="hidden" id="ex_announ_type_coupon"
+                               value="{{ shop.sms.announcement.type_coupon }}"/>
+                      {% endif %}{% endif %}
+                      <select name="announ_type_coupon" class="form-control form-input"
+                              style="width: auto" id="announ_type_coupon">
+                        <option value="no">Không</option>
+                        {% for coup in coupons_type_select %}
+                          <option value="{{ coup._id }}">{{ coup.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="form-group form-inline">
+                      <label>Hạn dùng Coupon (nếu có) : </label>
+
+                      <input type="text" class="form-control" style="width: 50px" value="{% if shop.sms.announcement %}{% if shop.sms.announcement.expire %}{{ shop.sms.announcement.expire }}{% endif %}{% endif %}"
+                             name="ex_announ"/> ngày
+                    </div>
+
+                  </div>
+                </div>
+                <hr>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <div class="btn-toolbar pull-right">
+                    <div class="btn-group">
+                      <button type="submit" class="btn btn-success m-t-xxs">Lưu thông tin
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+  </div>
+{% endblock %}
+{% block js %}
+   <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+      $('#marketing').click();
+      if ($("#ex_welcome_type_coupon").length > 0) {
+        $("#welcome_type_coupon").val($("#ex_welcome_type_coupon").val());
+      }
+      if ($("#ex_returning_type_coupon").length > 0) {
+        $("#returning_type_coupon").val($("#ex_returning_type_coupon").val());
+      }
+      if ($("#ex_regular_customer_type_coupon").length > 0) {
+        $("#regular_customer_type_coupon").val($("#ex_regular_customer_type_coupon").val());
+      }
+      if ($("#ex_one_month_type_coupon").length > 0) {
+        $("#one_month_type_coupon").val($("#ex_one_month_type_coupon").val());
+      }
+      if ($("#ex_happy_birthday_type_coupon").length > 0) {
+        $("#happy_birthday_type_coupon").val($("#ex_happy_birthday_type_coupon").val());
+      }
+      if ($("#ex_announ_type_coupon").length > 0) {
+        $("#announ_type_coupon").val($("#ex_announ_type_coupon").val());
+      }
+    });
+
+  </script>
+
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "v2/base.html" %} {% block right_content %}
+
+<div class="row">
+    <div class="header">
+        <h4 class="title">{{coupon_series_name}}</h4>
+    </div>
+    <div class="card">
+        <div class="content">
+
+        </div>
+        <div class="content table-responsive table-full-width">
+
+            <table class="table table-hover table-striped">
+                <thead>
+                    <th>ID</th>
+                    <th>{{ gettext("Coupon_number") }}</th>
+                    <th>{{ gettext("Discount_Percent") }}</th>
+                    <th>{{ gettext("Discount_Amount") }}</th>
+                    <th>{{ gettext("Expire_Date") }}</th>
+                    <th>{{ gettext("Active") }}</th>
+                </thead>
+                <tbody>
+                    {% for voun in vounchers %}
+                    <tr>
+                       <td>{{voun.CouponCardId}}</td>
+                       <td>{{voun.CouponNumber}}</td>
+                       <td>{{voun.DiscountPercent}}</td>
+                       <td>{{voun.DiscountAmount}}</td>
+                       <td>{{voun.ExpireDate}}</td>
+                       <td>{{voun.Active}}</td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+                {%if pagination %}
+        <center>
+            {{ pagination.links }}
+        </center>
+        {%endif%}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+{%block js%}
+ <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+              $('#vouchers').click();
+        });
+</script>
+{%endblock%}

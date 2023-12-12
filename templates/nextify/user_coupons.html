@@ -1,0 +1,99 @@
+{% if coupons|length > 0 %}
+<div class="c-table-responsive@desktop">
+                        <table class="c-table c-table--zebra u-mb-small">
+                            <thead class="c-table__head">
+                                <tr class="c-table__row">
+                                  <th class="c-table__cell
+                                  c-table__cell--head">Code</th>
+                                  <th class="c-table__cell
+                                  c-table__cell--head">{{ gettext("Loai") }}</th>
+                                  <th class="c-table__cell
+                                  c-table__cell--head">{{ gettext("Tien") }}</th>
+                                  <th class="c-table__cell
+                                  c-table__cell--head">{{ gettext("Giam_gia") }}</th>
+                                  <th class="c-table__cell
+                                  c-table__cell--head">{{ gettext("Trang_thai") }}</th>
+                                  <th class="c-table__cell c-table__cell--head">
+                                      <span class="u-hidden-visually"></span>
+                                  </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for coup in coupons %}
+                                <tr class="c-table__row">
+                                    <td class="c-table__cell">{{ coup.code }}
+                                    </td>
+
+                                    <td class="c-table__cell">{{ coup.coupon_type_info.name }}
+                                    </td>
+
+                                    <td class="c-table__cell">
+                                        {% if coup.coupon_type_info.money_exchange %}
+              {{ coup.coupon_type_info.money_exchange |format_price }}{% endif %}
+                                    </td>
+
+                                    <td class="c-table__cell">$4,670
+                                      {{ coup.coupon_type_info.discount_percent }}
+                                    </td>
+
+                                    <td class="c-table__cell">
+                                        {% if coup.redeemed %}
+                                         <i class="fa fa-circle-o
+                                         u-color-success u-mr-xsmall"></i>{{ gettext("Da_doi") }}
+                                        {% else %}
+                                            {% if coup.date_expire|is_great_time_than %}
+                                                <i class="fa fa-circle-o
+                                                u-color-info
+                                                u-mr-xsmall"></i>{{ gettext("Chua_doi") }}
+                                                {% else %}
+                                                <i class="fa fa-circle-o
+                                                u-color-danger
+                                                u-mr-xsmall"></i>{{ gettext("Het_han") }}
+                                                {% endif %}
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td class="c-table__cell u-text-right">
+                                        <div class="c-candidate__actions">
+                                        <a href="#" data-toggle="modal" data-target="#{{ coup._id }}_details"><i class="fa
+                                        fa-info-circle"></i></a>
+                                    </div>
+                                    </td>
+                                <div class="c-modal modal fade"
+                                     id="{{ coup._id }}_details"
+                                     tabindex="-1"
+                                     role="dialog" aria-labelledby="myModal3" aria-hidden="true" style="display: none;">
+                        <div class="c-modal__dialog modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="card u-p-medium u-mh-auto" style="max-width:500px;">
+                                    <h3>{{ coup.coupon_type_info.name }}</h3>
+                                    <p class="u-text-mute u-mb-small">
+                                        {{coup.coupon_type_info.content}}
+                                    </p>
+                                    <button class="c-btn c-btn--info" data-dismiss="modal">
+                                        {{ gettext("Xong") }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+
+<nav class="c-pagination u-justify-center">
+                        {% if pagination %}
+                          {{ pagination.links }}
+                        {% endif %}
+                </nav>
+
+{% else %}
+
+
+{% endif %}

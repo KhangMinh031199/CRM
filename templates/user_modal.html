@@ -1,0 +1,108 @@
+<input type="hidden" id="user_curr" value="{{ user.phone }}">
+<div class="row" style="text-align: center;">
+
+      <div class="content">
+
+        <div class="row" style="margin-top: 0px">
+
+          <div class="col-md-12 col-centered">
+            <div class="form-group">
+                 {% if user.avatar and user.avatar|length > 0 %}
+
+            <img class="img-circle" src="{{ user.avatar }}">
+          {% else %}
+            <img class="img-circle"
+                 src="/static/v2/assets/img/medium-default-avatar.png">
+          {% endif %}
+
+            </div>
+            <div class="form-group">
+              {% if user %}
+              <h3 class="title" style="font-weight: 600;font-size: 30px;text-align: center;">
+                {% if user.name and user.name|length >0 %}
+                  {{ user.name }}{% else %}{{ user.phone }}{% endif %}</h3>
+            {% else %}
+
+            {% endif %}
+            </div>
+
+
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <label>{{ gettext("Thiet_bi") }}</label>
+              <h3 class="title"
+                  style="font-weight: 600;font-size: 20px;text-align: center;">{{ user.client_mac | length }}</h3>
+          </div>
+          <div class="col-md-4">
+            <label>{{ gettext("Luot_den") }}</label>
+              <h3 class="title"
+                  style="font-weight: 600;font-size: 20px;text-align: center;">{{ visit_count }}</h3>
+          </div>
+          <div class="col-md-4">
+            <label>{{ gettext("Lan_cuoi") }}</label>
+              <h3 class="title"
+                  style="font-weight: 600;font-size: 20px;text-align: center;">{{ last_visit_str }}</h3>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4" style="text-align: left">
+              <label>{{ gettext("So_dien_thoai") }}</label><p style=" margin-left:5px;">{{
+            user.phone }}</p>
+              <label>Email</label><p style=" margin-left:5px;">{% if user.email or user.email|string !=
+              'NONE' or user.email|string !='None'%}{{ user.email }}{% else
+            %}N/A{%
+            endif %}</p>
+              <label>{{ gettext("Sinh_nhat") }}</label><p style=" margin-left:5px;">{% if birthday and birthday|length > 0
+                %}{{ birthday }}{% else %}N/A{% endif %}</p>
+                <label>{{ gettext("Gioi_tinh") }}</label><p style=" margin-left:5px;">{% if user.gender %}{%if user
+                .gender == '2' %}{{ gettext("Nu") }} {% elif  user.gender == '1' %} {{ gettext("Nam") }}{% else %}N/A{% endif%}{% endif %}</p>
+          </div>
+          <div class="col-md-4" style="text-align: left">
+                <label>{{ gettext("Invite_Code") }}</label><p style=" margin-left:5px;">{% if user.invite_code and user.invite_code|length > 0
+                %}{{ user.invite_code }}{% else %}N/A{% endif %}</p>
+                <label >{{ gettext("Hang_thanh_vien") }}</label><p style=" margin-left:5px;
+">{% if rank and rank|length > 0 %}{{ rank }}{% else %}N/A{% endif %}</p>
+                <label>{{ gettext("Chi_tieu") }}</label><p style=" margin-left:5px;">{{ total_sales_shop|format_price }}</p>
+                <label>{{ gettext("Chi_tieu_chuoi") }}</label><p style=" margin-left:5px;">{{ total_sales|format_price }}</p>
+
+          </div>
+          <div class="col-md-4" style="text-align: left">
+             <label>{{ gettext("Diem") }}</label><p style=" margin-left:5px;">{{ points }}</p>
+                <label>{{ gettext("Tien_trong_vi") }}</label><p style=" margin-left:5px;">{{ credit_amount|format_price }}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+              <h3 class="title" style="font-weight: 600;font-size: 26px;
+              text-align: center;">
+                  {{ gettext("Loai_khach_hang") }}
+              </h3>
+          {% if user_tags_details|length > 0 %}
+            {% for tag in user_tags_details%}
+              <span class="tag label label-info" style="color: #ffffff">{{tag.name}}</span>
+            {% endfor %}
+          {% else %}
+          <p>N/A</p>
+          {% endif %}
+
+
+          </div>
+
+        </div>
+       <div class="row">
+          <center>
+            <div class="col-md-2 col-centered">
+              <a href="/user/{{ user.phone }}"><button class="btn
+              btn-success btn-lg" style="color: #ffffff; ">{{ gettext("Chi_tiet") }}</button></a>
+          </div>
+          </center>
+
+       </div>
+
+      </div>
+
+</div>
+

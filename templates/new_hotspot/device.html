@@ -1,0 +1,265 @@
+{% extends 'nextify/base.html' %}
+
+{% block main_content %}
+<div class="container-fluid">
+
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10 col-xl-8">
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-end">
+            <div class="col">
+              <!-- Pretitle -->
+              <h6 class="header-pretitle">
+                {{ gettext('Thiet_bb') }}
+              </h6>
+              <!-- Title -->
+              <h1 class="header-title">
+                {{ gettext('Quan_ly_thiet_bi_WIFI') }}
+              </h1>
+            </div>
+            <!-- <div class="col-2">
+                        
+                          <a type="button" class="btn btn-outline-primary d-block d-md-inline-block"  href="/device_grandstream" >Giám sát</a>
+                            
+                        </div> -->
+            <div class="col-2">
+
+              <a type="button" class="btn btn-outline-primary d-block d-md-inline-block" data-toggle="modal"
+                href="#add_device_btn">{{gettext('Them_thiet_bi') }}</a>
+
+            </div>
+            <div class="col-auto">
+              <select class="form-select" id="shop_in_mer">
+                {% for shop_mer in shop_in_mer %}
+                <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                {% endfor %}
+
+              </select>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          {% if error and error|length >0 %}
+          <div class="alert alert-danger">
+            {{ error | safe }}
+          </div>
+          {% else %}
+          <!-- List group -->
+          <div class="list-group list-group-flush my-n3">
+            {%for mac in gateway_macs %}
+            <div class="list-group-item">
+              <div class="row align-items-center">
+                <div class="col-auto">
+
+                  <!-- Icon -->
+                  <i class="fe fe-hard-drive h1"></i>
+
+                </div>
+                <div class="col ml-n2">
+
+                  <!-- Heading -->
+                  <h4 class="mb-1">
+                    {{mac}}
+                  </h4>
+
+                  {%set device= mac|format_mac_device %}
+                  <small class="text-muted">
+                    {{ device.device_type|get_device_name }}
+                  </small>
+
+
+                </div>
+                <div class="col-auto">
+
+                  <!-- Button -->
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="is_radius_{{ device._id }}" name="is_radius"
+                      {% if device.is_radius %}checked{% endif %}>
+                    <label class="custom-control-label {% if device.is_radius %}is-active{% endif %}"
+                      for="is_radius_{{ device._id }}">{{ gettext('Su_dung_Radius') }}</label>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <input type="hidden" id="id_{{ device._id }}" value="{{ device._id }}">
+            <script nonce="{{ csp_nonce() }}">
+              $(document).ready(function () {
+
+                $('#is_radius_{{ device._id }}').on("change", function () {
+                  var device_id = $('#id_{{ device._id }}').val();
+                  var is_radius = $('#is_radius_{{ device._id }}').is(":checked");
+                  url = '/edit_devices_shop/' + device_id;
+                  $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                      'is_radius': is_radius
+                    },
+                    success: function (data) {
+                      swal(ngettext("Thanh_cong"), '', 'success');
+                    }
+                  });
+
+                });
+              })
+            </script>
+            {%endfor%}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="modal hide fade" id="add_device_btn" tabindex="-1" role="dialog" aria-labelledby="add_device_btn"
+        data-backdrop="static" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="max-width: 700px">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3 class="modal-title">{{gettext('Them_thiet_bi') }}</h3>
+              <a class="close" data-dismiss="modal" aria-label="Close" ata-target="#add_device_btn">
+                <span aria-hidden="true">×</span>
+              </a>
+            </div>
+            <form method="POST" enctype="multipart/form-data" id="add_device_fr" action="/devices_shop">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+              <div class="modal-body">
+                {% if error %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong style="color: #fff;">{{ error }}</strong>
+                </div>
+                {% endif %}
+                <div class="form-group">
+                  <label class="" for="select_shop">{{ gettext('Chon_dia_diem') }} (<span>
+                      <font color="red">*</font>
+                    </span> {{ gettext('bat_buoc)') }}</label>
+                  <select name="shop_mac" class="form-control" id="shop_mac">
+                    {% for shop_mer in shop_in_mer %}
+                    <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="">{{ gettext('MAC_thiet_bi:') }} (<span>
+                      <font color="red">*</font>
+                    </span> {{ gettext('bat_buoc)') }}</label>
+                  <input type="text" class="form-control" style="margin-top:10px;font-size: 16px;" name="mac_add"
+                    rows="2" id="mac_add_otp" placeholder="77:A3:51:37:18:D8" required />
+                </div>
+                <div class="form-group">
+                  <label class="">{{ gettext('Loai_thiet_bi:') }}(<span>
+                      <font color="red">*</font>
+                    </span> {{ gettext('bat_buoc)') }} </label>
+                  <select name="device_type" class="form-control" id="device_type">
+                    <option value="nextify">Nextify
+                    </option>
+                    <option value="tplink">Tp-Link
+                    </option>
+                    <option value="mikrotik">Mikrotik
+                    </option>
+                    <option value="extreme">Extreme
+                    </option>
+                    <option value="draytek">DrayTek
+                    </option>
+                    <option value="unifi">Unifi
+                    </option>
+                    <option value="fortinet">Fortinet
+                    </option>
+                    <option value="pfsense">pfSense
+                    </option>
+                    <option value="ruijie">Ruijie</option>
+                    <option value="cisco">Cisco</option>
+                    <option value="borynet">Borynet
+                    </option>
+                    <option value="grandstream">Grandstream
+                    </option>
+                    <option value="engenius">Engenius
+                    </option>
+                    <option value="aruba">Aruba
+                    </option>
+                    </option>
+                    <option value="wifidog">WifiDog
+                    </option>
+                    <option value="meraki">Meraki
+                    </option>
+                    <option value="omada">Tplink Omada
+                    </option>
+                    <option value="ruckus">Ruckus
+                    </option>
+                     <option value="allied">Allied Telesis
+                    </option>
+                    <option value="peplink">Peplink
+                    </option>
+                    <option value="relay2">Relay2
+                    </option>
+
+                  </select>
+                </div>
+                <div class="form-group">
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="is_radius" name="is_radius">
+                    <label class="custom-control-label" for="is_radius">{{ gettext('Su_dung_Radius') }}</label>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-lg btn-primary u-float-right" type="submit">
+                    {{gettext('Luu')}}
+                  </button>
+                </div>
+              </div>
+
+          </div>
+        </div>
+        {% if shop_id_select %}
+        <input id="shop_id_select" type="hidden" value="{{ shop_id_select }}" />
+        {% endif %}
+        {% endblock %}
+        {% block js %}
+        <script nonce="{{ csp_nonce() }}">
+          $(document).ready(function () {
+            $('#add_device_btn').on('shown.bs.modal', function () {
+              $('#shop_mac').trigger('focus');
+            });
+            
+            var shop_id_select = $('#shop_id_select').val();
+
+            $('#shop_in_mer').val(shop_id_select).trigger('change');
+            $('#shop_in_mer').on("change", function () {
+              var shop_id = $('#shop_in_mer').val();
+              var url = "/devices_shop/" + shop_id;
+              $(location).attr('href', url);
+            });
+            $("#add_device_fr").on('submit', (function (e) {
+              e.preventDefault();
+              $.ajax({
+                url: $("#add_device_fr").attr("action"),  // id form
+                type: $("#add_device_fr").attr("method"),
+                data: $("#add_device_fr").serialize(),
+                success: function (response) {
+                  var returnedData = JSON.parse(response);
+                  if ('error' in returnedData) {
+                    swal(returnedData['error'], " ", "error");
+                  }
+
+                  else {
+                    swal('{{ gettext("Them_moi_thiet_bi_thanh_cong") }}', '', 'success');
+                    location.reload();
+                  }
+                },
+
+                error: function (xhr, desc, err) {
+                  swal("{{ gettext('Co_loi_xay_ra,_thu_lai_sau') }}", " ", "error");
+                }
+              });
+              return false;
+            }));
+
+
+          });
+
+        </script>
+        {% endblock %}

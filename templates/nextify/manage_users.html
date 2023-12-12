@@ -1,0 +1,71 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="c-toolbar u-mb-medium">
+    <h3 class="c-toolbar__title has-divider">{{ gettext('Quan_ly_Users:)') }}</h3>
+          <h5 class="c-toolbar__meta u-mr-auto">{{ total }}</h5>
+     </div>
+     <div class="container">
+        <div class="row u-mb-large">
+ <div class="c-table-responsive@desktop">
+                    <table class="c-table c-table--zebra u-mb-small"
+                           id="datatable2">
+                        <thead class="c-table__head">
+                        <tr class="c-table__row">
+                            <th class="c-table__cell c-table__cell--head">Id
+                            </th>
+                               <th class="c-table__cell
+                               c-table__cell--head">{{ gettext('Name:)') }}Name</th>
+                                <th class="c-table__cell
+                                c-table__cell--head">{{ gettext('Phone:)') }}Phone</th>
+                                <th class="c-table__cell
+                                c-table__cell--head">Email</th>
+                                <th class="c-table__cell
+                                c-table__cell--head">Facebook</th>
+                                <th class="c-table__cell
+                                c-table__cell--head">Zalo</th>
+                                <th class="c-table__cell c-table__cell--head">{{ gettext('Tao_luc:)') }}</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+                             {% for user in users %}
+                                 <tr class="c-table__row">
+                                     <td class="c-table__cell"> <a
+                                             href='/manage_user/{{ user
+                                             ._id }}'>{{ user._id }}</a></td>
+                                    <td class="c-table__cell">
+                                        {{ user.name }}
+                                    </td>
+                                     <td class="c-table__cell">
+                                        {{ user.phone }}
+                                    </td>
+                                    <td class="c-table__cell">
+                                        {{ user.email }}
+                                    </td>
+                                    <td class="c-table__cell">
+                                        {{ user.facebook }}
+                                    </td>
+                                    <td class="c-table__cell">
+                                        {{ user.zalo }}
+                                    </td>
+                                    <td class="c-table__cell">{{ user
+                                    .created_at|human_time}}</td>
+                                </tr>
+                             {% endfor %}
+                        </tbody>
+                    </table>
+   <nav class="c-pagination u-justify-center">
+                    {% if pagination %}
+                        {{ pagination.links }}
+                    {% endif %}
+                </nav>
+ </div>
+
+        </div>
+     </div>
+
+{% endblock %}
+
+
+

@@ -1,0 +1,254 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">
+            {{ gettext("Ung_dung") }}
+          </h6>
+
+          <!-- Title -->
+          <h1 class="header-title">
+            Zalo OA
+          </h1>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+
+
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <h1 class="header-title">
+            {{ gettext("Cau_hinh") }}
+          </h1>
+        </div>
+        <div class="card-body">
+          <!-- Heading -->
+
+          <!-- Form -->
+          {% if shop_select._id %}
+          <form id="ipos_connect_{{ shop_select._id }}" method="POST" action="/apps/zalo/{{ shop_select._id }}">
+            {% else %}
+            <form id="ipos_connect" method="post" action="">
+              {% endif %}
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+              <!-- Email address -->
+              <div class="form-group">
+                <select id="redirect_shop_select" class="custom-select">
+                  {% if shop_select._id %}
+                  <option disabled selected>{{ shop_select.name }}</option>
+                  {% else %}
+                  <option disabled selected>{{ gettext("Chon_dia_diem") }}</option>
+                  {% endif %}
+                  {% for shop in shop_in_mer %}
+                  <option value="{{ shop._id }}">{{ shop.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="c-field__label">Zalo OA ID: (<span>
+                    <font color="red">*</font>
+                  </span> {{ gettext("bat_buoc") }})</label>
+                <input type="text" class="form-control" autofocus
+                  value="{% if shop_select.zalo_oa_id and  shop_select.zalo_oa_id|length > 0 %}{{shop_select.zalo_oa_id }}{% endif %}"
+                  name="zalo_oa_id" />
+
+              </div>
+              <div class="form-group">
+                <label class="c-field__label">Zalo App ID: (<span>
+                    <font color="red">*</font>
+                  </span> {{ gettext("bat_buoc") }})</label>
+                <input type="text" class="form-control"
+                  value="{% if shop_select.zalo_app_id and  shop_select.zalo_app_id|length > 0 %}{{shop_select.zalo_app_id }}{% endif %}"
+                  name="zalo_app_id" />
+
+
+              </div>
+              <div class="form-group">
+                <label class="c-field__label">Zalo App Secret: </label>
+                <input type="text" class="form-control"
+                  value="{% if shop_select.zalo_app_secret_key and  shop_select.zalo_app_secret_key|length > 0 %}{{shop_select.zalo_app_secret_key }}{% endif %}"
+                  name="zalo_app_secret_key" />
+
+
+              </div>
+              <div class="form-group">
+                <label class="c-field__label">Zalo Refesh Token: 
+                </label>
+
+                <input type="text" class="form-control"
+                  value="{% if shop_select.zalo_refesh_token and  shop_select.zalo_refesh_token|length > 0 %}{{shop_select.zalo_refesh_token }}{% endif %}"
+                  name="zalo_refesh_token" />
+              </div>
+              <div class="form-group">
+                <label class="c-field__label">Zalo Access Token: 
+                </label>
+
+                <input type="text" class="form-control"
+                  value="{% if shop_select.zalo_access_token and  shop_select.zalo_access_token|length > 0 %}{{shop_select.zalo_access_token }}{% endif %}"
+                  name="zalo_access_token" />
+              </div>
+            </form>
+        </div>
+
+        <div class="card-footer">
+          <div class="row">
+            <div class="col">
+
+            </div>
+            <div class="col">
+              <button type="button" class="btn btn-lg btn-block btn-primary" {% if shop_select._id %}
+                id="save_info_API_{{ shop_select._id }}" {% else %} id="save_info_API" {% endif %}>
+                {{ gettext("Luu_thong_tin") }}
+
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div> <!-- / .row -->
+</div>
+
+{% if shop_select._id %}
+<script nonce="{{ csp_nonce() }}">
+
+  $(document).ready(function () {
+    $('#redirect_shop_select').select2();
+    $('#redirect_shop_select').on('change', function (e) {
+
+      var shop_id = $(this).val();
+      var url = "/apps/zalo/" + shop_id;
+      location.replace(url);
+    })
+
+    $("#save_info_API_{{ shop_select._id }}").click(function () {
+      var zalo_oa_id = $("input[name='zalo_oa_id']").val();
+      if (zalo_oa_id.length == 0) {
+        swal('{{ gettext("Chua_nhap_zalo_oa_id") }}', '', 'error');
+        return false
+      }
+      var zalo_app_id = $("input[name='zalo_app_id']").val();
+      if (zalo_app_id.length == 0) {
+        swal('{{ gettext("Chua_nhap_zalo_app_id") }}', '', 'error');
+        return false
+      }
+      var zalo_app_secret_key = $("input[name='zalo_app_secret_key']").val();
+      
+      var zalo_access_token = $("input[name='zalo_access_token']").val();
+      if (zalo_access_token.length == 0) {
+        swal('{{ gettext("Chua_nhap_zalo_access_token") }}', '', 'error');
+        return false
+      }
+      $.ajax({
+        url: $("#ipos_connect_{{ shop_select._id }}").attr("action"),
+        type: $("#ipos_connect_{{ shop_select._id }}").attr("method"),
+        data: $("#ipos_connect_{{ shop_select._id }}").serialize(),
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ('error' in returnedData) {
+            swal(returnedData['error'], " ", "error");
+            return false;
+          }
+          else {
+            swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+            location.reload();
+          }
+
+        },
+        error: function (xhr, desc, err) {
+          swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+
+
+        }
+      });
+
+      return false;
+    })
+
+  });
+</script>
+{% else %}
+
+<script nonce="{{ csp_nonce() }}">
+  $(document).ready(function () {
+    $('#redirect_shop_select').select2();
+    $('#redirect_shop_select').on('change', function (e) {
+
+      var shop_id = $(this).val();
+      var url = "/apps/zalo/" + shop_id;
+      location.replace(url);
+
+    })
+
+    $("#save_info_API").click(function () {
+      var zalo_oa_id = $("input[name='zalo_oa_id']").val();
+      if (zalo_oa_id.length == 0) {
+        swal('{{ gettext("Chua_nhap_zalo_oa_id") }}', '', 'error');
+        return false
+      }
+      var zalo_app_id = $("input[name='zalo_app_id']").val();
+      if (zalo_app_id.length == 0) {
+        swal('{{ gettext("Chua_nhap_zalo_app_id") }}', '', 'error');
+        return false
+      }
+      var zalo_app_secret_key = $("input[name='zalo_app_secret_key']").val();
+      if (zalo_app_secret_key.length == 0) {
+        swal('{{ gettext("Chua_nhap_zalo_app_secret_key") }}', '', 'error');
+        return false
+      }
+      var zalo_access_token = $("input[name='zalo_access_token']").val();
+      if (zalo_access_token.length == 0) {
+        swal('{{ gettext("Chua_nhap_zalo_access_token") }}', '', 'error');
+        return false
+      }
+
+      $.ajax({
+        url: $("#ipos_connect").attr("action"),
+        type: $("#ipos_connect").attr("method"),
+        data: $("#ipos_connect").serialize(),
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ('error' in returnedData) {
+            swal(returnedData['error'], " ", "error");
+            return false;
+          }
+          else {
+            swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+            location.reload();
+          }
+
+        },
+        error: function (xhr, desc, err) {
+          swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+
+
+
+        }
+      });
+
+      return false;
+    })
+
+  });
+</script>
+{% endif %}
+
+{% endblock %}
+{% block js %}
+{% endblock %}

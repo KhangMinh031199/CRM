@@ -1,0 +1,65 @@
+{% extends "v2/base.html" %}
+{% block right_content %}
+  <div class="page-title">
+    <div class="row">
+      <div class="col-md-6">
+        <h3 class="breadcrumb-header">Địa điểm</h3>
+      </div>
+      <div class="col-md-6">
+         <div class="col-md-2">
+           <p>Đường dẫn:</p>
+         </div>
+        <div class="col-md-6">
+      <input type="text" name="search" class="form-control input-search"
+             value="//crm.nextify.vn/{{ merchant.slug }}" readonly />
+        </div>
+        <div class="col-md-4">
+          <a href="/create_locations"><button type="button" class="btn
+          btn-success" style="color:#ffffff">
+                    Thêm địa điểm
+          </button></a>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <div id="main-wrapper">
+    <div class="row">
+      <div class="col-md-12">
+        <ul class="cd-gallery">
+          {% for shop in shop_in_mer %}
+          <li>
+            <a href="/shops/{{ shop.slug }}">
+              <ul class="cd-item-wrapper">
+                <li class="selected">
+                  <img src="//files.nextify.vn/{{ shop.background }}"
+                       alt="Preview image">
+                </li>
+              </ul>
+            </a>
+
+            <div class="cd-item-info">
+              <b><a href="/shops/{{ shop.slug }}">{{ shop.name }}</a></b>
+              <em class="cd-price">{{ shop.address }}</em>
+            </div>
+            <div class="cd-item-details">
+              {% if shop_id == shop._id %}
+             <a href="#" class="pull-left"><i
+                class="fa fa-list-ul"></i>Bạn đang ở đây</a>
+                {% else %}
+                 <a href="/shops/{{ shop.slug }}" class="pull-right details"><i
+                class="fa fa-list-ul"></i>Chọn</a>
+              {% endif %}
+
+            </div>
+          </li>
+          {% endfor %}
+
+        </ul>
+      </div>
+    </div><!-- Row -->
+  </div>
+
+{% endblock %}
+{% block js %}{% endblock %}

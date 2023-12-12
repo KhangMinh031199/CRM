@@ -1,0 +1,122 @@
+
+<style>
+    #visit {
+        width: 100%;
+        height: 100%;
+    }
+
+    #visualization_wrap {
+        border: 1px solid gray;
+        position: relative;
+        padding-bottom: 80%;
+        height: 0;
+        overflow: hidden;
+    }
+
+    #visit {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+    <script type="text/javascript" src="//www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+
+      google.charts.setOnLoadCallback(drawVisitChart);
+
+$(window).on("throttledresize", function (event) {
+    drawVisitChart();
+});
+
+function drawVisitChart() {
+
+    var options = {
+      title: "",
+      width: '100%',
+       height: '100%',
+      legend: { position: 'right', maxLines: 3 },
+      annotations: {alwaysOutside: true},
+      'isStacked': true,
+       pieSliceText: 'percentage',
+      chartArea: {
+        left: "10%",
+        top: "3%",
+        height: "100%",
+        width: "70%"
+    },
+      colors: ['#0598d8', '#f97263'],
+    };
+
+    var data = google.visualization.arrayToDataTable([
+      ['Day', 'Returning', 'New', { role: 'annotation' } ],
+      {% for row in visit_stats[::-1] %}
+        ['{{ row[0] }}', {{ row[1] }}, {{ row[2] }}, '{{ row[3] }}'],
+      {% endfor %}
+    ]);
+
+    new google.visualization.BarChart(document.getElementById('visit')).
+    draw(data,options);
+}
+
+{#
+      google.charts.setOnLoadCallback(drawGenderChart);
+      function drawGenderChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Gender', 'Visits'],
+          {% for key, value in stats.gender.items() %}
+            ['{{ key }}', {{ value }}]{% if not loop.last %},{% endif %}
+          {% endfor %}
+        ]);
+
+        var options = {
+          title: 'Gender',
+          is3D: true,
+          legend: { position: 'none' },
+          colors: ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896']
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('gender'));
+        chart.draw(data, options);
+      }
+
+      google.charts.setOnLoadCallback(drawAgeChart);
+      function drawAgeChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Age', 'Visits'],
+          {% for key, value in stats.age.items() %}
+            ['{{ key }}', {{ value }}]{% if not loop.last %},{% endif %}
+          {% endfor %}
+        ]);
+
+        var options = {
+          title: 'Age',
+          is3D: true,
+          legend: { position: 'none' },
+          colors: ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896']
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('age'));
+        chart.draw(data, options);
+      }
+#}
+    </script>
+
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div id="visualization_wrap">
+      <div id="visit"></div>
+  </div>
+      </div>
+
+
+{#
+      <div class="col-sm-4">
+        <div id="gender" style="width: 250px; height: 200px;"></div>
+        <div id="age" style="width: 250px; height: 200px;"></div>
+      </div>
+#}
+    </div>

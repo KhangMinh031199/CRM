@@ -1,0 +1,87 @@
+{% extends 'nextify/new_hotspot.html' %}
+{% block item_hotspot %}
+    <form method="POST" action="/wifi/{{ shop_id_select }}/new_hotspot/birthday"
+          enctype="multipart/form-data"
+          id="form_new_splash">
+
+     <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-center mb-2">
+                    {{ gettext("Them_trang_chao_sinh_nhat") }}
+                </h2>
+            </div>
+            <div class="card-body">
+                <div class="modal-body">
+                    {% if error %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong style="color: #fff;">{{ error }}</strong>
+                  </div>
+                {% endif %}
+
+                    <div class="c-field u-mb-small">
+                        <label class="c-field__label"
+                               for="photo">{{ gettext("Anh:") }}</label>
+
+                        <p class="help-block">
+                            <img src="" id="view_photo"
+                                 width="200">
+                        </p>
+                        <input type="file" class="c-input"
+                               id="photo" name="photo">
+                    </div>
+
+                    <div class="c-field u-mb-small">
+                        <label class="c-field__label" for="title">{{ gettext("Tieu_de:") }}</label>
+                        <input type="text" maxlength="200"
+                               class="c-input"
+                               id="title"
+                               name="title" value="{% if  card and card.title %}{{ card.title }}{% endif %}"
+                               placeholder='( {{ gettext("Khong_bat_buoc" }} )'>
+                    </div>
+
+                    <div class="c-field u-mb-small">
+                        <label class="c-field__label"
+                               for="content">{{ gettext("Noi_dung:") }}</label>
+                        <textarea class="c-input"
+                                  id="content" name="content"
+                                  rows="6"
+                                  maxlength="1000"
+                                  placeholder="(Không bắt buộc)">{% if  card and card.content %}
+                            {{ card.content }}{% endif %}</textarea>
+                    </div>
+                    {% if  card and card.type_page %}
+                        <input type="hidden" id="type_exist"
+                               class="c-input"
+                               value="{{ card.type_page }}"/>
+                    {% endif %}
+                <input type="hidden" name="auto_mar" value="birthday"/>
+
+
+                    <div class="c-field u-mb-small">
+                        <label class="c-field__label">{{ gettext("Kich_hoat") }}</label>
+                        <input type="checkbox" name="active"
+                               class="c-input"
+                               {% if  card and  card.active %}checked{% endif %}>
+                    </div>
+
+
+                    {% if  card and card %}
+                        <a href="/splash_page/remove?card_id={{ card._id }}">{{ gettext("Xoa_card") }}</a> {% endif %}
+                </div>
+
+
+            </div>
+            <div class="card-footer">
+                <div class="btn-toolbar pull-right">
+                    <div class="btn-group">
+                        <button id="new_splash_submit"
+                                class="c-btn c-btn--info u-float-right">
+                            {{ gettext("Luu_trang_chao") }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

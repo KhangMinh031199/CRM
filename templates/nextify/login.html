@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    {% if 'digiads.com.vn' in request.url %}
+    <title>DigiCare | VIOT</title>
+    {% elif 's9tech.vn' in request.url%}
+    <title>S9 | WIFIMARKETING</title>
+    {% elif 'maxsolution' in request.url%}
+    <title>MAX SOLUTION | MAX CRM</title>
+    {% elif 'unitel.com.la' in request.url%}
+    <title>Unitel | WIFIMARKETING</title>
+    {% elif 'leeon.vn' in request.url%}
+    <title>Leeon Tech | WIFIMARKETING</title>
+    {% elif 'vmarketing.viettel.vn' in  request.url%}
+       <title>Giải pháp Wifi Marketing của Viettel</title>
+    {% else %}
+    <title>Nextify | The Next Generation of Loyalty</title>
+    {% include 'nextify/nextify_meta_tags.html' %}
+    {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Libs CSS -->
+    <link rel="stylesheet" href="/static/nextify/css/feather/feather.min.css">
+    <link rel="stylesheet" href="/static/nextify/css/dash_kit_theme.min.css" id="stylesheetLight">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}" type="text/css"/> -->
+    <style nonce="{{ csp_nonce() }}">
+        body { display: none; }
+    </style>
+    <style>
+        .field-icon {
+        float: right;
+        margin-right: 10px;
+        margin-top: -25px;
+        position: relative;
+        z-index: 2;
+        }
+        .change-color:hover {
+        color: red;
+        }
+    </style>
+</head>
+
+<body class="d-flex align-items-center bg-auth border-top border-top-2 border-primary">
+
+<!-- CONTENT
+================================================== -->
+<div class="container-fluid">
+    <div class="row align-items-center justify-content-center">
+
+        <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5">
+
+            <!-- Heading -->
+            <h1 class="display-4 text-center mb-3">
+                {% if 's9tech.vn' in request.url %}
+                <img alt="" src="/static/images/s9.jpg" style="width: 150px"/>
+                {% elif 'crmx' in request.url %}
+                <img alt="" src="/static/nextify/img/crmx.jpg" style="width: 150px"/>
+                {% elif 'anphat.vn' in request.url %}
+                <img alt="" src="/static/nextify/img/draytek.jpg" style="width: 150px"/>
+                {% elif 'digiads.com.vn' in request.url %}
+                <img alt="" src="/static/nextify/img/digicare.jpg" style="width: 150px"/>
+                {% elif 'omiwifi.com' in request.url %}
+                <img alt="" src="/static/nextify/img/omi.jpg" style="width: 150px"/>
+                {% elif 'wifi365.vn' in request.url %}
+                <img alt="" src="/static/nextify/img/wifi365.jpg" style="width: 150px"/>
+                {% elif 'nhaxe.vn' in request.url %}
+                <img alt="" src="/static/nextify/img/anvui-logo.jpg" style="width: 250px"/>
+                {% elif 'mobifone' in request.url%}
+                <img alt="" src="/static/images/mcare_1588844918.jpg" style="width: 250px"/>
+
+                {% elif 'maxsolution' in request.url%}
+                <img alt="" src="/static/images/max_solution.png" style="width: 250px"/>
+                {% elif 'unitel.com.la' in request.url%}
+                <img alt="" src="/static/images/unitel_logo.png" style="width: 250px"/>
+                {% elif 'leeon.vn' in request.url%}
+                <img alt="" src="/static/images/leeon_logo.png" style="width: 250px"/>
+                {% elif 'vmarketing.viettel.vn' in  request.url%}
+                <img alt="" src="/static/images/new_vmarketing.png" style="width: 250px"/>
+                {% else %}
+                <img alt="" src="/static/nextify/img/new_logo.png" style="width: 55px; height: 55px"/>
+                {% endif %}
+            </h1>
+            <!-- Form -->
+            <form id="sign_in_form" method="post" name='myForm'
+                  action="{% if merchant_id %}/{{ merchant.slug }}{% else %}/login{% endif %}">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"/>
+                {% if error %}
+
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert">
+                    {{ error }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+
+                {% endif %}
+
+                <!-- Email address -->
+                <div class="form-group">
+
+                    <!-- Label -->
+                    <label>{{ gettext('enterUserLogin') }} <font color="red">*</font></label>
+
+                    <!-- Input -->
+                    <input type="text" name="phone" class="form-control" placeholder="name@address.com" id="phone" value='' autofocus>
+
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+
+                    <div class="row">
+                        <div class="col">
+
+                            <!-- Label -->
+                            <label>{{ gettext('enterUserPassword') }} <font color="red">*</font></label>
+
+                        </div>
+                        
+                    </div> <!-- / .row -->
+
+                    <!-- Input group -->
+                    <div class="form-group">
+
+                        <!-- Input -->
+                        <input type="password" name="password" class="form-control" value=''
+                               placeholder="{{ gettext('enterUserPassword') }}" id="password-field">
+                               <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+
+                    </div>
+                    <div class="form-group">
+
+                        <!-- Help text -->
+                        <a href="/forgot" class="form-text small change-color" style="float: right;">
+                            {{ gettext('forgotPasswordLabel') }}?
+                        </a>
+
+                    </div>
+                    <div clas="form-group">
+                        <label>Vui lòng nhập captcha: <font color="red">*</font></label>
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" class="form-control" name="captcha">
+                                <span toggle="#password-field" class="fa fa-fw fa-refresh field-icon toggle-captcha"></span>
+                            </div>
+                            <div class="col-auto" id="captcha">
+                                {{ captcha() }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-3">
+                        <select id="language" name="language" class="form-control">
+                            <option value="vi">VN</option>
+                            <option value="en">EN</option>
+                            {% if 'vmarketing.viettel.vn' not in  request.url%}
+                            <option value="lo">LAO</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="col-9" style="float:right">
+                        <button class="btn btn-lg btn-block btn-primary" id="sign_in_btn">
+                            {{ gettext('enterSigninBtn') }}
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+            {# <p class="text-center" style="margin-top:20px">#}
+            {# <small class="text-muted text-center">#}
+                {# © 2019 Power by <a href="http://nextify.vn">NEXTIFY SOFTWARE.,JSC.</a>.#}
+                {# </small>#}
+            {# </p>#}
+
+
+        </div>
+        <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
+
+            <div class="bg-cover vh-100 mt-n1 mr-n3"
+                 style="background-image: url(/static/images/cover_authen.jpg);"></div>
+
+        </div>
+    </div>
+     <!-- / .row -->
+
+</div> <!-- / .container -->
+
+<!-- JAVASCRIPT
+================================================== -->
+<!-- Libs JS -->
+
+<script type="text/javascript" src="/static/wifi_portal/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/static/wifi_portal/js/js.cookie.min.js"></script>
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        var ex_phone = localStorage.getItem("ex_phone");
+        var ex_password = localStorage.getItem("ex_password");
+        document.forms['myForm']['phone'].value = ex_phone;
+        document.forms['myForm']['password'].value = ex_password;
+
+        $(".toggle-password").click(function() {
+
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "password") {
+            input.attr("type", "text");
+            } else {
+            input.attr("type", "password");
+            }
+        });
+        
+
+        $(".toggle-captcha").click(function() {
+            var phone = $('#phone').val();
+            var password = $('#password-field').val();
+            localStorage.setItem("ex_phone", phone)
+            localStorage.setItem("ex_password", password)
+            $(".toggle-captcha").addClass("fa-spin")
+            window.location.reload();
+            return false;
+        });
+    
+
+        $("#sign_in_btn").click(function () {
+            $("#sign_in_form").submit();
+
+        });
+
+        var url = window.location.href;
+        domain_lao = 'unitel.com.la';
+        var lang_cookie = Cookies.get('langs');
+        if(url.toString().indexOf(domain_lao) !== -1) {
+            if (lang_cookie) {
+                Cookies.set('langs', lang_cookie);
+                $("#language").val(lang_cookie).trigger("change");
+            } else {
+                Cookies.set('langs', 'lo');
+                $("#language").val('lo').trigger("change");
+                window.onload = function () {
+                    //considering there aren't any hashes in the urls already
+                    if (!window.location.hash) {
+                        //setting window location
+                        window.location = window.location + '#loaded';
+                        //using reload() method to reload web page
+                        window.location.reload();
+                        return false
+                    }
+                }
+            }
+        } else {
+            if (lang_cookie){
+                $("#language").val(lang_cookie).trigger("change");
+                Cookies.set('langs', lang_cookie);
+            }else{
+                $("#language").val('vi').trigger("change");
+                Cookies.set('langs', 'vi');
+                window.onload = function () {
+                    //considering there aren't any hashes in the urls already
+                    if (!window.location.hash) {
+                        //setting window location
+                        window.location = window.location + '#loaded';
+                        //using reload() method to reload web page
+                        window.location.reload();
+                        return false
+                    }
+                }
+            }
+        }
+
+
+         $("#language").change(function () {
+            var lang = $("#language").val();
+            Cookies.set('langs', lang);
+            location.reload();
+            return false;
+        });
+
+        $("#alert").click(function () {
+            $("#alert").hide();
+            });
+    });
+
+
+
+</script>
+
+</body>
+</html>

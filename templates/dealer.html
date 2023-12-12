@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+
+{% block styles %}
+  {{ super() }}
+  <link href="{{ url_for('static', filename='styles/setup.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4 col-sm-offset-4">
+        <div class="page-header text-center">
+          <a href="/clients">SMART CRM</a>
+        </div>
+
+        {% if error %}
+            <div class="alert alert-error">
+            {{ error | safe }}
+            </div>
+        {% endif %}
+
+        <form method="POST" action="/dealers/{%if dealer%}{{dealer._id}}{%else%}add{%endif%}" enctype="multipart/form-data">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+          {%if dealer%}
+           <input type="hidden" value="{{ dealer._id }}" name="dealer_id">
+          {%endif%}
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" maxlength="50" class="form-control" name="name" value="{%if dealer%}{{dealer.name}}{%endif%}"/>
+            </div>
+            <div class="form-group">
+                <label for="name">Phone:</label>
+                <input type="text" maxlength="50" class="form-control" name="phone" value="{%if dealer%}{{dealer.phone}}{%endif%}"/>
+            </div>
+            <div class="form-group">
+                <label for="name">Password:</label>
+                <input type="text" class="form-control" name="password" value=""/>
+            </div>
+            <hr>
+            <button type="submit" class="btn btn-success">{{ gettext("Luu_thong_tin") }}</button>
+        </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

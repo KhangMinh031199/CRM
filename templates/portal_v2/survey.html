@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>{{ shop.name }}</title>
+	<meta charset="UTF-8">
+     {% if 'viettel.vn' in request.url %}
+        <title>Viettel | vmarketing</title>
+        {% include 'portal_v2/viettel_meta_tags.html' %}
+        {% elif 'crmx' in request.url %}
+        <title>CRMX | Better eXperience fo Wi-Fi</title>
+         {% include 'portal_v2/crmx_meta_tags.html' %}
+    {% else %}
+        <title>Nextify | The Next Generation of Loyalty</title>
+         {% include 'portal_v2/nextify_meta_tags.html' %}
+    {% endif %}
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/static/portal_v2/default/vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/static/portal_v2/default/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/static/portal_v2/default/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/static/portal_v2/default/vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/static/portal_v2/default/vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/static/portal_v2/default/vendor/animsition/css/animsition.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/portal_v2/default/css/util.css">
+	<link rel="stylesheet" type="text/css" href="/static/portal_v2/default/css/main.css">
+    <style>
+        .slider-block{
+	height:350px;
+	display:inline-block;
+}
+        #carousel {
+	height:100%;
+}
+#carousel .carousel-inner{
+	height:100%;
+}
+#carousel .item{
+	background-repeat:no-repeat;
+	background-size:cover;
+	background-position:center center;
+	width:100%;
+	height:100%;
+}
+        .bg-image {
+  /* The image used */
+  background-image: url(//files.nextify.vn/{{ shop.background }});
+
+   -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  /* Full height */
+  height: 100%;
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+        .label-checkbox100 {
+  font-family: 'PlainRegular', Helvetica Neue, Helvetica, Arial, sans-serif !important;
+  font-size: 16px;
+  color: #999999;
+  line-height: 1.4;
+
+  display: block;
+  position: relative;
+  padding-left: 26px;
+  cursor: pointer;
+}
+    </style>
+<!--===============================================================================================-->
+</head>
+<body>
+
+	<div class="limiter">
+		<div class="container-login100 bg-image">
+
+			<div class="wrap-login100">
+                    <span class="login100-form-avatar">
+						<img src="//files.nextify.vn/{{ shop.logo }}" style="width: 120px; height: 120px" alt="AVATAR">
+					</span>
+
+				<div class="login100-form-title">
+                 {% if survey_item.photo %}
+                    <div class="login100-form-title">
+                 <img src="//files.nextify.vn/{{ survey_item.photo }}"
+                                     class="img-fluid" style="width:418px;height: 220px"/>
+
+                </div>
+                {% endif %}
+				</div>
+               <div class="text-center p-t-20 p-b-20" style="margin-left: 15px;margin-right: 15px">
+                   <span class="tx3"> {{ survey_question }}</span>
+               </div>
+
+                <form style="margin-top: 0em;" method="post" action="/save_survey" enctype="multipart/form-data">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    {% if error %}
+                    <p style="font-weight: 300;color: #fff; margin-bottom: 20px;">*{{ error }}</p>
+                {% endif %}
+                    <input type="hidden" value="{{ gateway_mac }}"
+                           name="gateway_mac"/>
+                    <input type="hidden" value="{{ client_mac }}"
+                           name="client_mac"/>
+                    <input type="hidden" value="{{ device_type }}"
+                           name="device_type"/>
+                    <input type="hidden" value="{{ nas_id }}"
+                           name="nas_id"/>
+                    <input type="hidden" value="{{ auth_target }}"
+                           name="auth_target"/>
+                   <input type="hidden" value="{{ shop_id }}"
+                           name="shop_id"/>
+                <input type="hidden" value="{{ profile_id }}"
+                           name="profile_id"/>
+                           <input type="hidden" value="{{ magic_fortinet }}"
+                           name="magic_fortinet"/>
+                    <input type="hidden" value="{{ survey_item._id }}" name="survey_id">
+                <input type="hidden" value="{{ survey_type }}" name="survey_type">
+               <div class="login100-form" style="padding: 0px 43px 0px 43px;" >
+
+
+                            {% for ans in survey_item.answers %}
+                            <div class="flex-sb-m w-full p-b-10">
+                                 <div class="contact100-form-checkbox">
+                                    <input type="checkbox" name="answers" id="{{ ans.id }}" value="{{ ans.id }}" class="input-checkbox100"/>
+                                    <label for="{{ ans.id }}"  class="label-checkbox100">{{ ans.value}}</label>
+                                  </div>
+
+
+                            </div>
+                        {% endfor %}
+
+                </div>
+            <div class="container-login100-form-btn p-t-20 p-b-20" style="justify-content: center;">
+						<button type="submit" class="login100-form-btn" style="background-image: linear-gradient(90deg,#f65e38 0,#f68a39 51%,#f65e38);">
+                            {% if shop.connect_button %}
+                                            {{ shop.connect_button }}
+                                        {% else %}
+                                         Kết nối Wi-Fi/Go Online
+                                        {% endif %}
+						</button>
+					</div>
+                </form>
+
+			</div>
+		</div>
+	</div>
+
+<!--===============================================================================================-->
+	<script src="/static/portal_v2/default/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+    <script src="/static/portal_v2/cloud_flare/modernizr.min.js"></script>
+<script src="/static/portal_v2/cloud_flare/jquery.touchSwipe.min.js"></script>
+	<script src="/static/portal_v2/default/vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="/static/portal_v2/default/vendor/bootstrap/js/popper.js"></script>
+	<script src="/static/portal_v2/default/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="/static/portal_v2/default/vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="/static/portal_v2/default/vendor/daterangepicker/moment.min.js"></script>
+<!--===============================================================================================-->
+	<script src="/static/portal_v2/default/vendor/countdowntime/countdowntime.js"></script>
+
+<!--===============================================================================================-->
+	<script src="/static/portal_v2/default/js/main.js"></script>
+
+
+<script>
+
+  $(document).ready(function () {
+$(".carousel").swipe({
+
+  swipe: function(event, direction, distance, duration, fingerCount, fingerData) {
+
+    if (direction == 'left') $(this).carousel('next');
+    if (direction == 'right') $(this).carousel('prev');
+
+  },
+  allowPageScroll:"vertical"
+
+});
+});
+</script>
+ {% if shop.facebook_pixel_code and  shop.facebook_pixel_code != 'None' %}
+        {{ shop.facebook_pixel_code|safe }}
+    {% endif %}
+    {% if shop.google_pixel_code  and  shop.google_pixel_code != 'None' %}
+        {{ shop.google_pixel_code|safe }}
+    {% endif %}
+</body>
+</html>

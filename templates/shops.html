@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}SMART CRM{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  <link href="{{ url_for('static', filename='styles/setup.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-header">
+                <h3>Danh sách địa điểm</h3>
+            </div>
+            <div class="row list-group">
+                {% for shop in shops %}
+                     <div class="item col-4 col-md-4 col-sm-6 col-lg-4">
+                            <div class="thumbnail">
+                                <img class="group list-group-image img-responsive center-block centered-and-cropped" style="width: 100%;height: 300px"
+                                     src="//files.nextify.vn/{{ shop.background }}" alt=""/>
+                                <div class="caption">
+                                    <h4 class="group inner list-group-item-heading"><a href="/shops/{{ shop.slug }}">{{ shop.name }}</a></h4>
+                                    <p class="group inner list-group-item-text"></p>
+                                </div>
+                            </div>
+                     </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Nextify</title>
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/css/bootstrap.min.css">
+{#    <link rel="stylesheet" type="text/css" href="/static/nextify/css/styles.css">#}
+    <script type="text/javascript" src="/static/wifi_portal/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/static/wifi_portal/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/wifi_portal/js/jquery.bcSwipe.min.js"></script>
+</head>
+<body>
+
+<div class="wifi_slider_connect">
+    <div class="container">
+        <div class="row">
+                <div class="col-md-6 col-lg-4 mg-auto pd-rl-24">
+                     <div class="box_logo">
+                        <div class="logo">
+                            <img src="//files.nextify.vn/{{ shop_select.logo }}"
+                                 style="width:325px;height: 130px;border-radius: 50%;"
+                                 alt="">
+                        </div>
+                    </div>
+                 </div>
+        </div>
+        <!-- header -->
+       <div class="row">
+            <div id="demo" class="carousel slide" data-ride="carousel" data-interval="3000">
+                    <ul class="carousel-indicators">
+                        {% for card in cards %}
+                            <li data-target="#demo" data-slide-to="{{ loop.index }}"></li>
+                        {% endfor %}
+                    </ul>
+                    <div class="carousel-inner" role="listbox">
+                        <!-- item -->
+                        {% for card in cards %}
+                            <div class="carousel-item {% if loop.index == 1 %} active{% endif %}">
+                                <img src="//files.nextify.vn/{{ card.photo }}"
+                                     style="width:418px;height: 250px"/>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+        </div>
+        <!-- end header -->
+
+
+        <!-- middle -->
+        <div class="row">
+             <div class="col-md-8 col-lg-4 mg-auto pd-rl-24">
+                    <div id="welcome_info">
+                        {% if message %}
+                            <div class="box_text_intro">
+                                <h3>
+                                    {{ message }}
+                                </h3>
+                            </div>
+                        {% else %}
+                            <div class="box_text_intro">
+                                <h3>
+                                {% if shop_select.welcome_member_text_splash %}
+                                            <span>{{ shop_select.welcome_member_text_splash }}</span>
+                                        {% else %}
+                                            {% if user.name and user.name|length > 1 %} Chào
+                                        <strong>{{ user.name }}</strong>,
+                                        <br/> cảm ơn bạn đã ghé thăm. {% else %} Chào
+                                        <strong>{{ user.phone }}</strong>,
+                                        <br/>cảm ơn bạn đã ghé thăm.
+                                    {% endif %}
+                                        {% endif %}
+                                </h3>
+                            </div>
+                        {% endif %}
+                                  <div class="btn_action">
+
+                                    <a id="auth_target" href="{{ auth_target }}"
+                                       class="btn btn btn_bg_green mg-bt-10 white_text"
+                                       style="width:100%">
+                                        <i class="fe fe-wifi font_size_24" aria-hidden="true"></i>
+                                        {% if shop_select.connect_button %}
+                                            <span>{{ shop_select.connect_button }}</span>
+                                        {% else %}
+                                            <span>Kết nối Wi-Fi/Go Online</span>
+                                        {% endif %}
+                                    </a>
+                                </div>
+
+                    </div>
+
+
+            </div>
+        </div>
+      
+    </div>
+
+
+</div>
+<script type="text/javascript"
+            src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript"
+            src="//cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.4/jquery.touchSwipe.min.js"></script>
+
+ <script nonce="{{ csp_nonce() }}">
+
+  $(document).ready(function () {
+$(".carousel").swipe({
+
+  swipe: function(event, direction, distance, duration, fingerCount, fingerData) {
+
+    if (direction == 'left') $(this).carousel('next');
+    if (direction == 'right') $(this).carousel('prev');
+
+  },
+  allowPageScroll:"vertical"
+
+});
+});
+</script>
+
+
+</body>
+
+</html>

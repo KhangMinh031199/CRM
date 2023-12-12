@@ -1,0 +1,72 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="c-toolbar u-mb-medium">
+        <h3 class="c-toolbar__title has-divider">{{ gettext('Ma_truy_cap_WIFI') }}</h3>
+        <h5 class="c-toolbar__meta u-mr-auto">{{ total_access_code }}
+            {{ gettext('ma_truy_cap') }}</h5>
+    </div>
+    <div class="container">
+        <div class="row u-mb-large">
+
+            <div class="col-lg-12 order-lg-1">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="c-table-responsive@desktop">
+                            <table class="c-table c-table--zebra u-mb-small"
+                                   id="datatable2">
+                                <thead class="c-table__head">
+                                <th class="c-table__cell
+                                    c-table__cell--head">{{ gettext('Ma') }}
+                                </th>
+                                <th class="c-table__cell
+                                    c-table__cell--head">{{ gettext('dia_diem') }}
+                                </th>
+                                <th class="c-table__cell
+                                    c-table__cell--head">
+                                    {{ gettext('Tao_luc') }}
+                                </th>
+                                <th class="c-table__cell
+                                    c-table__cell--head">
+                                    {{ gettext('Kich_hoat') }}
+                                </th>
+                                <th class="c-table__cell
+                                    c-table__cell--head">
+                                    {{ gettext('Het_han') }}
+                                </th>
+
+                                </thead>
+                                <tbody>
+                                {% for coup in list_access_code %}
+                                    {% set shop_info = coup.shop_id|shop_info %}
+                                    <tr class="c-table__row">
+                                        <td class="c-table__cell">{{ coup.wifi_code }}</td>
+                                        <td class="c-table__cell">{{ shop_info.name }}</td>
+                                        <td class="c-table__cell">{{ coup.created_at|human_time_string}}</td>
+                                        <td class="c-table__cell">{{ coup.active_at|human_time_string}}</td>
+                                        <td class="c-table__cell">{{ coup.expire_at|human_time_string}}</td>
+                                    </tr>
+
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <nav class="c-pagination u-justify-center">
+                            {% if pagination %}
+                                {{ pagination.links }}
+                            {% endif %}
+                        </nav>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div><!-- // .row -->
+    </div>
+
+{% endblock %}

@@ -1,0 +1,86 @@
+<table class="table table-hover table-striped">
+  <thead>
+  <th>Code</th>
+  <th>Mô tả</th>
+  <th>Trạng thái</th>
+  <th>Tạo lúc</th>
+  <th>SMS</th>
+  <th>Push App</th>
+  <th>Loại</th>
+  <th>Code FPT</th>
+  <th>Tin dự kiến</th>
+  <th></th>
+  <th></th>
+  </thead>
+  <tbody>
+  {% for record in list_camp %}
+    <tr>
+      <td><a {% if is_hq %}href="/sms_marketing_hq/{{ record._id }}"
+             {% else %}href="/sms_marketing/{{ record._id }}" {% endif %}>{{ record.code }}</a>
+      </td>
+      <td>{{ record.desc }}</td>
+      <td>
+        {% if not record.status == '0' and not record.active %}Chưa gửi{% elif record.status =='1' %}Đang gửi{% else %}Đã gửi{% endif %}
+      </td>
+      <td>{{ record.when_str }}</td>
+      <td>{% if record.is_sms %}SMS{% endif %}</td>
+      <td>{% if record.is_push_app %}Push{% endif %}</td>
+      <td>{% if record.is_spam %}{% if record.is_spam == 'care' %}Chăm sóc
+      {% else %}Quảng cáo{% endif %}{% endif %}</td>
+      <td>
+        {% if sms_provider and sms_provider|upper == 'FPT' %}
+          {% if record.code_fpt %}{{ record.code_fpt }}{% endif %} {% endif %}
+      </td>
+      <td>{{ record.predict_message }}</td>
+
+      <td>
+        {% if sms_provider and user_sms and pass_sms and brand_name and
+          sms_provider|length > 0 and user_sms|length > 0 and
+          pass_sms|length > 0 and brand_name|length > 0 %}
+          {% if merchant.quota == '-1'  or merchant.quota|int > 0 %}
+            {% if not record.status != '0' %}
+              {% if merchant.sms_provider == 'FPT' %}
+                {% if record.is_spam == 'care' %}
+                  <a
+                    {% if is_hq %}href="/sms_marketing_hq/{{ record._id }}/send"
+                    {% else %}href="/sms_marketing/{{ record._id }}/send" {% endif %}>
+                    <button class="btn btn-success btn-fill">Gửi tin</button>
+                  </a>
+                {% else %}
+                  {% if record.code_fpt %}
+                    <a
+                      {% if is_hq %}href="/sms_marketing_hq/{{ record._id }}/send"
+                      {% else %}href="/sms_marketing/{{ record._id }}/send" {% endif %}>
+                      <button class="btn btn-success btn-fill">Gửi tin</button>
+                    </a>
+                  {% else %}
+
+                    <a {% if is_hq %}href="/sms_marketing_hq/{{ record._id
+                      }}/fpt_campaign"{% else %}href="/sms_marketing/{{record._id }}/fpt_campaign"{% endif %}>
+                      <button class="btn btn-success btn-fill">Đăng ký chiến
+                        dịch
+                      </button>
+                    </a>
+
+                  {% endif %}
+
+                {% endif %}
+              {% else %}
+
+                <a {% if is_hq %}href="/sms_marketing_hq/{{ record._id }}/send"
+                   {% else %}href="/sms_marketing/{{ record._id }}/send" {% endif %}>
+                  <button class="btn btn-success btn-fill">Gửi tin</button>
+                </a>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      </td>
+
+      <td><a {% if is_hq %}href="/sms_marketing_hq/{{ record._id }}"
+             {% else %}href="/sms_marketing/{{ record._id }}" {% endif %}> Chi
+        tiết</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>

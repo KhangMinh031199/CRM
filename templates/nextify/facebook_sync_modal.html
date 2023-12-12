@@ -1,0 +1,62 @@
+
+
+
+    <img src="{{ url_background }}" alt="..." class="card-img-top">
+
+    <div class="card-body">
+
+        <!-- Image -->
+        <a href="profile-posts.html" class="avatar avatar-xl card-avatar card-avatar-top">
+            <img src="{{ url_logo }}"
+                 class="avatar-img rounded-circle border border-4 border-card" alt="...">
+        </a>
+
+        <h2 class="card-title text-center">
+            {{ page.name }}
+        </h2>
+        <input type="hidden" value="{{ url_logo }}" name="url_logo" id="url_logo"/>
+        <input type="hidden" value="{{ url_background }}" name="url_background" id="url_background"/>
+        <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                    <label>Tên địa điểm</label>
+                    <input type="text" value="{{ page.name }}" class="form-control" id="name" name="name"/>
+
+                </div>
+
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="text" value="{% if page.emails %}{% if page.emails|length>0 %}{{ page.emails[0] }}{% endif %}{% endif %}" class="form-control" id="email" name="email"
+                           placeholder="name@yourdomain.com"/>
+
+                </div>
+                <div class="form-group">
+                    <label>Website</label>
+                    <input type="text" value="{{ page.website }}" class="form-control" id="website" name="website"
+                           placeholder="http://yourdomain.com"/>
+
+                </div>
+
+                <div class="form-group">
+                    <label>Facebook Page</label>
+                    <input type="text" value="{{ page.link }}" class="form-control" id="facebook_page" name="facebook_page"
+                           placeholder="https://facebook.com/your_page"/>
+
+                </div>
+
+
+                <input type="hidden" value="{{ page_id }}" name="page_id" id="page_id"/>
+                <input type="hidden" value="{{ access_token }}" name="page_access_token" id="page_access_token"/>
+
+        </div>
+
+
+
+
+
+        </div>
+
+
+    </div>
+

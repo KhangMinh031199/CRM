@@ -1,0 +1,155 @@
+{% extends 'nextify/base.html' %} {% block main_content %}
+<div class="container-fluid">
+  <div class="header">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">Thống kê quảng cáo</h6>
+          <h1 class="header-title">{{ shop_select.name }}</h1>
+          <!-- Title -->
+        </div>
+        <div class="col-auto">
+          <select class="custom-select control-container" id="shop_in_mer">
+            <option value="all">{{ gettext("Tat_ca_dia_diem") }}</option>
+            {% for shop_mer in shop_in_mer %}
+            <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <!-- / .row -->
+    </div>
+  </div>
+  {% if shop_select %}
+  <input id="shop_id_select" type="hidden" value="{{ shop_select._id }}" />
+  {% endif %}
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-4">
+      <div class="card-body">
+        <div class="row align-items-center gx-0">
+          <div class="col">
+
+            <!-- Title -->
+            <h6 class="text-uppercase text-muted mb-2">
+              Tổng số
+            </h6>
+
+            <!-- Heading -->
+            <span class="h2 mb-0">
+              {{total}}
+            </span>
+
+          </div>
+          <div class="col-auto">
+
+            <!-- Icon -->
+            <span class="h2 fe fe-eye text-muted mb-0"></span>
+
+          </div>
+        </div> <!-- / .row -->
+      </div>
+
+    </div>
+    <div class="col-4">
+      <div class="card-body">
+        <div class="row align-items-center gx-0">
+          <div class="col">
+
+            <!-- Title -->
+            <h6 class="text-uppercase text-muted mb-2">
+              Banner 1
+            </h6>
+
+            <!-- Heading -->
+            <span class="h2 mb-0">
+              {{total_banner_1}}
+            </span>
+
+          </div>
+          <div class="col-auto">
+
+            <!-- Icon -->
+            <span class="h2 fe fe-eye text-muted mb-0"></span>
+
+          </div>
+        </div> <!-- / .row -->
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card-body">
+        <div class="row align-items-center gx-0">
+          <div class="col">
+
+            <!-- Title -->
+            <h6 class="text-uppercase text-muted mb-2">
+              Banner 2
+            </h6>
+
+            <!-- Heading -->
+            <span class="h2 mb-0">
+              {{total_banner_2}}
+            </span>
+
+          </div>
+          <div class="col-auto">
+
+            <!-- Icon -->
+            <span class="h2 fe fe-eye text-muted mb-0"></span>
+
+          </div>
+        </div> <!-- / .row -->
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <!-- Table -->
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col">Mac</th>
+              <th scope="col">Brandname</th>
+              <th scope="col">Banner</th>
+              <th scope="col">Thời gian</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%for log in logs%}
+            <tr>
+              <th scope="row">{{log.client_mac}}</th>
+              <td>{{log.brandname}}</td>
+              <td>{{log.interactive_banner_id}}</td>
+              <td>{{log.timestamp|human_time_string}}</td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-footer">
+      <ul class="pagination justify-content-center">
+        {% if pagination %} {{ pagination.links }} {% endif %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+{%endblock%} {% block js %}
+<script nonce="{{ csp_nonce() }}">
+  $(document).ready(function () {
+    var shop_id_select = $('#shop_id_select').val();
+    $("#shop_in_mer").val(shop_id_select).trigger("change");
+    $("#shop_in_mer").on("change", function () {
+      var shop_id = $("#shop_in_mer").val();
+      var url = "/ads_banner/" + shop_id;
+      $(location).attr("href", url);
+    });
+  });
+</script>
+
+{%endblock%}

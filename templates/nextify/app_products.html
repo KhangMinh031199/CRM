@@ -1,0 +1,49 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+<div class="c-toolbar u-mb-medium">
+        <h3 class="c-toolbar__title has-divider">{{ gettext("San_pham") }}</h3>
+        <h5 class="c-toolbar__meta u-mr-auto">{{ gettext("Quan_ly_san_pham_&_dich_vu") }}</h5>
+</div>
+<div class="container">
+        <div class="row">
+
+            <div class="col-lg-12">
+                <div class="card u-p-medium">
+                    <div class="c-table-responsive@desktop">
+                        <table class="c-table c-table--zebra u-mb-small"
+                               id="datatable2">
+                            <thead class="c-table__head">
+                            <tr class="c-table__row">
+                                <th class="c-table__cell
+                                c-table__cell--head">
+                                    {{ gettext("Dia_diem") }}
+                                </th>
+                                <th class="c-table__cell
+                                c-table__cell--head">
+                                    {{ gettext("So_danh_muc") }}
+                                </th>
+                                <th class="c-table__cell
+                                c-table__cell--head">
+                                   {{ gettext("So_san_pham") }}
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                             {% for shop_mer in shop_products %}
+                                   <tr>
+                                       <td class="c-table__cell">
+                                           <a href="/shop_category_product/{{ shop_mer._id }}">{{ shop_mer.name }}</a></td>
+                                   <td class="c-table__cell">{{ shop_mer
+                                               .cat_count }}</td>
+                                   <td class="c-table__cell">{{ shop_mer
+                                               .product_count }}</td>
+                                   </tr>
+                             {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+   {% endblock %}

@@ -1,0 +1,185 @@
+<div class="col u-justify-center">
+    <div class="row u-justify-center">
+        <div class="col-md-7">
+            <div class="u-mt-medium u-text-center">
+                <div class="c-avatar c-avatar--large u-mb-small u-inline-flex">
+                    {% if cus.avatar and cus.avatar|length > 0 %}
+
+                    <img class="c-avatar__img" src="{{ cus.avatar.replace('http:', 'https:') }}">
+                    {% else %}
+                    <img class="c-avatar__img" src="/static/v2/assets/img/medium-default-avatar.png">
+                    {% endif %}
+                </div>
+                <h2 class="u-h5">
+                    {{ cus.name }}
+                </h2>
+                <input type="hidden" value="{{ cus.phone }}" id="callTo">
+                <h3 class="u-h5">
+                    {{ cus.phone }}
+                </h3>
+                {{ gettext("Trang_thai:") }}
+                <span id="callStatus" style="color: red"></span>
+                <!-- <div>
+                                    <br />
+                                    Máy nhánh : <span id="loggedUserId" style="color: red">Không xác
+                                        định</span>
+                                </div>
+
+                                <div>
+                                    <br />
+                                    Trạng thái : <span id="callStatus" style="color: red">Chưa hoạt
+                                        động</span>
+                                </div> -->
+
+                <div style="display: none;">
+                    <video id="localVideo" autoplay muted style="width: 150px;"></video>
+                    <video id="remoteVideo" playsinline autoplay style="width: 350px"></video>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div type="hidden" id="incoming-call-div">
+                            Incoming call from: <span id="incoming_call_from"></span>
+                            <button id="answerBtn" onclick="testAnswerCall()">Answer</button>
+                            <button id="rejectBtn" onclick="testRejectCall()">Reject</button>
+                        </div> -->
+        <!-- aaa -->
+        <main id="animation" style="display: none;">
+            <section>
+                <div class="voice-coder">
+                    <!-- 45 spans inside the main .voice-coder wrapper -->
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+            </section>
+        </main>
+    </div>
+    <!-- aaa -->
+    <div style="margin-top: 30px;">
+        <a class="u-justify-center" style="float: left;">
+            <i class="fa fa-phone-volume" id="callBtn" style="color: green;">
+               {{ gettext("GOI_NGAY") }}
+            </i>
+        </a>
+
+        <a class="u-justify-center" style="float: right;" data-dismiss="modal" data-toggle="modal">
+            <i class="fa fa-phone-slash" id="hangupBtn" style="color: red;">
+               {{ gettext("KET_THUC") }}
+            </i>
+        </a>
+    </div>
+</div>
+<input type="hidden" value="{{ merchant_id|jinja_get_number }}" id="fromNumber">
+<input type="hidden" value="{{ merchant_id|jinja_get_token }}" id="access_token">
+
+<script nonce="{{ csp_nonce() }}">
+        $("#hangupBtn").click(function () {
+            $('#callStatus').html("Finish");
+            testHangupCall(call);
+            var phone_call_to = $("#callTo").val();
+            var fromNumber = $("#fromNumber").val();
+            var access_token = $("#access_token").val();
+            function testHangupCall(call) {
+                localVideo.srcObject = null;
+                remoteVideo.srcObject = null;
+                if (call) {
+                    call.hangup(function (res) {
+                        console.log('hangup res', res);
+                    });
+                }
+
+            }
+
+            $("#animation").hide();
+            // $("#pop_up_{{ cus._id }}").modal("hide");
+            // location.reload();
+            return false;
+
+        });
+        $("#callBtn").click(function () {
+            Swal.fire({
+                title: '{{ gettext("Ban_co_chac_chan_muon_goi_khach_hang?") }}',
+
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+focusCancel: true,
+                cancelButtonColor: '#d33',
+                confirmButtonText: '{{ gettext("Co!") }}',
+                cancelButtonText: '{{ gettext("Khong!")}}'
+            }).then((result) => {
+                if (result.value) {
+
+                    $("#animation").show();
+                    var phone_call_to = $("#callTo").val();
+
+                    var fromNumber = $("#fromNumber").val();
+
+
+                    testMakeCall(stringeeClient, fromNumber, phone_call_to);
+                    function testMakeCall() {
+                        console.log("test make call");
+                        call = new StringeeCall(stringeeClient, fromNumber, phone_call_to, false);
+                        settingCallEvents(call);
+
+                        call.makeCall(function (res) {
+                            console.log('make call callback: ' + JSON.stringify(res));
+                            if (res.r !== 0) {
+                                $('#callStatus').html(res.message);
+                            }
+                        });
+                    }
+
+
+                };
+                return false;
+
+            })
+        });
+
+
+</script>

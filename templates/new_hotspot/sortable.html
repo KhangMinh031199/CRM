@@ -1,0 +1,61 @@
+{% if campaigns.count() > 1 %}
+    <button id="sort_campaign" class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#priority"
+            style=" float: right; margin-right: 12px">
+        <i class="fa fa-sort"></i> Thứ tự
+    </button>
+{% endif %}
+<!-- Priority Modal -->
+<div class="modal fade" id="priority" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Sắp xếp chiến dịch</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul id="sortable" class="sortable-container list-group list-group-lg">
+                    {% for campaign in campaigns %}
+                        {% if campaign.campaign_type == 'default' %}
+                            <li class="sortable-item list-group-item">
+                                <input type="hidden" value="{{ campaign._id }}" class="campaign_id">
+
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+
+                                        <div class="avatar avatar-sm">
+                                            <div class="avatar-title font-size-lg bg-primary-soft rounded-circle text-primary">
+                                                <i class="fa fa-arrows-alt-v"></i>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col ml-n2">
+
+                                        <!-- Title -->
+                                        <h4 class="mb-1 name">
+                                            {% if campaign.name %}
+                                                {{ campaign.name }}
+                                            {% endif %}
+                                        </h4>
+
+
+                                    </div>
+                                </div>
+
+
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary saved_priority">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>

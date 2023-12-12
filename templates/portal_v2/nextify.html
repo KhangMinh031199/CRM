@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<title>{% if 'viettel.vn' in request.url %}Viettel{% elif 'crmx' in request.url %}CRMX{% else %}Nextify{% endif %}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	  {% if 'viettel.vn' in request.url %}
+        <title>Viettel | vmarketing</title>
+        {% include 'portal_v2/viettel_meta_tags.html' %}
+        {% elif 'crmx' in request.url %}
+        <title>CRMX | Better eXperience fo Wi-Fi</title>
+         {% include 'portal_v2/crmx_meta_tags.html' %}
+    {% else %}
+        <title>Nextify | The Next Generation of Loyalty</title>
+         {% include 'portal_v2/nextify_meta_tags.html' %}
+    {% endif %}
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<style>
+    	html,body{
+			height: 100%;
+		}
+       .container{
+       	height: 100%;
+       	align-content: center;
+       }
+
+       .image_outer_container{
+       	margin-top: auto;
+       	margin-bottom: auto;
+       	border-radius: 50%;
+       	position: relative;
+       }
+
+       .image_inner_container{
+       	border-radius: 50%;
+       	padding: 5px;
+        background: #833ab4;
+        background: -webkit-linear-gradient(to bottom, #fcb045, #fd1d1d, #833ab4);
+        background: linear-gradient(to bottom, #fcb045, #fd1d1d, #833ab4);
+       }
+       .image_inner_container img{
+       	height: 200px;
+       	width: 200px;
+       	border-radius: 50%;
+       	border: 5px solid white;
+       }
+
+       .image_outer_container .green_icon{
+         background-color: #4cd137;
+         position: absolute;
+         right: 30px;
+         bottom: 10px;
+         height: 30px;
+         width: 30px;
+         border:5px solid white;
+         border-radius: 50%;
+       }
+
+.support-frontpage{margin-top:20px;background:#fff;padding:20px;margin-bottom:30px;}
+.text-center{text-align:center;}
+.support-frontpage p{margin:0 auto 30px;}
+
+
+</style>
+</head>
+<body>
+   	<div class="container">
+     <div class="flex-sb-m w-full p-b-30" style="justify-content: center;margin-top:50px">
+		<div class="d-flex justify-content-center h-100">
+
+			<div class="image_outer_container">
+				<div class="green_icon"></div>
+				<div class="image_inner_container">
+                     {% if 'viettel.vn' in request.url %}
+					<img src="/static/nextify/logo_whitelabel/viettel.png">
+			        {% elif 'crmx' in request.url %}
+                    <img src="/static/nextify/logo_whitelabel/crmx.png">
+                    {% else %}
+                       <img src="/static/nextify/logo_whitelabel/nextify.jpg">
+                    {% endif %}
+
+				</div>
+
+
+         </div>
+        </div>
+            <div class="container-login100-form-btn justify-content-center">
+                <div class="support-frontpage col-lg-12">
+                    <div class="col-lg-12" style="margin: 20px">
+                        <div class="text-center">
+                        <i class="fa fa-life-ring" style="font-size: 64px;margin-bottom:25px;"></i>
+                        <h2>Trung tâm trợ giúp</h2>
+                        <p>Truy cập trang trợ giúp và hướng dẫn đăng ký sử dụng sản phẩm.</p>
+                        <a class="btn btn-success" href="{% if 'viettel.vn' in request.url %}
+                                https://nextify.vn
+                            {% elif 'crmx' in request.url %}
+                                https://vhttelecom.freshdesk.com/support/solutions/folders/44001019933
+                            {% else %}
+                               https://nextify.vn
+                            {% endif %}">Trung tâm trợ giúp</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-12" style="margin: 20px">
+                        <div class="text-center">
+                        <i class="fa fa-envelope-o" style="font-size: 64px;margin-bottom:25px;"></i>
+                        <h2>Liên hệ với chúng tôi</h2>
+                        <p>Bạn muốn được tư vấn trực tiếp? Hãy liên hệ với chúng tôi.</p>
+                        <a class="btn btn-primary" href="{% if 'viettel.vn' in request.url %}
+                                https://nextify.vn
+                            {% elif 'crmx' in request.url %}
+                                https://vhttelecom.freshdesk.com/support/solutions/folders/44001019933
+                            {% else %}
+                               https://nextify.vn
+                            {% endif %}">Liên hệ với chúng tôi</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+		</div>
+
+
+	</div>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,31 @@
+<div class="panel-header-stats">
+  <div class="row">
+    <div class="col-md-2 col-xs-12" style="text-align: center">
+      <p class="lead">{{ gettext("Tong") }}</p>
+      <p style="font-size: 25px;"><b>{{ total }}</b></p>
+    </div>
+    <div class="col-md-2 col-xs-12" style="text-align: center">
+      <p class="lead">{{ gettext("Cham_soc") }}</p>
+      <p style="font-size: 25px;"><b>{{ care_camp }}</b></p>
+    </div>
+    <div class="col-md-2 col-xs-12" style="text-align: center">
+      <p class="lead">{{ gettext("Quang_Cao") }}</p>
+      <p style="font-size: 25px;"><b>{{ spam_camp }}</b></p>
+    </div>
+    <div class="col-md-2 col-xs-12" style="text-align: center">
+      <p class="lead">SMS</p>
+      <p style="font-size: 25px;"><b>{{ sms_camp }}</b></p>
+    </div>
+    <div class="col-md-2 col-xs-12" style="text-align: center">
+      <p class="lead">Zalo</p>
+      <p style="font-size: 25px;"><b>{{ zalo_camp }}</b></p>
+    </div>
+    <div class="col-md-2 col-xs-12" style="text-align: center">
+      <p class="lead">{{ gettext("Push") }}</p>
+      <p style="font-size: 25px;"><b>{{ push_camp }}</b></p>
+    </div>
+  </div>
+</div>
+<div>
+  {% line_chart campaign_serrie_data with id='chart-shop_campaign_serrie_data' %}
+</div>

@@ -1,0 +1,69 @@
+{% extends "v2/base.html" %} {% block right_content %}
+
+<div class="row">
+    <div class="panel panel-white">
+        <div class="panel-heading clearfix">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="btn-toolbar">
+                        <div class="btn-group pull-right">
+                            <a {%if is_hq %}href="/sms_marketing_hq/add" {%else%}href="/sms_marketing/add" {%endif%}>
+                                <button class="btn btn-info btn-fill pull-right">{{ gettext("Tao_chien_dich") }}</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="panel-body" style="zoom: 1;">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="table-responsive">
+
+                    <table class="table">
+                        <div id="view_data"></div>
+
+                        {% if pagination %}
+                        <center>
+                            {{ pagination.links }}
+                        </center>
+                        {% endif %}
+                    </table>
+                </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+{% endblock %} {%block js%} {% if is_hq %}
+ <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $('#marketing').click();
+        $.ajax({
+            url: "/get_sms_marketing_hq?page=" + {{ page }},
+        success: function (data) {
+            $("#view_data").html(data);
+        }
+        });
+
+    });
+</script> {%else%}
+
+ <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $('#marketing').click();
+        $.ajax({
+            url: "/get_sms_marketing?page=" + {{ page }},
+        success: function (data) {
+            $("#view_data").html(data);
+        }
+        });
+
+    });
+</script> {%endif%} {%endblock%}

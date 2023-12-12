@@ -1,0 +1,38 @@
+{% extends 'v2/base.html'%}
+{% block right_content %}
+  <div class="row">
+       <div class="panel panel-white">
+  <div class="panel-body">
+       <div class="table-responsive">
+
+         <table class="table">
+                <thead>
+                <th>File</th>
+                <th>Thời gian</th>
+                <th>Lúc</th>
+                </thead>
+                <tbody>
+                {% for file in files %}
+                    <tr>
+                       <td><a href="//crm.nextify.vn/{{ file.static_path }}">Download</a></td>
+                        <td>{{ file.when|human_time_string }}</td>
+                        <td>{{ file.time_string }}</td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+            {% if pagination %}
+                <center>
+                    {{ pagination.links }}
+                </center>
+            {% endif %}
+  </div>
+  </div>
+  </div>
+
+</div>
+
+
+{% endblock %}
+

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Nextify</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel='stylesheet' id='google-fonts-roboto-css' href='//fonts.googleapis.com/css?family=Roboto+Slab%3A400%2C300%2C100%2C700&#038;subset=latin%2Cgreek%2Cvietnamese%2Ccyrillic-ext%2Clatin-ext%2Ccyrillic' type='text/css' media='all' />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='v2/assets/css/flatpickr.css') }}" type="text/css" />
+    <link rel="stylesheet" href="/static/nextify/css/feather/feather.min.css">
+    <link rel="stylesheet" href="/static/nextify/css/select2.min.css">
+    <link rel="stylesheet" href="/static/v2/assets/css/pace-theme-minimal.css">
+    <link rel="stylesheet" href="/static/nextify/css/sweetalert.css">
+    <link rel="stylesheet" href="/static/nextify/css/tooltip.css">
+    <link rel="stylesheet" href="/static/nextify/css/toastr.min.css">
+    <link rel="stylesheet" href="/static/nextify/css/pagination.css">
+    <link rel="stylesheet" href="/static/nextify/css/main.min.css">
+    <link rel="stylesheet" href="/static/nextify/css/dash_kit_theme.min.css" />
+
+
+</head>
+
+<body id="body">
+
+    <div class="main-content" id="main-content">
+    <div class="c-toolbar u-mb-medium">
+    <h3 class="c-toolbar__title has-divider">Backup DB</h3>
+    </div>
+
+    <div class="container">
+        <div class="row u-mb-large">
+            <div class="col-lg-12">
+                <div class="card u-p-medium">
+                    <div class="c-table-responsive">
+                        <table class="c-table">
+                         <thead class="c-table__head c-table__head--slim">
+                                <tr class="c-table__row">
+                                    <th class="c-table__cell
+                                        c-table__cell--head">File
+                                    </th>
+                                    <th  class="c-table__cell
+                                        c-table__cell--head">Download</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for file_name in list_of_files %}
+         <tr class="c-table__row">
+            <td class="c-table__cell">{{ file_name }}</td>
+         <td  class="c-table__cell">
+             <a href="/static/backup_db/{{ file_name }}">Download</a>
+         </td>
+
+          </tr>
+        {% endfor %}
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</body>
+</html>
+

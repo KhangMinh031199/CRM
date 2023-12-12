@@ -1,0 +1,154 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+    <div class="c-toolbar u-mb-medium">
+        <h3 class="c-toolbar__title has-divider"><a
+                href="/app_products">{{ gettext('San_pham') }}</a></h3>
+        <h5 class="c-toolbar__meta u-mr-auto">{{ prod.item_desc }}</h5>
+    </div>
+    <div class="container ">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="c-card u-p-medium">
+                    <div class="row u-justify-center">
+                        <div class="col-lg-12">
+                        {% if error %}
+                                <div class="alert alert-danger">
+                                    {{ error | safe }}
+                                </div>
+                            {% endif %} {% if message %}
+                            <div class="alert alert-success">
+                                {{ message | safe }}
+                            </div>
+                        {% endif %}
+                            <form method="POST"
+                                  action="/products/{{ cat_id }}/product/{% if not prod %}add{% else %}{{ prod._id }}{% endif %}"
+                                  enctype="multipart/form-data">
+                                  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="item_desc">{{ gettext('Ten_san_pham') }}</label>
+                                    <input type="text" class="c-input"
+                                           name="item_desc" id="item_desc"
+                                           {% if prod %}value="{{ prod.item_desc }}"{% endif %}/>
+                                </div>
+                                {% if merchant_id %}
+                                    <input type="hidden" name="merchant_id"
+                                           value="{{ merchant_id }}"/>
+                                {% endif %}
+                                <div class="c-field u-mb-small">
+                                    <label  class="c-field__label"
+                                            for="code">{{ gettext('Ma_san_pham:') }}</label>
+                                    <input type="text" class="c-input"
+                                           name="code" id="code"
+                                           {% if prod %}value="{{ prod.code }}"{% endif %}/>
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="retail_price">{{ gettext('Gia:') }}</label>
+                                    <input type="text" class="c-input"
+                                           name="retail_price"
+                                           id="retail_price"
+                                           {% if prod %}value="{{ prod.retail_price }}"{% endif %}/>
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="type_discount_price">{{ gettext('Loai_giam_gia') }}</label>
+                                    {% if prod %}
+                                        <input type="hidden"
+                                               value="{{ prod.type_discount_price }}"
+                                               id="ex_type_discount_price"/>
+                                    {% endif %}
+                                    <select class="c-select"
+                                            name="type_discount_price"
+                                            id="type_discount_price">
+                                        <option value="percent">{{gettext('Phan_tram') }}
+                                        </option>
+                                        <option value="price">{{ gettext('Gia_sau_giam') }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="discount_price">{{ gettext('Giam_gia') }}</label>
+                                    <input type="text" class="c-input"
+                                           name="discount_price"
+                                           id="discount_price"
+                                           {% if prod %}value="{{ prod.discount_price }}"{% endif %}>
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="photo">{{ gettext('Anh:') }}</label>
+                                    {% if prod.photo %}
+                                        <p class="help-block">
+                                            <img src="//files.nextify.vn/{{ prod.photo }}"
+                                                 width="200">
+                                        </p>
+                                    {% endif %}
+                                    <input type="file" class="c-input"
+                                           id="photo" name="photo">
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="description">{{ gettext('Mo_ta_ngan:') }}</label>
+                                    <textarea class="c-input"
+                                              id="description"
+                                              name="description">
+                                    {% if prod.description %}
+                                        {{ prod.description }}
+                                    {% endif %}
+                                </textarea>
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <label class="c-field__label" for="detail_product">{{ gettext('Chi_tiet_san_pham:') }}</label>
+                                    <textarea class="c-input"
+                                              id="detail_product"
+                                              name="detail_product">
+                                    {% if prod.detail_product %}
+                                        {{ prod.detail_product }}
+                                    {% endif %}
+                                </textarea>
+                                </div>
+
+                            <div class="c-field u-mb-small">
+                                 <div class="c-choice c-choice--checkbox">
+                                    <input class="c-choice__input"
+                                           type="checkbox"
+                                                name="active" id="active"
+                                                             {% if prod and prod.active|lower == "true" %}checked{% endif %}>
+                                    <label class="c-choice__label"
+                                           for="active">{{ gettext('Kich_hoat') }} </label>
+                                </div>
+
+                                </div>
+                                   <button id="new_splash_submit"
+                                        type="submit"
+                                        class="c-btn c-btn--info u-float-right">
+                                    {{ gettext('Luu_thong_tin') }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+     <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            if ($('#ex_type_discount_price').length > 0) {
+                $('#type_discount_price').val($('#ex_type_discount_price').val());
+            }
+        });
+    </script>
+
+     <script nonce="{{ csp_nonce() }}">
+        ClassicEditor
+            .create(document.querySelector('#description'))
+            .catch(error = > {
+            console.error(error);
+        } )
+        ;
+        ClassicEditor
+            .create(document.querySelector('#detail_product'))
+            .catch(error = > {
+            console.error(error);
+        } )
+        ;
+    </script>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="c-toolbar u-mb-medium">
+        <h3 class="c-toolbar__title has-divider">{{ gettext("Danh_muc_tin") }}</h3>
+        <h5 class="c-toolbar__meta u-mr-auto">{{ gettext("Danh_muc_tin_tuc") }}</h5>
+        <div class="c-field c-field--inline has-icon-right u-hidden-down@tablet">
+            <div class="c-search-form__section">
+                <a href="/app/blogs/category/add">
+                    <button class="c-btn c-btn--success u-ml-small">{{ gettext("Them_moi") }}
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-12">
+                <div class="c-card u-p-medium">
+                    <div class="c-table-responsive@desktop">
+                        <table class="c-table c-table--zebra u-mb-small"
+                               id="datatable2">
+                            <thead class="c-table__head">
+                            <tr class="c-table__row">
+                                <th class="c-table__cell
+                                c-table__cell--head">{{ gettext("Tieu_de") }}</th>
+                                <th class="c-table__cell
+                                c-table__cell--head">{{ gettext("Chi_tiet") }}</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cat in cats %}
+                                <tr class="c-table__row">
+                                        <td class="c-table__cell">
+                                        <a href="/app/blogs/category/{{ cat._id }}">{{ cat.title }}</a>
+                                    </td>
+                                       <td class="c-table__cell">{{ cat.desc }}</td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

@@ -1,0 +1,339 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                        {{ gettext("Ung_dung") }}
+                    </h6>
+
+                    <!-- Title -->
+                    <h1 class="header-title">
+                        Email
+                    </h1>
+
+                </div>
+            </div> <!-- / .row -->
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="header-title">
+                        {{ gettext("Cau_hinh") }}
+                    </h1>
+                </div>
+                <form method="POST" action="/info_email" enctype="multipart/form-data" id="fr_email_config">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="c-choice c-choice--radio">
+                                    <input class="c-choice__input" id="checkbox_mail_nextify" name="mail_box"
+                                        type="radio" value="mail_gun" autofocus>
+                                    <label class="c-choice__label" for="checkbox_mail_nextify">
+                                        MailGun
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="c-choice c-choice--radio">
+                                    <input class="c-choice__input" id="checkbox_mail_sendgrid" name="mail_box"
+                                        type="radio" value="sendgrid">
+                                    <label class="c-choice__label" for="checkbox_mail_sendgrid">
+                                        SendGrid
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="c-choice c-choice--radio">
+                                    <input class="c-choice__input" id="checkbox_mail_khac" name="mail_box" type="radio"
+                                        value="mail_khac">
+                                    <label class="c-choice__label" for="checkbox_mail_khac">{{ gettext("Khac")
+                                        }}</label>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="mt-4" id="mail_nexify">
+                            <input type="hidden" class="form-control" value="nextify" name="mail_partner" />
+                            <div class="form-group">
+                                <label>Mailgun Domain: (<span>
+                                        <font color="red">*</font>
+                                    </span> {{ gettext("bat_buoc") }})</label>
+                                <input class="form-control" type="text" name="mail_domain"
+                                    value="{% if 'mailgun' in mail_settings.mail_server %}{{ mail_settings.mail_name }}{% endif %}">
+                            </div>
+                            <div class="form-group">
+                                <label>Mailgun API KEY: (<span>
+                                        <font color="red">*</font>
+                                    </span> {{ gettext("bat_buoc") }})</label>
+                                <input class="form-control" type="text" name="mail_api_key"
+                                    value="{% if 'mailgun' in mail_settings.mail_server %}{{ mail_settings.mail_pass }}{% endif %}">
+                            </div>
+                            <div class="form-group">
+                                <label>Mailgun API URL: (<span>
+                                        <font color="red">*</font>
+                                    </span> {{ gettext("bat_buoc") }})</label>
+                                <input class="form-control" type="text" name="mail_api_url"
+                                    value="{% if 'mailgun' in mail_settings.mail_server %}{{ mail_settings.mail_server }}{% endif %}">
+                            </div>
+
+                        </div>
+
+                        <div class="mt-4" id="mail_sendgrid" style="display: none">
+
+                            <input type="hidden" class="form-control" value="nextify" name="mail_partner" />
+                            <div class="form-group">
+                                <label>From Email: (<span>
+                                        <font color="red">*</font>
+                                    </span> {{ gettext("bat_buoc") }})</label>
+                                <input class="form-control" type="text" name="from_email"
+                                    value="{% if 'sendgrid' in mail_settings.mail_server %}{{ mail_settings.mail_user }}{% endif %}">
+                            </div>
+                            <div class="form-group">
+                                <label>API KEY: (<span>
+                                        <font color="red">*</font>
+                                    </span> {{ gettext("bat_buoc") }})</label>
+                                <input class="form-control" type="text" name="api_key"
+                                    value="{% if 'sendgrid' in mail_settings.mail_server %}{{ mail_settings.mail_pass }}{% endif %}">
+                            </div>
+
+                        </div>
+
+                        <div id="mail_smtp" class="mt-4" style="display: none">
+
+                            <div class="form-group">
+                                <label>Email {{ gettext("gui") }}: (<span>
+                                        <font color="red">*</font>
+                                    </span> {{ gettext("bat_buoc") }})</label>
+                                <input type="text" class="form-control"
+                                    value="{% if (mail_settings.mail_server|string() != ' smtp.nextify.vn'|string()) and
+                                    (mail_settings.mail_server|string() !='smtp.gmail.com' |string()) %}{{
+                                    mail_settings.mail_name }}{% endif %}" name="smtp_email" />
+                            </div>
+                            <div class="form-group">
+                                <label>{{ gettext("Tai_khoan") }}: (<span>
+                                        <font color="red">*</font>
+                                    </span> {{ gettext("bat_buoc") }})</label>
+                                <input type="text" class="form-control"
+                                    value="{% if (mail_settings.mail_server|string() != ' smtp.nextify.vn'|string()) and
+                                    (mail_settings.mail_server|string() !='smtp.gmail.com' |string()) %}{{
+                                    mail_settings.mail_user }}{% endif %}" name="smtp_user" />
+                            </div>
+                            <div class="form-group">
+                                <label>{{ gettext("Mat_khau") }}: (<span>
+                                        <font color="red">*</font>
+                                    </span> {{ gettext("bat_buoc") }})</label>
+                                <input type="password" class="form-control"
+                                    value="{% if (mail_settings.mail_server|string() != ' smtp.nextify.vn'|string()) and
+                                    (mail_settings.mail_server|string() !='smtp.gmail.com' |string()) %}{{
+                                    mail_settings.mail_pass }}{% endif %}" name="smtp_pass" />
+                            </div>
+                            <div class="form-group">
+                                <label>SMTP Server: (<span>
+                                        <font color="red">*</font>
+                                    </span> {{ gettext("bat_buoc") }})</label>
+                                <input type="text" class="form-control"
+                                    value="{% if (mail_settings.mail_server|string() != ' smtp.nextify.vn'|string()) and
+                                    (mail_settings.mail_server|string() !='smtp.gmail.com' |string()) and not 'sendgrid' in mail_settings.mail_server
+                                    and  not 'mailgun' in mail_settings.mail_server%}{{
+                                    mail_settings.mail_server }}{% endif %}" name="smtp_server" />
+                            </div>
+                            <div class="form-group">
+                                <label>Port: (<span>
+                                        <font color="red">*</font>
+                                    </span> {{ gettext("bat_buoc") }})</label>
+                                <input type="text" class="form-control"
+                                    value="{% if (mail_settings.mail_server|string() != ' smtp.nextify.vn'|string()) and
+                                    (mail_settings.mail_server|string() !='smtp.gmail.com' |string()) %}{{
+                                    mail_settings.mail_port }}{% endif %}" name="smtp_port" />
+                            </div>
+                            <div class="form-group">
+                                <div class="c-choice c-choice--checkbox">
+                                    <input class="c-choice__input" type="checkbox" name="checkbox_ssl" id="checkbox_ssl"
+                                        {% if mail_settings.mail_server %}checked{% endif %}>
+                                    <label class="c-choice__label" for="checkbox_ssl">{{ gettext("Su_dung_SSL")
+                                        }}</label>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col">
+
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" id="save" class="btn btn-lg btn-block btn-primary">
+                                    {{ gettext("Luu_cau_hinh") }}
+                                </button>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+            </div> <!-- / .row -->
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+        $('input').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+
+        if ("{{ mail_settings.mail_server }}".indexOf("mailgun") > 0) {
+            $("#checkbox_mail_nextify").attr('checked', 'checked');
+            $("#mail_nexify").show();
+            $("#mail_smtp").hide();
+            $("#mail_sendgrid").hide();
+        } else if ("{{ mail_settings.mail_server }}" == "smtp.gmail.com") {
+            $("#checkbox_gmail").attr('checked', 'checked');
+            $("#mail_nexify").hide();
+            $("#mail_smtp").hide();
+            $("#mail_sendgrid").hide();
+        } else if ("{{ mail_settings.mail_server }}" == "sendgrid") {
+            $("#checkbox_mail_sendgrid").attr('checked', 'checked');
+            $("#mail_nexify").hide();
+            $("#mail_smtp").hide();
+            $("#mail_sendgrid").show();
+        }
+        else {
+            $("#checkbox_mail_khac").attr('checked', 'checked');
+            $("#mail_nexify").hide();
+            $("#mail_smtp").show();
+            $("#mail_sendgrid").hide();
+        }
+
+        $("#checkbox_mail_nextify").on('click', function () {
+            $("#mail_nexify").show();
+            $("#mail_smtp").hide();
+            $("#mail_sendgrid").hide();
+        });
+        // $("#checkbox_gmail").on('click', function () {
+        //     $("#mail_nexify").hide();
+        //     $("#mail_smtp").hide();
+        //     $("#mail_sendgrid").hide();
+        // });
+        $("#checkbox_mail_khac").on('click', function () {
+            $("#mail_nexify").hide();
+            $("#mail_smtp").show();
+            $("#mail_sendgrid").hide();
+        });
+
+        $("#checkbox_mail_sendgrid").on('click', function () {
+            $("#mail_nexify").hide();
+            $("#mail_smtp").hide();
+            $("#mail_sendgrid").show();
+        });
+
+        $("#save").on('click', function () {
+            var mail_box = $("input[name='mail_box']:checked").val();
+            if (mail_box == "mail_gun") {
+                var mail_domain = $("input[name='mail_domain']").val();
+                if (mail_domain.length == 0) {
+                    swal('{{ gettext("Chua_nhap_Mailgun_Domain") }}', '', 'error');
+                    return false
+                }
+                var mail_api_key = $("input[name='mail_api_key']").val();
+                if (mail_api_key.length == 0) {
+                    swal('{{ gettext("Chua_nhap_Mailgun_API_KEY") }}', '', 'error');
+                    return false
+                }
+                var mail_api_url = $("input[name='mail_api_url']").val();
+                if (mail_api_url.length == 0) {
+                    swal('{{ gettext("Chua_nhap_Mailgun_API_URL") }}', '', 'error');
+                    return false
+                }
+            }
+            else if(mail_box == "sendgrid"){
+                var from_email = $("input[name='from_email']").val();
+                if (from_email.length == 0) {
+                    swal('{{ gettext("Chua_nhap_From_Email") }}', '', 'error');
+                    return false
+                }
+                var api_key = $("input[name='api_key']").val();
+                if (api_key.length == 0) {
+                    swal('{{ gettext("Chua_nhap_API_KEY") }}', '', 'error');
+                    return false
+                }
+            }
+            else {
+                var smtp_email = $("input[name='smtp_email']").val();
+                if (smtp_email.length == 0) {
+                    swal('{{ gettext("Chua_nhap_smtp_email") }}', '', 'error');
+                    return false
+                }
+                var smtp_user = $("input[name='smtp_user']").val();
+                if (smtp_user.length == 0) {
+                    swal('{{ gettext("Chua_nhap_smtp_user") }}', '', 'error');
+                    return false
+                }
+                var smtp_pass = $("input[name='smtp_pass']").val();
+                if (smtp_pass.length == 0) {
+                    swal('{{ gettext("Chua_nhap_smtp_pass") }}', '', 'error');
+                    return false
+                }
+                var smtp_server = $("input[name='smtp_server']").val();
+                if (smtp_server.length == 0) {
+                    swal('{{ gettext("Chua_nhap_smtp_server") }}', '', 'error');
+                    return false
+                }
+                var smtp_port = $("input[name='smtp_port']").val();
+                if (smtp_port.length == 0) {
+                    swal('{{ gettext("Chua_nhap_smtp_port") }}', '', 'error');
+                    return false
+                }
+            }
+            $.ajax({
+                type: 'post',
+                url: $("#fr_email_config").attr("action"),
+                data: $("#fr_email_config").serialize(),
+                success: function (response) {
+                    var returnedData = JSON.parse(response);
+                    if ('error' in returnedData) {
+
+                        swal(returnedData['error'], " ", "error");
+                    } else {
+                        swal('{{ gettext("Cap_nhat_thanh_cong") }}', " ", "success");
+                        location.reload();
+
+                    }
+                }
+            });
+        })
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends 'nextify/base.html' %}
+
+{% block main_content %}
+    <div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                      Chiến dịch
+                 </h6>
+                  
+
+                    <!-- Title -->
+                    <h1 class="header-title">
+                      Zalo Marketing
+                    </h1>
+
+                </div>
+
+                <div class="col-auto">
+                    <a href="/zalo_marketing/add" class="btn btn-primary ms-2">
+                      <i class="fe fe-plus"></i> Thêm mới
+                    </a>
+                </div>
+               
+
+            </div> <!-- / .row -->
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+            <div class="row justify-content-center">
+              <div class="col-12">
+
+                <!-- Card -->
+                <div class="card" id="email_lists">
+
+                  <div class="table-responsive">
+                    <table class="table table-sm table-hover table-nowrap card-table">
+                      <thead>
+                        <tr>
+
+                          <th>
+                            <a class="list-sort text-muted" href="#">{{ gettext("Ten_chien_dich") }}</a>
+                          </th>
+                          <th>
+                            <a class="list-sort text-muted" href="#">{{ gettext("Tong_so") }}</a>
+                          </th>
+                            <th>
+                            <a class="list-sort text-muted" href="#">{{ gettext("Trang_thai") }}</a>
+                          </th>
+                          <th>
+                            <a class="list-sort text-muted" href="#">{{ gettext("Da_gui") }} </a>
+                          </th>
+                          <th>
+                            <a class="list-sort text-muted"  href="#">{{ gettext("Chua_gui") }}</a>
+                          </th>
+                            <th>
+                            <a class="list-sort text-muted"  href="#">{{ gettext("That_bai") }}</a>
+                          </th>
+                             <th>
+                            <a class="list-sort text-muted"  href="#"></a>
+                          </th>
+                          <th>
+                            <a class="list-sort text-muted"  href="#">{{ gettext("Cap_nhat") }}</a>
+                          </th>
+
+                        </tr>
+                      </thead>
+                      <tbody class="list font-size-base">
+                          {% for camp in list_camp %}
+                      <tr>
+                          <td>
+                            <a class="item-name text-reset" href="{% if not camp.status or camp.status == 0 %}/zalo_marketing/{{ shop_id_select }}/{{ camp._id }}{% else %}#{% endif %}">
+                             {{ camp.code }}
+                            </a>
+
+                          </td>
+                          <td>
+                            <span class="item-stage">{{ camp.predict_message }}</span>
+                          </td>
+
+                          <td>
+                          {% if not camp.status or camp.status == 0 %}
+                              <span class="badge badge-soft-primary ml-1 mt-n1">{{ gettext("Chua_gui") }}</span>
+
+                          {% elif camp.status == 1 %}
+                              <span class="badge badge-soft-dark ml-1 mt-n1">{{ gettext("Dang_gui") }}</span>
+
+                          {% else %}
+                                <span class="badge badge-soft-danger ml-1 mt-n1">{{ gettext("Hoan_thanh") }}</span>
+
+                          {% endif %}
+                          </td>
+                          <td>
+                              {{ camp.mail_send }}
+                          </td>
+                          <td>
+                            {{ camp.mail_not_send }}
+                          </td>
+                       <td>
+                            {{ camp.fail }}
+                          </td>
+                          <td>
+                              <a href="/zalo_marketing/{{ shop_id_select }}/{{ camp._id }}/logs">Logs</a>
+
+                          <td>
+
+                            <time class="item-contacted">{{ camp.when|human_time }}</time>
+
+                          </td>
+                        </tr>
+                      {% endfor %}
+
+                      </tbody>
+                    </table>
+                 
+                  </div>
+                  <div class="card-footer">
+                    <ul class="pagination justify-content-center">
+                      {% if pagination %}
+                      {{ pagination.links }}
+                  {% endif %}
+                      </ul>
+
+                  </div>
+                </div>
+
+              </div>
+            </div> <!-- / .row -->
+          </div>
+   <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+
+{% endblock %}
+{% block js %}
+    <script nonce="{{ csp_nonce() }}">
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+        $(document).ready(function () {
+
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            var shop_id_select = $('#shop_id_select').val();
+            $('#shop_in_mer').val(shop_id_select).trigger('change');
+            $('#shop_in_mer').on("change", function (e) {
+                var shop_id = $('#shop_in_mer').val();
+                var url = "/zalo_marketing/" + shop_id;
+                $(location).attr('href', url);
+            });
+
+
+
+        });
+    </script>
+{% endblock %}

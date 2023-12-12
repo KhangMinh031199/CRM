@@ -1,0 +1,678 @@
+{% extends 'nextify/base.html' %}
+
+{% block main_content %}
+
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10 col-xl-8">
+      <div class="header mt-md-5">
+
+        <div class="header-body">
+          <div class="row align-items-end">
+            <div class="col">
+
+              <!-- Pretitle -->
+              <h6 class="header-pretitle">
+                Marketing
+              </h6>
+
+              <!-- Title -->
+              <h1 class="header-title">
+                {{ gettext("Phieu_khuyen_mai") }}
+              </h1>
+
+            </div>
+            {% if user_login and user_login.roles in ['1', '3'] %}
+            <div class="col-auto">
+
+              <button class="btn btn-danger" data-toggle="modal" data-target="#new_viewModal">
+                {{ gettext("Them_moi") }}
+              </button>
+            </div>
+            {% endif %}
+
+
+          </div>
+          <div class="row align-items-center">
+            <div class="col">
+
+              <!-- Nav -->
+              <ul class="nav nav-tabs nav-overflow header-tabs">
+                <li class="nav-item">
+                  <a href="/coupons" class="nav-link active">
+                    {{ gettext("Phieu_khuyen_mai") }}
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/coupons/codes" class="nav-link">
+                    {{ gettext("Ma_khuyen_mai") }}
+                  </a>
+                </li>
+
+              </ul>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      {% for voun in coupons_type %}
+      <div class="card">
+        <div class="card-header">
+
+          <div class="row align-items-center">
+            <div class="col-auto">
+
+              <!-- Image -->
+
+              <i class="fe fe-tag h1"></i>
+            </div>
+            <div class="col ml-n2">
+
+              <!-- Heading -->
+              <h3 class="mb-1">
+                <a href="/coupons/codes?coupon_type={{ voun._id }}"> {{ voun.name }}</a>
+              </h3>
+              <small class="badge badge-soft-danger">
+                {{ voun.code }}
+              </small>
+
+
+            </div>
+            <div class="col-auto align-self-end">
+
+              {# <td class="c-table__cell">#}
+                {# <a href="#" #} {# class="text-reset mr-3 u-ml-small" #} {# data-toggle="modal" #} {#
+                  data-target="#{{ voun._id }}_viewModal" #} {# coupon_id="{{ voun._id }}"><i
+                    class="fe fe-info"></i></a>#}
+                {# </td>#}
+              {# <td class="c-table__cell"><a class="text-reset mr-3 u-ml-small" #} {#
+                  href="/vouchers/coupon_type?id={{ voun._id }}"><i class="fe fe-edit"></i></a></a>#}
+                {# </td>#}
+              {# <td class="c-table__cell">#}
+                {# {% if user_login and user_login.roles in ['1', '3'] %}#}
+                {# <a href="#" class="text-reset mr-3 remove" #} {# voucher_id="{{ voun._id }}"><i
+                    class="fe fe-delete"></i></a>#}
+                {# {% endif %}#}
+                {# </td>#}
+
+              <!-- Icons -->
+              <div class="text mb-2">
+                <a class="text-reset mr-3" href="#!" data-toggle="modal"  coupon_id="{{ voun._id }}"
+                  data-target="#{{ voun._id }}_viewModal">
+                  <i class="fe fe-info" title="{{ gettext('Chi_tiet') }}" data-toggle="tooltip"></i>
+                </a>
+                {# {% if user_login and user_login.roles in ['1', '3'] %}#}
+                {# <a class="text-reset mr-3" href="#!" data-toggle="modal" title="" coupon_id="{{ voun._id }}"
+                  data-target="#{{ voun._id }}_editModal">#}
+                  {# <i class="fe fe-edit"></i>#}
+                  {# </a>#}
+                {# {% endif %}#}
+                {% if user_login and user_login.roles in ['1', '3'] %}
+                <a class="text-reset remove" href="#!" data-toggle="tooltip" voucher_id="{{ voun._id }}">
+                  <i class="fe fe-delete" title="{{ gettext('Xoa') }}" data-toggle="tooltip"></i>
+                </a>
+                {% endif %}
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-12 col-md-3">
+              <h6 class="text-uppercase text-muted mb-2">
+                Mã khuyến mại
+              </h6>
+              <span class="h2 mb-0">
+                {{ voun.total_codes }}
+              </span>
+
+            </div>
+
+            <div class="col-12 col-md-3">
+              <h6 class="text-uppercase text-muted mb-2">{{ gettext("Chua_doi") }}</h6>
+              <span class="h2 mb-0">
+                {{ voun.total_codes_not_redeem }}
+              </span>
+
+            </div>
+            <div class="col-12 col-md-3">
+              <h6 class="text-uppercase text-muted mb-2">{{ gettext("Da_doi") }}</h6>
+              <span class="h2 mb-0">
+                {{ voun.total_codes_redeem }}
+              </span>
+
+            </div>
+            <div class="col-12 col-md-3">
+              <h6 class="text-uppercase text-muted mb-2">{{ gettext("Het_han") }}</h6>
+              <span class="h2 mb-0">
+                {{ voun.total_codes_expire }}
+              </span>
+
+            </div>
+          </div>
+
+
+        </div>
+        <div class="card-footer card-footer-boxed">
+          <div class="row align-items-center">
+            <div class="col-auto">
+
+              <!-- Text -->
+              <small class="text-muted">
+                <i class="fe fe-clock"></i> {{ voun.when|human_time }}
+              </small>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+      {# <div class="modal fade" id="{{ voun._id }}_editModal" #} {# tabindex="-1" role="dialog" #} {#
+        aria-labelledby="userDetailModal" #} {# data-backdrop="static">#}
+        {##}
+        {##}
+        {# <div class="modal-dialog modal-dialog-centered" #} {# role="document">#}
+          {# <div class="modal-content">#}
+            {##}
+            {# <div class="modal-card card">#}
+              {##}
+              {##}
+              {# <div class="card-header">#}
+                {##}
+                {# <div class="row align-items-center">#}
+                  {# <div class="col-auto">#}
+                    {##}
+                    {#
+                    <!-- Title -->#}
+                    {# <h4 class="card-header-title">#}
+                      {# {{ gettext("Them_moi") }}#}
+                      {# </h4>#}
+                    {#
+                  </div>#}
+                  {# <div class="col">#}
+                    {##}
+                    {#
+                    <!-- Close -->#}
+                    {# <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+                      {# <span aria-hidden="true">×</span>#}
+                      {# </button>#}
+                    {#
+                  </div>#}
+                  {# </div>#}
+                {##}
+                {# </div>#}
+              {##}
+              {# <div class="card-body" style="max-height: 100%">#}
+                {# <form action="/vouchers/coupon_type" method="POST" #} {# id="update_coupon" #} {#
+                  enctype="multipart/form-data">#}
+                  {# <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />#}
+                  {# {% if coupon_type_item %}#}
+                  {# <input type="hidden" #} {# value="{{ coupon_type_item._id }}" #} {# name="coupon_id">#}
+                  {# {% endif %}#}
+                  {# <h5>{{ gettext('Ten:') }} (<font color="red">*</font> {{ gettext('bat_buoc') }})</h5>#}
+                  {# <div class="form-group">#}
+                    {# <input type="text" class="form-control" #} {# id="name" name="name" #} {# {% if coupon_type_item
+                      %}value="{{ coupon_type_item.name }}" {% endif %} />#}
+                    {# </div>#}
+                  {# <h5>Code: (<font color="red">*</font> {{ gettext('bat_buoc') }})</h5>#}
+                  {# <div class="form-group">#}
+                    {# <input type="text" class="form-control" #} {# maxlength="10" #} {# id="code" name="code" #} {#
+                      placeholder="OFF20, GIAMGIA ..." #} {# {% if coupon_type_item
+                      %}value="{{ coupon_type_item.code }}" {% endif %} />#}
+                    {# </div>#}
+                  {##}
+                  {# <h5>{{ gettext('Quy_doi_tien:') }} (<font color="red">*</font> {{ gettext('bat_buoc') }})</h5>#}
+                  {# <div class="form-group">#}
+                    {# <input type="text" class="form-control" #} {# id="money" #} {# name="money" #} {#
+                      placeholder="150000" #} {# {% if coupon_type_item %}value="{{ coupon_type_item.money_exchange }}"
+                      {% endif %} />#}
+                    {# <span id="errmsg"></span>#}
+                    {# </div>#}
+                  {# <h5>{{ gettext('Giam_gia') }} (<font color="red">%*</font> {{ gettext('bat_buoc') }})</h5>#}
+                  {# <div class="form-group">#}
+                    {# <input type="text" class="form-control" #} {# id="discount_percent" #} {# name="discount_percent"
+                      #} {# placeholder="20%" #} {# {% if coupon_type_item
+                      %}value="{{ coupon_type_item.discount_percent }}" {% endif %} />#}
+                    {# </div>#}
+                  {# <h5>Số lượng</h5>#}
+                  {# <div class="form-group">#}
+                    {# <input type="text" class="form-control" #} {# id="quantity" #} {# name="quantity" value="{% if coupon_type_item %}#}
+{#                                    {{ coupon_type_item.quantity }}{% endif %}" />#}
+                    {# </div>#}
+                  {##}
+                  {# <h5>{{ gettext('Chi_tiet:') }}</h5>#}
+                  {# <div class="form-group">#}
+                    {# <textarea type="text" class="form-control" #} {# id="content" #} {# name="content">{% if coupon_type_item %}#}
+{#                                    {{ coupon_type_item.content }}{% endif %}</textarea>#}
+                    {# </div>#}
+                  {#
+                  <script nonce="{{ csp_nonce() }}">#}
+                    {#                                    $(document).ready(function () {# }
+{#                                    $("#btn_update").click(function () {# }
+{#                                        var name = $("#name").val();#}
+{#                                        var code = $("#code").val();#}
+{#                                        var money = $("#money").val();#}
+{#                                        var discount_percent = $("#discount_percent").val();#}
+{#                                        var cus_in_mer = $("#cus_in_mer").val();#}
+{#                                        var quantity = $("#quantity").val();#}
+{## }
+{#                                        if(name.length == 0){#}
+{#                                            swal("{{ gettext('Ten_khong_duoc_de_trong') }}", " ", "error");#}
+{#                                                 return false;#}
+{#                                        }#}
+                    {#                                        if (code.length == 0) {# }
+                      {#                                            swal("{{ gettext('Code_khong_duoc_de_trong') }}", " ", "error");# }
+                      {#                                                 return false;# }
+                      {# }#
+                    }
+                    {#                                        if (money.length == 0 && discount_percent.length == 0) {# }
+                      {#                                            swal("{{ gettext('Quy_doi_tien_hoac_ma_giam_gia_khong_duoc_de_trong') }}", " ", "error");# }
+                      {#                                                 return false;# }
+                      {# }#
+                    }
+                    {#                                        $.ajax({#}
+{#                                            url: $("#update_coupon").attr("action"),#}
+{#                                            type: $("#update_coupon").attr("method"),#}
+{#                                            data: $("#update_coupon").serialize(),#}
+{#                                            success: function(response) {# }
+{#                                                        var href = '/vouchers/coupon_type';#}
+{#                                                        swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');#}
+{#                                                        location.href = href;#}
+{## }
+{#                                                                 },#}
+                    {#                                            error: function (xhr, desc, err)# }
+                    {#                                            {# }
+                      {#                                                 swal("{{ gettext('Co_loi_xay_ra,_thu_lai_sau') }}", " ", "error");# }
+                      {# }#
+                    }
+                    {# });#}
+                    {## }
+                    {#                                      return false;# }
+                    {## }
+                    {# });#}
+                    {# })#}
+                    {#                                    </script>#}
+                  {#
+                </form>#}
+                {##}
+                {# </div>#}
+              {# <div class="card-footer text-center">#}
+                {# <a class="btn btn-danger" #} {# id="btn_update">#}
+                  {# {{ gettext('Cap_nhat') }}#}
+                  {# </a>#}
+                {##}
+                {# </div>#}
+              {##}
+              {# </div>#}
+            {##}
+            {##}
+            {# </div>#}
+          {# </div>#}
+        {# </div>#}
+
+      <div class="modal fade" id="{{ voun._id }}_viewModal" tabindex="-1" role="dialog"
+        aria-labelledby="userDetailModal" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-card card">
+
+              <div class="card-header">
+
+                <div class="row align-items-center">
+                  <div class="col-auto">
+
+                    <!-- Title -->
+                    <h4 class="card-header-title">
+                      {{ voun.code }}
+                    </h4>
+                  </div>
+                  <div class="col">
+
+                    <!-- Close -->
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+              <div class="card-body" style="max-height: 100%">
+
+
+                <div class="list-group list-group-flush my-n3">
+
+                  <div class="list-group-item">
+                    <dt class="u-width-50">
+                      {{ gettext('Loai_coupon') }}
+                    </dt>
+                    <dd>{{ voun.name }}</dd>
+                  </div>
+                  <div class="list-group-item">
+                    <dt class="u-width-50">
+                      {{ gettext('Tien_khuyen_mai') }}
+                    </dt>
+                    <dd>
+                      {% if voun.money_exchange %}
+                      {{ voun.money_exchange }}{% endif %}</dd>
+                  </div>
+                  <div class="list-group-item">
+                    <dt class="u-width-50">
+                      {{ gettext('Giam_gia') }}
+                    </dt>
+                    <dd>{{ voun.discount_percent }}</dd>
+                  </div>
+                  <div class="list-group-item">
+                    <dt class="u-width-50">
+                      {{ gettext('So_luong') }}
+                    </dt>
+                    <dd>{{ voun.quantity }}</dd>
+                  </div>
+                  <div class="list-group-item">
+                    <dt class="u-width-50">
+                      {{ gettext('Tao_luc') }}
+                    </dt>
+                    <dd>{{ voun.when|human_time }}</dd>
+                  </div>
+                  <div class="list-group-item">
+                    <dt class="u-width-50">
+                      {{ gettext('Chi_tiet') }}
+                    </dt>
+                    <dd>{{ voun.content }}</dd>
+                  </div>
+
+                </div>
+
+
+
+              </div>
+              <div class="card-footer text-center">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">
+                  {{ gettext("Dong_lai") }}
+                </button>
+              </div>
+
+
+
+            </div>
+
+
+
+
+
+          </div>
+
+        </div>
+      </div>
+      {% endfor %}
+      <ul class="pagination justify-content-center">
+        {% if pagination %}
+        {{ pagination.links }}
+        {% endif %}
+      </ul>
+
+    </div>
+
+  </div>
+
+
+  <div class="modal fade" id="new_viewModal" tabindex="-1" role="dialog" aria-labelledby="userDetailModal"
+    data-backdrop="static">
+
+
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+
+        <div class="modal-card card">
+
+
+          <div class="card-header">
+
+            <div class="row align-items-center">
+              <div class="col-auto">
+
+                <!-- Title -->
+                <h4 class="card-header-title">
+                  {{ gettext("Them_moi") }}
+                </h4>
+              </div>
+              <div class="col">
+
+                <!-- Close -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                  data-target="#new_viewModal">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="card-body" style="max-height: 100%">
+            <form action="/coupons" method="POST" id="update_coupon" enctype="multipart/form-data">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+              {% if coupon_type_item %}
+              <input type="hidden" value="{{ coupon_type_item._id }}" name="coupon_id">
+              {% endif %}
+              <h5>{{ gettext('Ten:') }} (<font color="red">*</font> {{ gettext('bat_buoc') }})</h5>
+              <div class="form-group">
+                <input type="text" class="form-control" id="name" name="name" {% if coupon_type_item
+                  %}value="{{ coupon_type_item.name }}" {% endif %} />
+              </div>
+              <h5>Code: (<font color="red">*</font> {{ gettext('bat_buoc') }})</h5>
+              <div class="form-group">
+                <input type="text" class="form-control" maxlength="10" id="code" name="code"
+                  placeholder="OFF20, GIAMGIA ..." {% if coupon_type_item %}value="{{ coupon_type_item.code }}" {% endif
+                  %} />
+              </div>
+
+              <h5>{{ gettext('Quy_doi_tien:') }}: (<font color="red">*</font> {{ gettext('bat_buoc') }})</h5>
+              <div class="form-group">
+                <input type="text" class="form-control" id="money" name="money" placeholder="150000"
+                  data-type='currency' {% if coupon_type_item %}value="{{ coupon_type_item.money_exchange }}" {% endif
+                  %} />
+                <span id="errmsg"></span>
+              </div>
+              <h5>{{ gettext('Giam_gia') }}: (<font color="red">%*</font> {{ gettext('bat_buoc') }})</h5>
+              <div class="form-group">
+                <input type="text" class="form-control" id="discount_percent" name="discount_percent" placeholder="20%"
+                  {% if coupon_type_item %}value="{{ coupon_type_item.discount_percent }}" {% endif %} />
+              </div>
+              <h5>Số lượng:</h5>
+              <div class="form-group">
+                <input type="text" class="form-control" id="quantity" name="quantity" value="{% if coupon_type_item %}
+                                    {{ coupon_type_item.quantity }}{% endif %}" />
+              </div>
+
+              <h5>{{ gettext('Chi_tiet:') }}</h5>
+              <div class="form-group">
+                <textarea type="text" class="form-control" id="content" name="content">{% if coupon_type_item %}
+                                    {{ coupon_type_item.content }}{% endif %}</textarea>
+              </div>
+              <script nonce="{{ csp_nonce() }}">
+                  $(document).ready(function () {
+                    function formatNumber(n) {
+                      // format number 1000000 to 1,234,567
+                      return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    }
+                    function formatCurrency(input, blur) {
+                      // appends $ to value, validates decimal side
+                      // and puts cursor back in right position.
+
+                      // get input value
+                      var input_val = input.val();
+
+                      // don't validate empty input
+                      if (input_val === "") { return; }
+
+                      // original length
+                      var original_len = input_val.length;
+
+                      // initial caret position
+                      var caret_pos = input.prop("selectionStart");
+
+                      // check for decimal
+                      if (input_val.indexOf(".") >= 0) {
+
+                        // get position of first decimal
+                        // this prevents multiple decimals from
+                        // being entered
+                        var decimal_pos = input_val.indexOf(".");
+
+                        // split number by decimal point
+                        var left_side = input_val.substring(0, decimal_pos);
+                        var right_side = input_val.substring(decimal_pos);
+
+                        // add commas to left side of number
+                        left_side = formatNumber(left_side);
+
+                        // validate right side
+                        right_side = formatNumber(right_side);
+
+                        // On blur make sure 2 numbers after decimal
+                        if (blur === "blur") {
+                          right_side += "00";
+                        }
+
+                        // Limit decimal to only 2 digits
+                        right_side = right_side.substring(0, 2);
+
+                        // join number by .
+                        input_val = left_side + "." + right_side;
+
+                      } else {
+                        // no decimal entered
+                        // add commas to number
+                        // remove all non-digits
+                        input_val = formatNumber(input_val);
+
+                      }
+
+                      // send updated string to input
+                      input.val(input_val);
+
+                      // put caret back in the right position
+                      var updated_len = input_val.length;
+                      caret_pos = updated_len - original_len + caret_pos;
+                      input[0].setSelectionRange(caret_pos, caret_pos);
+                    }
+                    $("input[data-type='currency']").on({
+                      keyup: function () {
+                        formatCurrency($(this));
+                      }
+                    });
+                    $("#btn_update").click(function () {
+                      var name = $("#name").val();
+                      var code = $("#code").val();
+                      var money = $("#money").val();
+                      var discount_percent = $("#discount_percent").val();
+                      var cus_in_mer = $("#cus_in_mer").val();
+                      var quantity = $("#quantity").val();
+
+                      if (name.length == 0) {
+                        swal("{{ gettext('Ten_khong_duoc_de_trong') }}", " ", "error");
+                        return false;
+                      }
+                      if (code.length == 0) {
+                        swal("{{ gettext('Code_khong_duoc_de_trong') }}", " ", "error");
+                        return false;
+                      }
+                      if (money.length == 0 && discount_percent.length == 0) {
+                        swal("{{ gettext('Quy_doi_tien_hoac_ma_giam_gia_khong_duoc_de_trong') }}", " ", "error");
+                        return false;
+                      }
+                      $.ajax({
+                        url: $("#update_coupon").attr("action"),
+                        type: $("#update_coupon").attr("method"),
+                        data: $("#update_coupon").serialize(),
+                        success: function (response) {
+                          var href = '/coupons';
+                          swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+                          location.href = href;
+
+                        },
+                        error: function (xhr, desc, err) {
+                          swal("{{ gettext('Co_loi_xay_ra,_thu_lai_sau') }}", " ", "error");
+                        }
+                      });
+
+                      return false;
+
+                    });
+                  })
+              </script>
+            </form>
+
+          </div>
+          <div class="card-footer text-center">
+            <a class="btn btn-danger" id="btn_update">
+              {{ gettext('Cap_nhat') }}
+            </a>
+
+          </div>
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+  {% endblock %}
+  {% block js %}
+  <script nonce="{{ csp_nonce() }}">
+      $(document).ready(function () {
+        $('#new_viewModal').on('shown.bs.modal', function () {
+          $('#name').trigger('focus');
+        });
+        $("#money").keypress(function (e) {
+          //if the letter is not digit then display error and don't type anything
+          if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            //display error message
+            $("#errmsg").html("{{ gettext('Chi_duoc_nhap_so') }} ").show().fadeOut("slow");
+            return false;
+          }
+        });
+        $('textarea').each(function () {
+          $(this).val($(this).val().trim());
+        }
+        );
+        $('input').each(function () {
+          $(this).val($(this).val().trim());
+        }
+        );
+        flatpickr("#expire_date", {
+          enableTime: false,
+          dateFormat: "d-m-Y"
+        });
+        $('.remove').on('click', function (e) {
+          e.preventDefault();
+          var coupon_id = $(this).attr('voucher_id');
+          Swal.fire({
+            title: '{{ gettext("Ban_co_chac_chan_muon_xoa_coupon_khong?") }}',
+            type: 'warning',
+            focusCancel: true,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+focusCancel: true,
+            cancelButtonColor: '#d33',
+            confirmButtonText: '{{ gettext("Co!") }}',
+            cancelButtonText: '{{ gettext("Khong!")}}'
+          }).then((result) => {
+
+            if (result.value) {
+              href = '/vouchers/coupon_type/remove?voucher_id=' + coupon_id;
+              swal('{{ gettext("Thao_tac_thanh_cong") }}', " ", "success")
+              location.href = href;
+            }
+          });
+
+
+        });
+      })
+  </script>
+
+  {% endblock %}

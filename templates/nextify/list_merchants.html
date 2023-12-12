@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    {% if 'viettel.vn' in request.url %}
+        <title>Viettel | vmarketing</title>
+    {% elif 'unitel.com.la' in request.url %}
+        <title>Unitel | WIFI</title>
+    {% elif 'maxsolution' in request.url %}
+        <title>MAX SOLUTION | MAX CRM</title>
+    {% elif 'leeon.vn' in  request.url%}
+        <title>Leeon Tech | WIFIMARKETING</title>
+    {% else %}
+        <title>Nextify | The Next Generation of Loyalty</title>
+    {% endif %}
+    <meta name="description" content="The Next Generation of Loyalty">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="/static/nextify/apple-touch-icon.png">
+
+    <link rel="stylesheet" href="/static/nextify/css/feather/feather.min.css">
+    <link rel="stylesheet" href="/static/nextify/css/dash_kit_theme.min.css" />
+    <link rel="stylesheet" href="/static/css/table.css">
+    <link rel="stylesheet" href="/static/nextify/css/pagination.css">
+
+
+</head>
+
+<body >
+    <div class="container-fluid">
+            <div class="card" style="width: 50%; margin-left: 25%;">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover table-nowrap card-table">
+                            <thead>
+                                <tr>
+                                <th scope="col">Tên merchant</th>
+                                
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for merchant in merchants %}
+                                <tr>
+                                <td >
+                                    <a href='/login_from_partner?merchant_id={{ merchant._id }}'>
+                                    {{ merchant.name }}</a>
+                                </td>
+                                
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                    <nav class="c-pagination u-justify-center" style='margin-left:20%;'>
+                        {% if pagination %}
+                        {{ pagination.links }}
+                        {% endif %}
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script src="/static/wifi_portal/js/jquery-3.3.1.min.js"></script>
+</body>
+</html>

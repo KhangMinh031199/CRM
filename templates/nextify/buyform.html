@@ -1,0 +1,139 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                        {{ gettext("Ung_dung") }}
+                    </h6>
+
+                    <!-- Title -->
+                    <h1 class="header-title">
+                        {{ gettext("Mua_tin") }}
+                    </h1>
+
+                </div>
+            </div> <!-- / .row -->
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="header-title">
+                        {{ gettext("Cau_hinh") }}
+                    </h1>
+                </div>
+                <div class="card-body">
+                    <!-- Heading -->
+
+                    <!-- Form -->
+
+                    <form id="buy_message" method="post" action="/buyform/{{ type_buy }}">
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+                        <div class="form-group">
+                            <label>{{ gettext("So_luong_mua") }}:</label>
+                            <select id="amount_news" class="custom-select control-container" name="amount_news">
+                                <option value="1000">1000</option>
+                                <option value="2000">2000</option>
+                                <option value="3000">3000</option>
+                                <option value="4000">4000</option>
+                                <option value="5000">5000</option>
+                                <option value="6000">6000</option>
+                                <option value="7000">7000</option>
+                                <option value="8000">8000</option>
+                                <option value="9000">9000</option>
+                                <option value="10000">10000</option>
+                                <option value="11000">11000</option>
+                                <option value="12000">12000</option>
+                                <option value="13000">13000</option>
+                                <option value="14000">14000</option>
+                                <option value="15000">15000</option>
+                                <option value="16000">16000</option>
+                                <option value="17000">17000</option>
+                                <option value="18000">18000</option>
+                                <option value="19000">19000</option>
+                                <option value="20000">20000</option>
+                            </select>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col">
+
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-lg btn-block btn-primary" id="save_buy_news">
+                                {{ gettext("Luu_thong_tin") }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div> <!-- / .row -->
+</div>
+
+{% endblock %}
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $("#save_buy_news").click(function () {
+            Swal.fire({
+                title: '{{ gettext("Ban_co_chac_chan_muon_mua_tin_khong?") }}',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                focusCancel: true,
+                cancelButtonColor: '#d33',
+                confirmButtonText: '{{ gettext("Co") }}!',
+                cancelButtonText: '{{ gettext("Khong") }}!'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: $("#buy_message").attr("action"),
+                        type: $("#buy_message").attr("method"),
+                        data: $("#buy_message").serialize(),
+                        success: function (response) {
+                            var returnedData = JSON.parse(response);
+                            if ('error' in returnedData) {
+                                swal(returnedData['error'], " ", "error");
+                                return false;
+                            }
+                            else {
+                                swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+                                location.reload();
+                            }
+
+                        },
+                        error: function (xhr, desc, err) {
+                            swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+                            return false;
+
+                        }
+                    });
+                }
+                
+            })
+
+        });
+    });
+</script>
+
+{% endblock %}

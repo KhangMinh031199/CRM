@@ -1,0 +1,839 @@
+{% if error %}
+
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{error}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span>
+    </button>
+</div>
+
+{% endif %} {% if total > 0 %}
+
+<div class="table-responsive">
+    <table class="table align-items-center table-flush">
+        <thead class="thead-light">
+            <tr>
+                <th></th>
+                <th>
+                    {{ gettext('Khach_hang') }}
+                </th>
+
+                <th>{{ gettext('Luot_den') }}
+                </th>
+                <th>{{ gettext('Lan_cuoi') }}
+                </th>
+                <th></th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+            {% for cus in customers %}
+            <tr>
+
+                <td style="vertical-align: middle;text-align:center">
+                    <div class="avatar avatar-lg">
+
+                        {% if cus.user.avatar and cus.user.avatar|length > 0 %}
+                        <img class="avatar-img rounded-circle" src="{{ cus.user.avatar.replace('http:', 'https:') }}" />
+                        {% else %}
+                        {%set avatar = cus.user|human_avatar%}
+
+                        <img class="avatar-img rounded-circle" src="{{ avatar }}" />
+
+                        {% endif %}
+                    </div>
+                </td>
+                <td data-toggle="modal" data-target="#{{ cus._id }}_viewModal" style="vertical-align: middle;">
+
+                    <div class="contact">
+                        {% if cus.user.name and cus.user.name|string != 'None' and cus.user.name|length != 0 %}
+                        {{ cus.user.name }} {% else %} {% endif %}
+                    </div>
+                    <div class="name">
+                        {% if cus.user.phone and cus.user.phone|string != 'None' and cus.user.phone|length != 0 %}
+                        {{ cus.user.phone }} {% else %} {% endif %}
+
+                    </div>
+                    <div class="name">
+                        {% if cus.user.email | string != 'None' %}{{ cus.user.email }}{% endif %}
+                    </div>
+                    {% if (not cus.user.name and not cus.user.phone and not cus.user.email) or (cus.user.phone | string == 'None' and cus.user.name|string == 'None' and cus.user.phone|length == 0 and cus.user.email | string == 'None' and cus.user.client_mac|string != 'None') and cus.user.client_mac | length > 0%}
+                    <div class="name">
+                        {{ cus.user.client_mac[0] if cus.user.client_mac[0] |string != 'None' else ''}}
+
+                    </div>
+                    {% endif %}
+                </td>
+
+
+                <td style="vertical-align: middle;" data-toggle="modal" data-target="#{{ cus._id }}_viewModal">
+                    <div class="name">{{ cus.total_visit }}</div>
+                </td>
+                <td style="vertical-align: middle;" data-toggle="modal" data-target="#{{ cus._id }}_viewModal">
+        
+                    <div class="name">{{ cus.last_visit|human_time }}</div>
+                </td>
+                <td style="vertical-align: middle;">
+                    <a href="#user_edit_{{ cus._id }}" data-toggle="modal"
+                        class="btn btn-flat d-block d-md-inline-block"><i class="fa fa-edit"></i></a>
+                    <!-- <a href="/user/{{ cus._id }}/visits" class="btn btn-flat d-block d-md-inline-block"><i
+                            class="fa fa-map-marker-alt"></i></a>-->
+                    <a href="#" id="remove_{{ cus._id }}" class="btn btn-flat d-block d-md-inline-block"><i
+                            class="fa fa-minus-circle" "></i> </a> 
+
+                </td>
+            </tr>
+            <div class=" modal fade" id="user_edit_{{ cus._id }}" tabindex="-1" role="dialog" style="display: none;"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">{{ gettext('Cap_nhat_khach_hang') }}</h4>
+                                        <a class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </a>
+
+                                    </div>
+                                    <div class="modal-body">
+
+
+                                        <form role="form" id="new_customer_fr_{{ cus._id }}" method="post"
+                                            action="/user/edit/{{ cus.user._id }}">
+                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                            <div class="row u-mb-medium">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label for="firstName">{{ gettext('Ten') }} (<span>
+                                                                <font color="red">*</font>
+                                                            </span> {{ gettext('bat_buoc') }})</label>
+                                                        <input class="form-control" type="text"
+                                                            id="firstName_{{ cus._id }}" name="name"
+                                                            value="{{ cus.user.name }}" placeholder="">
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="lastName">{{ gettext('So_dien_thoai') }} (<span>
+                                                                <font color="red">*</font>
+                                                            </span> {{ gettext('bat_buoc') }})</label>
+                                                        <input class="form-control" type="text" placeholder=""
+                                                            name="phone" value="{{ cus.user.phone }}"
+                                                            id="new_phone_{{ cus._id }}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="email">E-mail (<span>
+                                                                <font color="red">*</font>
+                                                            </span> {{ gettext('bat_buoc') }})</label>
+                                                        <input class="form-control" type="email" name="email"
+                                                            id="new_email_{{ cus._id }}"
+                                                            value="{% if cus.user.email|string != 'None' %}{{ cus.user.email }}{% endif %}"
+                                                            placeholder="">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="email">{{ gettext('Sinh_nhat') }}</label>
+
+                                                        <input type="text" class="form-control" name='birthday'
+                                                            id="birthday_{{ cus._id }}"
+                                                            value="{{ cus.user.birthday|human_birthday }}" />
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="year_birth_{{ cus._id }}">{{ gettext('Nam_sinh') }}</label>
+                                                        <input type="hidden" value="{{ cus.user.year_birthday }}"
+                                                            id="ex_year_birth_{{ cus._id }}" />
+                                                        <select name="year_birth" id="year_birth_{{ cus._id }}"
+                                                            class="form-control">
+                                                            <option value="">{{ gettext('Nam/Year') }}</option>
+                                                            <option value="2013">2013</option>
+                                                            <option value="2012">2012</option>
+                                                            <option value="2011">2011</option>
+                                                            <option value="2010">2010</option>
+                                                            <option value="2009">2009</option>
+                                                            <option value="2008">2008</option>
+                                                            <option value="2007">2007</option>
+                                                            <option value="2006">2006</option>
+                                                            <option value="2005">2005</option>
+                                                            <option value="2004">2004</option>
+                                                            <option value="2003">2003</option>
+                                                            <option value="2002">2002</option>
+                                                            <option value="2001">2001</option>
+                                                            <option value="2000">2000</option>
+                                                            <option value="1999">1999</option>
+                                                            <option value="1998">1998</option>
+                                                            <option value="1997">1997</option>
+                                                            <option value="1996">1996</option>
+                                                            <option value="1995">1995</option>
+                                                            <option value="1994">1994</option>
+                                                            <option value="1993">1993</option>
+                                                            <option value="1992">1992</option>
+                                                            <option value="1991">1991</option>
+                                                            <option value="1990">1990</option>
+                                                            <option value="1989">1989</option>
+                                                            <option value="1988">1988</option>
+                                                            <option value="1987">1987</option>
+                                                            <option value="1986">1986</option>
+                                                            <option value="1985">1985</option>
+                                                            <option value="1984">1984</option>
+                                                            <option value="1983">1983</option>
+                                                            <option value="1982">1982</option>
+                                                            <option value="1981">1981</option>
+                                                            <option value="1980">1980</option>
+                                                            <option value="1979">1979</option>
+                                                            <option value="1978">1978</option>
+                                                            <option value="1977">1977</option>
+                                                            <option value="1976">1976</option>
+                                                            <option value="1975">1975</option>
+                                                            <option value="1974">1974</option>
+                                                            <option value="1973">1973</option>
+                                                            <option value="1972">1972</option>
+                                                            <option value="1971">1971</option>
+                                                            <option value="1970">1970</option>
+                                                            <option value="1969">1969</option>
+                                                            <option value="1968">1968</option>
+                                                            <option value="1967">1967</option>
+                                                            <option value="1966">1966</option>
+                                                            <option value="1965">1965</option>
+                                                            <option value="1964">1964</option>
+                                                            <option value="1963">1963</option>
+                                                            <option value="1962">1962</option>
+                                                            <option value="1961">1961</option>
+                                                            <option value="1960">1960</option>
+                                                            <option value="1959">1959</option>
+                                                            <option value="1958">1958</option>
+                                                            <option value="1957">1957</option>
+                                                            <option value="1956">1956</option>
+                                                            <option value="1955">1955</option>
+                                                            <option value="1954">1954</option>
+                                                            <option value="1953">1953</option>
+                                                            <option value="1952">1952</option>
+                                                            <option value="1951">1951</option>
+                                                            <option value="1950">1950</option>
+                                                            <option value="1949">1949</option>
+                                                            <option value="1948">1948</option>
+                                                            <option value="1947">1947</option>
+                                                            <option value="1946">1946</option>
+                                                            <option value="1945">1945</option>
+                                                            <option value="1944">1944</option>
+                                                            <option value="1943">1943</option>
+                                                            <option value="1942">1942</option>
+                                                            <option value="1941">1941</option>
+                                                            <option value="1940">1940</option>
+                                                            <option value="1939">1939</option>
+                                                            <option value="1938">1938</option>
+                                                            <option value="1937">1937</option>
+                                                            <option value="1936">1936</option>
+                                                            <option value="1935">1935</option>
+                                                            <option value="1934">1934</option>
+                                                            <option value="1933">1933</option>
+                                                            <option value="1932">1932</option>
+                                                            <option value="1931">1931</option>
+                                                            <option value="1930">1930</option>
+                                                            <option value="1929">1929</option>
+                                                            <option value="1928">1928</option>
+                                                            <option value="1927">1927</option>
+                                                            <option value="1926">1926</option>
+                                                            <option value="1925">1925</option>
+                                                            <option value="1924">1924</option>
+                                                            <option value="1923">1923</option>
+                                                            <option value="1922">1922</option>
+                                                            <option value="1921">1921</option>
+                                                            <option value="1920">1920</option>
+                                                            <option value="1919">1919</option>
+                                                            <option value="1918">1918</option>
+                                                            <option value="1917">1917</option>
+                                                            <option value="1916">1916</option>
+                                                            <option value="1915">1915</option>
+                                                            <option value="1914">1914</option>
+                                                            <option value="1913">1913</option>
+                                                            <option value="1912">1912</option>
+                                                            <option value="1911">1911</option>
+                                                            <option value="1910">1910</option>
+                                                            <option value="1909">1909</option>
+                                                            <option value="1908">1908</option>
+                                                            <option value="1907">1907</option>
+                                                            <option value="1906">1906</option>
+                                                            <option value="1905">1905</option>
+
+                                                        </select>
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="email">Tags</label>
+                                                        <select class="c-select c-select--multiple" name="tags"
+                                                            style="width: 100%;" id="new_tags_selects_{{ cus._id }}"
+                                                            multiple="multiple">
+                                                            {% for tag in tags %}
+                                                            <option value="{{ tag._id }}">{{ tag.name }}
+                                                            </option>
+                                                            {% endfor %}
+
+                                                        </select>
+                                                    </div>
+                                                    {% if merchant.active_detection == 'True' %}
+                                                    <div>
+                                                        <label for="email">{{ gettext('Nhan_vien') }}</label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                    <input name="is_employee" id="is_employee_{{ cus._id }}"
+                                                        type="checkbox" data-toggle="toggle" data-on=" " data-off=" "
+                                                        data-onstyle="success" data-offstyle="danger"
+                                                        {% if cus.user.is_employee=="True" %}checked="checked"
+                                                        {% endif %}> 
+                                                        <!-- <div class="c-switch {% if cus.user.is_employee=="True" %}is-active{% endif %}" id="is_employee_div_{{ cus._id }}" >
+                                                            <input class="c-switch__input" type="checkbox" id="is_employee_{{ cus._id }}"
+                                                            {% if cus.user.is_employee=="True" %}checked="checked" {% endif %}>
+                                                          </div>  -->
+                                                    </div> 
+                                                    {% endif %}
+                                                </div>
+                                                <div class="col-lg-6">
+
+                                                    <div class="form-group">
+                                                        <label for="gender">{{ gettext('Gioi_tinh') }}</label>
+                                                        <select class="form-control" style="width: 100%;"
+                                                            id="gender_{{ cus._id }}" name="gender">
+                                                            <option value="0">{{ gettext('Chua_xac_dinh') }}</option>
+                                                            <option value="1">{{ gettext('Nam') }}</option>
+                                                            <option value="2">{{ gettext('Nu') }}</option>
+                                                        </select>
+                                                    </div>
+                                                    <input type="hidden" value="{{ cus.user.gender }}"
+                                                        id="current_gender_{{ cus._id }}" />
+
+
+                                                    <div class="form-group">
+                                                        <label class="c-field__label" for="bio">Note</label>
+                                                        <textarea class="form-control" id="bio_{{ cus._id }}"
+                                                            name="note">{{ cus.user.note }}</textarea>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="companyName">{{ gettext('Dia_chi') }}</label>
+                                                        <input class="form-control" id="companyName_{{ cus._id }}"
+                                                            type="text" name="address" placeholder=""
+                                                            value="{% if cus.user.address|string !='None' %}{{ cus.user.address }} {% endif %}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="company">{{ gettext('Cong_ty') }}</label>
+                                                        <input class="form-control" type="text"
+                                                            id="company_{{ cus._id }}" name="company" placeholder=""
+                                                            value="{% if cus.user.company|string !='None' %}{{ cus.user.company }}{% endif %}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="company">{{ gettext('Chuc_vu') }}</label>
+                                                        <input class="form-control" type="text"
+                                                            id="company_role_{{ cus._id }}" name="company_role"
+                                                            placeholder=""
+                                                            value="{% if cus.user.company_role|string !='None' %}{{ cus.user.company_role }}{% endif %}">
+                                                    </div>
+                                                    <div class="form-group">
+
+
+                                                        <label for="socialProfile">Social
+                                                            Profiles</label>
+
+                                                        <div class="c-field has-addon-left u-mb-small">
+                                                            <span class="c-field__addon u-bg-twitter">
+                                                                <i class="fa fa-twitter u-color-white"></i>
+                                                            </span>
+                                                            <input class="c-input" id="socialProfile_{{ cus._id }}"
+                                                                type="text" name="twitter" placeholder=""
+                                                                value="{{ cus.user.twitter }}">
+                                                        </div>
+
+
+                                                        <div class="c-field has-addon-left">
+                                                            <span class="c-field__addon u-bg-facebook">
+                                                                <i class="fa fa-facebook u-color-white"></i>
+                                                            </span>
+                                                            <input class="c-input" type="text"
+                                                                id="facebook_{{ cus._id }}" name="facebook"
+                                                                placeholder="" value="{{ cus.user.facebook }}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <input type="hidden" name="source_tags" id="source_tags_{{ cus._id }}"
+                                                value="{{ cus._id|source_tags }}" />
+
+                                            <input type="hidden" id="new_select_tags_filter_{{ cus._id }}"
+                                                name="real_tags_filter" value="{{ cus._id|source_tags|join(', ') }}" />
+
+                                        </form>
+                                        <div class="row row-centered">
+                                            <div class="col-12" style="text-align: center;">
+                                                <div class="form-group">
+                                                    <button class="btn btn-primary" id="new_customer_{{ cus._id }}">{{ gettext('Cap_nhat') }}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+</div>
+<style>
+    .toggle.btn {
+        min-width: 50px;
+        min-height: 25px;
+    }
+</style>
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        var shop_id_select = $("#shop_id_select").val();
+        if ($("#current_gender_{{ cus._id }}").length > 0) {
+            $("#gender_{{ cus._id }}").val($("#current_gender_{{ cus._id }}").val());
+            $('#gender_{{ cus._id }}').trigger('change');
+        }
+
+        flatpickr("#birthday_{{ cus._id }}", {
+            enableTime: false,
+            dateFormat: "d-m"
+        });
+
+        $('#new_tags_selects_{{ cus._id }}').select2({
+            dropdownAutoWidth: true
+        });
+
+        var ex_year_birth = $("#ex_year_birth_{{ cus._id }}").val();
+        $("#year_birth_{{ cus._id }}").val(ex_year_birth);
+        $('#year_birth_{{ cus._id }}').trigger('change');
+        var source_tags = $("#source_tags_{{ cus._id }}").val();
+        var data_soure_tags = JSON.parse(source_tags.replace(/\'/g, '"'));
+        $("#new_tags_selects_{{ cus._id }}").val(data_soure_tags);
+        $('#new_tags_selects_{{ cus._id }}').trigger('change');
+
+
+        $('#new_tags_selects_{{ cus._id }}').on("change", function (e) {
+            if ($('#new_tags_selects_{{ cus._id }}').val()) {
+                $('#new_select_tags_filter_{{ cus._id }}').val($('#new_tags_selects_{{ cus._id }}').val().toString());
+            } else {
+                $('#new_select_tags_filter_{{ cus._id }}').val("");
+            }
+        });
+        $("#new_customer_{{ cus._id }}").click(function () {
+            var name = $("#firstName_{{ cus._id }}").val();
+            var phone = $("#new_phone_{{ cus._id }}").val();
+            var email = $("#new_email_{{ cus._id }}").val();
+            var birthday = $("#birthday_{{ cus._id }}").val();
+            var year = $("#year_birth_{{ cus._id }}").val();
+            var real_tags_filter = $("#new_select_tags_filter_{{ cus._id }}").val();
+            var company_role = $("#company_role_{{ cus._id }}").val();
+            var company = $("#company_{{ cus._id }}").val();
+            var location_id = $("#companyName_{{ cus._id }}").val();
+            var gender = $("#gender_{{ cus._id }}").val();
+            var is_employee = $("#is_employee_{{ cus._id }}").is(":checked");
+            var note = $("#bio_{{ cus._id }}").val();
+            var address = $("#companyName_{{ cus._id }}").val();
+            var facebook = $("#facebook_{{ cus._id }}").val();
+            var twitter = $("#socialProfile_{{ cus._id }}").val();
+
+            if (name.length == 0) {
+                swal("{{ gettext('Ten_khach_hang_khong_duoc_de_trong') }}", " ", "error");
+                return false;
+
+            }
+            if (phone.length == 0 && email.length == 0) {
+                swal("{{ gettext('So_dien_thoai_hoac_Email_khong_duoc_de_trong') }}", " ", "error");
+                return false;
+            }
+            var data = {
+                'name': name,
+                'phone': phone,
+                'email': email,
+                'birthday': birthday,
+                'year_birth': year,
+                'real_tags_filter': real_tags_filter,
+                'location_id': location_id,
+                'gender': gender,
+                'is_employee': is_employee,
+                'note': note,
+                'address': address,
+                'facebook': facebook,
+                'twitter': twitter,
+                'company_role': company_role,
+                'company': company
+            };
+            $.ajax({
+                url: $("#new_customer_fr_{{ cus._id }}").attr("action"),
+                type: $("#new_customer_fr_{{ cus._id }}").attr("method"),
+                data: data,
+
+                success: function (response) {
+                    var returnedData = JSON.parse(response);
+                    if ('error' in returnedData) {
+
+                        swal(returnedData['error'], " ", "error");
+                    } else {
+                        swal('{{ gettext("Cap_nhat_khach_hang_thanh_cong") }}', '', 'success');
+                        location.reload();
+                    }
+
+                },
+                error: function (xhr, desc, err) {
+                    swal("{{ gettext('Co_lo_xay_ra,_thu_lai_sau') }}", " ", "error");
+
+
+                }
+            });
+            return false;
+
+
+        });
+        $("#remove_{{ cus._id }}").click(function () {
+            Swal.fire({
+                title: '{{ gettext("Ban_co_chac_chan_muon_xoa_khach_hang?") }}',
+
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+focusCancel: true,
+                cancelButtonColor: '#d33',
+                confirmButtonText: '{{ gettext("Co!"") }}',
+                cancelButtonText: '{{ gettext("Khong!")}}'
+            }).then((result) => {
+                if (result.value) {
+                    if (shop_id_select.length > 0 && shop_id_select != 'all'){
+                        var url_submit = '/user/{{ cus.user._id }}/unsubscribe?loc_id=' + shop_id_select;
+                        $.ajax({
+                            url: url_submit,
+                            type: 'GET',
+
+                            success: function (data) {
+                                swal('{{ gettext("Xoa_khach_hang_thanh_cong") }}', '', 'success');
+                                location.reload();
+                            }
+                        });
+                    }
+                    else {
+                    var url_submit = '/user/{{ cus.user._id }}/unsubscribe';
+                    $.ajax({
+                        url: url_submit,
+                        type: 'GET',
+
+                        success: function (data) {
+                            swal('{{ gettext("Xoa_khach_hang_thanh_cong") }}', '', 'success');
+                            location.reload();
+                        }
+                    });
+
+                }
+
+
+                };
+                return false;
+
+            })
+        });
+        $("#user_info_{{ cus.user._id }}").click(function () {
+            $("#user_info_div_{{ cus.user._id }}").show();
+            $("#user_activity_info_{{ cus.user._id }}").hide();
+            document.getElementById('user_info_{{ cus.user._id }}').className = 'nav-link active';
+            document.getElementById('user_activity_{{ cus.user._id }}').className = 'nav-link';
+        });
+
+        $("#user_activity_{{ cus.user._id }}").click(function () {
+            $("#user_info_div_{{ cus.user._id }}").hide();
+            $("#user_activity_info_load").show();
+            document.getElementById('user_activity_{{ cus.user._id }}').className = 'nav-link active';
+            document.getElementById('user_info_{{ cus.user._id }}').className = 'nav-link';
+
+            $.ajax(
+             {
+                 type: 'GET',
+                 url: "/user/{{ cus.user._id }}/visits",
+                 success: function (data) {
+                    $('#user_activity_info_{{ cus.user._id }}').empty();
+                     $('#user_activity_info_{{ cus.user._id }}').append(data);
+                     $("#user_activity_info_{{ cus.user._id }}").show();
+                     $("#user_activity_info_load").hide();
+                 },
+                 error: function () {
+                     return false;
+                 }
+             });
+        });
+
+    });
+</script>
+<div class="modal fade fixed-right" id="{{ cus._id }}_viewModal" tabindex="-1" role="dialog" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-vertical  modal-lg" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <a class="close btn btn-flat d-block d-md-inline-block" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </a>
+
+                <div class="row u-justify-center">
+                    <div class="col-md-7">
+                        <div class="u-mt-medium u-text-center">
+                            <div class="c-avatar c-avatar--large u-mb-small u-inline-flex">
+                                {% if cus.user.avatar and cus.user.avatar|length > 0 %}
+                                <img class="avatar-img rounded-circle"
+                                    src="{{ cus.user.avatar.replace('http:', 'https:') }}" style="width:80px" />
+                                {% else %}
+                                {%set avatar = cus.user|human_avatar%}
+
+                                <img class="avatar-img rounded-circle" src="{{ avatar }}" style="width:80px" />
+
+                                {% endif %}
+                            </div>
+
+                            <h3 class="u-h5">
+                                {% if cus.user.name and cus.user.name|length >0 %} {{ cus.user.name }}{% else %}
+                                {{ cus.user.phone }}{% endif %}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row u-justify-center">
+
+
+                    <div class="col-md-4 u-text-center">
+                        <h4 class="u-pt-small
+                                      u-color-primary">{{ cus.user.created_at|jinja_get_human_time }}</h4>
+                        <h4 class="u-text-mute u-text-xsmall
+                                       u-pb-small u-text-uppercase">{{ gettext("Lan_dau") }}
+                        </h4>
+                    </div>
+                    <div class="col-md-4 u-text-center">
+                        <h4 class="u-pt-small
+                                      u-color-primary">{{ cus.user.last_visit|human_time }}</h4>
+                        <h4 class="u-text-mute u-text-xsmall
+                                     u-pb-small u-text-uppercase">{{ gettext("Lan_cuoi") }}</h4>
+                    </div>
+
+                    <div class="col-md-4 u-text-center">
+                        <h4 class="u-pt-small
+                                      u-color-primary">{{ cus.total_visit }}</h4>
+                        <h4 class="u-text-mute u-text-xsmall
+                                       u-pb-small u-text-uppercase">{{ gettext("Luot_den") }}
+                        </h4>
+                    </div>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col">
+
+                        <!-- Nav -->
+                        <ul class="nav nav-tabs nav-overflow header-tabs">
+                            <li class="nav-item">
+                                <a href="#" id="user_info_{{ cus.user._id }}" class="nav-link active">
+                                   {{ gettext("Thong_tin") }}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" id="user_activity_{{ cus.user._id }}" class="nav-link">
+                                    {{ gettext("Hanh_trinh") }}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    {{ gettext("Hoat_dong") }}
+                                </a>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                </div>
+                <div id="user_activity_info_{{ cus.user._id }}" class="row u-justify-center" style="display: none;">
+                    
+                </div>
+                <div id="user_activity_info_load" class="loader" style="display: none;"></div>
+                <div id="user_info_div_{{ cus.user._id }}">
+                    <div class="row u-justify-center">
+                        <div class="col-md-12">
+                            <dl class="u-flex u-pv-small u-border-bottom">
+                                <dt class="u-width-50">
+                                   {{ gettext("So_dien_thoai") }}
+                                </dt>
+                               
+                                <dd>{{ cus.user.phone or '' }}</dd>
+
+                            </dl>
+                            {% if status_call == 'True' and cus.user.phone and merchant._id|jinja_get_name_app == 'vcall' %}
+                            <dl class="u-flex u-pv-small u-border-bottom">
+                                <dt class="u-width-50">
+                                    {{ gettext("Goi_ngay") }}
+
+                                </dt>
+                                <dd>
+                                    <a class="fe fe-phone-call" data-toggle="modal" data-dismiss="modal"
+                                        id="call_{{ cus._id }}" url="/vcall_pop_up/{{ cus._id }}" data-target="#pop_up">
+                                    </a>
+                            </dl>
+
+                            {% endif %}
+                            <dl class="u-flex u-pv-small u-border-bottom">
+                                <dt class="u-width-50">
+                                    Email
+                                </dt>
+
+                                <dd>
+                                    {% if cus.user.email or cus.email|string !='NONE' or cus.user.email|string !='None' %}
+                                    {{ cus.user.email }}{% else %} N/A{% endif %}</dd>
+                            </dl>
+                            <dl class="u-flex u-pv-small u-border-bottom">
+                                <dt class="u-width-50">
+                                    {{ gettext("Thiet_bi") }}
+                                </dt>
+                                <dd>{% if cus.user.client_mac and cus.user.client_mac|length > 0 %}{{ cus.user.client_mac|length }}{%else%}0{%endif%}
+                                </dd>
+                            </dl>
+                            <dl class="u-flex u-pv-small u-border-bottom">
+                                <dt class="u-width-50">
+                                    {{ gettext("Sinh_nhat") }}
+                                </dt>
+                                <dd>{% if cus.user.birthday and cus.user.birthday|length > 0 %}
+                                    {{ cus.user.birthday|human_birthday }}{% else %} N/A{% endif %}</dd>
+                            </dl>
+                            <dl class="u-flex u-pv-small u-border-bottom">
+                                <dt class="u-width-50">
+                                    {{ gettext("Nam_sinh") }}
+                                </dt>
+                                <dd>{% if cus.user.year_birthday and cus.user.year_birthday|length > 0 %}
+                                    {{ cus.user.year_birthday}}{% else %} N/A{% endif %}</dd>
+                            </dl>
+                            <dl class="u-flex u-pv-small u-border-bottom">
+                                <dt class="u-width-50">
+                                    {{ gettext("Gioi_tinh") }}
+                                </dt>
+                                <dd>{% if cus.user.gender %} {% if cus.user.gender == '2' %} {{ gettext("Nu") }}
+                                    {% elif cus.user.gender == '1' %} {{ gettext("Nam") }}{% else %} {{ gettext("Chua_xac_dinh") }} {% endif %}{% endif %}
+                                </dd>
+                            </dl>
+
+
+                            <dl class="u-flex u-pv-small u-border-bottom">
+                                <dt class="u-width-50">
+                                    {{ gettext("Chi_tieu") }}
+                                </dt>
+                                <dd>{{ cus.user.total_sales_shop|format_price or ''  }}</dd>
+                            </dl>
+
+
+                            <dl class="u-flex u-pv-small u-border-bottom">
+                                <dt class="u-width-50">
+                                    Facebook
+                                </dt>
+                                <dd>
+                                    {% if cus.user.facebook and cus.user.facebook|string != 'None' %}
+                                    <a target="_blank" href="{{ cus.facebook }}">
+                                        <img src="/static/nextify/img/facebook_circle-512.png"
+                                            style="width: 30px" /></a>
+                                    {% endif %}
+
+                                </dd>
+                            </dl>
+                            {% if cus.user.is_employee =='True' %}
+                            <dl class="u-flex u-pv-small u-border-bottom">
+                                <dt class="u-width-50">
+                                    {{ gettext("Nhan_vien") }}
+                                </dt>
+                                <i class="fe fe-user-check"></i>
+                            </dl>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <div class="row u-justify-center">
+                        <div class="col-md-7">
+                            <div class="u-mt-medium u-text-center">
+                                <h3 class="u-h5">
+                                    Tags</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="u-mt-medium u-text-center">
+                                {%set tag_param = merchant._id|string + ',' +cus.user._id|string %}
+                                {%set user_tags_details = tag_param|user_tag %}
+                                {% if user_tags_details|length> 0 %}
+
+                                {% for tag in user_tags_details %}
+                                <span class="c-badge
+                                                  c-badge--small c-badge--{{ ['success','warning','info']|random }}">
+                                    {{ tag.name }}
+                                </span> {% endfor %} {% else %}
+                                <p>N/A</p>
+                                {% endif %}
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $('#call_{{ cus._id }}').click(function () {
+            $("#load_data_user").show();
+            var url = $(this).attr("url");
+
+            $.ajax({
+                url: url,
+                success: function (res) {
+                    $('#div_call').empty();
+                    $('#div_call').append(res);
+                    $("#load_data_user").hide();
+                    $('#pop_up').modal('show');
+
+                },
+                error: function (request, status, error) {
+                    console.log("ajax call went wrong:" + request.responseText);
+                }
+            });
+        });
+
+    })
+</script>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+
+
+{% else %}
+<div class="card-body">
+    <div class="row u-justify-center">
+
+        <h4>{{ gettext("Hien_khong_co_du_lieu_nao._Ban_co_the_cap_nhat_du_lieu_tu_file_excel_hoac_thu_tim_khoa_voi_tu_khoa_khac.") }}
+        </h4>
+    </div>
+</div>
+
+{% endif %}
+<!-- --------------- -->
+<div class="modal fade" id="pop_up" tabindex="-1" role="dialog" aria-labelledby="userDetailModal"
+    data-backdrop="static">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+            <a class="c-modal__close c-modal__close--absolute u-text-mute u-opacity-medium" data-dismiss="modal"
+                aria-label="Close">
+                <i class="fa fa-close"></i>
+            </a>
+            <form class="form-horizontal m-t-xs" action="" id="pop_up_call" enctype="multipart/form-data" method="post">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                <div class="modal-body" id="div_call">
+                    <div id="load_data_user" class="loader"></div>
+                </div>
+            </form>
+
+            <script type="text/javascript" nonce="{{ csp_nonce() }}">
+            </script>
+
+        </div>
+    </div>
+</div>

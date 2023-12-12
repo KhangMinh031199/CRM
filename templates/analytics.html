@@ -1,0 +1,36 @@
+{% extends "v2/base.html" %}
+{% block css %}
+    <link href="{{ url_for('static', filename='styles/analytics.css') }}" rel="stylesheet"/>
+{% endblock %}
+{% block right_content %}
+
+    <div class="row">
+    <input type="hidden" id="date_range_to" value="{{ date_to }}" />
+    <input type="hidden" id="date_range_from" value="{{ date_from }}" />
+        <div id="report_content">
+
+        </div>
+    </div>
+
+{% endblock %}
+{% block js %}
+    <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+       $('#dashboard').collapse('show');
+    });
+    </script>
+     <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            var date_from = $('#date_range_from').val();
+            var date_to = $('#date_range_to').val();
+            var url = "/get_reports?date_from=" + date_from + '&date_to=' + date_to;
+            $.ajax({
+                url: url,
+                success: function (data) {
+                    $("#report_content").html(data);
+                }
+            });
+
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "login_base.html" %}
+{% block form_login %}
+<form class="form-signin" method="POST" action="/dealers">
+	<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+		<h1 class="form-signin-heading text-muted">Nextify Dealer</h1>
+        {%if error%}
+         <div class="alert alert-danger">
+                                    {{ error | safe }}
+                                </div>
+        {%endif%}
+
+		<input type="text" class="form-control" placeholder='{{ gettext("So_dien_thoai") }}' name="phone" required="" autofocus="">
+		<input type="password" class="form-control" placeholder='{{ gettext("Mat_khau") }}' name="password" required="">
+		<button class="btn btn-info btn-fill btn-lg" style="width: 100%" type="submit">
+			{{ gettext("Dang_nhap") }}
+		</button>
+
+	</form>
+{%endblock%}
+
+
+

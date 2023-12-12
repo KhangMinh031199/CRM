@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% if 'viettel.vn' in request.url %}
+    <title>Viettel | vmarketing</title>
+    {% include 'nextify/viettel_meta_tags.html' %}
+    {% elif 'crmx' in request.url %}
+    <title>CRMX | Better eXperience fo Wi-Fi</title>
+    {% include 'nextify/crmx_meta_tags.html' %}
+    {% else %}
+    <title>Nextify | The Next Generation of Loyalty</title>
+    {% include 'nextify/nextify_meta_tags.html' %}
+    {% endif %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="/static/wifi_portal/register/images/icons/favicon.ico" />
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/register/vendor/bootstrap/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css"
+        href="/static/wifi_portal/register/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css"
+        href="/static/wifi_portal/register/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/register/vendor/animate/animate.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/register/vendor/css-hamburgers/hamburgers.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/register/vendor/animsition/css/animsition.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/register/vendor/select2/select2.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css"
+        href="/static/wifi_portal/register/vendor/daterangepicker/daterangepicker.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/register/css/util.css">
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/register/css/main.css">
+    <link rel="stylesheet" href="/static/nextify/css/sweetalert.css">
+
+    <style>
+        .bg-image {
+            /* The image used */
+            background-image: url(//files.nextify.vn/{{ shop_select.background }});
+
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            /* Full height */
+            height: 100%;
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+    <!--===============================================================================================-->
+</head>
+
+<body>
+
+    <div class="limiter">
+        <div class="container-login100 bg-image">
+            <form class="login100-form validate-form" style="margin: 15px" method="post"
+                action="/save_survey/{{ shop_id }}/{{ survey_result_id }}">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                <span class="login100-form-title p-b-10">
+                    <img src="//files.nextify.vn/{{ shop_select.logo }}"
+                        style="width: 120px; height: 120px" alt="AVATAR">
+                </span>
+                <div class="text-center p-t-20 p-b-20">
+                    <span class="tx3">
+                        Vui lòng để lại thông tin để chúng tôi phục vụ bạn tốt hơn.
+                    </span>
+                </div>
+
+
+                <div class="wrap-input100">
+                    <input type="text" id="name" name="name" class="input100" />
+                    <span class="focus-input100"></span>
+                    <span class="label-input100">Tên của bạn/Your name</span>
+                </div>
+
+                <div class="wrap-input100">
+                    <input type="tel" class="input100" id="phone" name="phone" required />
+                    <span class="focus-input100"></span>
+                    <span class="label-input100">Số điện thoại/Phone number</span>
+                </div>
+
+
+
+                <div class="wrap-input100">
+                    <input type="text" class="input100" id="email" name="email">
+                    <span class="focus-input100"></span>
+                    <span class="label-input100">Email của bạn/Your email</span></div>
+
+
+
+                <div class="container-login100-form-btn">
+                    <button class="login100-form-btn" id="btn_submit"
+                        style="background-image: linear-gradient(90deg,#f65e38 0,#f68a39 51%,#f65e38);">
+                        Hoàn thành
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+
+
+
+
+    <!--===============================================================================================-->
+    <script src="/static/wifi_portal/register/vendor/jquery/jquery-3.2.1.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="/static/wifi_portal/register/vendor/animsition/js/animsition.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="/static/wifi_portal/register/vendor/bootstrap/js/popper.js"></script>
+    <script src="/static/wifi_portal/register/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="/static/wifi_portal/register/vendor/select2/select2.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="/static/wifi_portal/register/vendor/daterangepicker/moment.min.js"></script>
+    <script src="/static/wifi_portal/register/vendor/daterangepicker/daterangepicker.js"></script>
+    <!--===============================================================================================-->
+    <script src="/static/wifi_portal/register/vendor/countdowntime/countdowntime.js"></script>
+    <!--===============================================================================================-->
+    <script src="/static/wifi_portal/register/js/main.js"></script>
+    <script src="/static/v2/assets/js/sweetalert2.all.js"></script>
+    <script>
+        $("#phone").change(function () {
+            var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+            var mobile = $('#phone').val();
+            if (mobile !== '') {
+                if (vnf_regex.test(mobile) == false) {
+                    swal('Số điện thoại không đúng định dạng!', '', 'error');
+                    document.getElementById("btn_submit").disabled = true;
+                    document.getElementById("btn_submit").style.background = 'linear-gradient(90deg,#aeaeae 0,#cec7c2 51%,#9b8580)';
+                    return false
+                }
+            } else {
+                swal('Bạn chưa điền số điện thoại!', '', 'error');
+                document.getElementById("btn_submit").disabled = true;
+                document.getElementById("btn_submit").style.background = 'linear-gradient(90deg,#aeaeae 0,#cec7c2 51%,#9b8580)';
+                return false
+            }
+            document.getElementById("btn_submit").disabled = false;
+            document.getElementById("btn_submit").style.background = "linear-gradient(90deg,#f65e38 0,#f68a39 51%,#f65e38)";
+        })
+        $("#email").change(function () {
+            var vnf_regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            var mobile = $('#email').val();
+            if (mobile !== '') {
+                if (vnf_regex.test(mobile) == false) {
+                    swal('Email không đúng định dạng!', '', 'error');
+                    document.getElementById("btn_submit").disabled = true;
+                    document.getElementById("btn_submit").style.background = 'linear-gradient(90deg,#aeaeae 0,#cec7c2 51%,#9b8580)';
+                    return false
+                }
+            } else {
+                swal('Bạn chưa điền số địa chỉ email!', '', 'error');
+                document.getElementById("btn_submit").disabled = true;
+                document.getElementById("btn_submit").style.background = 'linear-gradient(90deg,#aeaeae 0,#cec7c2 51%,#9b8580)';
+                return false
+            }
+            document.getElementById("btn_submit").disabled = false;
+            document.getElementById("btn_submit").style.background = "linear-gradient(90deg,#f65e38 0,#f68a39 51%,#f65e38)";
+        })
+    </script>
+</body>
+
+</html>

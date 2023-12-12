@@ -1,0 +1,271 @@
+{% extends 'nextify/base.html' %}
+
+{% block main_content %}
+
+<div class="header">
+    <div class="container-fluid">
+
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                        {{ gettext("Tong_quan") }}
+                    </h6>
+
+                    <!-- Title -->
+                    <h1 class="header-title">
+                        {{ merchant.name }}
+                    </h1>
+
+                </div>
+                <div class="col-3">
+                    <select class="form-select"  id="shop_in_mer">
+                        <option value="all">{{ gettext("Tat_ca_dia_diem") }}</option>
+                        {% for shop_mer in shop_in_mer %}
+                        <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <select class="form-select"  id="range_time">
+                        <option value="7">7 ngày gần nhất</option>
+                        <option value="31">31 ngày gần nhất</option>
+                        <option value="365">12 tháng gần nhất</option>
+                        <option value="all">Toàn thời gian</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+
+
+
+        </div>
+
+
+    </div>
+    <div class="container-fluid">
+       
+        <div class="row mt-md-5">
+            <div class="col-12 col-lg-6 d-flex flex-column">
+
+                <div class="card card-body">
+                    <div class="row align-items-center gx-0">
+                        <div class="col">
+                            <h4 class="text-uppercase text-body-secondary mb-2">Khách hàng <span class="fe fe-help-circle" data-toggle="tooltip"
+                                    title="Số khách hàng đã thu thập được, thông tin khách hàng là duy nhất"></span>
+                            </h4>
+                        </div>
+                        <div class="body">
+                            <div class="spinner-border text-danger" role="status" id="customers_loading">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <div id="customers_content"></div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 d-flex flex-column">
+
+                <div class="card card-body">
+                    <div class="row align-items-center gx-0">
+                        <div class="col">
+                            <h4 class="text-uppercase text-body-secondary mb-2">Lượt đến <span class="fe fe-help-circle" data-toggle="tooltip"
+                                    title="Số lượt đến khách hàng tại các địa điểm, bao gồm cả khách không qua WIFI."></span>
+                            </h4>
+                        </div>
+                        <div class="body">
+                            <div class="spinner-border text-danger" role="status" id="visits_loading">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <div id="visits_content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-lg-6 d-flex flex-column">
+
+                <div class="card card-body">
+                    <div class="row align-items-center gx-0">
+                        <div class="col">
+                            <h4 class="text-uppercase text-body-secondary mb-2">Đăng ký mới <span class="fe fe-help-circle" data-toggle="tooltip"
+                                    title="Số khách hàng đăng ký mới lần đầu"></span></h4>
+                        </div>
+                        <div class="body">
+                            <div class="spinner-border text-danger" role="status" id="new_customers_loading">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <div id="new_customers_content"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 d-flex flex-column">
+
+                <div class="card card-body">
+                    <div class="row align-items-center gx-0">
+                        <div class="col">
+                            <h4 class="text-uppercase text-body-secondary mb-2">Khách quay lại <span class="fe fe-help-circle" data-toggle="tooltip"
+                                    title="Số khách hàng quay lại"></span></h4>
+                        </div>
+                        <div class="body">
+                            <div class="spinner-border text-danger" role="status" id="return_customers_loading">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <div id="return_customers_content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-lg-6 d-flex flex-column">
+
+                <div class="card card-body">
+                    <div class="row align-items-center gx-0">
+                        <div class="col">
+                            <h4 class="text-uppercase text-body-secondary mb-2">Tin chăm sóc đã gửi <span class="fe fe-help-circle" data-toggle="tooltip"
+                                    title="Số tin gửi từ kịch bẩn chăm sóc tự động"></span></h4>
+                        </div>
+                        <div class="body">
+                            <div class="spinner-border text-danger" role="status" id="smart_message_loading">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <div id="smart_message_content"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 d-flex flex-column">
+
+                <div class="card card-body">
+                    <div class="row align-items-center gx-0">
+                        <div class="col">
+                            <h4 class="text-uppercase text-body-secondary mb-2">Khách quay lại sau nhận tin <span class="fe fe-help-circle" data-toggle="tooltip"
+                                    title="Khách quay lại trong 7 ngày sau nhận tin chăm sóc"></span></h4>
+                        </div>
+                        <div class="body">
+                            <div class="spinner-border text-danger" role="status" id="walkthrough_loading">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <div id="walkthrough_content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-lg-6 d-flex flex-column">
+
+                <div class="card card-body">
+                    <div class="row align-items-center gx-0">
+                        <div class="col">
+                            <h4 class="text-uppercase text-body-secondary mb-2">Địa điểm <span class="fe fe-help-circle" data-toggle="tooltip"
+                                    title="Số khách hàng theo địa điểm"></span></h4>
+                        </div>
+                        <div class="body">
+                            <div class="spinner-border text-danger" role="status" id="location_loading">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <div id="location_content"></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 d-flex flex-column">
+
+                <div class="card card-body">
+                    <div class="row align-items-center gx-0">
+                        <div class="col">
+                            <h4 class="text-uppercase text-body-secondary mb-2">Thiết bị <span class="fe fe-help-circle" data-toggle="tooltip"
+                                    title="Số khách hàng theo loại thiết bị"></span></h4>
+                        </div>
+                        <div class="body">
+                            <div class="spinner-border text-danger" role="status" id="device_loading">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <div id="device_content"></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-lg-12 d-flex flex-column">
+                <div class="card card-body">
+                  
+                    <div class="row">
+                        <div class="chart-container-row col-4">
+                            <div class="customer-chart-container old-graph">
+                                <h4 class="text-uppercase text-body-secondary mb-2">Theo lượt đến <span class="fe fe-help-circle" data-toggle="tooltip"
+                                                title="Nhóm khách hàng theo lượt đến"></span></legend>
+                                </h4>
+                                <div class="body">
+                                    <div class="spinner-border text-danger" role="status" id="visit_loading">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <div id="visit_content"></div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="chart-container-row col-4">
+                            <div class="customer-chart-container old-graph">
+                                <h4 class="text-uppercase text-body-secondary mb-2">Theo giờ <span class="fe fe-help-circle" data-toggle="tooltip"
+                                                title="Nhóm khách hàng theo khung giờ"></span></legend>
+                                </h4>
+                                <div class="body">
+                                    <div class="spinner-border text-danger" role="status" id="hours_loading">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <div id="hours_content"></div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="chart-container-row col-4">
+                            <div class="customer-chart-container old-graph">
+                                <h4 class="text-uppercase text-body-secondary mb-2">Theo ngày <span class="fe fe-help-circle" data-toggle="tooltip"
+                                                title="Nhóm khách hàng theo ngày"></span></legend>
+                                </h4>
+                                <div class="body">
+                                    <div class="spinner-border text-danger" role="status" id="days_loading">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <div id="days_content"></div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+{%endblock%}
+{% block js %}
+<script src="{{ url_for('static', filename='nextify/js/overview.js') }}"></script>
+{% endblock %}

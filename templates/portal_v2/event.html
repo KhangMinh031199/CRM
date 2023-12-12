@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    {% if 'viettel.vn' in request.url %}
+        <title>Viettel | vmarketing</title>
+        {% include 'portal_v2/viettel_meta_tags.html' %}
+    {% elif 'crmx' in request.url %}
+        <title>CRMX | Better eXperience fo Wi-Fi</title>
+        {% include 'portal_v2/crmx_meta_tags.html' %}
+    {% else %}
+        <title>Nextify | The Next Generation of Loyalty</title>
+        {% include 'portal_v2/nextify_meta_tags.html' %}
+    {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link href="http://fonts.googleapis.com/css?family=Kotta+One|Cantarell:400,700" rel="stylesheet" type="text/css">
+    <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+	<link rel="stylesheet" type="text/css" href="/static/portal_v2/default/css/font-awesome.min.css">
+    <link href="/static/portal_v2/event/presentational-only.css" rel="stylesheet" type="text/css">
+    <style>
+        body {
+            /* Location of the image */
+            background-image: url('//files.nextify.vn/{{ card.photo }}');
+
+            /* Image doesn't repeat */
+            background-repeat: no-repeat;
+
+            /* Makes the image fixed in the viewport so that it doesn't move when
+               the content height is greater than the image height */
+            background-attachment: fixed;
+
+            /* This is what makes the background image rescale based on its container's size */
+            background-size: cover;
+
+            /* Pick a solid background color that will be displayed while the background image is loading */
+            background-color: #464646;
+
+            /* SHORTHAND CSS NOTATION
+             * background: url(background-photo.jpg) center center cover no-repeat fixed;
+             */
+        }
+
+        h2 {
+            position: absolute;
+            top: 200px;
+            left: 0;
+            width: 100%;
+        }
+
+        h2 span {
+            color: white;
+            font: bold 24px/45px Helvetica, Sans-Serif;
+            letter-spacing: -1px;
+            background: rgb(0, 0, 0); /* fallback color */
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+        }
+
+        h2 span.spacer {
+            padding: 0 5px;
+        }
+
+        /* For mobile devices */
+        @media only screen and (max-width: 767px) {
+            body {
+                /* The file size of this background image is 93% smaller
+                 * to improve page load speed on mobile internet connections */
+                background-image: url('//files.nextify.vn/{{ card.photo }}');
+                background-size: cover;
+                background-repeat: no-repeat;
+            }
+        }
+    </style>
+
+    <!-- Not required: jquery.min.js and presentational-only.js is only used to demonstrate scrolling behavior of the viewport  -->
+<!-- Facebook Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'http://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '498571484318232');
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="http://www.facebook.com/tr?id=498571484318232&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel Code -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="http://www.googletagmanager.com/gtag/js?id=UA-121655296-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121655296-1');
+</script>
+
+</head>
+<body>
+<nav class="navbar" id="top">
+    <div  class="inner">
+        <div id="wftimer">
+            <a href="#">Vui lòng chờ <span>5</span>s để bấm kết nối</a>
+        </div>
+
+    </div>
+</nav>
+<header class="container">
+    <section class="content" style="background: rgba(0, 0, 0, 0) linear-gradient(to bottom, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0.6) 100%) repeat 0 0;
+z-index: 1;">
+        {% if title and title|length > 0 %}
+            <p> {{ title|safe }}</p>
+        {% endif %}
+        {% if content and content|length > 0 %}
+            <p class="sub-title"> {{ content|safe }}</p>
+        {% endif %}
+    <div id="makingdifferenttimer">
+
+     {% if auth_target %}
+
+                   {% if device_type in ['mikrotik','draytek','unifi', 'fortinet', 'cisco', 'borynet', 'ruijie', 'grandstream', 'pfsense'] %}
+
+                             {%if device_type == 'ruijie' %}
+
+                                    <script type="text/javascript">
+                                function doLogin() {
+                                           var auth_target = document.getElementById('auth_target').value;
+                                           location.href = auth_target;
+                                            return false;
+                                        }
+                                    </script>
+                                 {% else %}
+                                 <script type="text/javascript">
+                                function doLogin() {
+                                            document.send_mik_fr.submit();
+                                            return false;
+                                        }
+                                    </script>
+                            {% endif %}
+                                {% if device_radius %}
+                                    {% if device_type == 'mikrotik'  %}
+
+                                       <form name="send_mik_fr" action="{{ auth_target }}" method="post"
+                                      id="send_mik_fr">
+                                      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                          {%if profile%}
+                                          <input type="hidden" name="username" value="{{ profile.user_radius }}"/>
+                                          <input type="hidden" name="password" value="Accept"/>
+                                          {%else%}
+                                            <input type="hidden" name="username" value="vpn"/>
+                                            <input type="hidden" name="password" value="vpn"/>
+                                        {%endif%}
+                                            <input type="hidden" name="dst" value="{{ redirect_uri }}"/>
+                                            <input type="hidden" name="popup" value="true"/>
+                                        </form>
+                                        {% elif device_type in ['draytek', 'grandstream'] %}
+                                          <form name="send_mik_fr" action="{{ auth_target }}" method="get" id="send_mik_fr">
+                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                            <input type="hidden" name="target" value="{{ redirect_uri }}">
+                                              {%if profile%}
+                                              <input type="hidden" name="username" value="{{ profile.user_radius }}"/>
+                                              <input type="hidden" name="password" value="Accept"/>
+                                              {%else%}
+                                                <input type="hidden" name="username" value="vpn"/>
+                                                <input type="hidden" name="password" value="vpn"/>
+                                            {%endif%}
+                                            <input type="hidden" name="dst" value="{{ redirect_uri }}"/>
+                                            <input type="hidden" name="popup" value="true"/>
+                                            </form>
+                                    {% elif device_type == 'unifi' %}
+                                    <form name="send_mik_fr" action="{{ auth_target }}" method="get" id="send_mik_fr">
+                                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                        <input type="hidden" name="next_url" value="{{ redirect_uri }}">
+                                        <input type="hidden" id="by" name="by" value="radius">
+                                        <input type="hidden" id="mac" name="mac" value="{{gateway_mac}}">
+                                        <input type="hidden" id="ec" name="ec" value="{{ec}}">
+                                        {%if profile%}
+                                        <input type="hidden" name="username" value="{{ profile.user_radius }}"/>
+                                        <input type="hidden" name="password" value="Accept"/>
+                                        {%else%}
+                                          <input type="hidden" name="username" value="vpn"/>
+                                          <input type="hidden" name="password" value="vpn"/>
+                                      {%endif%}
+                                        <input type="hidden" name="dst" value="{{ redirect_uri }}"/>
+                                        <input type="hidden" name="popup" value="true"/>
+                                  </form>
+                                    {% elif device_type == 'fortinet' %}
+                                    <form action="{{ auth_target.replace('fgtauth','') }}" method="post" name="send_mik_fr" id="send_mik_fr">
+                                        <input type="hidden" name="4Tredir" value="{{ redirect_uri }}">
+                                        <input type="hidden" name="magic" value="{{magic_fortinet}}">
+                                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                        {%if profile%}
+                                        <input name="username" id="ft_un" type="hidden" value="{{ profile.user_radius }}">
+
+                                        <input name="password" id="ft_pd" type="hidden" value="Accept">
+                                        {%else%}
+                                        <input name="username" id="ft_un" type="hidden" value="vpn"/>
+
+                                        <input name="password" id="ft_pd" type="hidden" value="vpn"/>
+                                    {%endif%}
+
+
+                                      </form>
+                                    {% elif device_type == 'cisco' %}
+                                        <form name="send_mik_fr" action="{{ auth_target }}" method="post" id="send_mik_fr">
+                                        <input type="hidden" name="buttonClicked" size="16" maxlength="15" value="4">
+                                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                        <input type="hidden" name="redirect_url"  value="{{ redirect_uri }}">
+                                        {%if profile%}
+                                        <input type="hidden" name="username" value="{{ profile.user_radius }}"/>
+                                        <input type="hidden" name="password" value="Accept"/>
+                                        {%else%}
+                                          <input type="hidden" name="username" value="vpn"/>
+                                          <input type="hidden" name="password" value="vpn"/>
+                                      {%endif%}
+                                        </form>
+                                        {% elif device_type == 'borynet' %}
+                                         <form name="send_mik_fr" action="/borynet_authen" method="get" id="send_mik_fr">
+                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                            <input type="hidden" name="dst" value="{{ redirect_uri }}"/>
+                                          <input type="hidden" name="api_url" id="api_url" value="{{ auth_target }}"/>
+                                         <input type="hidden" name="ApMac" id="gateway_mac" value="{{ gateway_mac.upper() }}"/>
+                                          <input type="hidden" name="UserMac" id="client_mac" value="{{ client_mac }}"/>
+                                        {%if profile%}
+                                        <input type="hidden" name="UserName" id="username" value="{{ profile.user_radius }}"/>
+                                        <input type="hidden" name="PassWord" id="password" value="Accept"/>
+                                        {%else%}
+                                          <input type="hidden" name="UserName" id="username" value="vpn"/>
+                                          <input type="hidden" name="PassWord" id="password" value="vpn"/>
+                                      {%endif%}
+                                        </form>
+                                       {% elif device_type == 'pfsense' %}
+
+                                       <form name="send_mik_fr" action="{{ auth_target }}&redirurl={{ redirect_uri }}"  method="post" id="send_mik_fr">
+                                          {%if profile%}
+                                                <input type="hidden" name="auth_user" id="username" value="{{ profile.user_radius }}"/>
+                                        <input type="hidden" name="auth_password" id="password" value="Accept"/>
+                                              {%else%}
+                                              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                           <input type="hidden"  name="auth_user" value="vpn">
+                                           <input  type="hidden" name="auth_pass" value="vpn">
+                                                {%endif%}
+                                           <input  type="hidden" name="accept" value="Continue">
+                                       <input  type="hidden" name="zone" value="nextify">
+                                           <input type="hidden"  name="redirurl" value="{{ redirect_uri }}">
+
+                                        </form>
+                                    {% endif %}
+
+                                    {% else %}
+                                     {%if device_type == 'ruijie' %}
+                                        <form name="send_mik_fr" action="{{ auth_target }}" method="get" id="send_mik_fr">
+                                            <input type="hidden" name="dst" id="dst" value="{{ redirect_uri }}"/>
+                                         <input type="hidden" name="auth_target" id="auth_target" value="{{ auth_target }}"/>
+
+                                        </form>
+
+                                         {% else %}
+
+                                <form name="send_mik_fr" action="{{ auth_target }}" method="post"
+                                      id="send_mik_fr">
+                                      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                    <input type="hidden" name="username" value="nextify"/>
+                                    <input type="hidden" name="password" value="Accept"/>
+                                    <input type="hidden" name="dst" value="{{ redirect_uri }}"/>
+                                    <input type="hidden" name="popup" value="true"/>
+                                </form>
+                                          {% endif %}
+                                    {% endif %}
+                        <p><a class="button" id="load-more-content" href="#" onclick="doLogin()"> {% if shop.connect_button %}
+                                            {{ shop.connect_button }}
+                                        {% else %}
+                                         Kết nối Wi-Fi/Go Online
+                                        {% endif %}</a></p>
+
+
+
+
+                            {% else %}
+
+                        <p><a class="button" id="load-more-content" href="{{ auth_target }}" > {% if shop.connect_button %}
+                                            {{ shop.connect_button }}
+                                        {% else %}
+                                         Kết nối Wi-Fi/Go Online
+                                        {% endif %}</a></p>
+
+
+
+                            {% endif %}
+                            {% else %}
+
+                            <p class="text-success"><i class="fe fe-wifi" aria-hidden="true"></i> Kết nối thành công</p>
+
+                        {% endif %}
+
+
+
+
+    </div>
+
+
+        <!-- Some content to demonstrate viewport scrolling behavior -->
+
+    </section>
+</header>
+<script src="/static/wifi_portal/js/jquery-3.3.1.min.js"></script>
+<script src="/static/wifi_portal/js/bootstrap.min.js"></script>
+<script>
+    jQuery(document).ready(function () {
+         $("#makingdifferenttimer").delay(500).hide();
+        var sec = 5;
+        var timer = setInterval(function () {
+            $("#wftimer span").text(sec--);
+            if (sec == -2) {
+                $("#makingdifferenttimer").delay(500).show();
+                $("#wftimer").hide(1000).css("display", "none");
+            }
+        }, 1000);
+    });
+</script>
+ {% if shop.facebook_pixel_code and  shop.facebook_pixel_code != 'None' %}
+        {{ shop.facebook_pixel_code|safe }}
+    {% endif %}
+    {% if shop.google_pixel_code  and  shop.google_pixel_code != 'None' %}
+        {{ shop.google_pixel_code|safe }}
+    {% endif %}
+</body>
+</html>

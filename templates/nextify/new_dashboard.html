@@ -1,0 +1,1392 @@
+{% extends 'nextify/base.html' %}
+{% block css %}
+<link rel="stylesheet" href="/static/nextify/css/daterangepicker.css">
+<style>
+  .after{
+    top:40%;
+    left:40%;
+    height:50px;
+    position:absolute;
+    text-align:center;
+  }
+  .after h1 {
+    margin:auto;
+    line-height:50px;
+    vertical-align:middle;
+}
+  .total {
+    margin-bottom: 12px;
+    color: #444;
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 38px;
+    text-align: center;
+  }
+  .loader1 {
+    border: 6px solid #f3f3f3;
+    border-radius: 60%;
+    border-top: 6px solid orange;
+    width: 50px;
+    height: 50px;
+    -webkit-animation: spin 1s linear infinite;
+    animation: spin 0.7s linear infinite;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    display: inline-block;
+    /* position: fixed; */
+}
+  .col-auto {
+    flex: 0 0 auto;
+  }
+
+  .shadow {
+    box-shadow: none;
+  }
+</style>
+{% endblock %}
+{% block main_content %}
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-1" style="height: 400px">
+  <div class="container-fluid">
+
+    <div class="row" style="margin-top: 20px">
+
+      <div class="col">
+
+        <!-- Pretitle -->
+        <h6 class="header-pretitle">
+          {{ gettext("Tong_quan") }}
+        </h6>
+
+        <!-- Title -->
+        <h1 class="header-title">
+          {{ merchant.name }}
+        </h1>
+
+      </div>
+      <div class="col">
+        <select class="custom-select control-container" style="width: 100%;" id="shop_in_mer">
+          <option value="all">{{ gettext("Tat_ca_dia_diem") }}</option>
+          {% for shop_mer in shop_in_mer %}
+          <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-auto">
+        <div id="reportrange" class="pull-right"
+          style="background: #fff; cursor: pointer; padding: 7px 10px; border: 1px solid #ccc; width: 100%; border-radius: 0.4rem;">
+          <i class="fa fa-calendar"></i>&nbsp;
+          <span></span> <i class="fa fa-caret-down"></i>
+        </div>
+      </div>
+
+    </div> <!-- / .row -->
+
+
+  </div>
+</div>
+
+
+<div class="container-fluid" style="margin-top: -300px">
+
+  <!-- Card stats -->
+  <div class="row">
+    {# <div class="col-xl-4 col-lg-6">
+      <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Tong_so_khach_hang") }}</h5>
+
+          </div>
+          <div class="col-auto">
+            <div class="">
+              <i id="tooltip1" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="card-body">
+          <div class="col">
+            <div class="row">
+              <div class="col-6">
+                <div id="total_customer_load" class="loader1"></div>
+                <span id="total_customer" class="total"></span>
+              </div>
+              <div class="col-6 text-center">
+                        <!-- Heading -->
+                  <h6 class="text-uppercase text-muted">{{ gettext("Luot_den_trung_binh") }}
+                    <i id="tooltip_avpv" data-toggle="tooltip" data-placement="right" data-original-title="" title="" class="fa fa-info-circle"></i>
+                  </h6>
+                  <!-- Value -->
+                  <div id="avpv_load" class="loader1" style="width: 35px; height: 35px"></div>
+                  <h2 class="mb-0" id="avpv"></h2>
+
+              </div>
+              <p class="mt-3 mb-0 text-muted text-sm">
+                  <span class="text-danger mr-2" id="total_customer_per_down"></span>
+                  <span class="text-success mr-2" id="total_customer_per_up"></span>
+                  <span class="text-nowrap">So với  <b style="color: #f57a33; text-align: center;" id="total_customer_day">
+                  </b> {{ gettext("ngay_truoc") }}</span>
+                </p>
+          </div>
+        </div>
+      </div>
+        <div class="card-footer">
+          <div class="col">
+              <div id="total_customer_avg_load" class="loader1_avg"></div>
+            <p class="c-graph-card__status">{{ gettext("Trung_binh") }}
+              <b style="color: #f57a33; font-size: 18px; text-align: center;" id="total_customer_avg">
+              </b> {{ gettext("khach/ngay") }}</p>
+            <!-- <p class="mt-3 mb-0 text-muted text-sm"> -->
+                <!-- <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                <span class="text-nowrap">Since last month</span> -->
+            <!-- </p> <--></-->
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 col-lg-6">
+      <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Khach_hang_moi") }}</h5>
+
+          </div>
+          <div class="col-auto">
+            <div class="">
+              <i id="tooltip2" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+            </div>
+          </div>
+
+        </div>
+        <div class="card-body">
+          <div class="col">
+            <div class="row">
+              <div class="col-6">
+                <div id="new_customer_load" class="loader1"></div>
+                <span id="new_customer" class="total"></span>
+              </div>
+              <div class="col-6 text-center">
+                        <!-- Heading -->
+                  <h6 class="text-uppercase text-muted">{{ gettext("Ty_le") }}
+                    <i id="tooltip_new_customer_percent" data-toggle="tooltip" data-placement="right" data-original-title="" title="" class="fa fa-info-circle"></i>
+                  </h6>
+                  <!-- Value -->
+                  <div id="new_customer_percent_load" class="loader1" style="width: 35px; height: 35px"></div>
+                  <h2 class="mb-0" id="new_customer_percent" style="color: rgb(245, 122, 51)"></h2>
+
+              </div>
+              <p class="mt-3 mb-0 text-muted text-sm">
+                  <span  class="text-danger mr-2" id="new_customer_per_down"></span>
+                  <span class="text-success mr-2" id="new_customer_per_up"></span>
+                  <span class="text-nowrap">{{ gettext("So_voi") }}  <b style="color: #f57a33; text-align: center;" id="new_customer_day">
+                  </b> {{ gettext("ngay_truoc") }}</span>
+                </p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="col">
+              <div id="new_customer_avg_load" class="loader1_avg"></div>
+            <p class="c-graph-card__status">{{ gettext("Trung_binh") }}
+              <b style="color: #f57a33; font-size: 18px; text-align: center;" id="new_customer_avg">
+              </b> {{ gettext("khach/ngay") }}</p>
+            <!-- <p class="mt-3 mb-0 text-muted text-sm"> -->
+                <!-- <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 4.48%</span>
+                <span class="text-nowrap">Since last month</span> -->
+            <!-- </p> -->
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 col-lg-6">
+
+      <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("KHACH_HANG_QUAY_LAI") }}</h5>
+          </div>
+          <div class="col-auto">
+            <div class="">
+              <i id="tooltip3" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="col">
+            <div class="row">
+              <div class="col-6">
+                <div id="customer_comeback_load" class="loader1"></div>
+                <span id="customer_comeback" class="total"></span>
+              </div>
+              <div class="col-6 text-center">
+                        <!-- Heading -->
+                  <h6 class="text-uppercase text-muted">{{ gettext("Ty_le") }}
+                    <i id="tooltip_customer_comeback_percent" data-toggle="tooltip" data-placement="right" data-original-title="" title="" class="fa fa-info-circle"></i>
+                  </h6>
+                  <!-- Value -->
+                  <div id="customer_comeback_percent_load" class="loader1" style="width: 35px; height: 35px"></div>
+                  <h2 class="mb-0" id="customer_comeback_percent" style="color: rgb(245, 122, 51)"></h2>
+
+              </div>
+              <p class="mt-3 mb-0 text-muted text-sm">
+                  <span  class="text-danger mr-2" id="customer_comeback_per_down"></span>
+                  <span class="text-success mr-2" id="customer_comeback_per_up"></span>
+                  <span class="text-nowrap">{{ gettext("So_voi") }}  <b style="color: #f57a33; text-align: center;" id="customer_comeback_day">
+                  </b> {{ gettext("ngay_truoc") }}</span>
+                </p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="col">
+              <div id="customer_comeback_avg_load" class="loader1_avg"></div>
+            <p class="c-graph-card__status">{{ gettext("Trung_binh") }}
+              <b style="color: #f57a33; font-size: 18px; text-align: center;" id="customer_comeback_avg">
+              </b> {{ gettext("khach/ngay") }}</p>
+
+          </div>
+
+        </div>
+      </div>
+    </div> #}
+
+
+
+    <div class="col-12 col-xl-8">
+
+      <!-- Traffic -->
+      <div class="card" style="height: 95%">
+        <div class="card-header" style="max-height: 50px;">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Thong_ke_khach_hang") }}
+            </h5>
+          </div>
+          <div class="col-auto">
+            <div class="">
+              <i id="tooltip_customers" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row" style="margin-top: 20px;">
+
+            <div class="col-12 col-xl-4" style="padding-left: 1.5rem;">
+              <div class="row">
+                  <div class="col-12">
+                      <div id="total_customer_load" class="loader1"></div>
+                      <span id="total_customer" class="total"></span>
+                      <span class="text-nowrap">{{ gettext("khach_hang") }}</span>
+                  </div>
+
+                  <div class="col-12">
+                      <p class="mt-3 mb-0 text-muted text-sm">
+                          <span class="text-danger mr-2" id="total_customer_per_down"></span>
+                          <span class="text-success mr-2" id="total_customer_per_up"></span>
+                          <span class="text-nowrap">{{ gettext("So_voi") }}  <b style="color: #f57a33; text-align: center;" id="total_customer_day">
+                          </b> {{ gettext("ngay_truoc") }}</span>
+                      </p>
+                  </div>
+
+                  <div class="col-12" style="margin-bottom: 20px;">
+                      <div id="total_customer_avg_load" class="loader1_avg"></div>
+                        <p class="c-graph-card__status">{{ gettext("Trung_binh") }}
+                          <b style="color: #f57a33; font-size: 18px; text-align: center;" id="total_customer_avg">
+                          </b> {{ gettext("khach/ngay") }}</p>
+                  </div>
+
+                  <div class="col-12">
+                      <div id="total_visit_load" class="loader1"></div>
+                      <span id="total_visit" class="total"></span>
+                      <span class="text-nowrap">{{ gettext("luot_den") }}</span>
+                  </div>
+
+                  <div class="col-12">
+                      <p class="mt-3 mb-0 text-muted text-sm">
+                        <span  class="text-danger mr-2" id="total_visit_per_down"></span>
+                        <span class="text-success mr-2" id="total_visit_per_up"></span>
+                        <span class="text-nowrap"> {{ gettext("So_voi") }}  <b style="color: #f57a33; text-align: center;" id="total_visit_day">
+                        </b> {{ gettext("ngay_truoc") }}</span>
+                      </p>
+                  </div>
+
+                  <div class="col-12">
+                      <div id="total_visit_avg_load" class="loader1_avg"></div>
+                          <p class="c-graph-card__status">{{ gettext("Trung_binh") }}
+
+                            <b style="color: #f57a33; font-size: 18px; text-align: center;" id="total_visit_avg">
+                            </b> {{ gettext("luot/ngay") }}</p>
+                  </div>
+              </div>
+
+          </div>
+          <!-- Chart -->
+          <div class="col-12 col-xl-8">
+              <!-- Chart -->
+              <div class="chart chart-appended"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                <div id="customers_load" class="loader1" style="display: block"></div>
+                <canvas id="customers" class="chart-canvas" data-toggle="legend" data-target="" style="display: block; width: 278px; height: 241px;" width="278" height="241"></canvas>
+              </div>
+
+              <!-- Legend -->
+              <div class="chart-legend">
+                <span class="chart-legend-item">
+                  <i class="chart-legend-indicator" style="background-color: #2C7BE5"></i>{{ gettext("Khach_hang_moi") }}
+                </span>
+                <span class="chart-legend-item"><i class="chart-legend-indicator" style="background-color: #D2DDEC"></i>{{ gettext("Khach_hang_quay_lai") }}
+                </span>
+              </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-xl-4">
+        <div class="card card-stats mb-4">
+            <div class="card-header">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Doanh_thu") }}
+                </h5>
+                <input type="hidden" value="{{ merchant.average_earnings }}" id="average_earnings_inp">
+              </div>
+              <div class="col-auto">
+                <div class="">
+                  <i id="tooltip5" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+                </div>
+              </div>
+
+            </div>
+            <div class="card-body">
+              <div class="col">
+                <div id="average_earnings_load" class="loader1"></div>
+                <span id="average_earnings" class="total"></span>
+                <!-- <div class="input_with_appended_unit">
+                            <input id="profit_per_peo" type="text" class="text-muted mb-0"></input>
+                            <span class="addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <span>VNĐ / người</span>
+                        </div> -->
+                <!-- <div class="row">
+                      <span id="profit_total" class="h2 font-weight-bold mb-0">50 000 000</span>
+                    </div> -->
+                <p class="mt-3 mb-0 text-muted text-sm">
+                  <span  class="text-danger mr-2" id="average_earnings_per_down"></span>
+                  <span class="text-success mr-2" id="average_earnings_per_up"></span>
+                  <span class="text-nowrap">{{ gettext("So_voi") }}  <b style="color: #f57a33; text-align: center;" id="average_earnings_day">
+                  </b> {{ gettext("ngay_truoc") }}</span>
+                </p>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="col">
+                  <div id="average_earnings_avg_load" class="loader1_avg"></div>
+                <p class="c-graph-card__status">{{ gettext("Trung_binh") }}
+                  <b style="color: #f57a33; font-size: 18px; text-align: center;" id="average_earnings_avg">
+                  </b> {{ gettext("VND/ngay") }}</p>
+              </div>
+            </div>
+        </div>
+
+        <div class="card card-stats mb-4">
+            <div class="card-header">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("COUPON_da_tao/da_doi") }}</h5>
+
+              </div>
+              <div class="col-auto">
+                <div class="">
+                  <i id="tooltip6" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+                </div>
+              </div>
+
+            </div>
+            <div class="card-body">
+              <div class="col">
+                <div id="coupon_redeemed_load" class="loader1"></div>
+                <span id="coupon_redeemed" class="total"></span>
+
+                <span id="coupon_redeem" class="total"></span>
+
+                <p class="mt-3 mb-0 text-muted text-sm">
+                  <span class="text-success mr-2"> </span>
+                  <span class="text-nowrap"> </span>
+                </p>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="col">
+                  <div id="coupon_redeem_avg_load" class="loader1_avg"></div>
+                <p class="c-graph-card__status">{{ gettext("Trung_binh") }}
+                  <b style="color: #f57a33; font-size: 18px; text-align: center;" id="coupon_redeemed_avg"> </b> /
+                  <b style="color: #f57a33; font-size: 18px; text-align: center;" id="coupon_redeem_avg">
+                  </b> {{ gettext("coupon/ngay") }}</p>
+              </div>
+            </div>
+      </div>
+    </div>
+  </div>
+{#   <div class="row" style="margin-top: 20px;">
+    <div class="col-xl-4 col-lg-6">
+      <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Tong_so_luot_den") }}</h5>
+
+          </div>
+          <div class="col-auto">
+            <div class="">
+              <i id="tooltip4" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="col">
+            <div id="total_visit_load" class="loader1"></div>
+            <span id="total_visit" class="total"></span>
+            <p class="mt-3 mb-0 text-muted text-sm">
+              <span  class="text-danger mr-2" id="total_visit_per_down"></span>
+              <span class="text-success mr-2" id="total_visit_per_up"></span>
+              <span class="text-nowrap">{{ gettext("So_voi") }}  <b style="color: #f57a33; text-align: center;" id="total_visit_day">
+              </b> {{ gettext("ngay_truoc") }}</span>
+            </p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="col">
+              <div id="total_visit_avg_load" class="loader1_avg"></div>
+            <p class="c-graph-card__status">{{ gettext("Trung_binh") }}
+
+              <b style="color: #f57a33; font-size: 18px; text-align: center;" id="total_visit_avg">
+              </b> {{ gettext("luot/ngay") }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 col-lg-6">
+      <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Doanh_thu") }}
+            </h5>
+            <input type="hidden" value="{{ merchant.average_earnings }}" id="average_earnings_inp">
+          </div>
+          <div class="col-auto">
+            <div class="">
+              <i id="tooltip5" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+            </div>
+          </div>
+
+        </div>
+        <div class="card-body">
+          <div class="col">
+            <div id="average_earnings_load" class="loader1"></div>
+            <span id="average_earnings" class="total"></span>
+            <!-- <div class="input_with_appended_unit">
+                        <input id="profit_per_peo" type="text" class="text-muted mb-0"></input>
+                        <span class="addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <span>VNĐ / người</span>
+                    </div> -->
+            <!-- <div class="row">
+                  <span id="profit_total" class="h2 font-weight-bold mb-0">50 000 000</span>
+                </div> -->
+            <p class="mt-3 mb-0 text-muted text-sm">
+              <span  class="text-danger mr-2" id="average_earnings_per_down"></span>
+              <span class="text-success mr-2" id="average_earnings_per_up"></span>
+              <span class="text-nowrap">{{ gettext("So_voi") }}  <b style="color: #f57a33; text-align: center;" id="average_earnings_day">
+              </b> {{ gettext("ngay_truoc") }}</span>
+            </p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="col">
+              <div id="average_earnings_avg_load" class="loader1_avg"></div>
+            <p class="c-graph-card__status">{{ gettext("Trung_binh") }}
+              <b style="color: #f57a33; font-size: 18px; text-align: center;" id="average_earnings_avg">
+              </b> {{ gettext("VND/ngay") }}</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 col-lg-6">
+      <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("COUPON_da_tao/da_doi") }}</h5>
+
+          </div>
+          <div class="col-auto">
+            <div class="">
+              <i id="tooltip6" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+            </div>
+          </div>
+
+        </div>
+        <div class="card-body">
+          <div class="col">
+            <div id="coupon_redeemed_load" class="loader1"></div>
+            <span id="coupon_redeemed" class="total"></span>
+
+            <span id="coupon_redeem" class="total"></span>
+
+            <p class="mt-3 mb-0 text-muted text-sm">
+              <span class="text-success mr-2"> </span>
+              <span class="text-nowrap"> </span>
+            </p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="col">
+              <div id="coupon_redeem_avg_load" class="loader1_avg"></div>
+            <p class="c-graph-card__status">{{ gettext("Trung_binh") }}
+              <b style="color: #f57a33; font-size: 18px; text-align: center;" id="coupon_redeemed_avg"> </b> /
+              <b style="color: #f57a33; font-size: 18px; text-align: center;" id="coupon_redeem_avg">
+              </b> {{ gettext("coupon/ngay") }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> #}
+
+<div id='block_acquire'>
+  <div class="row" style="margin-top: 20px;">
+          <div class="col-12 col-xl-4">
+
+      <!-- Traffic -->
+      <div class="card" style="margin-bottom: 0px;height: 95%;">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("So_lien_he_thu_thap_duoc") }}
+            </h5>
+          </div>
+          <div class="col-auto">
+            <div class="">
+              <i id="tooltip_contacts_collect" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+
+          <!-- Chart -->
+          <div class="chart chart-appended"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+            <div id="contacts_collect_load" class="loader1" style="display: block"></div>
+            <canvas id="contacts_collect" class="chart-canvas" data-toggle="legend" data-target="" style="display: block; width: 278px; height: 241px;" width="278" height="241"></canvas>
+          </div>
+
+          <!-- Legend -->
+          <div class="chart-legend">
+            <span class="chart-legend-item">
+              <i class="chart-legend-indicator" style="background-color: #2C7BE5"></i>{{ gettext("Khach_hang_co_lien_He") }}
+            </span>
+            <span class="chart-legend-item"><i class="chart-legend-indicator" style="background-color: #D2DDEC"></i>{{ gettext("Khach_hang_khong_co_lien_He") }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-xl-4">
+
+      <!-- Traffic -->
+      <div class="card" style="margin-bottom: 0px;height: 95%;">
+
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Khach_den_>1_chi_nhanh") }}
+            </h5>
+          </div>
+          <div class="col-auto">
+            <div class="">
+              <i id="tooltip_cross_shopers" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+            </div>
+          </div>
+
+        </div>
+        <div class="card-body">
+
+          <!-- Chart -->
+          <div class="chart chart-appended"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+            <div id="cross_shopers_load" class="loader1" style="display: block"></div>
+            <canvas id="cross_shopers" class="chart-canvas" data-toggle="legend" data-target="" style="display: block; width: 278px; height: 241px;" width="278" height="241"></canvas>
+          </div>
+
+          <!-- Legend -->
+          <div class="chart-legend">
+            <span class="chart-legend-item">
+              <i class="chart-legend-indicator" style="background-color: #2C7BE5"></i>{{ gettext("Khach_den_>1_chi_nhanh") }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-xl-4">
+      <div class="card card-stats" style="margin-bottom: 10px;">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Diem_dong_khach_nhat") }}</h5>
+          </div>
+          <div class="col-auto">
+          </div>
+        </div>
+      <div class="card-body">
+          <div class="col">
+            <div class="row">
+              <div class="col-12">
+                <div id="top_shop_load" class="loader1" style="width: 16px; height: 16px; display: none;"></div>
+                <span class="h2 mb-0" id="top_shop" style="font-size: 15px;"></span>
+                 </div>
+              <div class="col-12">
+                        <!-- Heading -->
+                  <div id="top_shop_count_load" class="loader1 mb-0" style="width: 16px; height: 16px; display: none;"></div>
+                <span class="h2 mb-0" id="top_shop_count" style="font-size: 15px;">9</span>
+                <i class="fe fe-users"></i>
+
+              </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="card card-stats" style="margin-bottom: 10px;">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Diem_it_khach_nhat") }}</h5>
+          </div>
+          <div class="col-auto">
+          </div>
+        </div>
+      <div class="card-body">
+          <div class="col">
+            <div class="row">
+            <div class="col-12">
+                <div id="low_shop_load" class="loader1" style="width: 16px; height: 16px"></div>
+                <span class="h2 mb-0" id="low_shop" style="font-size: 15px">
+                </span>
+                 </div>
+              <div class="col-12">
+                        <!-- Heading -->
+                  <div id="low_shop_count_load" class="loader1 mb-0" style="width: 16px; height: 16px"></div>
+                  <span class="h2 mb-0" id="low_shop_count" style="font-size: 15px"></span>
+                  <i class="fe fe-users"></i>
+
+              </div>
+          </div>
+        </div>
+      </div>
+      </div>
+{#      <div class="card card-stats">#}
+{#        <div class="card-header">#}
+{#          <div class="col">#}
+{#            <h5 class="card-title text-uppercase text-muted mb-0">CLV#}
+{#            </h5>#}
+{#          </div>#}
+{#          <div class="col-auto">#}
+{#            <div class="">#}
+{#              <i id="tooltip_clv" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right" data-original-title="" title=""></i>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{#      <div class="card-body">#}
+{#          <div class="col">#}
+{#            <div id="clv_load" class="loader1" style="display: none;"></div>#}
+{#            <span id="clv" class="total" style=""></span>#}
+{#          </div>#}
+{#        </div>#}
+{#      </div>#}
+    </div>
+  </div>
+
+{#   <div class="row" style="margin-top: 20px;">
+    <div class="col-xl-4 col-lg-6">
+      <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Ty_le_khach_hang_trung_thanh") }}</h5>
+
+          </div>
+          <div class="col-auto">
+            <div class="">
+              <i id="tooltip_crr" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right" data-original-title="" title=""></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="col">
+            <div id="crr_load" class="loader1" style="display: none;"></div>
+            <span id="crr" class="total" style="color: rgb(245, 122, 51)"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 col-lg-6">
+      <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Ty_le_khach_hang_roi_bo") }}
+            </h5>
+          </div>
+          <div class="col-auto">
+            <div class="">
+              <i id="tooltip_churnrate" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right" data-original-title="" title=""></i>
+            </div>
+          </div>
+
+        </div>
+        <div class="card-body">
+          <div class="col">
+            <div id="churnrate_load" class="loader1" style="display: none;"></div>
+            <span id="churnrate" class="total" style="color: rgb(245, 122, 51)"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-4 col-lg-6">
+      <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">CLV
+            </h5>
+          </div>
+          <div class="col-auto">
+            <div class="">
+              <i id="tooltip_clv" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right" data-original-title="" title=""></i>
+            </div>
+          </div>
+
+        </div>
+        <div class="card-body">
+          <div class="col">
+            <div id="clv_load" class="loader1" style="display: none;"></div>
+            <span id="clv" class="total" style=""></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+ #}
+{#     <div class="row" style="margin-top: 20px;">
+          <div class="col-xl-3 col-lg-6">
+
+      <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("So_lien_he_thu_thap_duoc") }}</h5>
+          </div>
+          <div class="col-auto">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="col">
+            <div id="contacts_collect_load" class="loader1" style="width: 16px; height: 16px"></div>
+            <span class="h2 mb-0" id="contacts_collect" style="color: rgb(245, 122, 51)"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-6">
+      <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Cross_shopers") }}</h5>
+          </div>
+          <div class="col-auto">
+            <div class="">
+              <i id="tooltip_cross_shopers" data-toggle="tooltip" data-placement="right" data-original-title="" title="" class="fa fa-info-circle"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="col">
+            <div id="cross_shopers_load" class="loader1" style="width: 16px; height: 16px"></div>
+            <span class="h2 mb-0" id="cross_shopers" style="color: rgb(245, 122, 51)"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-6">
+      <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Diem_dong_khach_nhat") }}</h5>
+          </div>
+          <div class="col-auto">
+          </div>
+        </div>
+      <div class="card-body">
+          <div class="col">
+            <div class="row">
+              <div class="col-8">
+                <div id="top_shop_load" class="loader1" style="width: 16px; height: 16px"></div>
+                <span class="h2 mb-0" id="top_shop" style="font-size: 15px">
+                </span>
+                <i id="tooltip_top_shop" data-toggle="tooltip" data-placement="right" data-original-title="" title="" class="fa fa-info-circle"></i>
+              </div>
+              <div class="col-4 text-center">
+                        <!-- Heading -->
+                  <div id="top_shop_count_load" class="loader1 mb-0" style="width: 16px; height: 16px"></div>
+                <span class="h2 mb-0" id="top_shop_count" style="font-size: 15px"></span>
+                <i class="fe fe-users"></i>
+
+              </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-6">
+      <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Diem_it_khach_nhat") }}</h5>
+          </div>
+          <div class="col-auto">
+          </div>
+        </div>
+      <div class="card-body">
+          <div class="col">
+            <div class="row">
+              <div class="col-8">
+                <div id="low_shop_load" class="loader1" style="width: 16px; height: 16px"></div>
+                <span class="h2 mb-0" id="low_shop" style="font-size: 15px">
+                </span>
+                <i id="tooltip_low_shop" data-toggle="tooltip" data-placement="right" data-original-title="" title="" class="fa fa-info-circle"></i>
+              </div>
+              <div class="col-4 text-center">
+                        <!-- Heading -->
+                  <div id="low_shop_count_load" class="loader1 mb-0" style="width: 16px; height: 16px"></div>
+                  <span class="h2 mb-0" id="low_shop_count" style="font-size: 15px"></span>
+                  <i class="fe fe-users"></i>
+
+              </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div> #}
+
+{#     <div class="col-12 col-lg-6 col-xl">
+
+        <!-- Value  -->
+        <div class="card">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col">
+
+                <!-- Title -->
+                <h6 class="text-uppercase text-muted mb-2">
+                  {{ gettext("So_lien_he_thu_thap_duoc") }}
+                </h6>
+
+                <!-- Heading -->
+                <div id="contacts_collect_load" class="loader1" style="width: 16px; height: 16px"></div>
+                <span class="h2 mb-0" id="contacts_collect" style="float: right; font-size: x-large; color: rgb(245, 122, 51)"></span>
+
+              </div>
+              <div class="col-auto">
+
+                <!-- Icon -->
+
+              </div>
+            </div> <!-- / .row -->
+          </div>
+        </div>
+
+      </div> #}
+          {# <div class="col-12 col-lg-6 col-xl">
+
+            <!-- Exit -->
+            <div class="card">
+              <div class="card-body">
+
+                <div class="row align-items-center">
+                  <div class="col">
+
+                    <!-- Title -->
+                    <h6 class="text-uppercase text-muted mb-2">
+                      {{ gettext("Cross_shopers") }}
+                      <i id="tooltip_cross_shopers" data-toggle="tooltip" data-placement="right" data-original-title="" title="" class="fa fa-info-circle"></i>
+                    </h6>
+                    <span class="h2 mb-0">{{ gettext("Ty_le") }}</span>
+
+                  </div>
+
+                  <div class="col-auto">
+
+                    <!-- Icon -->
+                    <div id="cross_shopers_load" class="loader1" style="width: 16px; height: 16px"></div>
+                    <span class="h2 mb-0" id="cross_shopers" style="font-size: xx-large; color: rgb(245, 122, 51)"></span>
+                    <i class="fa fa-percent fa-1x" style="color: rgb(245, 122, 51)"></i>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div> #}
+{#       <div class="col-12 col-lg-6 col-xl">
+
+        <!-- Value  -->
+        <div class="card">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col">
+
+                <!-- Title -->
+                <h6 class="text-uppercase text-muted mb-2">
+                  {{ gettext("Diem_dong_khach_nhat") }}
+                </h6>
+
+                <!-- Heading -->
+                <div id="top_shop_load" class="loader1" style="width: 16px; height: 16px"></div>
+                <span class="h2 mb-0" id="top_shop">
+                </span>
+                <i id="tooltip_top_shop" data-toggle="tooltip" data-placement="right" data-original-title="" title="" class="fa fa-info-circle"></i>
+
+              </div>
+              <div class="col-auto">
+
+                <!-- Icon -->
+                <div id="top_shop_count_load" class="loader1 mb-0" style="width: 16px; height: 16px"></div>
+                <span class="h2 mb-0" style="font-size: xx-large" id="top_shop_count"></span>
+                <i class="fe fe-users fa-2x"></i>
+
+              </div>
+            </div> <!-- / .row -->
+          </div>
+        </div>
+
+      </div>
+          <div class="col-12 col-lg-6 col-xl">
+
+            <!-- Hours -->
+            <div class="card">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col">
+
+                    <!-- Title -->
+                    <h6 class="text-uppercase text-muted mb-2">
+                      {{ gettext("Diem_it_khach_nhat") }}
+                    </h6>
+
+                    <!-- Heading -->
+                    <div id="low_shop_load" class="loader1" style="width: 16px; height: 16px"></div>
+                    <span class="h2 mb-0" id="low_shop">
+                    </span>
+                    <i id="tooltip_low_shop" data-toggle="tooltip" data-placement="right" data-original-title="" title="" class="fa fa-info-circle"></i>
+
+                  </div>
+                  <div class="col-auto">
+
+                    <!-- Icon -->
+                    <div id="low_shop_count_load" class="loader1 mb-0" style="width: 16px; height: 16px"></div>
+                    <span class="h2 mb-0" style="font-size: xx-large" id="low_shop_count"></span>
+                    <i class="fe fe-users fa-2x"></i>
+
+                  </div>
+                </div> <!-- / .row -->
+              </div>
+            </div>
+
+          </div> #}
+        {# </div> #}
+
+  <div class="row" style="margin-top: 20px;">
+
+    <div class="col-12 col-xl-12 mb-5 mb-xl-0">
+      <div class="card bg-gradient-default">
+        <div class="card-header bg-transparent">
+          <div class="row align-items-center">
+            <div class="col">
+              <h4 class="card-title text-uppercase text-muted mb-0">{{ gettext("So_luong_khach_hang") }}</h4>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Chart -->
+          <div class="chart">
+            <!-- Chart wrapper -->
+            <div id="chart_sales_load" class="loader1" style="display: block"></div>
+            <canvas id="chart_sales" class="chart-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{#    <div class="col-12 col-xl-4">#}
+{##}
+{#      <!-- Traffic -->#}
+{#      <div class="card">#}
+{#        <div class="card-header">#}
+{##}
+{#          <!-- Title -->#}
+{#          <h4 class="card-title text-uppercase text-muted mb-0">{{ gettext("Ty_le_trung_thanh/roi_bo") }}</h4>#}
+{##}
+{#        </div>#}
+{#        <div class="card-body">#}
+{##}
+{#          <!-- Chart -->#}
+{#          <div class="chart chart-appended"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>#}
+{#            <div id="churnrate_load" class="loader1" style="display: block"></div>#}
+{#            <canvas id="churnrate_crr" class="chart-canvas" data-toggle="legend" data-target="#trafficChartLegend" style="display: block; width: 278px; height: 241px;" width="278" height="241"></canvas>#}
+{#          </div>#}
+{##}
+{#          <!-- Legend -->#}
+{#          <div class="chart-legend">#}
+{#            <span class="chart-legend-item">#}
+{#              <i class="chart-legend-indicator" style="background-color: #2C7BE5"></i>{{ gettext("Roi_bo") }}#}
+{#            </span>#}
+{#            <span class="chart-legend-item"><i class="chart-legend-indicator" style="background-color: #D2DDEC"></i>{{ gettext("Trung_thành") }} #}
+{#            </span>#}
+{#          </div>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+
+  </div>
+
+    <div class="row">
+    <div class="col-xl-4 mb-5 mb-xl-0">
+      <div class="card">
+        <div class="card-header">
+            <div class="col">
+               <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Khach_quay_lai_sau_khi_nhan_thong_diep") }}</h5>
+            </div>
+            <div class="col-auto">
+                <div class="">
+                  <i id="tooltip7" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+                </div>
+              </div>
+          </div>
+        <div class="card-body justify-content-center" style="height: 380px;">
+
+              <div class="c-graph-card__content after">
+                  <div id="customer_comeback_after_load" class="loader1"></div>
+                <h1 class="c-graph-card__number total" id="customer_comeback_after" style="color: rgb(245, 122, 51)"></h1>
+              </div>
+
+        </div>
+        <div class="card-footer">
+            <div id="customer_comeback_after_avg_load" class="loader1_avg"></div>
+          <p class="c-graph-card__status">{{ gettext("Trung_binh") }} <b style="color: #f57a33; font-size: 18px; text-align: center;"
+              id="customer_comeback_after_avg"></b> {{ gettext("luot/ngay") }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 mb-5 mb-xl-0">
+      <div class="card">
+        <div class="card-header">
+            <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Luot_truy_cap_theo_thiet_bi") }}</h5>
+            </div>
+            <div class="col-auto">
+                <div class="">
+                  <i id="tooltip8" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+                </div>
+              </div>
+          </div>
+        <div class="row">
+          <div class="col">
+            <div class="c-graph-card__chart">
+              <div class="chartjs-size-monitor"
+                style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                <div class="chartjs-size-monitor-expand"
+                  style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                  <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
+                  </div>
+                </div>
+                <div class="chartjs-size-monitor-shrink"
+                  style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                  <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                </div>
+              </div>
+              <!-- <div id="customer_by_device_load" class="loader1"></div> -->
+              <canvas id="customer_by_device"
+                style="position: relative;height: 390px;width: 569px;display: block;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4">
+      <div class="card">
+        <div class="card-header">
+            <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Nguon_khach_hang") }}</h5>
+            </div>
+            <div class="col-auto">
+                <div class="">
+                  <i id="tooltip9" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+                </div>
+              </div>
+          </div>
+
+        <div id="chart_source_customer">
+          <div class="c-graph-card__chart">
+            <div class="chartjs-size-monitor"
+              style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+              <div class="chartjs-size-monitor-expand"
+                style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
+                </div>
+              </div>
+              <div class="chartjs-size-monitor-shrink"
+                style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+              </div>
+            </div>
+            <canvas id="source_customer"
+              style="position: relative; height: 390px; width: 569px; display: block;"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-6 u-mr-auto u-mb-medium">
+      <div class="card">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Khach_theo_luot_den") }} (%)</h5>
+          </div>
+        <div class="col-auto">
+            <div class="">
+              <i id="tooltip10" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-body" data-mh="graph-cards">
+
+          <div class="c-graph-card__content">
+            <div class="c-graph-card__chart" style="padding: 0px">
+              <div class="chartjs-size-monitor">
+                <div class="chartjs-size-monitor-expand">
+                  <div></div>
+                </div>
+                <div class="chartjs-size-monitor-shrink">
+                  <div></div>
+                </div>
+              </div>
+              <!-- <div id="customers_by_visit_load" class="loader1"></div> -->
+              <canvas id="customers_by_visit"></canvas>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 u-mr-auto u-mb-medium">
+      <div class="card">
+        <div class="card-header">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Khach_theo_khung_gio") }}(%)</h5>
+          </div>
+            <div class="col-auto">
+                <div class="">
+                  <i id="tooltip11" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+                </div>
+              </div>
+        </div>
+        <div class="card-body" data-mh="graph-cards">
+          <div class="c-graph-card__content">
+
+            <div class="c-graph-card__chart" style="padding: 0px">
+              <div class="chartjs-size-monitor">
+                <div class="chartjs-size-monitor-expand">
+                  <div></div>
+                </div>
+                <div class="chartjs-size-monitor-shrink">
+                  <div></div>
+                </div>
+              </div>
+              <!-- <div id="visit_by_hour_load" class="loader1"></div> -->
+              <canvas id="visit_by_hour"></canvas>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="row mt-5">
+    <div class="col-lg-6 u-mr-auto u-mb-medium">
+      <div class="card shadow">
+        <div class="card-header">
+          <h3 class="c-graph-card__title">Số lượt xem trang chào - Số lượt đăng ký</h3>
+        </div>
+        <div class="card-body" data-mh="graph-cards">
+          <div class="c-graph-card__content">
+
+            <div id="login_wifi_register" class="c-graph-card__chart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 u-mr-auto u-mb-medium">
+      <div class="card shadow">
+        <div class="card-header">
+          <h3 class="c-graph-card__title">Số tin nhắn đã gửi</h3>
+
+        </div>
+        <div class="card-body" data-mh="graph-cards">
+          <div class="c-graph-card__content">
+
+            <div id="auto_send_hihi" class="c-graph-card__chart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <div class="row">
+    <!-- <div class="col-xl-4 mb-5 mb-xl-0">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <div class="row align-items-center">
+            <div class="col">
+              <h2 class="mb-0">Số lượt xem trang chào</h2>
+            </div>
+          </div>
+        </div>
+        <div class="card-body" style="text-align: center;margin-top: 60px; height: 320px;">
+          <div class="row">
+            <div class="col">
+              <div class="c-graph-card__content">
+                  <div id="seen_wifi_load" class="loader1"></div>
+                <h1 class="c-graph-card__number total" id="seen_wifi" style="margin-top: 70px;
+                margin-left: 130px;
+            "></h1>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+            <div id="seen_wifi_avg_load" class="loader1"></div>
+          <p class="c-graph-card__status">Trung bình <b style="color: #f57a33; font-size: 18px; text-align: center;"
+              id="seen_wifi_avg"></b> lượt / ngày</p>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 mb-5 mb-xl-0">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <div class="row align-items-center">
+            <div class="col">
+              <h2 class="mb-0">Số lượt đăng ký</h2>
+            </div>
+          </div>
+        </div>
+        <div class="card-body" style="text-align: center;margin-top: 60px; height: 320px;">
+          <div class="row">
+            <div class="col">
+              <div class="c-graph-card__content">
+                  <div id="register_wifi_load" class="loader1"></div>
+                <h1 class="c-graph-card__number total" id="register_wifi" style="margin-top: 70px;
+                  margin-left: 130px;
+              "></h1>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+            <div id="register_wifi_avg_load" class="loader1"></div>
+          <p class="c-graph-card__status">Trung bình <b style="color: #f57a33; font-size: 18px; text-align: center;"
+              id="register_wifi_avg"></b> lượt / ngày</p>
+
+        </div>
+      </div>
+    </div>-->
+    <div class="col-xl-6 mb-5 mb-xl-0">
+        <div class="card">
+          <div class="card-header">
+              <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("Khach_hang_theo_ngay") }} (%)</h5>
+              </div>
+              <div class="col-auto">
+                  <div class="">
+                    <i id="tooltip12" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+                  </div>
+                </div>
+            </div>
+          <div class="row">
+            <div class="col">
+              <div class="c-graph-card__chart">
+                <div class="chartjs-size-monitor"
+                  style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                  <div class="chartjs-size-monitor-expand"
+                    style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                    <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
+                    </div>
+                  </div>
+                  <div class="chartjs-size-monitor-shrink"
+                    style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                    <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                  </div>
+                </div>
+                <!-- <div id="customer_by_device_load" class="loader1"></div> -->
+                <canvas id="customer_by_weekday"
+                  style="position: relative;height: 390px;width: 569px;display: block;"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="col-lg-6 u-mr-auto u-mb-medium"> 
+        <div class="card">
+          <div class="card-header">
+            <div class="col">
+             <h5 class="card-title text-uppercase text-muted mb-0">{{ gettext("So_tin_nhan_da_gui") }}</h5>
+           </div>
+             <div class="col-auto">
+                <div class="">
+                  <i id="tooltip13" class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="right"></i>
+                </div>
+              </div>
+          </div>
+          <div class="card-body" data-mh="graph-cards">
+            <div class="c-graph-card__content" style="height: 405px;">
+  
+              <div class="c-graph-card__chart" style="padding: 0px">
+                <div class="chartjs-size-monitor">
+                  <div class="chartjs-size-monitor-expand">
+                    <div></div>
+                  </div>
+                  <div class="chartjs-size-monitor-shrink">
+                    <div></div>
+                  </div>
+                </div>
+                <!-- <div id="sms_sent_load" class="loader1"></div> -->
+                <canvas id="sms_sent" style="display: block; height: 370px; width: 373px;"></canvas>
+  
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+</div>
+
+
+<input type="hidden" id="start_date" value="{{ date_from }}" />
+<input type="hidden" id="end_date" value="{{ date_to }}" />
+<input type="hidden" id="merchant_id" value="{{ merchant_id }}" />
+<input type="hidden" id="create_at" value="{{ merchant.when }}" />
+<input type="hidden" id="package_merchant" value="{{ package_merchant }}" />
+<input type="hidden" id="time_after_send"
+  value="{% if merchant.time_after_send %}{{ merchant.time_after_send }} {% else %}7{% endif %}" />
+{% endblock %}
+{% block js %}
+<script src="{{ url_for('static', filename='nextify/js/daterangepicker.js') }}"></script>
+<script src="{{ url_for('static', filename='nextify/js/dashboard.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,36 @@
+{%for log in log_visit%}
+
+    <div class="list-group-item">
+        <div class="row">
+            <div class="col-auto">
+
+                <!-- Avatar -->
+                <div class="avatar avatar-sm">
+                    <div class="avatar-title fs-lg bg-primary-soft rounded-circle text-primary">
+                        <i class="fe fe-mail"></i>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col ms-n2">
+
+                <!-- Heading -->
+                <h5 class="mb-1">
+                    {{ log.shop_name }}
+                </h5>
+
+                <!-- Text -->
+                <p class="small text-gray-700 mb-0">
+                    {{ log.timestamp|human_time }}
+                </p>
+
+                <!-- Time -->
+                <small class="text-muted">
+                    <strong>{{ log.time_hour }}</strong> {{ gettext("ngay") }}
+                    <strong>{{ log.time_day }}</strong>
+                </small>
+
+            </div>
+        </div> <!-- / .row -->
+    </div>
+    {%endfor%}

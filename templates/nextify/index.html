@@ -1,0 +1,233 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+              
+                <div class="u-mv-large u-text-center">
+
+                    <h2 class="u-mb-xsmall">Xin chào {{ merchant.name }} !</h2>
+                    <p class="u-text-mute u-h6">Đừng quên cập nhật tính năng và bài viết chia sẻ mới nhất của Nextify tại  <a href="https://blog.nextify.vn">Blog</a> của chúng tôi.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+{#            <div class="col-sm-12 col-lg-4">#}
+{#                <div class="card u-p-medium u-text-center u-mb-medium"#}
+{#                     data-mh="landing-cards">#}
+{##}
+{#                    <img class="u-mb-small"#}
+{#                         src="/static/nextify/img/icon-intro2.png"#}
+{#                         alt="iPhone icon">#}
+{##}
+{#                    <h4 class="u-h6 u-text-bold u-mb-small">#}
+{#                        Báo cáo & thống kê khách hàng#}
+{#                    </h4>#}
+{#                    <a class="c-btn c-btn--info" href="/customers_reports">Báo#}
+{#                        cáo#}
+{#                        khách hàng</a>#}
+{#                </div>#}
+{#            </div>#}
+            <div class="col-sm-12 col-lg-6">
+                <div class="card u-p-medium u-text-center u-mb-medium"
+                     data-mh="landing-cards">
+
+                    <img class="u-mb-small"
+                         src="/static/nextify/img/icon-intro1.png"
+                         alt="iPhone icon">
+
+                    <h4 class="u-h6 u-text-bold u-mb-small">
+                        Phân tích & thống kê hiệu quả Marketing
+                    </h4>
+                    <a class="c-btn c-btn--info"
+                       href="/marketing_reports">Báo cáo Marketing</a>
+                </div>
+            </div>
+
+
+            <div class="col-sm-12 col-lg-6">
+                <div class="card u-p-medium u-text-center u-mb-medium"
+                     data-mh="landing-cards">
+
+                    <img class="u-mb-small"
+                         src="/static/nextify/img/icon-intro3.png"
+                         alt="iPhone icon">
+
+                    <h4 class="u-h6 u-text-bold u-mb-small">
+                        Báo cáo đặt bàn & doanh thu
+                    </h4>
+                    <a class="c-btn c-btn--info" href="/sales_report">Xem báo
+                        cáo</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-lg-12 col-xl-12" style="text-align:right;float:right;padding-bottom: 20px;">
+               <h4 class="u-h6 u-text-bold u-mb-small" style="    display: inline-block;">{% autoescape false %}{{ date_from | replace("-", "/")}} - {{ date_to | replace("-", "/")}}{% endautoescape %}</h4> <a href="/" style="padding:10px">Tất cả</a><a href="/this_month_reports"  style="padding:10px">Tháng này</a><a href="/last_month_reports"  style="padding:10px">Tháng trước</a><a href="/this_week_reports"  style="padding:10px">Tuần này</a><a href="/last_week_reports"  style="padding:10px">Tuần trước</a>
+            </div>
+
+        </div>
+        <div class="row" id="detail_info">
+            <div class="col-sm-12 col-lg-6 col-xl-3">
+                    <div class="c-state-card" data-mh="state-cards" style="height: 143px;">
+                        <div class="c-state-card__icon c-state-card__icon--info">
+                            <i class="fa fa-line-chart"></i>
+                        </div>
+                        <div class="c-state-card__content">
+                               <p class="c-state-card__meta">Khách đã đến </p>
+                            <h5 class="c-state-card__number">
+                                    {{ total_customers }}
+                            </h5>
+                            <p class="c-state-card__meta"></p>
+                            {% if tag == "up" %}
+                             <span class="u-color-success u-ml-xsmall">{{ total_cus_compare }}% <i class="fa fa-angle-up"></i></span>
+                             {% elif tag == "down" %}
+                             <span class="u-color-warning u-ml-xsmall">{{ total_cus_compare }}% <i class="fa fa-angle-down"></i></span>
+                            {% endif %}
+                        </div>
+
+                    </div>
+            </div>
+            <div class="col-sm-12 col-lg-6 col-xl-3">
+                    <div class="c-state-card" data-mh="state-cards" style="height: 143px;">
+                        <div class="c-state-card__icon c-state-card__icon--fancy">
+                                <i class="fa fa-pie-chart"></i>
+                        </div>
+                        <div class="c-state-card__content">
+                            <p class="c-state-card__meta">Khách đến lần đầu </p>
+                            <h5 class="c-state-card__number">
+                                    {{ new_customers }}
+                            </h5>
+                            <p class="c-state-card__meta"></p>
+                            {% if tag == "up" %}
+                             <span class="u-color-success u-ml-xsmall">{{ new_cus_compare }}% <i class="fa fa-angle-up"></i></span>
+                             {% elif tag == "down" %}
+                             <span class="u-color-warning u-ml-xsmall">{{ new_cus_compare }}% <i class="fa fa-angle-down"></i></span>
+                            {% endif %}
+                        </div>
+                    </div>
+            </div>
+            <div class="col-sm-12 col-lg-6 col-xl-3">
+                    <div class="c-state-card" data-mh="state-cards" style="height: 143px;">
+                        <div class="c-state-card__icon c-state-card__icon--warning">
+                                <i class="fa fa-user"></i>
+                        </div>
+                        <div class="c-state-card__content">
+                            <p class="c-state-card__meta">Khách trong 30 ngày qua(tính đến ngày {{date_to}})</p>
+                            <h5 class="c-state-card__number">
+                                    {{ customers_in_30d }}
+                            </h5>
+                        </div>
+                    </div>
+            </div>
+            <div class="col-sm-12 col-lg-6 col-xl-3">
+                    <div class="c-state-card" data-mh="state-cards" style="height: 143px;">
+                        <div class="c-state-card__icon c-state-card__icon--success">
+                                <i class="fa fa-bar-chart"></i>
+                        </div>
+                        <div class="c-state-card__content">
+                            <p class="c-state-card__meta">Khách thân thiết( > 3 lượt đến)</p>
+                            <h5 class="c-state-card__number">
+                                    {{ loyal_customers }}
+                            </h5>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <div class="row u-mt-small">
+
+            <div class="col-lg-6">
+                <h3 class="u-mb-small">Địa điểm</h3>
+
+                <div class="card c-overview-card u-p-medium u-mb-medium">
+                    <div class="c-graph-card__chart u-flex
+                      u-justify-center">
+                         {% pie_chart locations with id='chart-locations' %}
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h3 class="u-mb-small">Thiết bị</h3>
+
+                <div class="card c-overview-card u-p-medium u-mb-medium">
+                    <div class="c-graph-card__chart u-flex
+                      u-justify-center">
+                      {% pie_chart os_stats with id='chart-devices'%}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row u-mt-small">
+
+
+            <div class="col-lg-6">
+                <h3 class="u-mb-small">Khách hàng tiêu biểu</h3>
+
+{#                <div class="c-field u-width-25 u-mb-small u-float-right">#}
+{##}
+{#                    <!-- Select2 jquery plugin is used -->#}
+{#                    <select class="c-select"#}
+{#                            name="recently-opened"#}
+{#                            id="select-recently">#}
+{#                        <option value="value1">All Types</option>#}
+{#                        <option value="value2">This day</option>#}
+{#                        <option value="value3">Last Week</option>#}
+{#                    </select>#}
+{#                </div>#}
+                <div class="c-table-responsive@desktop">
+    <table class="c-table c-table--zebra u-mb-small"
+           id="datatable2">
+        <thead class="c-table__head">
+        <tr class="c-table__row">
+            <th class="c-table__cell c-table__cell--head">Khách
+            </th>
+          <th class="c-table__cell c-table__cell--head">Lượt
+                đến
+            </th>
+            <th class="c-table__cell c-table__cell--head">Lần
+                cuối
+            </th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+        {% for cus in customers %}
+
+
+            <tr class="c-table__row">
+                                <td class="c-table__cell"> {% if cus.name and cus.name|length >0 %}
+                            {{ cus.name }} {% else %}{{ cus.phone }}{% endif %} </td>
+
+                                <td class="c-table__cell">{{ cus.visit_count }} </td>
+                                <td class="c-table__cell">{{ cus.timestamp_str }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+            </div>
+            <div class="col-lg-6">
+
+
+                <h3 class="u-mb-small">Giới tính</h3>
+                <div class="card c-overview-card u-p-medium u-mb-medium">
+                    <div class="c-graph-card__chart u-flex
+                      u-justify-center">
+                         {% pie_chart gender_stats with id='chart-genders'%}
+
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+

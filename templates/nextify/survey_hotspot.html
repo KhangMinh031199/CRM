@@ -1,0 +1,437 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            {{ gettext("Trang_chao") }}
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                         <a href="/wifi/{{ shop_id_select }}">{{ shop_select.name }}</a>
+                        </h1>
+
+                    </div>
+                    <div class="col-auto">
+                        <a href="/splash_page/apply_merchant/{{ merchant_id }}" class="btn btn-fancy">
+                            {{ gettext("Ap_dung_chuoi") }}
+                        </a>
+                        <a  class="btn btn-primary" href="/wifi/{{ shop_id_select }}/new_hotspot/survey">
+                            {{ gettext("Tao_moi") }}
+                        </a>
+                        <!-- Button -->
+                        {#                <a href="#!" class="btn btn-primary">#}
+                        {#                  Create Report#}
+                        {#                </a>#}
+
+                    </div>
+                </div> <!-- / .row -->
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-12 col-xl-3">
+
+                <!-- Card -->
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Title -->
+                                <h5 class="mb-0">
+                                    <a href="#" id="list_hotspot">{{ gettext("Danh_sach_trang_chao") }}</a>
+                                </h5>
+
+                            </div>
+
+                        </div> <!-- / .row -->
+                         <hr>
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Title -->
+                                <h5 class="mb-0">
+                                     <a href="/wifi/{{ shop_id_select }}/survey" id="">{{ gettext("Khao_sat") }}</a>
+                                </h5>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Divider -->
+                        <hr>
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Title -->
+                                <h5 class="mb-0">
+                                    <a href="#" id="config_hotspot">{{ gettext("Cau_hinh") }}</a>
+                                </h5>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-12 col-xl-9">
+
+                <div class="tab-content">
+
+                    <div id="tab_survey">
+
+                         <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-header-title">
+                                    {{ gettext("Danh_sach_khao_sat") }}
+                                </h4>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm card-table">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            {{ gettext("Loai") }}
+                                        </th>
+
+                                        <th>
+                                            {{ gettext("Trang_thai") }}
+                                        </th>
+                                        <th>{{ gettext("Cap_nhat") }}</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for page in list_survey_splash %}
+                                    <tr>
+                                            <td>
+                                                <h4 class="card-title mb-1">
+
+                                                    {% if page.survey_type == 'multi_select' %}
+                                                        {{ gettext("Chon_nhieu_dap_an") }}
+                                                    {% elif page.survey_type == 'one_select' %}
+                                                        {{ gettext("Chi_mot_dap_an") }}
+                                                    {% elif page.survey_type == 'rating' %}
+                                                        {{ gettext("Cham_diem") }}
+                                                    {% elif page.survey_type == 'comment' %}
+                                                        {{ gettext("Binh_luan") }}
+                                                    {% endif %}
+
+                                                </h4>
+                                            </td>
+                                    <td>
+
+                                         {% if page.active %}
+                                                   <a href="/wifi/{{ shop_id_select }}/survey/{{ page._id }}/active"><span class="c-badge c-badge--success">{{ gettext("Dang_chay") }}</span></a>
+                                                {% else %}
+                                             <a href="/wifi/{{ shop_id_select }}/survey/{{ page._id }}/active"> <span class="c-badge c-badge--secondary">{{ gettext("Tam_dung") }}</span></a>
+                                                {% endif %}
+                                    </td>
+                                    <td>
+
+                                        {{ page.when|human_time }}
+                                    </td>
+                                    <td>
+                                        <a href="/wifi/{{ shop_id_select }}/survey/{{ page._id }}/view"
+                                                   class="btn btn-sm btn-primary d-none d-md-inline-block">{{ gettext("Chi_tiet") }}</a>
+                                    </td>
+
+                                    <td>
+                                     <a href="/wifi/{{ shop_id_select }}/survey/{{ page._id }}/remove" class="btn btn-sm btn-primary d-none d-md-inline-block">{{ gettext("Xoa") }}</a>
+                                    </td>
+
+                                    </tr>
+
+                                    {% endfor %}
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                         </div>
+
+                    </div>
+
+                    <div id="tablisthotspot">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-header-title">
+                                    {{ gettext("Danh_sach_trang_chao") }}
+                                </h4>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm card-table">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            {{ gettext("Loai") }}
+                                        </th>
+                                        <th>
+                                            {{ gettext("Luot_den") }}
+                                        </th>
+                                        <th>
+                                            {{ gettext("Ngay_bat_dau") }}
+                                        </th>
+                                        <th>
+                                            {{ gettext("Ngay_ket_thuc") }}
+                                        </th>
+                                        <th>
+                                            {{ gettext("Trang_thai") }}
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for page in pages %}
+                                        <tr>
+                                            <td>
+                                                <h4 class="card-title mb-1">
+
+                                                    {% if page.type_page == 'default' %}
+                                                        {{ gettext("Mac_dinh") }}
+                                                    {% elif page.type_page == 'loyal' %}
+                                                        {{ gettext("Theo_luot_den") }}
+                                                    {% elif page.type_page == 'birthday' %}
+                                                        {{ gettext("Chuc_mung_sinh_nhat") }}
+                                                    {% elif page.type_page == 'promotion' %}
+                                                        {{ gettext("Khuyen_mai/Su_kien") }}
+                                                    {% endif %}
+
+                                                </h4>
+                                            </td>
+                                            <td>
+                                                {% if page.type_page == 'loyal' %}{{ page.loyal_count }} -
+                                                    {{ page.loyal_count_max }} {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if page.type_page == 'promotion' %}{{ page.date_from }}{% endif %}
+                                            </td>
+                                            <td>
+                                                {% if page.type_page == 'promotion' %}{{ page.date_to }}{% endif %}
+                                            </td>
+                                            <td>
+
+                                                {% if page.active %}
+                                                    <span class="c-badge
+                                        c-badge--success">{{ gettext("Dang_chay") }}</span>
+                                                {% else %}
+                                                    <span class="c-badge
+                                        c-badge--secondary">{{ gettext("Tam_dung") }}</span>
+                                                {% endif %}
+
+                                            </td>
+                                            <td>
+                                                <a href="/splash_page/{{ shop_select._id }}/item/{{ page._id }}"
+                                                   class="btn btn-sm btn-primary d-none d-md-inline-block">{{ gettext("Cai_dat") }}</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div  id="tabconfighotspot">
+                        <div class="card">
+                            <div class="card-body">
+                                <form method="POST"
+                                      action="/wifi_settings/{{ shop_id_select }}"
+                                      enctype="multipart/form-data" id="home">
+                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                    <div class="row u-mb-medium">
+
+                                        <div class="col-lg-12">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+
+                                                    <div class="form-group">
+                                                        <label class="c-field__label"
+                                                               for="auto_popup">{{ gettext("Chuyen_huong_sau_dang_nhap:") }}</label>
+                                                        <input type="text"
+                                                               class="c-input"
+                                                               id="auto_popup"
+                                                               name="auto_popup"
+                                                               value="{% if shop_select.auto_popup|string != 'None' %}{{ shop_select.auto_popup }}{% endif %}"
+                                                               placeholder="//www.facebook.com/nextify">
+                                                    </div>
+                                                    <div class="c-choice c-choice--checkbox">
+                                                        <p class="u-text-mute
+                                                    u-mb-small">Nút kết nối WIFI:</p>
+                                                        <textarea class="c-input"
+                                                                  id="connect_button"
+                                                                  name="connect_button"
+                                                                  rows="2">
+                                                          {% if shop_select.connect_button and shop_select.connect_button|length > 1 %}
+                                                              {{ shop_select.connect_button }}
+                                                          {% else %}
+                                                              Kết nối
+                                                          {% endif %}
+                                                    </textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="c-field__label"
+                                                               style="display:inline-block; padding-right: 20px;">
+                                                            {{ gettext("Bo_qua_dang_ky") }}
+                                                        </label>
+
+                                                        <div class="c-switch {% if
+                                                   shop_select.ignore_register and shop_select.ignore_register|lower == "true" %} is-active{% endif %}">
+                                                            <input class="c-switch__input"
+                                                                   id="switch_ignore_register"
+                                                                   type="checkbox"
+                                                                   name="ignore_register"
+                                                                   {% if shop_select.ignore_register and shop_select.ignore_register|lower == "true" %}checked{% endif %}>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="c-field__label"
+                                                               style="display:inline-block; padding-right: 20px;">
+                                                            {{ gettext("Yeu_cau_nhap_ma_truy_cap_WIFI") }}
+                                                        </label>
+                                                        <div class="c-switch {% if
+                                                   shop_select.wifi_access_code and shop_select.wifi_access_code|lower == "true" %} is-active{% endif %}">
+                                                            <input class="c-switch__input"
+                                                                   id="switch_wifi_access_code"
+                                                                   type="checkbox"
+                                                                   name="wifi_access_code"
+                                                                   {% if shop_select.wifi_access_code and shop_select.wifi_access_code|lower == "true" %}checked{% endif %}>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                                <div class="col-lg-6">
+
+                                                    <div class="form-group">
+                                                        <label class="c-field__label"
+                                                               for="page_id">Pixel
+                                                            ID:</label>
+                                                        <input type="text"
+                                                               class="c-input"
+                                                               id="facebook_pixel_id"
+                                                               name="facebook_pixel_id"
+                                                               value="{% if shop_select.facebook_pixel_id|string != 'None' %}{{ shop_select.facebook_pixel_id }}{% endif %}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="c-field__label"
+                                                               for="pixel_code">Pixel
+                                                            Code:</label>
+                                                        <textarea class="c-input"
+                                                                  id="pixel_code"
+                                                                  name="facebook_pixel_code"
+                                                                  rows="6">{% if shop_select.facebook_pixel_code|string != 'None' %}{{ shop_select.facebook_pixel_code }}{% endif %}</textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label
+                                                                class="c-field__label"
+                                                                for="pixel_code">Google
+                                                            Remarketing
+                                                            Code:</label>
+                                                        <textarea class="c-input"
+                                                                  id="google_pixel_code"
+                                                                  name="google_pixel_code"
+                                                                  rows="6">{% if shop_select.google_pixel_code|string != 'None' %}{{ shop_select.google_pixel_code }}{% endif %}</textarea>
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+                                            <div class="c-field"
+                                                 style="padding:20px">
+                                                <button class="c-btn c-btn--info u-float-right"
+                                                        type="submit">{{ gettext("Cap_nhat") }}
+                                                </button>
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+                                </form>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+{% endblock %}
+{% block js %}
+    <script src="{{ url_for('static', filename='v2/assets/js/biomp.js') }}"></script>
+    <script  nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+
+            $('#tablisthotspot').hide();
+            $('#tabconfighotspot').hide();
+             $('#tab_survey').show();
+            $('#list_hotspot').click(function () {
+
+                $('#tablisthotspot').show();
+                $('#tabconfighotspot').hide();
+                $('#tab_survey').hide();
+
+            });
+                      $('#config_hotspot').click(function () {
+
+                $('#tablisthotspot').hide();
+                $('#tabconfighotspot').show();
+                   $('#tab_survey').hide();
+
+            });
+
+
+            var shop_id_select = $("#shop_id_select").val();
+
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+
+
+        });
+
+    </script>
+
+{% endblock %}

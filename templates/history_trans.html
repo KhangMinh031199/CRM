@@ -1,0 +1,202 @@
+{% extends 'v2/base.html' %}
+{% block right_content %}
+  <div class="row">
+    <div class="panel panel-white">
+      <div class="panel-heading clearfix">
+        <div class="row">
+          <div class="col-md-10 col-sm-3 col-xs-12">
+            <h3 class="title">{{ total_history }} {{ gettext("luot") }}</h3>
+          </div>
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <button type="button" class="btn btn-demo pull-right"
+                    data-toggle="modal" data-target="#customers_fb_filter"
+                    style="margin-right: 5px">
+              {{ gettext("Bo_loc") }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+        <div class="panel-body">
+          <div class="table-responsive">
+
+            <table class="table">
+              <thead>
+              <th>{{ gettext("Ten") }}</th>
+              <th>{{ gettext("So_dien_thoai") }}</th>
+              <th>{{ gettext("So_tien") }}</th>
+              <th>{{ gettext("Dia_diem") }}</th>
+              <th>{{ gettext("Thoi_gian") }}</th>
+              </thead>
+              <tbody>
+              {% for his in history %}
+                <tr>
+                  <td>{{ his.user.name }}</td>
+                  <td><a
+                    href="/user/{{ his.user.phone }}">{{ his.user.phone }}</a>
+                  </td>
+                  <td>{{ his.credit|format_price }}</td>
+                  <td>{% if his.shop and his.shop|length>0 %}
+                    {{ his.shop.name }}{% endif %}</td>
+                  <td>{% if his.sale %}{% if his.sale.UpdateDate %}{{ his
+                  .sale.UpdateDate|human_time_string }}{% else %}{{ his
+                  .when|human_time_string }}{% endif %}{% else %}{{ his
+                  .when|human_time_string }}{% endif %}</td>
+                </tr>
+              {% endfor %}
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% if pagination %}
+          <center>
+            {{ pagination.links }}
+          </center>
+        {% endif %}
+
+      </div>
+
+    </div>
+  <input type="hidden" id="ex_from_date" value="{{ from_date }}">
+<input type="hidden" id="ex_to_date" value="{{ to_date }}">
+
+  <div class="modal right fade" id="customers_fb_filter" tabindex="-1"
+       role="dialog" aria-labelledby="myModalLabel2">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"
+                  aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel2">{{ gettext("Bo_loc") }}</h4>
+        </div>
+        <form class="form" method="GET" action="/{{ url_parent }}"
+              enctype="multipart/form-data" id="form_cus">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+          <div class="modal-body">
+
+            <div class="form-group">
+              <label>{{ gettext("Thoi_gian_den") }}</label>
+              <div class="row" style="margin: 0px">
+                <div class="col-md-6">
+                  <input id="from_date" name="from_date" type="text"
+                         placeholder='{{ gettext("Tu_ngay..") }}'
+                         class="form-control form-input">
+                </div>
+                <div class="col-md-6">
+                  <input id="to_date" name="to_date" type="text"
+                         placeholder='{{ gettext("Den_ngay..") }}'
+                         class="form-control form-input">
+                </div>
+              </div>
+
+
+            </div>
+
+
+            <div class="form-group">
+              <div class="row" style="margin:0px">
+
+                <div class="row" style="margin:0px">
+                  <div class="col-md-12">
+                    <label>{{ gettext("Tien") }}</label>
+                    <div class="col-md-6">
+                      <input type="text" name="min_cash" placeholder='{{ gettext("Lon_hon") }}'
+                             class="form-control form-input" value="
+
+                        {% if min_cash and min_cash!='None' %}{{ min_cash }}{% endif %}">
+                    </div>
+                    <div class="col-md-6">
+                      <input type="text" name="max_cash" placeholder='{{ gettext("Nho_hon") }}' class="form-control form-input" value="
+
+                        {% if max_cash and max_cash!='None' %}{{ max_cash }}{% endif %}">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>{{ gettext("So_dien_thoai") }}</label>
+              <input class="form-control" type="text" name="phone"
+                     value="{% if phone %}{{ phone }}{% endif %}"/>
+            </div>
+            <div class="form-group">
+              <label for="shops">{{ gettext("Dia_diem") }}</label>
+              {% if shop_order %}
+                <input type="hidden" value="{{ shop_order }}"
+                       id="ex_shop_order">
+              {% endif %}
+              <select name="shop_book" class="form-control" id="select_shop">
+                <option value="None">{{ gettext("Tat_ca") }}</option>
+                {% for shop in shop_select %}
+                  <option value="{{ shop._id }}">{{ shop.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+
+          </div>
+          <div class="modal-footer">
+            <div class="row">
+              <div class="col-md-6">
+                <button id="view_data"
+                        class="btn btn-info btn-fill form-control">{{ gettext("Xem") }}
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- modal-content -->
+    </div>
+    <!-- modal-dialog -->
+  </div>
+
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#wallets').click();
+ if ($("#ex_from_date").length > 0 && $("#ex_from_date").val().length > 0 && $("#ex_from_date").val() != 'None') {
+        flatpickr("#from_date", {
+            enableTime: false,
+            defaultDate: $("#ex_from_date").val(),
+            dateFormat: "d-m-Y"
+        });
+    } else {
+        flatpickr("#from_date", {
+            enableTime: false,
+            dateFormat: "d-m-Y"
+        });
+    }
+    if ($("#ex_to_date").length > 0 && $("#ex_to_date").val().length > 0 && $("#ex_to_date").val() != 'None') {
+        flatpickr("#to_date", {
+            enableTime: false,
+            defaultDate: $("#ex_to_date").val(),
+            dateFormat: "d-m-Y"
+        });
+    } else {
+        flatpickr("#to_date", {
+            enableTime: false,
+            dateFormat: "d-m-Y"
+        });
+    }
+    if ($("#ex_shop_order").length > 0) {
+        $("#select_shop").val($("#ex_shop_order").val());
+      }
+
+ $('textarea').each(function () {
+          $(this).val($(this).val().trim());
+        }
+      );
+      $('input').each(function () {
+          $(this).val($(this).val().trim());
+        }
+      );
+
+    });
+  </script>
+{% endblock %}

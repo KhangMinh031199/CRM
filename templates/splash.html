@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7 ]>
+<html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>
+<html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>
+<html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en"> <!--<![endif]-->
+
+    <head>
+
+        <meta charset="utf-8">
+        <title>{{ shop.name }} Wi-Fi from WifiMan</title>
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/layout.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/splash.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/animate.css') }}">
+
+        <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="javascript"></script>
+        <![endif]-->
+
+        <link rel="shortcut icon" href="/static/favicon.ico">
+        <link rel="apple-touch-icon" href="/static/wifiman.png">
+
+    </head>
+    <body>
+        {% if shop.background %}
+        <div id="background-image" style="background: url('//files.nextify.vn/{{ shop.background }}') no-repeat bottom center; background-size: cover; -webkit-background-size: cover;-moz-background-size: cover; -o-background-size: cover;"></div>
+        <div id="background-overlay"></div>
+        {% endif %}
+
+        <div class="splash-main-block">
+            <div class="splash-logo">
+                <img src="{% if shop.logo %}//files.nextify.vn/{{ shop.logo }}{% else %}/static/wifiman.png{% endif %}" alt="{{ shop.name }}"/>
+            </div>
+
+            <div class="splash-headline">
+                <h2>Free Wi-Fi</h2>
+                {% if user %}
+                    Chào {{ user.name }},<br>
+                    {% if not visit_count or visit_count == 1 %}
+                        đây là lần đầu bạn đến đây 👍🏻
+                    {% else %}
+                        đây là lần thứ {{ visit_count }} bạn đến đây 👻
+                    {% endif %}
+                {% else %}
+                    Bạn cần đăng ký trước khi sử dụng wifi <br>
+                    🍹
+                {% endif %}
+            </div>
+
+            <div class="splash-terms">
+                {% if user %}
+                <a href="{{ session.auth_target }}"
+                   class="button splash-button animated tada">Kết nối Wi-Fi</a>
+                {% else %}
+                <a href="/register"
+                   class="button splash-button animated tada">Đăng ký thông tin</a>
+                {% endif %}
+
+                <label for="acceptTermsConditions">
+                    <span>Bằng việc {% if user %}kết nối{% else %}đăng ký{% endif %}, bạn đã đồng ý với
+                        <a href="#" target="_blank">điều khoản sử dụng</a> và
+                        <a href="#" target="_blank">chính sách bảo mật</a> của chúng tôi.
+                    </span>
+                </label>
+
+                <div class="splash-help">
+                    Cần trợ giúp? Hãy gọi <a href="tel:094-551-6379">094-551-6379</a>
+                </div>
+            </div>
+
+        </div>
+    </body>
+</html>

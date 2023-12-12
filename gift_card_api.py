@@ -1,0 +1,920 @@
+from pymongo import MongoClient
+from collections import OrderedDict
+from bson.objectid import ObjectId
+from hashids import Hashids
+from datetime import datetime
+import time
+import json
+import api
+from mongo_connect import *
+import settings
+
+
+hash_ids = Hashids(min_length=4)
+MONGODB = mongodb_create()
+DATABASE = MONGODB[settings.MONGODB_NAME]
+
+
+def update_coupon_series_pos(merchant_id, pos_id, coupons):
+    for coupon in coupons:
+        if coupon['UpdateDate'] == 'None':
+            coupon['UpdateDate'] = time.time()
+        ex_coupon = get_coupon_series_item(
+            merchant_id, coupon.get('CouponSeriesId')
+        )
+        if not ex_coupon:
+            coupon['merchant_id'] = merchant_id
+            coupon['pos_id'] = pos_id
+            DATABASE.coupon_series.insert(coupon)
+        else:
+            DATABASE.coupon_series.update(
+                {
+                    'merchant_id': merchant_id,
+                    'CouponSeriesId': coupon.get('CouponSeriesId')
+                }, {'$set': coupon}
+            )
+
+
+def get_coupon_series(
+        merchant_id, page, page_size=settings.ITEMS_PER_PAGE, active=None
+):
+    results = []
+    info = {'merchant_id': merchant_id}
+    if active:
+        info['Active'] = active
+
+    recs = DATABASE.coupon_series.find(info).skip(page_size * (page - 1)
+                                                  ).limit(page_size)
+    for rec in recs:
+        rec['_id'] = str(rec['_id'])
+        rec['shop_id'] = str(rec.get('shop_id'))
+        results.append(rec)
+    return results
+
+
+def total_coupon_series(merchant_id, active=None):
+    info = {'merchant_id': merchant_id}
+    if active:
+        info['Active'] = active
+    return DATABASE.coupon_series.find(info).count()
+
+
+def get_coupon_series_item(merchant_id, coupon_series_id):
+    return DATABASE.coupon_series.find_one(
+        {
+            'merchant_id': merchant_id,
+            'CouponSeriesId': coupon_series_id
+        }
+    )
+
+
+def update_coupon_cards_pos(merchant_id, pos_id, coupons):
+    for coupon in coupons:
+        if coupon['UpdateDate'] == 'None':
+            coupon['UpdateDate'] = time.time()
+        ex_coupon = get_coupon_card_item(
+            merchant_id,
+            coupon.get('CouponSeriesId'), coupon.get('CouponCardId')
+        )
+        if not ex_coupon:
+            coupon['merchant_id'] = merchant_id
+            coupon['pos_id'] = pos_id
+            DATABASE.coupon_cards.insert(coupon)
+        else:
+            DATABASE.coupon_cards.update(
+                {
+                    'merchant_id': merchant_id,
+                    'CouponSeriesId': coupon.get('CouponSeriesId'),
+                    'CouponCardId': coupon.get('CouponCardId')
+                }, {'$set': coupon}
+            )
+
+
+def get_coupon_card_item(merchant_id, coupon_series_id, coupon_card_id):
+    return DATABASE.coupon_cards.find_one(
+        {
+            'merchant_id': merchant_id,
+            'CouponSeriesId': coupon_series_id,
+            'CouponCardId': coupon_card_id
+        }
+    )
+
+
+def get_coupon_cards(
+        merchant_id, coupon_series_id, page, page_size=settings.ITEMS_PER_PAGE
+):
+    results = []
+    recs = DATABASE.coupon_cards.find(
+        {
+            'merchant_id': merchant_id,
+            'CouponSeriesId': coupon_series_id
+        }
+    ).skip(page_size * (page - 1)).limit(page_size)
+    for rec in recs:
+        rec['_id'] = str(rec['_id'])
+        rec['shop_id'] = str(rec.get('shop_id'))
+        results.append(rec)
+    return results
+
+
+def total_coupon_cards(merchant_id, coupon_series_id):
+    return DATABASE.coupon_cards.find(
+        {
+            'merchant_id': merchant_id,
+            'CouponSeriesId': coupon_series_id
+        }
+    ).count()
+
+
+def get_gift_card_item(merchant_id, gift_card_id):
+    return DATABASE.gift_card.find_one(
+        {
+            'merchant_id': merchant_id,
+            'GiftCardId': gift_card_id
+        }
+    )
+
+
+def get_gift_cards(merchant_id, page, page_size=settings.ITEMS_PER_PAGE):
+    results = []
+    recs = DATABASE.gift_card.find({
+        'merchant_id': merchant_id
+    }).skip(page_size * (page - 1)).limit(page_size)
+    for rec in recs:
+        rec['_id'] = str(rec['_id'])
+        rec['shop_id'] = str(rec.get('shop_id'))
+        results.append(rec)
+    return results
+
+
+def total_gift_card(merchant_id):
+    return DATABASE.gift_card.find({'merchant_id': merchant_id}).count()
+
+
+def update_gift_card(merchant_id, pos_id, coupons):
+    for coupon in coupons:
+        if coupon['UpdateDate'] == 'None':
+            coupon['UpdateDate'] = time.time()
+        ex_coupon = get_gift_card_item(merchant_id, coupon.get('GiftCardId'))
+        if not ex_coupon:
+            coupon['merchant_id'] = merchant_id
+            coupon['pos_id'] = coupon.get('BranchId')
+            DATABASE.gift_card.insert(coupon)
+        else:
+            DATABASE.gift_card.update(
+                {
+                    'merchant_id': merchant_id,
+                    'GiftCardId': coupon.get('GiftCardId')
+                }, {'$set': coupon}
+            )
+
+
+def create_coupon_manual_type(
+        merchant_id=None,
+        shop_id=None,
+        name=None,
+        code=None,
+        money_exchange=None,
+        content=None,
+        cp_id=None,
+        discount_percent=None,
+        quantity=None
+):
+    if cp_id:
+        if not isinstance(cp_id, ObjectId):
+            cp_id = ObjectId(cp_id)
+        info = {}
+        if name:
+            info['name'] = name
+        if code:
+            info['code'] = code
+        if discount_percent:
+            info['discount_percent'] = discount_percent
+        if money_exchange:
+            info['money_exchange'] = money_exchange
+        if content:
+            info['content'] = content
+        if quantity and quantity.isdigit():
+            info['quantity'] = quantity
+        if info:
+            info['when'] = time.time()
+        if merchant_id:
+            if not isinstance(merchant_id, ObjectId):
+                merchant_id = ObjectId(merchant_id)
+            DATABASE.coupon_manual_type.update(
+                {
+                    '_id': cp_id,
+                    'merchant_id': merchant_id
+                }, {'$set': info}
+            )
+        else:
+            if not isinstance(shop_id, ObjectId):
+                shop_id = ObjectId(shop_id)
+            DATABASE.coupon_manual_type.update(
+                {
+                    '_id': cp_id,
+                    'shop_id': shop_id
+                }, {'$set': info}
+            )
+    else:
+        if merchant_id:
+            if not isinstance(merchant_id, ObjectId):
+                merchant_id = ObjectId(merchant_id)
+        if shop_id:
+            if not isinstance(shop_id, ObjectId):
+                shop_id = ObjectId(shop_id)
+
+        DATABASE.coupon_manual_type.insert(
+            {
+                'name': name,
+                'code': code,
+                'money_exchange': money_exchange,
+                'when': time.time(),
+                'merchant_id': merchant_id,
+                'shop_id': shop_id,
+                'content': content,
+                'discount_percent': discount_percent,
+                'quantity': quantity
+            }
+        )
+
+
+def remove_coupon_manual_type(cp_id, merchant_id=None, shop_id=None):
+    if not isinstance(cp_id, ObjectId):
+        cp_id = ObjectId(cp_id)
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        DATABASE.coupon_manual_type.remove(
+            {
+                '_id': cp_id,
+                'merchant_id': merchant_id
+            }
+        )
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        DATABASE.coupon_manual_type.remove(
+            {
+                '_id': cp_id,
+                'shop_id': shop_id
+            }
+        )
+
+
+def get_coupon_manual_type(
+        merchant_id=None,
+        shop_id=None,
+        all=None,
+        page=None,
+        page_size=settings.ITEMS_PER_PAGE
+):
+    coupons = []
+    recs = []
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        if all:
+            recs = DATABASE.coupon_manual_type.find(
+                {
+                    'merchant_id': merchant_id
+                }
+            )
+        else:
+            recs = DATABASE.coupon_manual_type.find(
+                {
+                    'merchant_id': merchant_id
+                }
+            ).sort('when', -1).skip(page_size * (page - 1)).limit(page_size)
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        if all:
+            recs = DATABASE.coupon_manual_type.find({'shop_id': shop_id})
+        else:
+            recs = DATABASE.coupon_manual_type.find({
+                'shop_id': shop_id
+            }).sort('when', -1).skip(page_size * (page - 1)).limit(page_size)
+    for rec in recs:
+        # count total codes
+        rec['total_codes'] = DATABASE.coupon_manual.find({
+            'merchant_id': merchant_id,
+            'coupon_type': str(rec['_id'])
+        }).count()
+        rec['total_codes_not_redeem'] = total_coupon_manual_alive(
+            merchant_id=merchant_id,
+            coupon_type=str(rec['_id']))
+        rec['total_codes_redeem'] = total_coupon_manual_redeemed(
+            merchant_id=merchant_id,
+            coupon_type=str(rec['_id']))
+        rec['total_codes_expire'] = total_coupon_manual_expire(
+            merchant_id=merchant_id,
+            coupon_type=str(rec['_id']))
+        coupons.append(rec)
+    return coupons
+
+
+def total_coupon_manual_type(merchant_id=None, shop_id=None):
+    info = {}
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        info['merchant_id'] = merchant_id
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        info['shop_id'] = shop_id
+
+    return DATABASE.coupon_manual_type.find(info).count()
+
+
+def get_coupon_manual_type_by_id(
+        merchant_id=None, shop_id=None, coupon_type_id=None
+):
+    if not isinstance(coupon_type_id, ObjectId):
+        coupon_type_id = ObjectId(coupon_type_id)
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        return DATABASE.coupon_manual_type.find_one(
+            {
+                'merchant_id': merchant_id,
+                '_id': coupon_type_id
+            }
+        )
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        return DATABASE.coupon_manual_type.find_one(
+            {
+                'shop_id': shop_id,
+                '_id': coupon_type_id
+            }
+        )
+
+
+def create_coupon_manual(
+        merchant_id=None,
+        shop_id=None,
+        coupon_type=None,
+        date_expire=None,
+        coupon_code=None,
+        coupon_id=None
+):
+    if coupon_id:
+        if not isinstance(coupon_id, ObjectId):
+            coupon_id = ObjectId(coupon_id)
+        info = {}
+        if coupon_type:
+            info['coupon_type'] = coupon_type
+        if date_expire:
+            info['date_expire'] = date_expire
+        if coupon_code:
+            info['code'] = coupon_code.upper()
+        if info:
+            info['when'] = time.time()
+        find_info = {}
+        find_info['_id'] = coupon_id
+
+        if merchant_id:
+            if not isinstance(merchant_id, ObjectId):
+                merchant_id = ObjectId(merchant_id)
+            find_info['merchant_id'] = merchant_id
+
+        else:
+            if not isinstance(shop_id, ObjectId):
+                shop_id = ObjectId(shop_id)
+            find_info['shop_id'] = shop_id
+        DATABASE.coupon_manual.update(
+            find_info, {'$set': info}
+        )
+        return DATABASE.coupon_manual.find_one(find_info)
+    else:
+        if merchant_id:
+            if not isinstance(merchant_id, ObjectId):
+                merchant_id = ObjectId(merchant_id)
+            id_coupon = DATABASE.coupon_manual.insert(
+                {
+                    'coupon_type': coupon_type,
+                    'date_expire': date_expire,
+                    'code': coupon_code,
+                    'when': time.time(),
+                    'merchant_id': merchant_id
+                }
+            )
+            return DATABASE.coupon_manual.find_one({'_id': id_coupon})
+        else:
+            if not isinstance(shop_id, ObjectId):
+                shop_id = ObjectId(shop_id)
+            id_coupon = DATABASE.coupon_manual.insert(
+                {
+                    'coupon_type': coupon_type,
+                    'date_expire': date_expire,
+                    'code': coupon_code,
+                    'when': time.time(),
+                    'shop_id': shop_id
+                }
+            )
+            return DATABASE.coupon_manual.find_one({'_id': id_coupon})
+
+
+def get_coupon_manual(
+        merchant_id=None,
+        shop_id=None,
+        page=None,
+        is_redeem=None,
+        is_map_user=None,
+        coupon_type_id=None,
+        user_phone=None,
+        all=None,
+        page_size=settings.ITEMS_PER_PAGE
+):
+    coupons = []
+    info = {}
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+
+        info['merchant_id'] = merchant_id
+
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+
+        info['shop_id'] = shop_id
+    if coupon_type_id and coupon_type_id != 'all':
+        info['coupon_type'] = coupon_type_id
+    if is_redeem:
+        info['redeemed'] = True
+
+    if is_map_user:
+        info['user'] = {'$exists': True}
+
+    if user_phone:
+        user_phone = user_phone.strip()
+        user = api.get_user_info(phone_number=user_phone)
+        if user:
+            info['user'] = str(user.get('_id'))
+    print('haha')
+    print(info)
+    recs = []
+    if all:
+        recs = DATABASE.coupon_manual.find(info).sort('when', -1)
+    else:
+        recs = DATABASE.coupon_manual.find(info).sort('when', -1).skip(page_size * (page - 1)).limit(page_size)
+    for rec in recs:
+        rec['coupon_type_info'] = get_coupon_manual_type_by_id(merchant_id=merchant_id, shop_id=shop_id,
+                                                               coupon_type_id=rec['coupon_type'])
+        if 'user' in rec:
+            user = api.get_user_info(user_id=rec['user'])
+            rec['user_info'] = user
+        coupons.append(rec)
+    return coupons
+
+
+def total_coupon_manual(merchant_id=None, shop_id=None, is_redeem=None,
+                        is_map_user=None, coupon_type_id=None,
+                        user_phone=None, from_date=None, to_date=None):
+    info = {}
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        info['merchant_id'] = merchant_id
+        if is_redeem:
+            info['redeemed'] = True
+        if coupon_type_id and coupon_type_id != 'all':
+            info['coupon_type'] = coupon_type_id
+        if is_map_user:
+            info['user'] = {'$exists': True}
+        if user_phone:
+            user = api.get_user_info(phone_number=user_phone)
+            if user:
+                info['user'] = str(user.get('_id'))
+
+        info_when = {}
+        if from_date and from_date != 'None':
+            from_obj = datetime.strptime(from_date, '%d-%m-%Y'). \
+                replace(hour=1, minute=0)
+            from_tmp = time.mktime(
+                from_obj.timetuple())
+            info_when['$gte'] = from_tmp
+
+        if to_date and to_date != 'None':
+            to_obj = datetime.strptime(to_date, '%d-%m-%Y'). \
+                replace(hour=23, minute=59)
+            to_tmp = time.mktime(
+                to_obj.timetuple())
+            info_when['$lte'] = to_tmp
+        if len(info_when) > 0:
+            info['when'] = info_when
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        info = {}
+        info['shop_id'] = shop_id
+        if coupon_type_id and coupon_type_id != 'all':
+            info['coupon_type'] = coupon_type_id
+        if is_redeem:
+            info['redeemed'] = True
+        else:
+            info['redeemed'] = {'$ne': True}
+        if is_map_user:
+            info['is_map_user'] = True
+        else:
+            info['is_map_user'] = {'$ne': True}
+        if user_phone:
+            user = api.get_user_info(phone_number=user_phone)
+            if user:
+                info['user'] = user.get('_id')
+        info['when'] = {}
+        if from_date and from_date != 'None':
+            from_obj = datetime.strptime(from_date, '%d-%m-%Y'). \
+                replace(hour=1, minute=0)
+            from_tmp = time.mktime(
+                from_obj.timetuple())
+            info['when']['$gte'] = from_tmp
+
+        if to_date and to_date != 'None':
+            to_obj = datetime.strptime(to_date, '%d-%m-%Y'). \
+                replace(hour=23, minute=59)
+            to_tmp = time.mktime(
+                to_obj.timetuple())
+            info['when']['$lte'] = to_tmp
+    return DATABASE.coupon_manual.find(info).sort('when', -1).count()
+
+
+def get_coupon_manual_by_code(
+        merchant_id=None,
+        shop_id=None,
+        coupon_code=None
+):
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        return DATABASE.coupon_manual.find_one({'merchant_id': merchant_id, 'code': coupon_code})
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        return DATABASE.coupon_manual.find_one({'shop_id': shop_id, 'code': coupon_code})
+
+
+def get_coupon_manual_by_type(
+        merchant_id=None,
+        shop_id=None,
+        coupon_type=None,
+        all=None,
+        page=None,
+        page_size=settings.ITEMS_PER_PAGE
+):
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        if all:
+            return DATABASE.coupon_manual.find({'merchant_id': merchant_id, 'coupon_type': str(coupon_type)})
+        else:
+            return DATABASE.coupon_manual.find({'merchant_id': merchant_id,
+                                                'coupon_type': str(coupon_type)
+                                                }).skip(page_size * (page - 1)) \
+                .limit(page_size)
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        if all:
+            return DATABASE.coupon_manual.find({'shop_id': shop_id, 'coupon_type': str(coupon_type)})
+        else:
+            return DATABASE.coupon_manual.find({'shop_id': shop_id,
+                                                'coupon_type': str(coupon_type)
+                                                }).skip(page_size * (page - 1)) \
+                .limit(page_size)
+
+
+def total_coupon_manual_by_type(
+        merchant_id=None,
+        shop_id=None,
+        coupon_type=None):
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        if all:
+            return DATABASE.coupon_manual.find({'merchant_id': merchant_id, 'coupon_type': str(coupon_type)}).count()
+        else:
+            return DATABASE.coupon_manual.find({'merchant_id': merchant_id,
+                                                'coupon_type': str(coupon_type)
+                                                }).count()
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        if all:
+            return DATABASE.coupon_manual.find({'shop_id': shop_id, 'coupon_type': str(coupon_type)}).count()
+        else:
+            return DATABASE.coupon_manual.find({'shop_id': shop_id,
+                                                'coupon_type': str(coupon_type)
+                                                }).count()
+
+
+def total_coupon_manual_redeemed(
+        merchant_id=None,
+        shop_id=None,
+        coupon_type=None):
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        if all:
+            return DATABASE.coupon_manual.find({'merchant_id': merchant_id, 'coupon_type': str(coupon_type),
+                                                'redeemed': True, 'redeemed_at': {'$exists': True}}).count()
+        else:
+            return DATABASE.coupon_manual.find({'merchant_id': merchant_id,
+                                                'coupon_type': str(coupon_type),
+                                                'redeemed': True, 'redeemed_at': {'$exists': True}
+                                                }).count()
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        if all:
+            return DATABASE.coupon_manual.find({'shop_id': shop_id, 'coupon_type': str(coupon_type),
+                                                'redeemed': True, 'redeemed_at': {'$exists': True}}).count()
+        else:
+            return DATABASE.coupon_manual.find({'shop_id': shop_id,
+                                                'coupon_type': str(coupon_type),
+                                                'redeemed': True, 'redeemed_at': {'$exists': True}
+                                                }).count()
+
+
+def total_coupon_manual_alive(
+        merchant_id=None,
+        shop_id=None,
+        coupon_type=None):
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        if all:
+            return DATABASE.coupon_manual.find({'merchant_id': merchant_id, 'coupon_type': str(coupon_type),
+                                                'expire_time': {'$gte': time.time()}, 'redeemed_at': {'$exists': False}}).count()
+        else:
+            return DATABASE.coupon_manual.find({'merchant_id': merchant_id,
+                                                'coupon_type': str(coupon_type),
+                                                'expire_time': {'$gte': time.time()},'redeemed_at': {'$exists': False}
+                                                }).count()
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        if all:
+            return DATABASE.coupon_manual.find({'shop_id': shop_id, 'coupon_type': str(coupon_type),
+                                                'expire_time': {'$gte': time.time()},'redeemed_at': {'$exists': False}}).count()
+        else:
+            return DATABASE.coupon_manual.find({'shop_id': shop_id,
+                                                'coupon_type': str(coupon_type),
+                                                'expire_time': {'$gte': time.time()}, 'redeemed_at': {'$exists': False}
+                                                }).count()
+
+
+def total_coupon_manual_expire(
+        merchant_id=None,
+        shop_id=None,
+        coupon_type=None):
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        if all:
+            return DATABASE.coupon_manual.find({'merchant_id': merchant_id, 'coupon_type': str(coupon_type),
+                                                'expire_time': {'$lte': time.time()}, }).count()
+        else:
+            return DATABASE.coupon_manual.find({'merchant_id': merchant_id,
+                                                'expire_time': {'$lte': time.time()},
+                                                }).count()
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        if all:
+            return DATABASE.coupon_manual.find({'shop_id': shop_id, 'coupon_type': str(coupon_type),
+                                                'expire_time': {'$lte': time.time()}}).count()
+        else:
+            return DATABASE.coupon_manual.find({'shop_id': shop_id,
+                                                'coupon_type': str(coupon_type),
+                                                'expire_time': {'$lte': time.time()}
+                                                }).count()
+
+
+def remove_coupon_manual_by_type(merchant_id=None,
+                                 shop_id=None,
+                                 coupon_type=None):
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        return DATABASE.coupon_manual.remove({'merchant_id': merchant_id, 'coupon_type': str(coupon_type)})
+
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        return DATABASE.coupon_manual.remove({'shop_id': shop_id, 'coupon_type': str(coupon_type)})
+
+
+def get_coupon_manual_by_user(
+        merchant_id=None,
+        shop_id=None,
+        user_id=None,
+        page=None,
+        page_size=settings.ITEMS_PER_PAGE
+):
+    if not isinstance(user_id, ObjectId):
+        user_id = ObjectId(user_id)
+    info = {}
+    info['user'] = {'$in': [user_id]}
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        info['merchant_id'] = merchant_id
+
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        info['shop_id'] = shop_id
+
+    recs = DATABASE.coupon_manual.find(info).skip(page_size * (page - 1)).limit(page_size)
+    coupons = []
+    for rec in recs:
+        rec['coupon_type_info'] = get_coupon_manual_type_by_id(merchant_id=merchant_id, shop_id=shop_id,
+                                                               coupon_type_id=rec['_id'])
+        if 'user' in rec:
+            user = api.get_user_info(user_id=rec['user'])
+            rec['user_info'] = user
+        coupons.append(rec)
+    return coupons
+
+
+def total_coupon_manual_by_user(
+        merchant_id=None,
+        shop_id=None,
+        user_id=None
+):
+    if not isinstance(user_id, ObjectId):
+        user_id = ObjectId(user_id)
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        return DATABASE.coupon_manual.find({'merchant_id': merchant_id, 'user': user_id}).count()
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        return DATABASE.coupon_manual.find({'shop_id': shop_id, 'user': user_id}).count()
+
+
+def insert_code_manual_random(merchant_id=None, shop_id=None, code=None):
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        DATABASE.coupon_manual_random.insert({
+            'merchant_id': merchant_id,
+            'code': code
+        })
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        DATABASE.coupon_manual_random.insert({
+            'shop_id': shop_id,
+            'code': code
+        })
+
+
+def check_code_manual_random(merchant_id=None, shop_id=None, code=None):
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        DATABASE.coupon_manual_random.find_one({
+            'merchant_id': merchant_id,
+            'code': code
+        })
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        DATABASE.coupon_manual_random.find_one({
+            'shop_id': shop_id,
+            'code': code
+        })
+
+
+def gen_coupon_manual(
+        merchant_id=None,
+        shop_id=None,
+        coupon_type_id=None,
+):
+    coupon_type = get_coupon_manual_type_by_id(
+        merchant_id=merchant_id,
+        shop_id=shop_id,
+        coupon_type_id=coupon_type_id
+    )
+    if coupon_type:
+        coupon_type_code = coupon_type.get('code')
+        when = str(time.time()).replace('.', '')
+        hash_ids = Hashids(min_length=4, salt=str(when))
+        last_nums = list(str(when)[-3:])
+        random_code = hash_ids.encode(int(last_nums[0]), int(last_nums[1]), int(last_nums[2]))
+        coupon = coupon_type_code + '-' + random_code
+        time.sleep(1)
+        return coupon
+    else:
+        return False
+
+
+def update_coupon_manual_user(merchant_id=None, shop_id=None, coupon_code=None, user_id=None):
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        DATABASE.coupon_manual.update(
+            {
+                'code': coupon_code,
+                'merchant_id': merchant_id
+            }, {'$set': {'user': user_id}}
+        )
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        DATABASE.coupon_manual.update(
+            {
+                'code': coupon_code,
+                'shop_id': shop_id
+            }, {'$set': {'user': user_id}}
+        )
+
+
+def redeem_coupon_manual(merchant_id=None, shop_id=None, coupon_code=None, phone_emp=None):
+    if not isinstance(shop_id, ObjectId):
+        shop_id = ObjectId(shop_id)
+
+    now = time.time()
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        DATABASE.coupon_manual.update(
+            {
+                'code': coupon_code,
+                'merchant_id': merchant_id
+            }, {'$set': {
+                'redeemed': True,
+                'redeemed_at': now,
+                'redeem_by': phone_emp
+            }})
+
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        DATABASE.coupon_manual.update(
+            {
+                'code': coupon_code,
+                'shop_id': shop_id
+            }, {'$set': {
+                'redeemed': True,
+                'redeemed_at': now,
+                'redeem_by': phone_emp
+            }})
+
+
+def remove_coupon_manual(merchant_id=None, shop_id=None, coupon_id=None):
+    if not isinstance(shop_id, ObjectId):
+        shop_id = ObjectId(shop_id)
+    if coupon_id:
+        if not isinstance(coupon_id, ObjectId):
+            coupon_id = ObjectId(coupon_id)
+    now = time.time()
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        DATABASE.coupon_manual.remove(
+            {
+                '_id': coupon_id,
+                'merchant_id': merchant_id
+            })
+
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        DATABASE.coupon_manual.update(
+            {
+                '_id': coupon_id,
+                'shop_id': shop_id
+            })
+
+
+def get_coupon_manual_type_by_code(
+        merchant_id=None,
+        shop_id=None,
+        code=None
+):
+    if merchant_id:
+        if not isinstance(merchant_id, ObjectId):
+            merchant_id = ObjectId(merchant_id)
+        return DATABASE.coupon_manual_type.find_one(
+            {
+                'merchant_id': merchant_id,
+                'code': code
+            }
+        )
+    else:
+        if not isinstance(shop_id, ObjectId):
+            shop_id = ObjectId(shop_id)
+        return DATABASE.coupon_manual_type.find_one(
+            {
+                'shop_id': shop_id,
+                'code': code
+            }
+        )

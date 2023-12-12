@@ -1,0 +1,541 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="c-toolbar u-mb-medium">
+        <h3 class="c-toolbar__title has-divider">{% if camp %} {{ gettext('Chien_dich') }}
+            {{ camp.code }}{% else %}{{ gettext("Tao_chien_dich") }}{% endif %}</h3>
+        <h5 class="c-toolbar__meta u-mr-auto">{{ gettext('Chien_dich_quang_cao') }}</h5>
+        <div class="c-field c-field--inline has-icon-right u-hidden-down@tablet">
+            <div class="c-search-form__section">
+                <input type="hidden" value="{{ shop_id_select }}"
+                       id="current_shops"/>
+                <select class="c-select"
+                        style="width: 100%;" id="locations_selects">
+                    <option value="all">{{ gettext('Thiet_lap_chuoi') }}</option>
+                    {% for shop_mer in shop_in_mer %}
+                        <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                    {% endfor %}
+
+                </select>
+            </div>
+        </div>
+
+    </div>
+    <div class="container">
+        <div class="row u-mb-large">
+            <div class="col-lg-12">
+                <div class="card u-p-medium">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-white">
+
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            {% if error %}
+                                                <div class="alert alert-danger">
+                                                    {{ error | safe }}
+                                                </div>
+                                            {% endif %} {% if message %}
+                                            <div class="alert alert-success">
+                                                {{ message | safe }}
+                                            </div>
+                                        {% endif %}
+
+
+                                            <form method="POST"
+                                                  id="sms_campaign_item"
+                                                  action="/marketing_campaign/{{ shop_id_select }}/detail/{% if camp %}{{ camp._id }}{% else %}add{% endif %}">
+                                             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                                <div class="c-field u-mb-small">
+                                                    <label for="name"
+                                                           class="c-field__label">{{ gettext('Ma_chien_dich:') }}</label>
+                                                    <input type="text"
+                                                           class="c-input"
+                                                           id="code_camp"
+                                                           name="code_camp"
+                                                           value="{% if camp %} {{ camp.code }}{% endif %}"/>
+                                                </div>
+                                                {% if camp %}
+                                                    <input type="hidden"
+                                                           name="camp_id"
+                                                           value="{{ camp._id }}"/>
+
+                                                    <input type="hidden"
+                                                           id="current_target"
+                                                           value="{{ camp.target }}"/> {% endif %}
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="c-field u-mb-small">
+                                                            <label class="c-field__label">{{ gettext('Loai_chien_dich:') }}</label>
+                                                            <input type="hidden"
+                                                                   id="ex_is_spam"
+                                                                   value="
+
+                                                                           {% if camp.is_spam and camp.is_spam!='None' %}{{ camp.is_spam }}{% endif %}"/>
+                                                            <select name="is_spam"
+                                                                    id="is_spam"
+                                                                    class="c-select">
+                                                                <option value="care">
+                                                                    {{ gettext('Cham_soc') }}
+                                                                </option>
+                                                                <option value="spam">
+                                                                    {{ gettext('Quang_cao') }}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="from-group">
+                                                            <label for="announcement">{{ gettext('Loai_Coupon') }}</label>
+                                                            <select name="type_coupon"
+                                                                    class="c-select"
+                                                                    style="width: auto"
+                                                                    id="type_coupon">
+                                                                <option value="no">
+                                                                    {{ gettext('Khong') }}
+                                                                </option>
+                                                                {% for coup in coupons_type_select %}
+                                                                    <option
+                                                                            value="{{ coup._id }}">{{ coup.name }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="c-field u-mb-small">
+                                                            <label class="c-field__label">{{ gettext('Han_dung_Coupon') }} </label>
+                                                            <input type="text"
+                                                                   class="c-input"
+                                                                   id="ex_manual"
+                                                                   name="ex_manual"
+                                                                   value="{% if camp %} {{ camp.expire_coupon }}{% endif %}">
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="c-field u-mb-small">
+                                                            <label class="c-field__label">{{ gettext('Gioi_tinh:') }} </label>
+                                                                          <input type="hidden"
+                                                                   value="{{ camp.gender }}"
+                                                                   id="ex_gender"/>
+                                                             <select class="c-select c-select--multiple"
+                                                                    name="gender"
+                                                                    id="gender"
+                                                                    multiple="multiple"
+                                                                    style="width: 100%;">
+                                                                <option value="0">
+                                                                    {{ gettext('Chua_xac_dinh') }}
+                                                                </option>
+                                                                <option value="1">
+                                                                    {{ gettext('Nam') }}
+                                                                </option>
+                                                                <option value="2">
+                                                                    {{ gettext('Nu') }}
+                                                                </option>
+
+                                                            </select>
+                                                            <input type="hidden"
+                                                                   id="gender_filter"
+                                                                   name="gender_filter"/>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+
+                                                    <div class="col-md-4">
+                                                        <div class="c-field u-mb-small">
+                                                            <label class="c-field__label">{{ gettext('Sinh_nhat:') }} </label>
+                                                            <input id="from_date"
+                                                                   name="from_date"
+                                                                   type="text"
+                                                                   placeholder="{{ gettext('Tu_ngay..') }}"
+                                                                   class="c-input">
+
+                                                            <label class="c-field__label">&nbsp;</label>
+                                                            <input id="to_date"
+                                                                   name="to_date"
+                                                                   type="text"
+                                                                   placeholder="{{ gettext('Den_ngay..') }}"
+                                                                   class="c-input">
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="col-md-4">
+
+                                                        <div class="c-field u-mb-small">
+
+
+                                                            <label class="c-field__label">{{ gettext('Thoi_gian_den:') }} </label>
+                                                            <input id="visit_from_date"
+                                                                   name="visit_from_date"
+                                                                   type="text"
+                                                                   placeholder="{{ gettext('Tu_ngay..') }}"
+                                                                   class="c-input">
+
+                                                            <label class="c-field__label">&nbsp;</label>
+                                                            <input id="visit_to_date"
+                                                                   name="visit_to_date"
+                                                                   type="text"
+                                                                   placeholder="{{ gettext('Den_ngay..') }}"
+                                                                   class="c-input">
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="c-field u-mb-small">
+                                                            <label class="c-field__label">{{ gettext('Luot_den_tu') }} </label>
+                                                            <input type="text"
+                                                                   name="min_visit"
+                                                                   placeholder="{{ gettext('Lon_hon') }}"
+                                                                   class="c-input"
+                                                                   value="
+                                                                           {% if camp.min_visit and camp.min_visit!='None' %}{{ camp.min_visit }}{% endif %}">
+
+                                                            <label class="c-field__label">&nbsp;</label>
+                                                            <input type="text"
+                                                                   name="max_visit"
+                                                                   placeholder="{{ gettext('Nho_hon') }}"
+                                                                   class="c-input"
+                                                                   value="
+                                                                           {% if camp.max_visit and camp.max_visit!='None' %}{{ camp.max_visit }}{% endif %}">
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="c-field u-mb-small">
+                                                            <label class="c-field__label">{{ gettext('Phan_loai') }}</label>
+
+                                                            <select class="c-select c-select--multiple"
+                                                                    name="tags"
+                                                                    id="select_tags_input"
+                                                                    multiple="multiple"
+                                                                    style="width: 100%;">
+                                                                {% for tag in tags %}
+                                                                    <option value="{{ tag._id }}">{{ tag.name }}</option>
+                                                                {% endfor %}
+
+                                                            </select>
+                                                            <input type="hidden"
+                                                                   id="select_tags_filter"
+                                                                   name="real_tags_filter"/>
+                                                            {% if camp %}
+                                                                <input type="hidden"
+                                                                       name="source_tags"
+                                                                       id="source_tags_filter"
+                                                                       value="{{ camp.tags }}"/>
+
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                    {% if loyal_settings and loyal_rank|length > 0 %}
+                                                        <div class="col-md-4">
+
+                                                            <input type="hidden"
+                                                                   value="
+                        {% if camp.ranks %}{{ camp.ranks }}{% endif %}"
+                                                                   id="ex_ranks"/>
+                                                            <div class="c-field u-mb-small">
+                                                                <label class="c-field__label">{{ gettext('Hang_the') }}</label>
+                                                                <select name="ranks"
+                                                                        class="c-select"
+                                                                        style="width: auto"
+                                                                        id="ranks">
+                                                                    <option value="all">
+                                                                        {{ gettext('Tat_ca') }}
+                                                                    </option>
+                                                                    {% for rank in loyal_rank %}
+                                                                        <option
+                                                                                value="{{ rank.customer_point }}">{{ rank.customer_type }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+
+                                                            </div>
+
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if merchant.sms_provider == 'FPT' %}
+                                                        <div class="col-md-4">
+
+                                                            <div class="c-field u-mb-small">
+                                                                {% if  camp %}
+                                                                    {% if camp.date_send %}
+
+                                                                        <input type="hidden"
+                                                                               value="{{ camp.date_send }}"
+                                                                               id="ex_date_send"/>
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                                <div class="c-field u-mb-small">
+                                                                    <label class="c-field__label"
+                                                                           for="date_send">{{ gettext('Thoi_gian_gui:') }}</label>
+                                                                    <input type="text"
+                                                                           class="c-input"
+                                                                           id="date_send"
+                                                                           name="date_send"/>
+                                                                </div>
+
+                                                            </div>
+
+
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+
+                                                <!--
+                        <div class="c-field u-mb-small">
+
+                            <label class="c-field__label">Zalo Follower</label><input type="checkbox" name="is_zalo" style="margin-left: 5px;margin-top:10px" {% if camp %}{% if camp.is_zalo %}checked {% endif %}{% endif %}>
+                            <p class="category">Khi bỏ tích thì sẽ chỉ gửi những user chưa quan tâm Zalo Page</p>
+                        </div>-->
+
+                                                <div class="c-field u-mb-small">
+                                                    <label class="c-field__label"
+                                                           for="name">{{ gettext('Mo_ta:') }}</label>
+                                                    <input type="text"
+                                                           class="c-input"
+                                                           id="desc_camp"
+                                                           name="desc_camp"
+                                                           value="{% if camp %} {{ camp.desc }}{% endif %}">
+                                                </div>
+
+                                                <div class="c-field u-mb-small">
+                                                    <label class="c-field__label"
+                                                           for="announcement">{{ gettext('Thong_diep:') }}</label>
+                                                    <textarea class="c-input"
+                                                              id="announcement"
+                                                              name="announcement"
+                                                              rows="4">{% if camp %}
+                                                        {{ camp.message }} {% endif %}</textarea>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="c-field u-mb-small">
+
+                                                         <input class="c-choice__input"
+                                           type="checkbox"
+                                           name="is_sms"
+                                           id="is_sms"
+                                           {% if camp %}{% if camp.is_sms %}checked
+                                                                {% endif %}{% endif %}>
+                                    <label class="c-choice__label"
+                                           for="is_sms">SMS</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="c-field u-mb-small">
+                                                        <input class="c-choice__input"
+                                           type="checkbox"
+                                           name="is_push_app"
+                                           id="is_push_app"
+                                           {% if camp %}{% if camp.is_push_app %}checked
+                                                                {% endif %}{% endif %}>
+                                                    <label class="c-choice__label"
+                                                           for="is_push_app">Push
+                                                                Notification</label>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <input type="hidden"
+                                                       id="ex_from_date"
+                                                       value="{{ camp.b_day_from_date }}">
+                                                <input type="hidden"
+                                                       id="ex_to_date"
+                                                       value="{{ camp.b_day_to_date }}">
+
+                                                <div class="row u-justify-center">
+
+                                                    <button class="c-btn c-btn--info"
+                                                            id="clear_data">
+                                                        {{ gettext('Nhap_lai') }}
+                                                    </button>
+
+                                                    <button class="c-btn c-btn--warning"
+                                                            style="margin-left:10px"
+                                                            type="submit">
+                                                        {% if camp %}{{ gettext('Cap_nhat') }}{% else %} {{ gettext('Tao_chien_dich') }} {% endif %}
+                                                    </button>
+
+                                                </div>
+
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %} {% block js %}
+    <script type="text/javascript"  nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+
+            var data_soure_shops = $("#current_shops").val();
+            $('#locations_selects').select2().val(data_soure_shops)
+                .trigger("change");
+            $('#locations_selects').on("change", function (e) {
+                var location_href = $('#locations_selects').val();
+                var href = '/marketing_campaign/' + location_href;
+                $(location).attr('href', href);
+            });
+            if ($("#ex_ranks").length > 0) {
+                $("#ranks").val($("#ex_ranks").val());
+            }
+
+            if ($("#ex_is_spam").length > 0) {
+                $("#is_spam").val($("#ex_is_spam").val());
+            }
+
+            if ($("#current_target").length > 0) {
+                $("#target").val($("#current_target").val());
+            }
+
+            if ($("#ex_date_send").length > 0 && $("#ex_date_send").val().length > 0 && $("#ex_date_send").val() != 'None') {
+                flatpickr("#date_send", {
+                    enableTime: true,
+                    defaultDate: $("#ex_date_send").val(),
+                    dateFormat: "Y-m-d H:i",
+                });
+            } else {
+                flatpickr("#date_send", {
+                    enableTime: true,
+                    dateFormat: "Y-m-d H:i",
+
+                });
+            }
+
+
+            if ($("#ex_from_date").length > 0 && $("#ex_from_date").val().length > 0 && $("#ex_from_date").val() != 'None') {
+                flatpickr("#from_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_from_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#from_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+
+                });
+            }
+            if ($("#ex_to_date").length > 0 && $("#ex_to_date").val().length > 0 && $("#ex_to_date").val() != 'None') {
+                flatpickr("#to_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_to_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#to_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+                });
+            }
+            if ($("#ex_visit_from_date").length > 0 && $("#ex_visit_from_date").val().length > 0 &&
+                $("#ex_visit_from_date").val() != 'None') {
+                flatpickr("#visit_from_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_visit_from_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#visit_from_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+
+                });
+            }
+            if ($("#ex_visit_to_date").length > 0 && $("#ex_visit_to_date").val().length > 0 && $("#ex_visit_to_date").val() != 'None') {
+                flatpickr("#visit_to_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_visit_to_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#visit_to_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+                });
+            }
+
+            $('#select_tags_input').select2({});
+            $('#select_tags_input').select2({
+                dropdownAutoWidth: true
+            });
+            $('#select_tags_input').on("change", function (e) {
+                if ($('#select_tags_input').val()) {
+                    $('#select_tags_filter').val($('#select_tags_input').val().toString());
+                } else {
+                    $('#select_tags_filter').val("");
+                }
+            });
+
+             $('#gender').select2({
+                dropdownAutoWidth: true
+             });
+
+            $('#gender').select2().val(ex_gender)
+                .trigger("change");
+              $('#gender').on("change", function (e) {
+                if ($('#gender').val()) {
+                    $('#gender_filter').val($('#gender').val()
+                        .toString());
+                } else {
+                    $('#gender_filter').val("");
+                }
+            });
+
+            var ex_gender = $("#ex_gender").val();
+            if (ex_gender && ex_gender.length > 0 && ex_gender.toString() != 'None') {
+                var ex_gender = ex_gender.replace(/\u'/g, "'");
+                var ex_gender = ex_gender.replace(/\'/g, '"');
+                var data_ex_gender= JSON.parse(ex_gender);
+                $("#gender").val(data_ex_gender);
+                $('#gender').trigger('change');
+            }
+
+            var source_tags = $("#source_tags_filter").val();
+            if (source_tags && source_tags.length > 0 && source_tags.toString() != 'None') {
+                var source_tags = source_tags.replace(/\u'/g, "'");
+                var source_tags = source_tags.replace(/\'/g, '"');
+                var data_soure_tags = JSON.parse(source_tags);
+                $("#select_tags_input").val(data_soure_tags);
+                $('#select_tags_input').trigger('change');
+            }
+
+            $("#clear_data").click(function () {
+
+                $("#sms_campaign_item input[type='text']").val("");
+
+            })
+
+
+        });
+    </script>
+{% endblock %}

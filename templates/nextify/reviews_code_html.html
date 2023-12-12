@@ -1,0 +1,65 @@
+
+	<input type="hidden" value="{{ content_rating }}" name="content_rating">
+	<input type="hidden" value="{{ url_facebook }}" name="url_facebook">
+	<input type="hidden" value="{{ url_google }}" name="url_google">
+	<input type="hidden" value="{{ url_tripadvisor }}" name="url_tripadvisor"/>
+	<input type="hidden" value="{{ check_facebook }}" name="check_facebook"/>
+	<input type="hidden" value="{{ check_google }}" name="check_google"/>
+	<input type="hidden" value="{{ check_tripadvisor }}" name="check_tripadvisor"/>
+	
+	<div style="padding-top: 10px!important;
+								    padding-right: 20px!important;
+								    padding-bottom: 20px!important;
+								    padding-left: 20px!important;
+								    background-color: #fff;">	
+			<div style="width: 70%;
+						margin: auto;
+						margin-bottom: 20px;
+						text-align: center;">
+				<h3>{{ content_rating }}</h3>
+			</div>
+			<div style="display: flex !important; margin-bottom: 20px; width: 60%; margin: auto;">
+					{% if url_facebook and url_facebook|length > 0 and check_facebook == "true" %}
+					<div style="width: 100%;" align="center"> 
+				        <a href="{{ url_facebook }}" role="button" style="background: #3B5998;
+																		 color: #fff;
+																		 text-decoration-line: none;
+																		 border-radius: 5px;
+																		 padding: 5%;
+																		 padding-right: 15%;
+																		 padding-left: 15%;
+																		 border-color: #263961;">
+				        	<i ></i>Facebook
+				        </a>
+					</div>
+					{% endif %}
+					{% if url_google and url_google|length > 0 and check_google == "true" %}
+					<div style="width: 100%;" align="center"> 
+				        <a href="{{ url_google }}" role="button" style="background: #E93F2E;
+																		 color: #fff;
+																		 text-decoration-line: none;
+																		 border-radius: 5px;
+																		 padding: 5%;
+																		 padding-left: 21%;
+																		 padding-right: 21%;
+																		 border-color: #b72213;">
+				        	<i ></i>Google 
+				        </a>
+					</div>
+					{% endif %}
+					{% if url_tripadvisor and url_tripadvisor|length > 0 and check_tripadvisor == "true" %}
+					<div style="width: 100%;" align="center"> 
+				        <a href="{{ url_tripadvisor }}" role="button" style="background: #00f09f;
+																			 color: #fff;
+																			 text-decoration-line: none;
+																			 border-radius: 5px;
+																			 padding: 5%;
+																			 padding-right: 13%;
+																			 padding-left: 13%;
+																			 border-color: #00f09f;">
+				    	<i></i> TripAdvisor
+				  		</a>
+					</div>
+					{% endif %}
+			</div>
+	</div>

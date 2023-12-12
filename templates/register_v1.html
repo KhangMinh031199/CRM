@@ -1,0 +1,240 @@
+{% extends "welcome.html" %} {% block welcome_css %}
+    <style>
+        body > .container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 95%;
+    height: 600px;
+    text-align: center;
+    max-width: none;
+}
+
+        .signin-agile,
+        .signup-agileinfo {
+            transition: 0.5s all;
+            -webkit-transition: 0.5s all;
+            -moz-transition: 0.5s all;
+            -o-transition: 0.5s all;
+            -ms-transition: 0.5s all;
+        }
+
+        .center_form {
+            display: block;
+            padding: 0;
+            position: absolute;
+            margin: auto;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 90%
+        }
+
+        .signin-agile h2,
+        .signup-agileinfo h3 {
+            font-size: 25px;
+            color: #7d7d7d;
+            margin-bottom: 20px;
+        }
+
+        .signup-agileinfo h3 {
+            color: #7d7d7d;
+        }
+
+        .signup-agileinfo p {
+            color: #7d7d7d;
+            font-size: 14px;
+            line-height: 30px;
+        }
+
+        input[type="text"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 12px;
+            outline: none;
+            color: #7d7d7d;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            border: 0;
+        }
+
+        form ul {
+            float: left;
+        }
+
+        ul li {
+            list-style: none;
+            display: inline-block;
+        }
+
+        ul li input[type="checkbox"] {
+            display: none;
+        }
+
+        ul li input[type="checkbox"] + label {
+            position: relative;
+            padding-left: 25px;
+            border: #F0F8FF;
+            color: #7d7d7d;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        ul li input[type="checkbox"] + label span:first-child {
+            width: 13px;
+            height: 13px;
+            display: inline-block;
+            border: 1px solid #7d7d7d;
+            position: absolute;
+            top: 1px;
+            left: 4px;
+            bottom: 4px;
+        }
+
+        ul li input[type="checkbox"]:checked + label span:first-child:before {
+            content: "";
+            background: url(../images/tick.png) no-repeat;
+            position: absolute;
+            left: 2px;
+            top: 2px;
+            font-size: 10px;
+            width: 10px;
+            height: 10px;
+        }
+
+        form a {
+            color: #7d7d7d;
+            float: right;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            background: #1a925c;
+            padding: 13px;
+            font-size: 18px;
+            color: #fff;
+            cursor: pointer;
+            outline: none;
+            transition: .5s all;
+            -webkit-transition: .5s all;
+            -moz-transition: .5s all;
+            -o-transition: .5s all;
+            -ms-transition: .5s all;
+            width: 100%;
+            border: none;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        input[type="submit"]:hover,
+        input[type="submit"]:active {
+            background: #16a085;
+        }
+    </style>
+{% endblock %}
+
+{% block background %} {% if shop.background %}
+    <div id="background-image"
+         style="background: url('//files.nextify.vn/{{ shop.background }}') no-repeat bottom center; background-size: cover; -webkit-background-size: cover;-moz-background-size: cover; -o-background-size: cover;"></div>
+    <div id="background-overlay"></div>
+{% endif %} {% endblock %}
+
+{% block container %}
+    <div class="center_form">
+        <div class="row" style="margin-right: 0px; margin-left: 0px;margin-bottom: -5px;">
+            <div class="col-lg-5 col-md-7 col-sm-8 col-xs-12 col-centered">
+                <a href="/welcome?gateway_mac={{ gateway_mac }}&client_mac={{ client_mac }}"><img
+                        class="img-responsive center-block centered-and-cropped" style="width:80px;height: 80px"
+                        src="//files.nextify.vn/{{ shop.logo }}" alt=""/></a>
+            </div>
+        </div>
+
+        <div class="row signin-agile row-centered" style=" margin-right: 0px; margin-left: 0px;">
+            <div class="col-lg-5 col-md-7 col-sm-8 col-xs-12 col-centered">
+                <h4 style="line-height: 28px;text-align: center;margin: 25px 0;">
+                    Đăng ký <strong>khách hàng thân thiết</strong> để nhận các ưu đãi hấp dẫn
+                    <br/>
+                    Get connected with FREE WIFI</h4>
+                <form method="POST" action="/register?gateway_mac={{ gateway_mac }}&client_mac={{ client_mac }}"
+                      style="margin-top: 0em;">
+                      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    <div class="form-group">
+                        {% if error %}
+                            <h4 style="line-height: 24px;margin: 15px 0;">
+                                {{ error }}
+                            </h4>{% endif %}
+                        <input type="tel" class="form-control" placeholder="Số điện thoại/Phone number" id="phone"
+                               name="phone" autofocus required>
+                        {% if login_form.name and login_form.name|lower == "true" %}
+                            <input type="text" class="name" placeholder="Tên của bạn/Your name" id="name" name="name">
+                        {% endif %}
+                        {% if login_form.email  and login_form.email|lower == "true" %}
+                            <input type="text" class="name" placeholder="Email của bạn/Your email" id="email"
+                                   name="email">
+                        {% endif %}
+                        {% if login_form.gender and login_form.gender|lower == "true"%}
+                                <div class="row" id="gender_register">
+                                    <div class="col-xs-4 col-sm-4">
+                                        <div class="form-group">
+                                            <input type="checkbox" value="1" class="form-control" name="gender"> Nam/Male
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4">
+                                        <div class="form-group">
+                                            <input type="checkbox" value="2" class="form-control" name="gender"> Nữ/Female
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4">
+                                        <div class="form-group">
+                                            <input type="checkbox" value="0" class="form-control" name="gender"> Khác/Unknown
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {% endif %}
+                        {% if login_form.birthday and login_form.birthday|lower == "true" %}
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control" type="tel" maxlength="2" name="day"
+                                               placeholder="Ngày sinh/Day">
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control" type="tel" maxlength="2" name="month"
+                                               placeholder="Tháng sinh/Month">
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <input type="submit" class="form-control" value="Kết Nối/Go Online">
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% include "footer_welcome.html" %}
+    </div>
+{% endblock %}
+{%block welcome_script%}
+
+ <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            if ($('#gender_register').length > 0){
+                 $('#gender_register input[type="checkbox"]').on('change', function () {
+                     $('#gender_register input[type="checkbox"]').not(this).prop('checked', false);
+                });
+
+            }
+
+
+        });
+    </script>
+{%endblock%}
+

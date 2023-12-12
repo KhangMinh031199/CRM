@@ -1,0 +1,443 @@
+<form id="tag_for_customers_{{ tag._id }}" method="POST" action="/splash_page_tags/{{ shop_id_select }}">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+    <div class="form-group">
+        <label>Tag</label><span class="badge badge-soft-primary ml-2 mt-n2">{% if tag.name %}{{ tag.tag_name }}{% elif
+            tag_detail.name %}{{ tag_detail.name }} {% endif %}</span>
+
+    </div>
+    <div class="row mt-2">
+
+        <div class="col-auto">
+            <div class="custom-control custom-switch">
+                <input name="tag_name" id="tag_name_hotspot1_{{ tag._id }}" {% if tag.tag_id %}value="{{ tag.tag_id }}"
+                    {% else %} value="{{ tag_detail._id }}" {% endif %}type="hidden">
+                <input class="custom-control-input" id="option1_{{ tag._id }}" type="radio" name="options" {% if tag and
+                    tag.tag_type=='all_customers' %}checked{% endif %} value="all_customers" />
+                <label class="custom-control-label" for="option1_{{ tag._id }}"></label>
+
+            </div>
+        </div>
+        <div class="col ml-n2">
+
+            <span class="custom-control-caption">
+                {{gettext("Tat_ca_khach_hang") }}
+            </span>
+        </div>
+
+    </div>
+    <div class="row mt-2">
+        <div class="col-auto">
+            <div class="custom-control custom-switch">
+
+                <input class="custom-control-input" type="radio" name="options" value="by_visit" {% if tag and
+                    tag.tag_type=='by_visit' %}checked{% endif %} id="option2_{{tag._id}}">
+                <label class="custom-control-label" for="option2_{{tag._id}}"></label>
+            </div>
+        </div>
+        <div class="col ml-n2">
+            <span class="custom-control-caption">
+                {{ gettext("Khach_theo_luot_den") }}
+            </span>
+        </div>
+    </div>
+    <div class="alert alert-light mt-2">
+        <div class="row">
+            <label class="mb-2">{{ gettext("So_luot_den_tinh_theo:") }}</label>
+            <div class="col-md-3">
+                <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input" type="radio" name="visits_by" checked{% if tag and tag.settings and
+                        tag.settings.type_visit=="merchant" %} checked {% else %} {%endif%}
+                        id="return_visit_by_merchant_{{ tag._id }}" value="merchant" >
+                    <label class="custom-control-label" for="return_visit_by_merchant_{{ tag._id }}"></label>
+                    <span class="custom-control-caption">
+                        {{ gettext("Chuoi") }}
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input" type="radio" {% if tag and tag.settings and
+                        tag.settings.type_visit=="shop" %} checked {% else %} {%endif%} name="visits_by"
+                        id="return_visit_by_shop_{{ tag._id }}" value="shop">
+                    <label class="custom-control-label" for="return_visit_by_shop_{{ tag._id }}"></label>
+                    <span class="custom-control-caption">
+                        {{ gettext("Dia_diem")
+                        }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <input type="text" id="min_visit_{{ tag._id }}" name="min_visit"
+                    value="{% if tag and tag.settings and tag.settings.min_visit %}{{ tag.settings.min_visit }}{% else %}{% endif %}"
+                    placeholder='{{ gettext("Lon_hon") }}' class="form-control" />
+            </div>
+            <div class="col-lg-6">
+                <input type="text" id="max_visit_{{ tag._id }}" name="max_visit"
+                    value="{% if tag and tag.settings and tag.settings.max_visit %}{{tag.settings.max_visit}}{% else %}{% endif %}"
+                    placeholder='{{ gettext("Nho_hon") }}' class="form-control" />
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-auto">
+            <div class="custom-control custom-switch">
+                <input type="radio" name="options" id="option3_{{tag._id}}" {% if tag and tag.tag_type=='by_datetime' %}
+                    checked="" {% endif %} value="by_datetime" class="custom-control-input">
+                <label class="custom-control-label" for="option3_{{tag._id}}"></label>
+            </div>
+
+        </div>
+        <div class="col ml-n2">
+
+            <span class="custom-control-caption">
+                {{ gettext("Khach_den_theo_ngay,_gio") }}
+            </span>
+        </div>
+
+    </div>
+    <div class="alert alert-light mt-2">
+        <div class="row mb-2">
+            <div class="col-lg-12">
+                <label >{{ gettext("Chon_ngay:") }}</label>
+            </div>
+            <div class="col-lg-12">
+                <div class="weekDays-selector">
+                    <div class="custom-control custom-checkbox" style="display: inline;">
+                        <input class="custom-control-input" id="weekday-sun_{{tag._id}}" type="checkbox" name="weekday_sun" {% if tag and tag.settings and
+                            tag.settings.weekday_sun %} checked="" {% endif %} />
+                        <label class="custom-control-label" for="weekday-sun_{{tag._id}}"></label>
+                        <span class="custom-control-caption">
+                          S
+                        </span>
+                      </div>
+                      <div class="custom-control custom-checkbox" style="display: inline;">
+                        <input class="custom-control-input" id="weekday-mon_{{tag._id}}" type="checkbox" name="weekday_mon"  {% if tag and tag.settings and
+                            tag.settings.weekday_mon %} checked="" {% endif %} />
+                        <label class="custom-control-label" for="weekday-mon_{{tag._id}}"></label>
+                        <span class="custom-control-caption">
+                          M
+                        </span>
+                      </div>
+                      <div class="custom-control custom-checkbox" style="display: inline;">
+                        <input class="custom-control-input" id="weekday-tue_{{tag._id}}" type="checkbox" name="weekday_tue"  {% if tag and tag.settings and
+                            tag.settings.weekday_tue %} checked="" {% endif %} />
+                        <label class="custom-control-label" for="weekday-tue_{{tag._id}}"></label>
+                        <span class="custom-control-caption">
+                         T
+                        </span>
+                      </div>
+                      <div class="custom-control custom-checkbox" style="display: inline;">
+                        <input class="custom-control-input" id="weekday-wed_{{tag._id}}"" type="checkbox" name="weekday_wed" {% if tag and tag.settings and
+                            tag.settings.weekday_wed %} checked="" {% endif %} />
+                        <label class="custom-control-label" for="weekday-wed_{{tag._id}}""></label>
+                        <span class="custom-control-caption">
+                         W
+                        </span>
+                      </div>
+                      <div class="custom-control custom-checkbox" style="display: inline;">
+                        <input class="custom-control-input" id="weekday-thu_{{tag._id}}" type="checkbox" name="weekday_thu" {% if tag and tag.settings and
+                            tag.settings.weekday_thu %} checked="" {% endif %} />
+                        <label class="custom-control-label" for="weekday-thu_{{tag._id}}"></label>
+                        <span class="custom-control-caption">
+                         T
+                        </span>
+                      </div>
+                      <div class="custom-control custom-checkbox" style="display: inline;">
+                        <input class="custom-control-input" id="weekday-fri_{{tag._id}}" type="checkbox" name="weekday_fri" {% if tag and tag.settings and
+                            tag.settings.weekday_fri %} checked="" {% endif %}  />
+                        <label class="custom-control-label" for="weekday-fri_{{tag._id}}"></label>
+                        <span class="custom-control-caption">
+                         F
+                        </span>
+                      </div>
+                      <div class="custom-control custom-checkbox" style="display: inline;">
+                        <input class="custom-control-input" id="weekday-sat_{{tag._id}}" type="checkbox" name="weekday_sat" {% if tag and tag.settings and
+                            tag.settings.weekday_sat %} checked="" {% endif %}/>
+                        <label class="custom-control-label" for="weekday-sat_{{tag._id}}"></label>
+                        <span class="custom-control-caption">
+                         S
+                        </span>
+                      </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <label>{{ gettext("Chon_khung_gio_trong_ngay:") }}</label>
+            </div>
+            <div class="col-lg-4">
+                <input type="text" id="min_hour_in_date_{{tag._id}}" name="min_hour_in_date" value=""
+                    placeholder='{{ gettext("Lon_hon") }}' class="form-control" />
+            </div>
+            <div class="col-lg-4">
+                <input type="text" id="max_hour_in_date_{{tag._id}}" name="max_hour_in_date" value=""
+                    placeholder='{{ gettext("Nho_hon") }}' class="form-control" />
+            </div>
+            <div class="col-lg-4">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" name="all_hours" {% if tag and tag.settings and
+                        tag.settings.all_hours %} checked="" {% endif %} id="customSwitch1_{{tag._id}}">
+                    <label class="custom-control-label" for="customSwitch1_{{tag._id}}">{{ gettext("Ca_ngay")
+                        }}</label>
+                </div>
+                {% if tag and tag.settings and tag.settings.min_hour_in_date %}
+                <input type="hidden" class="c-input" value="{{ tag.settings.min_hour_in_date }}"
+                    id="ex_min_hour_in_date_{{tag._id}}" />
+                {% endif %}
+                {% if tag and tag.settings and tag.settings.max_hour_in_date %}
+                <input type="hidden" class="c-input" value="{{ tag.settings.max_hour_in_date }}"
+                    id="ex_max_hour_in_date_{{tag._id}}" />
+                {% endif %}
+            </div>
+            <script nonce="{{ csp_nonce() }}">
+                $(document).ready(function () {
+                    if ($("#ex_min_hour_in_date_{{tag._id}}").length > 0 && $("#ex_min_hour_in_date_{{tag._id}}").val()
+                        .length > 0 && $("#ex_min_hour_in_date_{{tag._id}}").val() != 'None') {
+                        flatpickr("#min_hour_in_date_{{tag._id}}", {
+                            enableTime: true,
+                            defaultDate: $("#ex_min_hour_in_date_{{tag._id}}").val(),
+                            noCalendar: true,
+                            dateFormat: "H:i", static: true,
+                        });
+                    } else {
+                        flatpickr("#min_hour_in_date_{{tag._id}}", {
+                            enableTime: true,
+                            noCalendar: true,
+                            dateFormat: "H:i", static: true,
+                        });
+                    }
+                    if ($("#ex_max_hour_in_date_{{tag._id}}").length > 0 && $("#ex_max_hour_in_date_{{tag._id}}").val()
+                        .length > 0 && $("#ex_max_hour_in_date_{{tag._id}}").val() != 'None') {
+                        flatpickr("#max_hour_in_date_{{tag._id}}", {
+                            enableTime: true,
+                            defaultDate: $("#ex_max_hour_in_date_{{tag._id}}").val(),
+                            noCalendar: true,
+                            dateFormat: "H:i", static: true,
+                        });
+                    } else {
+                        flatpickr("#max_hour_in_date_{{tag._id}}", {
+                            enableTime: true,
+                            noCalendar: true,
+                            dateFormat: "H:i", static: true,
+                        });
+                    }
+                });
+            </script>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-auto">
+            <div class="custom-control custom-switch">
+                <input type="radio" name="options" id="option4_{{tag._id}}" {% if tag and tag.tag_type=='by_event' %}
+                    checked="" {% endif %} value="by_event" class="custom-control-input">
+                <label class="custom-control-label" for="option4_{{tag._id}}"></label>
+            </div>
+
+        </div>
+        <div class="col ml-n2">
+
+            <span class="custom-control-caption">
+                {{ gettext("Khach_hang_theo_su_kien") }}
+            </span>
+        </div>
+
+    </div>
+
+    <div class="alert alert-light mt-2">
+        <div class="row mb-4">
+            <div class="col-lg-12">
+                <label >{{ gettext("Khoang_ngay:") }}</label>
+            </div>
+            {% if tag and tag.settings and tag.settings.min_date %}
+            <input type="hidden" class="c-input" value="{{ tag.settings.min_date }}" id="ex_min_date_{{tag._id}}" />
+            {% endif %}
+            {% if tag and tag.settings and tag.settings.max_date %}
+            <input type="hidden" class="c-input" value="{{ tag.settings.max_date }}" id="ex_max_date_{{tag._id}}" />
+            {% endif %}
+            <div class="col-lg-6">
+                <input type="text" class="c-input" id="min_date_{{tag._id}}" placeholder='{{ gettext("Tu_ngay") }}'
+                    name="date_from" value="" />
+            </div>
+            <div class="col-lg-6">
+                <input type="text" class="c-input" placeholder='{{ gettext("Den_ngay") }}' id="max_date_{{tag._id}}"
+                    name="date_to" value="" />
+            </div>
+            <script nonce="{{ csp_nonce() }}">
+                $(document).ready(function () {
+                    if ($("#ex_min_date_{{tag._id}}").length > 0 && $("#ex_min_date_{{tag._id}}").val()
+                        .length > 0 && $("#ex_min_date_{{ tag._id }}").val() != 'None') {
+                        flatpickr("#min_date_{{tag._id}}", {
+                            enableTime: false,
+                            defaultDate: $("#ex_min_date_{{tag._id}}").val(),
+                            dateFormat: "d-m-Y"
+                        });
+                    } else {
+                        flatpickr("#min_date_{{tag._id}}", {
+                            enableTime: false,
+                            dateFormat: "d-m-Y"
+                        });
+                    }
+                    if ($("#ex_max_date_{{tag._id}}").length > 0 && $("#ex_max_date_{{tag._id}}").val()
+                        .length > 0 && $("#ex_max_date_{{ tag._id }}").val() != 'None') {
+                        flatpickr("#max_date_{{tag._id}}", {
+                            enableTime: false,
+                            defaultDate: $("#ex_max_date_{{tag._id}}").val(),
+                            dateFormat: "d-m-Y"
+                        });
+                    } else {
+                        flatpickr("#max_date_{{tag._id}}", {
+                            enableTime: false,
+                            dateFormat: "d-m-Y"
+                        });
+                    }
+                });
+            </script>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <label >{{ gettext("Khoang_gio:") }}</label>
+            </div>
+            {% if tag and tag.settings and tag.settings.min_hour %}
+            <input type="hidden" class="c-input" value="{{ tag.settings.min_hour }}" id="ex_min_hour_{{tag._id}}" />
+            {% endif %}
+            {% if tag and tag.settings and tag.settings.max_hour %}
+            <input type="hidden" class="c-input" value="{{ tag.settings.max_hour }}" id="ex_max_hour_{{tag._id}}" />
+            {% endif %}
+            <div class="col-lg-6">
+                <input type="text" id="min_hour_{{tag._id}}" name="min_hour" placeholder='{{ gettext("Lon_hon") }}'
+                    class="form-control" />
+            </div>
+            <div class="col-lg-6">
+                <input type="text" id="max_hour_{{tag._id}}" name="max_hour" placeholder='{{ gettext("Nho_hon") }}'
+                    class="form-control" />
+            </div>
+            <script nonce="{{ csp_nonce() }}">
+                $(document).ready(function () {
+                    if ($("#ex_min_hour_{{tag._id}}").length > 0 && $("#ex_min_hour_{{tag._id}}").val()
+                        .length > 0 && $("#ex_min_hour_{{tag._id}}").val() != 'None') {
+                        flatpickr("#min_hour_{{tag._id}}", {
+                            enableTime: true,
+                            defaultDate: $("#ex_min_hour_{{tag._id}}").val(),
+                            noCalendar: true,
+                            dateFormat: "H:i",
+                            static: true,
+                        });
+                    } else {
+                        flatpickr("#min_hour_{{tag._id}}", {
+                            enableTime: true,
+                            noCalendar: true,
+                            dateFormat: "H:i",
+                            static: true,
+                        });
+                    }
+                    if ($("#ex_max_hour_{{tag._id}}").length > 0 && $("#ex_max_hour_{{tag._id}}").val()
+                        .length > 0 && $("#ex_max_hour_{{tag._id}}").val() != 'None') {
+                        flatpickr("#max_hour_{{tag._id}}", {
+                            enableTime: true,
+                            defaultDate: $("#ex_max_hour_{{tag._id}}").val(),
+                            noCalendar: true,
+                            dateFormat: "H:i",
+                            static: true,
+                        });
+                    } else {
+                        flatpickr("#max_hour_{{tag._id}}", {
+                            enableTime: true,
+                            noCalendar: true,
+                            dateFormat: "H:i",
+                            static: true,
+                        });
+                    }
+                });
+            </script>
+        </div>
+    </div>
+
+</form>
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $("#min_visit_{{ tag._id }}").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                $("#errmsg").html('{{ gettext("Chi_nhap_so") }}').show().fadeOut("slow");
+                return false;
+            }
+        });
+        $("#max_visit_{{ tag._id }}").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                $("#errmsg1").html('{{ gettext("Chi_nhap_so") }}').show().fadeOut("slow");
+                return false;
+            }
+        });
+        $("#new_tag_hotspot_btn").click(function () {
+            $.ajax({
+                type: 'POST',
+                url: $("#tag_for_customers_{{ tag._id }}").attr("action"),
+                data: $("#tag_for_customers_{{ tag._id }}").serialize(),
+                success: function (response) {
+                    var returnedData = JSON.parse(response);
+                    if ('error' in returnedData) {
+                        swal(returnedData['error'], " ", "error");
+                        return false;
+                    } else {
+                        swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+                        location.href = '/hotspot/{{ shop_id_select }}'
+                    }
+                },
+                error: function (xhr, desc, err) {
+                    swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+                    return false;
+                }
+            });
+        });
+        $('#remove_btn').click(function () {
+            var url = "/splash_page_tags/remove/{{tag._id}}";
+            Swal.fire({
+                title: '{{ gettext("Ban_co_chac_chan_muon_xoa_tag_khong?") }}',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+focusCancel: true,
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Có!',
+                cancelButtonText: '{{ gettext("Khong!")}}'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        success: function () {
+                            swal('{{ gettext("Thao_tac_thanh_cong") }}', " ", "success");
+                            location.href = '/hotspot/{{ shop_id_select }}'
+                        }
+                    });
+                }
+            })
+        });
+    });
+</script>
+<div class="row">
+    <div class="col-6">
+        {% if tag %}
+        <a id="remove_btn" class="btn btn-lg btn-outline-danger">
+            {{ gettext("Xoa") }}
+        </a>
+        {% endif %}
+
+    </div>
+    <div class="col-6">
+        <a id="new_tag_hotspot_btn" class="btn btn-lg btn-block btn-primary">
+            {{ gettext("Luu_lai") }}
+        </a>
+
+    </div>
+
+</div>
+
+

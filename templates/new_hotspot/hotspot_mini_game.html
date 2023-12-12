@@ -1,0 +1,212 @@
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id_select" />
+<input type="hidden" name="merchant_id" id="merchant_id" value="{{ merchant_id }}" />
+<input type="hidden" name="dealer_id" id="dealer_id" value="{{ dealer_id }}" />
+<style>
+    .text-middle-left {
+        display: flex;
+        justify-content: left;
+        align-items: center;
+    }
+</style>
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-12 col-xl-12">
+        <div class="card">
+
+            {% if pages|length > 0 %}
+            <div class="table-responsive mb-0">
+                <table class="table table-sm table-nowrap card-table">
+
+                    <tbody>
+                        {% for page in pages %}
+                        <tr>
+                            <td>
+                                {{ page.info.name|cut_name_question }}
+                                <i id="name_question_{{ page._id }}" data-toggle="tooltip" data-placement="right">...</i>
+                                <script nonce="{{ csp_nonce() }}">
+                                    $(document).ready(function () {
+                                        $("#name_question_{{ page._id }}").tooltip({
+                                            "title": "{{ page.info.name }}",
+                                            "animation": true,
+
+                                        });
+                                    });
+                                </script>
+                            </td>
+
+                            <td>
+                                <a href="#view_{{ page._id }}" data-toggle="modal">
+                                    <i class="fa fa-mobile"></i> {{ gettext("Xem_truoc") }}
+                                </a>
+                                <div class="modal hide fade" id="view_{{ page._id }}" tabindex="-1" role="dialog" aria-labelledby="new_image" data-backdrop="static" style="display: none;" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3 class="modal-title">{{ gettext("Xem_truoc") }}</h3>
+                                                <a class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </a>
+                                            </div>
+                                            <div class="modal-body" style="margin: auto">
+                                                <div id="preview_{{ page._id }}"></div>
+                                                <script nonce="{{ csp_nonce() }}">
+                                                    $(document).ready(function () {
+                                                        var url_preview = '/game/'  + '{{ page._id }}';
+                                                        $("#preview_{{ page._id }}").empty();
+                                                        bioMp(document.getElementById('preview_{{ page._id }}'), {
+                                                            url: url_preview,
+                                                            view: 'front',
+                                                            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                            height:618,
+                                                            width: 308
+                                                          });
+                                                      });
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+
+                                {% if page.choosed %}
+                                <a href="#" id="choose_{{ page._id }}" style="color: #5387e5;">
+                                    <span class="fa fa-check"> {{ gettext("Da_chon") }}</span>
+                                </a>
+                                {% else %}
+                                <a href="#" id="choose_{{ page._id }}" style="color: #5387e5;">
+                                    <i class="fa fa-mouse-pointer"></i> {{ gettext("Chon") }}
+                                </a>
+                                {% endif %}
+
+
+                                <script nonce="{{ csp_nonce() }}">
+                                    $(document).ready(function () {
+                                        $('#choose_{{ page._id }}').click(function () {
+                                            var url = '/{{ shop_id_select }}/spin/{{ page._id }}/choose';
+                                            var step = '{{ step }}';
+                                            $.ajax({
+                                                type: 'GET',
+                                                url: url,
+                                                data: {
+                                                    'step': step
+                                                },
+                                                success: function (response) {
+                                                    var returnedData = JSON.parse(response);
+                                                    var result = returnedData.result;
+                                                    if (result) {
+                                                        var choose_status = returnedData.choose_status;
+                                                        $.ajax({
+                                                            url: "/hotspot_type/spin",
+                                                            type: 'GET',
+                                                            data: {
+                                                                'step': step,
+                                                                'shop_id_select': '{{ shop_id_select }}'
+                                                            },
+                                                            beforeSend: function () {
+                                                                $(".detail-splash").empty();
+                                                            },
+                                                            success: function (data) {
+                                                                $(".detail-splash").append(data);
+                                                                console.log('spin');
+                                                                console.log(choose_status);
+                                                                if (choose_status) {
+                                                                    var url_preview = '/game/' + '{{ page._id }}';
+                                                                    console.log(url_preview);
+                                                                    $("#preview").empty();
+                                                                    bioMp(document.getElementById('preview'), {
+                                                                        url: url_preview,
+                                                                        view: 'front',
+                                                                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                                        height:618,
+                                                                        width: 308
+                                                                    });
+                                                                } else {
+                                                                    var url_preview = '/hotspot_type/0?shop_id_select={{ shop_id_select }}';
+                                                                    $("#preview").empty();
+                                                                    bioMp(document.getElementById('preview'), {
+                                                                        url: url_preview,
+                                                                        view: 'front',
+                                                                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                                        height: 618,
+                                                                        width: 308
+                                                                    });
+                                                                }
+                                                            }
+                                                        });
+                                                    } else {
+                                                        swal('{{ gettext("Co_loi_xay_ra,_vui_long_thu_lai") }}.', '', 'error');
+                                                    }
+                                                }
+                                            });
+
+                                        });
+                                    });
+                                </script>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+<div class="card-body">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-xl-8 justify-content-center" style="text-align: center;margin-bottom: 30px; margin-top: 30px">
+            <!-- Title -->
+            <h2>
+                {{ gettext("Ban_chua_tao_mini_game._Vui_long_them_moi") }}
+            </h2>
+            <a data-toggle="modal" href="#new_page_loyal" class="btn btn-flat d-block d-md-inline-block">
+                <i class="fa fa-plus"></i> {{ gettext("Them_moi") }}
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+        </div>
+    </div>
+</div>
+
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+$(document).ready(function() {
+
+    $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+    $("#deactive_splash").click(function() {
+        swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+    });
+    $('textarea').each(function() {
+        $(this).val($(this).val().trim());
+    });
+    $('input').each(function() {
+        $(this).val($(this).val().trim());
+    });
+    var shop_id_select = $("#shop_id_select").val();
+
+
+    var page_id = '{{ choosed_this_step }}';
+    if (page_id && page_id != 'None') {
+        var url_preview = '/game/' + page_id ;
+        $("#preview").empty();
+        bioMp(document.getElementById('preview'), {
+            url: url_preview,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+    } else {
+        var url_preview = '/hotspot_type/0?shop_id_select={{ shop_id_select }}';
+        $("#preview").empty();
+        bioMp(document.getElementById('preview'), {
+            url: url_preview,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+    };
+});
+</script>
+{% endblock %}

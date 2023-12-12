@@ -1,0 +1,66 @@
+{% extends 'nextify/base.html' %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row justify-content-left">
+            <div class="col-12 col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-end">
+                            <div class="col-auto">
+                                <a href="/email_marketing/{{ shop_id_select }}"
+                                   class="btn btn-light">
+                                    <i class="fa fa-close"></i> {{ gettext("Dong_lai") }}
+                                </a>
+
+
+                            </div>
+
+                            <div class="col text-center">
+
+                                <h2 class="card-title text-center">{{ camp.code }}</h2>
+
+
+                            </div>
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+         <div class="row justify-content-center">
+                            <div class="col-md-4">
+                                <div class="card">
+                    <div class="card-body">
+
+<div id="preview"></div>
+                    </div>
+                </div>
+
+                            </div>
+
+                        </div>
+    </div>
+{% endblock %}
+{% block js %}
+
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            var url_preview = '/email_marketing/' + "{{ shop_id_select }}" +'/' +  "{{ camp_id }}" + '/preview_html';
+            $("#preview").empty();
+
+            bioMp(document.getElementById('preview'), {
+                url: url_preview,
+                view: 'front',
+                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                             height:618,
+                    width: 308
+            });
+
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+
+      <!-- Files -->
+      <div class="card" data-toggle="lists" data-lists-values="[&quot;name&quot;]">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+
+              <!-- Title -->
+              <h4 class="card-header-title">
+                Files
+              </h4>
+
+            </div>
+            <div class="col-auto">
+            </div>
+            <div class="col-auto">
+            </div>
+          </div>
+        </div>
+        <div class="card-header">
+          <div class="row">
+            <div class="col-12">
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          {% if files|length > 0 %}
+          <ul class="list-group list-group-lg list-group-flush list my-n4">
+            {% for file in files %}
+            <li class="list-group-item px-0">
+
+              <div class="row align-items-center">
+                <div class="col-auto">
+
+                  <a href="//files.nextify.vn/{{ file.static_path}}">
+                    <span class="avatar-title rounded bg-white text-secondary" style="width: 4rem; height: 4rem; font-size: 1.33333rem;">
+                      <span class="fe fe-package"></span>
+                    </span>
+                  </a>
+
+                </div>
+                <div class="col ml-n2">
+
+                  <!-- Title -->
+                  <h4 class="card-title mb-1 name">
+                    <a href="//files.nextify.vn/{{ file.static_path}}">{{ file.static_path}}</a>
+                  </h4>
+
+                  <!-- Text -->
+                  <p class="card-text small text-muted mb-1">
+                  </p>
+
+                  <!-- Time -->
+                  <p class="card-text small text-muted">
+                    <time datetime="2018-01-03">{{ file.when|human_time_string }}</time>
+                  </p>
+
+                </div>
+                <div class="col-auto">
+                  <a href="//files.nextify.vn/{{ file.static_path}}" style="font-size: medium;"
+                    class="btn btn-sm btn-dark d-none d-md-inline-block">
+                    {{ gettext("Tai_file") }}
+                  </a>
+
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+          <nav class="c-pagination u-justify-center">
+            {% if pagination %}
+            {{ pagination.links }}
+            {% endif %}
+          </nav>
+          {% else %}
+          <div class="c-alert c-alert--info">
+            <i class="c-alert__icon fa fa-info-circle"></i> {{ gettext("Ban_chua_co_files_nao") }}.
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %}
+{% block js %}
+{% endblock %}

@@ -1,0 +1,1269 @@
+{% extends 'nextify/base.html' %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/wifi_wizard.css" />
+<script src="/static/js/dropzone.js"></script>
+
+{% endblock %}
+{% block body %}
+<style>
+    .kanban-container {
+        overflow-x: initial;
+    }
+</style>
+
+<div class="container-fluid">
+
+
+    <div class="row justify-content-center mt-5 py-5">
+        <div class="col-12 col-lg-10 col-xl-8">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8 col-xl-6 text-center">
+
+                    <!-- Title -->
+                    <h1 class="mb-3">
+                        Tạo chiến dịch mặc định
+                    </h1>
+
+                    <!-- Subtitle -->
+                    <p class="mb-5 text-muted">
+                        Tạo chiến dịch WIFI mặc định cho khách hàng mới và khách hàng quay lại, nếu bạn chưa muốn điều
+                        chỉnh lúc nãy, hãy bấm vào Bỏ qua.
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="header">
+                <div class="header-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Pretitle -->
+                            <h6 class="header-pretitle">
+                                Khách hàng mới
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="kanban-container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header card-header-flush">
+
+                                <!-- Title -->
+                                <h4 class="card-header-title text-center">
+                                    Bước 1
+                                </h4>
+
+
+
+                            </div>
+                            <div class="card-body">
+
+                                <div id="new_step_1_preview"></div>
+
+                            </div>
+                            <div class="card-footer">
+                                <div class="text-center">
+                                    <a class="kanban-add-link" href="#" data-target="#image_register_campaign"
+                                        aria-haspopup="true" aria-expanded="false" data-toggle="modal">Chọn ảnh</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header card-header-flush">
+
+                                <!-- Title -->
+                                <h4 class="card-header-title text-center">
+                                    Bước 2
+                                </h4>
+
+
+
+                            </div>
+                            <div class="card-body">
+                                <div id="new_step_2_preview"></div>
+
+
+                            </div>
+
+                            <div class="card-footer">
+                                <div class="text-center">
+                                    <a class="kanban-add-link" data-target="#collect_register_campaign"
+                                        aria-haspopup="true" aria-expanded="false" data-toggle="modal">Cấu hình</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header card-header-flush">
+
+                                <!-- Title -->
+                                <h4 class="card-header-title text-center">
+                                    Bước 3
+                                </h4>
+
+
+
+                            </div>
+                            <div class="card-body">
+                                <div id="new_step_3_preview"></div>
+
+
+                            </div>
+                            <div class="card-footer">
+                                <div class="text-center">
+                                    <a class="kanban-add-link" data-target="#connect_register_campaign"
+                                        aria-haspopup="true" aria-expanded="false" data-toggle="modal">Chọn trang
+                                        đích</a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+            <div class="header">
+                <div class="header-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Pretitle -->
+                            <h6 class="header-pretitle">
+                                Khách hàng quay lại
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="kanban-container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header card-header-flush">
+
+                                <!-- Title -->
+                                <h4 class="card-header-title text-center">
+                                    Bước 1
+                                </h4>
+
+
+
+                            </div>
+                            <div class="card-body">
+                                <div id="return_step_1_preview"></div>
+
+                            </div>
+                            <div class="card-footer">
+                                <div class="text-center">
+                                    <a class="kanban-add-link" href="#" data-target="#image_return_campaign"
+                                    aria-haspopup="true" aria-expanded="false" data-toggle="modal">Chọn ảnh</a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header card-header-flush">
+
+                                <!-- Title -->
+                                <h4 class="card-header-title text-center">
+                                    Bước 2
+                                </h4>
+
+
+
+                            </div>
+                            <div class="card-body">
+                                <div id="return_step_2_preview"></div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="text-center">
+                                    <a class="kanban-add-link" href="#" data-target="#survey_return_campaign"
+                                    aria-haspopup="true" aria-expanded="false" data-toggle="modal">Chọn khảo sát</a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header card-header-flush">
+
+                                <!-- Title -->
+                                <h4 class="card-header-title text-center">
+                                    Bước 3
+                                </h4>
+
+
+
+                            </div>
+                            <div class="card-body">
+                                <div id="return_step_3_preview"></div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="text-center">
+                                    <a class="kanban-add-link" href="#" data-target="#connect_return_campaign"
+                                    aria-haspopup="true" aria-expanded="false" data-toggle="modal">Chọn trang đích</a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+            <div class="row align-items-center">
+                <div class="col-auto">
+
+                    <!-- Button -->
+
+
+                </div>
+                <div class="col text-center">
+                    <a class="btn btn-lg btn-danger" href="/welcome/init_automation/{{shop_id_select}}?campaign=True" id="next_campaign">Tiếp tục</a>
+                </div>
+
+                <div class="col-auto">
+
+                    <!-- Button -->
+                    <a class="#" href="/welcome/init_automation/{{shop_id_select}}?campaign=False">Bỏ qua</a>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="modal fade" id="image_register_campaign" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Trang chào hình ảnh</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                <input type="hidden"  id="photo_image" />
+                <div class="card-body">
+                    <div class="col-auto mb-2" style="display: flex; align-items: center;">
+                        <div class="spinner-border text-danger" role="status" id="image_loading"
+                            style="margin: auto; display: none;">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        
+    
+                    </div>
+                    <div class="dropzone dropzone-multiple" data-toggle="dropzone_img_register" id="dropzone_img"
+                        data-options='{"url": "/files",  "maxFiles": 1, "acceptedFiles": "image/*"}'>
+    
+                        <!-- Fallback -->
+                        <div class="fallback">
+                            <div class="custom-file">
+    
+                                <input type="file" class="custom-file-input" id="customFileUploadMultiple" multiple>
+                                <label class="custom-file-label" for="customFileUploadMultiple">{{ gettext("Choose_file") }}</label>
+                            </div>
+                        </div>
+    
+                        <ul class="dz-preview dz-preview-multiple list-group list-group-lg list-group-flush" id='preview_image_register'>
+                            <li class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+    
+                                        <!-- Image -->
+                                        <div class="avatar">
+                                            <img class="avatar-img rounded" src="" alt="..." data-dz-thumbnail>
+                                        </div>
+    
+                                    </div>
+                                    <div class="col ml-n3">
+    
+                                        <!-- Heading -->
+                                        <h4 class="mb-1" data-dz-name></h4>
+    
+                                      
+    
+                                    </div>
+                                    <div class="col-auto">
+    
+                                        <span class="fe fe-x-circle mr-4" data-dz-remove></span>
+    
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <script nonce="{{ csp_nonce() }}">
+                                var csrf_token = "{{ csrf_token() }}";
+                                var img_name = $('#photo_image').val();
+                                var t = function () {
+                                    
+                                    var e = document.querySelectorAll('[data-toggle="dropzone_img_register"]');
+                                    "undefined" != typeof Dropzone && e && (Dropzone.autoDiscover = !1, Dropzone.thumbnailWidth = null, Dropzone.thumbnailHeight = null, [].forEach.call(e, function (e) {
+                                        ! function (e) {
+                                            var t = void 0,
+                                                a = e.dataset.options;
+                                            a = a ? JSON.parse(a) : {};
+                                            var o = {
+                                                previewsContainer: e.querySelector(".dz-preview"),
+                                                previewTemplate: e.querySelector(".dz-preview").innerHTML,
+                                                init: function () {
+                                                    
+                                                    this.on("addedfile", function (e) {
+                                                            1 == a.maxFiles && t && this.removeFile(t), t = e
+                                                    });
+                                                    this.on("success", function(file, response) {
+                                                        var obj = jQuery.parseJSON(response)                                               
+                                                        var new_img = obj['new_img']
+                                                        this.removeAllFiles(true);
+                                                        var countDiv = $('ul#preview_image_register li').length
+                                                        if(countDiv <1){
+                                                            var mockFile = {
+                                                            url: '//files.nextify.vn/' + new_img,
+                                                            name: new_img
+                                                            };
+                                                            this.emit("addedfile", mockFile); 
+                                                            this.emit("thumbnail", mockFile, mockFile.url);
+                                                            $('#photo_image').val(new_img)
+                                                            
+                                                        }else{
+                                                            swal('Tối đa 1 ảnh', '', 'error')
+                                                        }
+                                                        $("#image_loading").hide();
+                                                    })
+                                                    this.on("sending", function (file, xhr, formData) {
+                                                        $("#image_loading").show();
+                                                        formData.append('_csrf_token', '{{ csrf_token() }}');
+                                                        formData.append('type_page', 'register_image');
+                                                    });
+                                                    this.on("removedfile", function (file) {
+                                                        $('#photo_image').val('')
+        
+                                                    });
+ 
+                                                }
+                                            }, l = Object.assign(o, a);
+                                            e.querySelector(".dz-preview").innerHTML = "", new Dropzone(e, l)
+                                        }(e)
+                                    }))
+                                }();
+                        </script>
+                    </div>
+                    
+                </div>
+    
+                <div class="card-footer">
+                    <button type="button" class="btn btn-danger" style="float: right;" id="save_image" data-dismiss="modal">
+                        Lưu lại
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" id="collect_register_campaign" tabindex="-1" style="display: none;"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Trang đăng ký thông tin</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" id="login_form_settings" enctype="multipart/form-data">
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+                        <div class="row mb-2">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+
+                                    <label class="mb-1" for="logo">Logo</label>
+                                    <small class="form-text text-muted">
+                                        {{
+                                        gettext('De_hinh_anh_hien_thi_dep_nhat_vui_long_su_dung_kich_thuoc_2048_x_2048_px.')
+                                        }}
+                                    </small>
+                                    <div class='img_container'>
+                                        {% if shop_select.logo %}
+                                        <img class="preview" id="view_logo"
+                                            src="//files.nextify.vn/{{ shop_select.logo }}"
+                                            style="width: 168px; height: 168px">
+
+                                        {% endif %}
+                                    </div>
+                                    <input type="file" class="imgInp" id="logo" name="logo">
+
+                                </div>
+                                <div class="form-group">
+
+                                    <label class="mb-1" for="background">{{ gettext('Anh') }} Cover</label>
+                                    <small class="form-text text-muted">
+                                        {{
+                                        gettext('De_hinh_anh_hien_thi_dep_nhat_vui_long_su_dung_kich_thuoc_1958_x_745_px.')
+                                        }}
+                                    </small>
+                                    <div class='img_container'>
+                                        {% if shop_select.background %}
+                                        <img class="preview" id="view_background"
+                                            src="//files.nextify.vn/{{ shop_select.background }}"
+                                            style="width: 402px; height: 197px">
+
+                                        {% endif %}
+
+                                    </div>
+                                    <input type="file" class="imgInp" id="background" name="background">
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+
+
+                                <div class="card bg-light border ml-md-4">
+                                    <div class="card-header">{{ gettext('Hinh_thuc_ket_noi') }}</div>
+
+                                    <div class="card-body">
+
+                                        <div class="form-group form-inline">
+                                            <input class="form-control" id="checkbox1" name="phone_visible"
+                                                type="checkbox" {% if login_form.phone and
+                                                login_form.phone|lower=="true" %}checked{% endif %}>
+                                            <label style="margin-left: 5px" for="checkbox1"> {{
+                                                gettext('Ket_noi_qua_so_dien_thoai') }}</label>
+                                        </div>
+                                        <div class="form-group form-inline">
+                                            <input class="form-control" id="checkbox2" name="email_visible"
+                                                type="checkbox" {% if login_form.email and
+                                                login_form.email|lower=="true" %}checked{% endif %}>
+                                            <label style="margin-left: 5px" for="checkbox2"> {{
+                                                gettext('Ket_noi_qua_Email')
+                                                }}</label>
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+
+
+
+
+                                <div class="card bg-light border ml-md-4">
+                                    <div class="card-header">
+                                        {{ gettext('Moi_khach_hang_bo_dung_thong_tin') }}
+                                    </div>
+                                    <div class="card-body">
+
+                                        <div class="form-group form-inline">
+                                            <input class="form-control" id="checkbox3" name="name_visible"
+                                                type="checkbox" {% if login_form .name and login_form.name|lower=="true"
+                                                %}checked{% endif %}>
+                                            <label style="margin-left: 5px" for="checkbox3">{{
+                                                gettext('HotspotRegisterScreenNameText')}}</label>
+                                        </div>
+                                        <div class="form-group form-inline">
+                                            <input class="form-control" id="checkbox4" name="birthday_visible"
+                                                type="checkbox" {% if login_form.birthday and
+                                                login_form.birthday|lower=="true" %}checked{% endif %}>
+                                            <label style="margin-left: 5px" for="checkbox4">{{
+                                                gettext('HotspotRegisterScreendayofbirthText')}}</label>
+                                        </div>
+                                        <div class="form-group form-inline">
+                                            <input class="form-control" id="checkbox6" name="gender_visible"
+                                                type="checkbox" {% if login_form.gender and
+                                                login_form.gender|lower=="true" %}checked{% endif %}>
+                                            <label style="margin-left: 5px" for="checkbox6">{{
+                                                gettext('HotspotRegisterScreenGenderText')}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <label class="mb-1">{{ gettext('HotspotRegisterScreenWelcomemessageText')}}</label>
+                                    <textarea class="form-control" id="welcome_text" name="welcome_text" row mb-4s="6">
+                                                                {% if login_form.welcome_text|length > 1 %}
+                                                                    {{ login_form.welcome_text }}
+                                                                {% else %}
+                                                                    {{ gettext('Dang_ky_khach_hang_than_thiet_de_nhan_cac_uu_dai_hap_dan.') }} <br/>
+                                                                    Get connected with FREE WIFI
+                                                                {% endif %}
+                                                            </textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <label class="mb-1">{{ gettext('HotspotRegisterScreenBirthdaymessageText')}}</label>
+                                    <textarea class="form-control" id="birthday_text" name="birthday_text" row
+                                        mb-4s="6">
+                                                                {% if login_form.birthday_text|length > 1 %}
+                                                                    {{ login_form.birthday_text }}
+                                                                {% else %}
+                                                                    {{ gettext('Dung_quen_nhap_ngay_sinh_nhat_de_nhan_qua_tu_chung_toi_nhe') }}
+                                                                {% endif %}
+                                                            </textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <label class="mb-1">{{ gettext('HotspotRegisterScreenConnectbuttonText')}}</label>
+                                    <textarea class="form-control" id="welcome_button" name="welcome_button" row
+                                        mb-4s="2">
+                                                        {% if login_form.welcome_button and login_form.welcome_button|length > 1 %}
+                                                            {{ login_form.welcome_button }}
+                                                        {% else %}
+                                                        {{ gettext('Ket_noi_wi-Fi/Go_Online') }}
+                                                        {% endif %}
+                                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-danger" style="float: right;" id="save_collect"
+                            data-dismiss="modal">
+                            Lưu
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="connect_register_campaign" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Trang kết nối</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="connect_register">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-group">
+
+                            <input type="hidden" value="" id="ex_redirect_type" />
+
+                            <label for="auto_popup">{{ gettext('Chuyen_huong_sau_khi_dang_nhap:') }}</label>
+                            <select class="custom-select control-container" id="redirect_type" name="redirect_type">
+                                <option value="website">Website</option>
+                                <option value="mobile_app">Mobile App</option>
+                                <option value="facebook_page">Facebook Page</option>
+                                <option value="zalo_oa">Zalo OA</option>
+                                <option value="instagram">Instagram</option>
+                                <option value="facebook_mess">Facebook Mess</option>
+
+                            </select>
+
+                        </div>
+                        <div class="form-group" id="auto_website">
+                            <input type="text" class="form-control" id="auto_website" name="auto_website"
+                                placeholder="https://yourwebsite.com" value="">
+                        </div>
+                        <div class="form-group" id="auto_mobile_app">
+                            <label for="display_coupon" class="mt-2">IOS:</label>
+                            <input type="text" class="form-control" id="auto_popup_ios" name="auto_popup_ios"
+                                placeholder="https://itunes.apple.com/lb/app/yourapp" value="">
+
+                            <label for="display_coupon" class="mt-2">Android</label>
+                            <input type="text" class="form-control" id="auto_popup_android" name="auto_popup_android"
+                                placeholder="https://play.google.com/store/apps/details?id=yourapp" value="">
+                        </div>
+                        <div class="form-group" id="auto_facebook_page">
+                            <input type="text" class="form-control" id="auto_facebook_page" name="auto_facebook_page"
+                                placeholder="http://facebook.com/yourpage" value="">
+                        </div>
+                        <div class="form-group" id="auto_zalo_oa">
+                            <input type="text" class="form-control" id="auto_popup_zalo" name="auto_popup_zalo"
+                                placeholder="https://zalo.me/yourzalo" value="">
+                        </div>
+                        <div class="form-group" id="auto_instagram">
+                            <input type="text" class="form-control" id="auto_popup_insta" name="auto_popup_insta"
+                                placeholder="https://www.instagram.com/yourinstagrampage" value="">
+                        </div>
+                        <div class="form-group" id="auto_facebook_mess">
+                            <input type="text" class="form-control" id="auto_facebook_mess" name="auto_facebook_mess"
+                                placeholder="https://m.me/yourpage" value="">
+                        </div>
+
+                        <script nonce="{{ csp_nonce() }}">
+                            $(document).ready(function () {
+                                var list_redirect_type = ['website', 'mobile_app', 'facebook_page', 'zalo_oa', 'instagram', 'facebook_mess'];
+                                list_redirect_type.forEach(function (i) {
+                                    $("#auto_" + i).hide();
+                                });
+                                $("#redirect_type").on('change', function () {
+
+                                    var redirect_type = $("#redirect_type").val();
+
+                                    list_redirect_type.forEach(function (i) {
+                                        if (i == redirect_type) {
+                                            $("#auto_" + i).show();
+                                        } else {
+                                            $("#auto_" + i).hide();
+                                        }
+                                    })
+                                });
+                            })
+                        </script>
+
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-danger" style="float: right;" id="save_connect_register"
+                        data-dismiss="modal">
+                        Lưu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="image_return_campaign" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Trang chào hình ảnh</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                <input type="hidden"  id="photo_return_image" />
+                <div class="card-body">
+                    <div class="col-auto mb-2" style="display: flex; align-items: center;">
+                        <div class="spinner-border text-danger" role="status" id="return_image_loading"
+                            style="margin: auto; display: none;">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        
+    
+                    </div>
+                    <div class="dropzone dropzone-multiple" data-toggle="dropzone_img_return" 
+                        data-options='{"url": "/files",  "maxFiles": 1, "acceptedFiles": "image/*"}'>
+    
+                        <!-- Fallback -->
+                        <div class="fallback">
+                            <div class="custom-file">
+    
+                                <input type="file" class="custom-file-input" id="customFileUploadMultiple" multiple>
+                                <label class="custom-file-label" for="customFileUploadMultiple">{{ gettext("Choose_file") }}</label>
+                            </div>
+                        </div>
+    
+                        <ul class="dz-preview dz-preview-multiple list-group list-group-lg list-group-flush" id='preview_image_return'>
+                            <li class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+    
+                                        <!-- Image -->
+                                        <div class="avatar">
+                                            <img class="avatar-img rounded" src="" alt="..." data-dz-thumbnail>
+                                        </div>
+    
+                                    </div>
+                                    <div class="col ml-n3">
+    
+                                        <!-- Heading -->
+                                        <h4 class="mb-1" data-dz-name></h4>
+    
+                                      
+    
+                                    </div>
+                                    <div class="col-auto">
+    
+                                        <span class="fe fe-x-circle mr-4" data-dz-remove></span>
+    
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <script nonce="{{ csp_nonce() }}">
+                                var csrf_token = "{{ csrf_token() }}";
+                                var img_name = $('#photo__return_image').val();
+                                var t = function () {
+                                    
+                                    var e = document.querySelectorAll('[data-toggle="dropzone_img_return"]');
+                                    "undefined" != typeof Dropzone && e && (Dropzone.autoDiscover = !1, Dropzone.thumbnailWidth = null, Dropzone.thumbnailHeight = null, [].forEach.call(e, function (e) {
+                                        ! function (e) {
+                                            var t = void 0,
+                                                a = e.dataset.options;
+                                            a = a ? JSON.parse(a) : {};
+                                            var o = {
+                                                previewsContainer: e.querySelector(".dz-preview"),
+                                                previewTemplate: e.querySelector(".dz-preview").innerHTML,
+                                                init: function () {
+                                                    
+                                                    this.on("addedfile", function (e) {
+                                                            1 == a.maxFiles && t && this.removeFile(t), t = e
+                                                    });
+                                                    this.on("success", function(file, response) {
+                                                        var obj = jQuery.parseJSON(response)                                               
+                                                        var new_img = obj['new_img']
+                                                        this.removeAllFiles(true);
+                                                        var countDiv = $('ul#preview_image_return li').length
+                                                        if(countDiv <1){
+                                                            
+                                                            var mockFile = {
+                                                            url: '//files.nextify.vn/' + new_img,
+                                                            name: new_img
+                                                            };
+                                                            this.emit("addedfile", mockFile); 
+                                                            this.emit("thumbnail", mockFile, mockFile.url);
+                                                            $('#photo_return_image').val(new_img)
+                                                            
+                                                        }else{
+                                                            swal('Tối đa 1 ảnh', '', 'error')
+                                                        }
+                                                        $("#return_image_loading").hide();
+                                                    })
+                                                    this.on("sending", function (file, xhr, formData) {
+                                                        $("#return_image_loading").show();
+                                                        formData.append('_csrf_token', '{{ csrf_token() }}');
+                                                        formData.append('type_page', 'return_image');
+                                                    });
+                                                    this.on("removedfile", function (file) {
+                                                        $('#photo_return_image').val('')
+        
+                                                    });
+ 
+                                                }
+                                            }, l = Object.assign(o, a);
+                                            e.querySelector(".dz-preview").innerHTML = "", new Dropzone(e, l)
+                                        }(e)
+                                    }))
+                                }();
+                        </script>
+                    </div>
+                    
+                </div>
+    
+                <div class="card-footer">
+                    <button type="button" class="btn btn-danger" style="float: right;" id="save_return_image"
+                        data-dismiss="modal">
+                        Lưu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="survey_return_campaign" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Trang khảo sát</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="return_surveys">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-group">
+                            <select class="custom-select control-container" id="return_survey" name="return_survey" aria-placeholder="Chọn trang khảo sát">
+                                <option value=""> Chọn trang khảo sát</option>
+                                {% for survey in surveys %}
+                                <option value="{{ survey._id }}"> {{ survey.question }}</option>
+                                {% endfor %}
+                            </select>
+
+                        </div>
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-danger" style="float: right;" id="save_survey"
+                        data-dismiss="modal">
+                        Lưu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="connect_return_campaign" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Trang kết nối</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="form_connect_return" enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-group">
+                            <input type="hidden" value="" id="ex_redirect_type" />
+                            <label for="return_auto_popup">{{ gettext('Chuyen_huong_sau_khi_dang_nhap:') }}</label>
+                            <select class="custom-select control-container" id="redirect_type_return" name="redirect_type_return">
+                                <option value="website">Website</option>
+                                <option value="mobile_app">Mobile App</option>
+                                <option value="facebook_page">Facebook Page</option>
+                                <option value="zalo_oa">Zalo OA</option>
+                                <option value="instagram">Instagram</option>
+                                <option value="facebook_mess">Facebook Mess</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="return_auto_website">
+                            <input type="text" class="form-control" id="return_auto_website" name="return_auto_website"
+                                placeholder="https://yourwebsite.com" value="">
+                        </div>
+                        <div class="form-group" id="return_auto_mobile_app">
+                            <label for="display_coupon" class="mt-2">IOS:</label>
+                            <input type="text" class="form-control" id="return_auto_popup_ios" name="return_auto_popup_ios"
+                                placeholder="https://itunes.apple.com/lb/app/yourapp" value="">
+
+                            <label for="display_coupon" class="mt-2">Android</label>
+                            <input type="text" class="form-control" id="return_auto_popup_android" name="return_auto_popup_android"
+                                placeholder="https://play.google.com/store/apps/details?id=yourapp" value="">
+                        </div>
+                        <div class="form-group" id="return_auto_facebook_page">
+                            <input type="text" class="form-control" id="return_auto_facebook_page" name="return_auto_facebook_page"
+                                placeholder="http://facebook.com/yourpage" value="">
+                        </div>
+                        <div class="form-group" id="return_auto_zalo_oa">
+                            <input type="text" class="form-control" id="return_auto_popup_zalo" name="return_auto_popup_zalo"
+                                placeholder="https://zalo.me/yourzalo" value="">
+                        </div>
+                        <div class="form-group" id="return_auto_instagram">
+                            <input type="text" class="form-control" id="return_auto_popup_insta" name="return_auto_popup_insta"
+                                placeholder="https://www.instagram.com/yourinstagrampage" value="">
+                        </div>
+                        <div class="form-group" id="return_auto_facebook_mess">
+                            <input type="text" class="form-control" id="return_auto_facebook_mess" name="return_auto_facebook_mess"
+                                placeholder="https://m.me/yourpage" value="">
+                        </div>
+
+                        <script nonce="{{ csp_nonce() }}">
+                            $(document).ready(function () {
+                                var list_redirect = ['website', 'mobile_app', 'facebook_page', 'zalo_oa', 'instagram', 'facebook_mess'];
+                                list_redirect.forEach(function (i) {
+                                    $("#return_auto_" + i).hide();
+                                });
+                                $("#redirect_type_return").on('change', function () {
+
+                                    var redirect_type_return = $("#redirect_type_return").val();
+
+                                    list_redirect.forEach(function (i) {
+                                        if (i == redirect_type_return) {
+                                            $("#return_auto_" + i).show();
+                                        } else {
+                                            $("#return_auto_" + i).hide();
+                                        }
+                                    })
+                                });
+                            })
+                        </script>
+
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-danger" style="float: right;" id="save_connect_return"
+                        data-dismiss="modal">
+                        Lưu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id" />
+{% endblock %}
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        var shop_id = $('#shop_id').val()
+        $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        });
+        $('input').each(function () {
+            $(this).val($(this).val().trim());
+        });
+        function readURL(input, input_view) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                var view_id = '#' + input_view;
+                reader.onload = function (e) {
+                    $(view_id).attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#logo").change(function () {
+            readURL(this, 'view_logo');
+        });
+        $("#background").change(function () {
+            readURL(this, 'view_background');
+        });
+
+        var shop_id = $('#shop_id').val();
+        var url_preview = '/preview/' + shop_id + '/register';
+        $("#new_step_1_preview").empty();
+        url_preview_image = '/preview_init_camp/' + shop_id + '/image_register';
+        bioMp(document.getElementById('new_step_1_preview'), {
+            url: url_preview_image,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+        $("#new_step_2_preview").empty();
+        bioMp(document.getElementById('new_step_2_preview'), {
+            url: url_preview,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+        $("#new_step_3_preview").empty();
+        url_preview_connect = '/preview_init_camp/' + shop_id + '/connect_register';
+        bioMp(document.getElementById('new_step_3_preview'), {
+            url: url_preview_connect,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+
+
+
+        $("#return_step_1_preview").empty();
+        url_preview_img_return = '/preview_init_camp/' + shop_id + '/image_return';
+        bioMp(document.getElementById('return_step_1_preview'), {
+            url: url_preview_img_return,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+        $("#return_step_2_preview").empty();
+        url_preview_default = '/preview_init_camp/' + shop_id + '/0';
+        bioMp(document.getElementById('return_step_2_preview'), {
+            url: url_preview_default,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+        $("#return_step_3_preview").empty();
+        url_preview_connect = '/preview_init_camp/' + shop_id + '/connect_register';
+        bioMp(document.getElementById('return_step_3_preview'), {
+            url: url_preview_connect,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+
+
+
+        function validate(photo) {
+            var file_size = $(photo)[0].files[0].size;
+            var file = $(photo).val();
+            var exts = ['jpg', 'png', 'jpeg'];
+            if (file) {
+                var get_ext = file.split('.');
+                get_ext = get_ext.reverse();
+                if ($.inArray(get_ext[0].toLowerCase(), exts) > -1) {
+                    if (file_size > 3670016) {
+                        return "big_file";
+                    } else {
+                        return true;
+                    }
+                } else {
+                    return false;
+                }
+            }
+
+        }
+        $("#logo").change(function () {
+            var validate_photo = validate(this);
+            if (validate_photo == true) {
+                swal('{{ gettext("Chon_File_thanh_cong") }}', '', 'success');
+                $('#view_logo').show();
+                readURL(this, 'view_logo');
+            } else {
+                if (validate_photo == "big_file") {
+                    swal('{{ gettext("File_co_kich_thoc_qua_lon") }}', '', 'error');
+                    return false
+                };
+                swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                $('#logo').val('');
+                $('#view_logo').hide();
+            }
+        });
+
+        $("#background").change(function () {
+            if (validate(this) == true) {
+                swal('{{ gettext("Chon_File_thanh_cong") }}', '', 'success');
+                $('#view_background').show();
+                // readURL(this, 'view_background');
+            } else {
+                swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                $('#background').val('');
+                $('#view_background').hide();
+            }
+        });
+
+
+        $("#save_image").click(function () {
+            var type_page = 'image_register'
+            var form_data = new FormData();
+            var img = $('#photo_image').val();
+            form_data.append('type_page', type_page);
+            form_data.append('img_register', img);
+            $.ajax({
+                headers: { "X-CSRFToken": '{{ csrf_token() }}' },
+                url: "/save_page_init/" + shop_id,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function () {
+                    var url_preiew = '/preview_init_camp/' + shop_id + '/' + type_page;
+                    $("#new_step_1_preview").empty();
+                    bioMp(document.getElementById('new_step_1_preview'), {
+                        url: url_preiew,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 618,
+                        width: 308
+                    });
+                }
+            });
+
+
+        });
+
+        $("#save_collect").click(function () {
+            var type_page = 'collect_register'
+            var modal_collect = document.getElementById('login_form_settings');
+            var form_collect = new FormData(modal_collect);
+            var collect_page = {};
+            var form_data = new FormData();
+            var new_logo = $('#logo')[0].files[0]
+            var new_background = $('#background')[0].files[0]
+            form_collect.forEach((value, key) => {
+                // Reflect.has in favor of: object.hasOwnProperty(key)
+                if (!Reflect.has(collect_page, key)) {
+                    collect_page[key] = value;
+                    return;
+                }
+                if (!Array.isArray(collect_page[key])) {
+                    collect_page[key] = [collect_page[key]];
+                }
+                collect_page[key].push(value);
+            });
+            form_data.append('collect_page', JSON.stringify(collect_page))
+            form_data.append('new_logo', new_logo);
+            form_data.append('new_background', new_background);
+            form_data.append('type_page', type_page);
+            $.ajax({
+                headers: { "X-CSRFToken": '{{ csrf_token() }}' },
+                url: "/save_page_init/" + shop_id,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function () {
+                    var url_preiew = '/preview_init_camp/' + shop_id + '/' + type_page;
+                    $("#new_step_2_preview").empty();
+                    bioMp(document.getElementById('new_step_2_preview'), {
+                        url: url_preiew,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 618,
+                        width: 308
+                    });
+                }
+            });
+        });
+
+        $("#save_connect_register").click(function () {
+            var type_page = 'connect_register'
+            var modal_connect = document.getElementById('connect_register');
+            var form_connect = new FormData(modal_connect);
+            var connect_success_page = {};
+            var form_data = new FormData();
+            form_connect.forEach((value, key) => {
+                // Reflect.has in favor of: object.hasOwnProperty(key)
+                if (!Reflect.has(connect_success_page, key)) {
+                    connect_success_page[key] = value;
+                    return;
+                }
+                if (!Array.isArray(connect_success_page[key])) {
+                    connect_success_page[key] = [connect_success_page[key]];
+                }
+                connect_success_page[key].push(value);
+            });
+            form_data.append('connect_register', JSON.stringify(connect_success_page))
+            
+            form_data.append('type_page', type_page)
+            $.ajax({
+                headers: { "X-CSRFToken": '{{ csrf_token() }}' },
+                url: "/save_page_init/" + shop_id,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function () {
+                    var url_preiew = '/preview_init_camp/' + shop_id + '/' + type_page;
+                    $("#new_step_3_preview").empty();
+                    bioMp(document.getElementById('new_step_3_preview'), {
+                        url: url_preiew,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 618,
+                        width: 308
+                    });
+                }
+            });
+        });
+
+        $("#save_return_image").click(function () {
+            var type_page = 'image_return'
+            var form_data = new FormData();
+            var img = $('#photo_return_image').val();
+            form_data.append('img_return', img);
+            form_data.append('type_page', type_page);
+            $.ajax({
+                headers: { "X-CSRFToken": '{{ csrf_token() }}' },
+                url: "/save_page_init/" + shop_id,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function () {
+                    var url_preiew = '/preview_init_camp/' + shop_id + '/' + type_page;
+                    $("#return_step_1_preview").empty();
+                    bioMp(document.getElementById('return_step_1_preview'), {
+                        url: url_preiew,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 618,
+                        width: 308
+                    });
+                }
+            });
+
+
+        });
+
+        $("#save_survey").click(function () {
+            var type_page = 'survey'
+            var survey_id = $('#return_survey').val();           
+            if(survey_id.length > 0){
+                var form_data = new FormData();
+                form_data.append('type_page', type_page);
+                form_data.append('survey_id', survey_id);
+                $.ajax({
+                    headers: { "X-CSRFToken": '{{ csrf_token() }}' },
+                    url: "/save_page_init/" + shop_id,
+                    type: 'POST',
+                    data: form_data,
+                    contentType: false,
+                    processData: false,
+                    success: function () {
+                        var url_preiew = '/preview_init_camp/' + shop_id + '/' + type_page;
+                        $("#return_step_2_preview").empty();
+                        bioMp(document.getElementById('return_step_2_preview'), {
+                            url: url_preiew,
+                            view: 'front',
+                            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                            height: 618,
+                            width: 308
+                        });
+                    }
+                });
+            }
+
+
+        });
+    
+        $("#save_connect_return").click(function () {
+            var type_page = 'connect_return'
+            var form = $('#form_connect_return')[0];
+            var connect_return = new FormData(form);
+            var connect_success_page = {};
+            var form_data = new FormData();
+
+            connect_return.forEach((value, key) => {
+                // Reflect.has in favor of: object.hasOwnProperty(key)
+                if (!Reflect.has(connect_success_page, key)) {
+                    connect_success_page[key] = value;
+                    return;
+                }
+                if (!Array.isArray(connect_success_page[key])) {
+                    connect_success_page[key] = [connect_success_page[key]];
+                }
+                connect_success_page[key].push(value);
+            });
+            form_data.append('connect_return', JSON.stringify(connect_success_page))
+            
+            form_data.append('type_page', type_page)
+            $.ajax({
+                headers: { "X-CSRFToken": '{{ csrf_token() }}' },
+                url: "/save_page_init/" + shop_id,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function () {
+                    var url_preiew = '/preview_init_camp/' + shop_id + '/' + type_page;
+                    $("#return_step_3_preview").empty();
+                    bioMp(document.getElementById('return_step_3_preview'), {
+                        url: url_preiew,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 618,
+                        width: 308
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

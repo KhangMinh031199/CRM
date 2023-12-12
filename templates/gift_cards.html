@@ -1,0 +1,53 @@
+{% extends "v2/base.html" %} {% block right_content %}
+
+<div class="row">
+    <div class="header">
+        <h4 class="title">GiftCard</h4>
+    </div>
+    <div class="card">
+        <div class="content">
+
+        </div>
+        <div class="content table-responsive table-full-width">
+
+            <table class="table table-hover table-striped">
+                <thead>
+                    <th>{{ gettext("ID") }}</th>
+                    <th>{{ gettext("Name") }}</th>
+                    <th>{{ gettext("Notes") }}</th>
+                    <th>{{ gettext("GiftCard Number") }} </th>
+                    <th>{{ gettext("Expire Date") }} </th>
+                    <th>{{ gettext("Active") }}</th>
+                </thead>
+                <tbody>
+                    {% for voun in vounchers %}
+                    <tr>
+                       <td><a href="/vounchers/{{voun.GiftCardId}}">{{voun.GiftCardId}}</a></td>
+                       <td><a href="/vounchers/{{voun.GiftCardId}}">{{voun.CardHolderName}}</a></td>
+                       <td>{{voun.Notes}}</td>
+                       <td>{{voun.GiftCardNum}}</td>
+                       <td>{{voun.ExpireDate}}</td>
+                       <td>{{voun.Active}}</td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+                {%if pagination %}
+        <center>
+            {{ pagination.links }}
+        </center>
+        {%endif%}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+{%block js%}
+ <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+              $('#vouchers').click();
+        });
+</script>
+{%endblock%}

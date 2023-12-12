@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge"> {% if 'viettel.vn' in request.url %}
+    <title>Viettel | vmarketing</title>
+    {% include 'nextify/viettel_meta_tags.html' %} {% elif 'crmx' in request.url %}
+    <title>CRMX | Better eXperience fo Wi-Fi</title>
+    {% include 'nextify/crmx_meta_tags.html' %} {% else %}
+    <title>Nextify | The Next Generation of Loyalty</title>
+    {% include 'nextify/nextify_meta_tags.html' %} {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='stylesheet' id='google-fonts-roboto-css' href='//fonts.googleapis.com/css?family=Roboto+Slab%3A400%2C300%2C100%2C700&#038;subset=latin%2Cgreek%2Cvietnamese%2Ccyrillic-ext%2Clatin-ext%2Ccyrillic' type='text/css' media='all' />
+    <link rel="stylesheet" href="/static/nextify/css/bootstrap-rating.css">
+    <link rel="stylesheet" href="/static/wifi_portal/css/fonts.css">
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/wifi_portal/css/fontawesome-stars.css">
+    <link rel="stylesheet" href="/static/nextify/css/main.min.css">
+    <link rel="stylesheet" href="/static/nextify/css/dash_kit_theme.min.css" />
+    <link rel="stylesheet" href="/static/wifi_portal/css/css-stars.css">
+    <style>
+    @font-face {
+        font-family: 'Glyphicons Halflings';
+        src: url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/fonts/glyphicons-halflings-regular.eot');
+        src: url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+            url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/fonts/glyphicons-halflings-regular.woff') format('woff'),
+            url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
+            url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
+    }
+    </style>
+    <style>
+    .br-theme-bootstrap-stars .br-widget {
+        height: 35px;
+        white-space: nowrap;
+    }
+
+    .br-theme-bootstrap-stars .br-widget a {
+        font: normal normal normal 30px/1 'Glyphicons Halflings';
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        text-decoration: none;
+        margin-right: 2px;
+    }
+
+    .br-theme-bootstrap-stars .br-widget a:after {
+        content: '\e006';
+        color: #d2d2d2;
+    }
+
+    .br-theme-bootstrap-stars .br-widget a.br-active:after {
+        color: #EDB867;
+    }
+
+    .br-theme-bootstrap-stars .br-widget a.br-selected:after {
+        color: #EDB867;
+    }
+
+    .br-theme-bootstrap-stars .br-widget .br-current-rating {
+        display: none;
+    }
+
+    .br-theme-bootstrap-stars .br-readonly a {
+        cursor: default;
+    }
+
+    @media print {
+        .br-theme-bootstrap-stars .br-widget a:after {
+            content: '\e007';
+            color: black;
+        }
+
+        .br-theme-bootstrap-stars .br-widget a.br-active:after,
+        .br-theme-bootstrap-stars .br-widget a.br-selected:after {
+            content: '\e006';
+            color: black;
+        }
+    }
+    </style>
+</head>
+
+<body>
+    <div class="main-content" id="main-content">
+        <div class="container-fluid">
+            <div class="row justify-content-center mt-5">
+                <div class="col-12 col-md-8 col-xl-6">
+                    <form style="margin-top: 0em;" method="post" action="/save_survey" enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"/>
+                        <input type="hidden" value="{{ shop_id }}" name="shop_id"/>
+                        <input type="hidden" value="{{ survey_id }}" name="survey_id"/>
+                        <!-- Card -->
+                        <div class="card">
+                            {% if survey_item.photo %}
+                            <img src="//files.nextify.vn/{{ survey_item.photo }}" alt="" class="card-img-top" style="height: 250px">
+                            {% endif %}
+                            <!-- Body -->
+                            <div class="card-body">
+                                <!-- Image -->
+                                <a href="#" class="avatar avatar-xl card-avatar card-avatar-top">
+                                    <img src="//files.nextify.vn/{{ shop.logo }}" class="avatar-img rounded-circle border border-4 border-card" alt="...">
+                                </a>
+                                <h3 class="card-title mb-3" style="text-align: center;">
+                                    <a href="#">{{ survey_item.question }}</a>
+                                </h3>
+                                <div class="form-group mb-3" style="text-align: center;">
+                                    <select id="rating" name="rating">
+                                        {% for i in range(survey_item.min_point, survey_item.max_point) %}
+                                        <option value="{{ i }}">{{ i }}</option>
+                                        {% endfor %}
+                                        <option selected value="{{ survey_item.max_point }}">{{ survey_item.max_point }}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label>Đừng quên để lại góp ý cho chúng tôi:</label>
+                                    <textarea class="form-control" id="comment" name="comment"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-lg btn-primary btn-block text-uppercase">
+                                    <i class="fe fe-wifi"></i>
+                                    {% if survey_item.connect_button %}
+                                    {{ survey_item.connect_button }}
+                                    {% else %}
+                                    Kết nối Wi-Fi/Go Online
+                                    {% endif %}
+                                </button>
+                            </div>
+                            <!-- Footer -->
+                            <div class="card-footer card-footer-boxed">
+                                <div class="row align-items-center justify-content-between">
+                                    <div class="col text-center">
+                                        <!-- Status -->
+                                        <small>
+
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/jquery-3.2.1.min.js"></script>
+    <script src="/static/v2/assets/js/bootstrap.min.js"></script>
+    <script src="/static/nextify/js/jquery.barrating.min.js"></script>
+    <script nonce="{{ csp_nonce() }}">
+    $(function() {
+        $('#rating').barrating('show', {
+            theme: 'bootstrap-stars'
+        });
+
+    })
+    </script>
+</body>
+
+</html>

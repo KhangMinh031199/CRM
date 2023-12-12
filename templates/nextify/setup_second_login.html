@@ -1,0 +1,303 @@
+{% extends 'nextify/base.html' %}
+
+
+{% block body %}
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '611214335939430',
+                autoLogAppEvents: true,
+                xfbml: true,
+                version: 'v6.0'
+            });
+        };
+    </script>
+    <script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
+
+    <style>
+        .btn-facebook-page {
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-facebook-page:hover {
+            color: #fff;
+            background-color: #0069d9;
+            border-color: #0062cc
+        }
+
+        .btn-facebook-page.focus, .btn-facebook-page:focus {
+            box-shadow: 0 0 0 .2rem rgba(38, 143, 255, .5)
+        }
+
+        .btn-facebook-page.disabled, .btn-facebook-page:disabled {
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff
+        }
+
+        .btn-facebook-page:not(:disabled):not(.disabled).active, .btn-facebook-page:not(:disabled):not(.disabled):active, .show > .btn-facebook-page.dropdown-toggle {
+            color: #fff;
+            background-color: #0062cc;
+            border-color: #005cbf
+        }
+
+        .btn-facebook-page:not(:disabled):not(.disabled).active:focus, .btn-facebook-page:not(:disabled):not(.disabled):active:focus, .show > .btn-facebook-page.dropdown-toggle:focus {
+            box-shadow: 0 0 0 .2rem rgba(38, 143, 255, .5)
+        }
+
+        .btn-light {
+            color: #212529;
+            background-color: #f8f9fa;
+            border-color: #f8f9fa
+        }
+
+        .btn-light:hover {
+            color: #212529;
+            background-color: #e2e6ea;
+            border-color: #dae0e5
+        }
+
+        .btn-light.focus, .btn-light:focus {
+            box-shadow: 0 0 0 .2rem rgba(216, 217, 219, .5)
+        }
+
+        .btn-light.disabled, .btn-light:disabled {
+            color: #212529;
+            background-color: #f8f9fa;
+            border-color: #f8f9fa
+        }
+
+        .btn-light:not(:disabled):not(.disabled).active, .btn-light:not(:disabled):not(.disabled):active, .show > .btn-light.dropdown-toggle {
+            color: #212529;
+            background-color: #dae0e5;
+            border-color: #d3d9df
+        }
+
+        .btn-light:not(:disabled):not(.disabled).active:focus, .btn-light:not(:disabled):not(.disabled):active:focus, .show > .btn-light.dropdown-toggle:focus {
+            box-shadow: 0 0 0 .2rem rgba(216, 217, 219, .5)
+        }
+
+
+    </style>
+
+    <div class="container-fluid">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5">
+
+                <!-- Heading -->
+                <h1 class="display-4 text-center mb-3">
+                    {{ gettext("Khoi_tao_dia_diem") }}
+                </h1>
+
+                <!-- Subheading -->
+                <p class="text-muted text-center mb-5">
+                    {{ gettext("Xac_nhan_thong_tin_dong_bo_tu_Facebook_Page_cua_dia_diem_hoac_tu_nhap_thong_tin_ban_muon.") }}
+                </p>
+
+                <form action="/welcome/init" role="form" id="fr_new_shop">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    {% if access_token and fb_pages|length > 0 %}
+                        <input type="hidden" value="{{ access_token }}" id="fb_access_token"/>
+                        <div class="form-group">
+
+                            <label>{{ gettext("Chon_Page_muon_dong_bo") }}</label>
+                            <select class="form-control" id="fb_pages">
+                                {% for page in fb_pages %}
+                                    <option value="{{ page.id }}"
+                                            page_access_token="{{ page.access_token }}">{{ page.name }}</option>
+                                {% endfor %}
+
+                            </select>
+
+
+                        </div>
+                    {% endif %}
+                    <div class="form-group">
+                        <label>{{ gettext("Ten_dia_diem") }}</label>
+                        <input type="text" value="" class="form-control" id="name" name="name"/>
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" value="" class="form-control" id="email" name="email" placeholder="name@yourdomain.com"/>
+
+                    </div>
+                    <div class="form-group">
+                        <label>Website</label>
+                        <input type="text" value="" class="form-control" id="website" name="website" placeholder="http://yourdomain.com"/>
+
+                    </div>
+                    <div class="form-group">
+                        <label>{{ gettext("Dia_chi") }}</label>
+                        <input type="text" value="" class="form-control" id="address" name="address"/>
+
+                    </div>
+                    <div class="form-group">
+                        <label>{{ gettext("Thanh_pho") }}</label>
+                        <input type="text" value="" class="form-control" id="city" name="city"/>
+
+                    </div>
+                    <div class="form-group">
+                        <label>Facebook Page</label>
+                        <input type="text" value="" class="form-control" id="facebook_page"  name="facebook_page" placeholder="https://facebook.com/your_page"/>
+
+                    </div>
+                     <div class="form-group">
+                            <label>{{ gettext("Nganh_hang:") }}</label>
+                                        <select id="business_model" name="business_model" class="form-control">
+                                            <!-- {% for bus_name in ls_business_model %}
+                                                    <option value="{{ bus_name._id }}">{{ bus_name.name }}</option>
+                                            {% endfor %} -->
+                                            <option value="5c86160daeb2ff77d5ab50e4">{{ gettext('Khach_san') }}</option>
+                                            <option value="5c9ddd00e452d5225bb1ef31">{{ gettext('Nha_hang') }}</option>
+                                            <option value="5c9dde98e452d5232c09cbba">{{ gettext('Ngan_hang') }}</option>
+                                            <option value="5c9ddeaae452d5232c09cbbb">{{ gettext('Resort_&_nghi_duong') }}</option>
+                                            <option value="5c9ddeb3e452d5232c09cbbc">Spa</option>
+                                            <option value="5c9ddec4e452d5232c09cbbd">Coffee Shop</option>
+                                            <option value="5c9ddecee452d5232c09cbbe">Co-workingSpace</option>
+                                            <option value="5c9ddee3e452d5232c09cbbf">{{ gettext('Phong_tap') }}</option>
+                                            <option value="5cbd3d63e452d5a715051f7d">{{ gettext('Diem_giao_dich') }}</option>
+
+                                        </select>
+
+                    </div>
+
+
+                    <input type="hidden" value="" name="page_id" id="page_id"/>
+                    <input type="hidden" value="" name="page_access_token" id="page_access_token"/>
+
+                </form>
+            <a href="#" id="submit_new_shop">
+                 <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit"> {{ gettext("Tao_dia_diem") }}</button>
+            </a>
+
+{#                <p class="text-center" style="margin-top:20px">#}
+{#                    <small class="text-muted text-center">#}
+{#                        © 2020 Power by <a href="http://nextify.vn">NEXTIFY SOFTWARE.,JSC.</a>.#}
+{#                    </small>#}
+{#                </p>#}
+
+            </div>
+            <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
+
+                <!-- Image -->
+                <div class="bg-cover vh-100 mt-n1 mr-n3"
+                     style="background-image: url(/static/images/onboard/welcome_1.jpg);"></div>
+
+            </div>
+        </div> <!-- / .row -->
+    </div>
+
+{% endblock %}
+{% block js %}
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            var fb_access_token = $('#fb_access_token').val();
+            if (fb_access_token && fb_access_token.length > 0) {
+                var page_id = $('#fb_pages option:selected', this).val();
+                var page_token = $('#fb_pages option:selected', this).attr('page_access_token');
+                var action = '/facebook/pages/' + page_id + '?access_token=' + page_token;
+
+                $.ajax({
+                    url: action,
+                    success: function (response) {
+                        var resp = JSON.parse(response);
+
+                        var data = resp['data'];
+                        $('#name').val(data['name']);
+                        var emails = data['emails'];
+                        if (emails && emails.length > 0) {
+                            $('#email').val(emails[0]);
+                        }
+                        $('#website').val(data['website']);
+                         $('#page_id').val(page_id);
+                         $('#page_access_token').val(page_token);
+                          $('#facebook_page').val(data['link']);
+                        var location = data['location'];
+                        if (location){
+                              $('#address').val(location['street']);
+                        $('#city').val(location['city']);
+                        }
+
+
+
+                    },
+                    error: function (e) {
+                        swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+                    }
+                });
+
+            }
+            $("#fb_pages").change(function(){
+                 $('#name').val('');
+                 $('#email').val('');
+                        $('#website').val('');
+                        $('#address').val('');
+                        $('#city').val('');
+
+                var page_id = $(this).find(":selected").val();
+                var page_token =  $(this).find(":selected").attr('page_access_token');
+                var action = '/facebook/pages/' + page_id + '?access_token=' + page_token;
+
+                $.ajax({
+                    url: action,
+                    success: function (response) {
+                        var resp = JSON.parse(response);
+                         var data = resp['data'];
+                        $('#name').val(data['name']);
+                        var emails = data['emails'];
+                        if (emails && emails.length > 0) {
+                            $('#email').val(emails[0]);
+                        }
+                        $('#website').val(data['website']);
+                         $('#page_id').val(page_id);
+                         $('#page_access_token').val(page_token);
+                          $('#facebook_page').val(data['link']);
+                        var location = data['location'];
+                        if (location){
+                              $('#address').val(location['street']);
+                        $('#city').val(location['city']);
+                        }
+                    },
+                    error: function (e) {
+                        swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+                    }
+                });
+            });
+             $("#submit_new_shop").click(function(e){
+                 var action = $("#fr_new_shop").attr('action');
+                 $.ajax({
+                     url: action,
+                     type: 'POST',
+                     data: $("#fr_new_shop").serialize(),
+                     success: function (response) {
+                        var resp = JSON.parse(response);
+                        var result = resp['result'];
+                        if (result.toString() == 'false'){
+                            if ('msg' in resp){
+                                swal(resp['msg'], " ", "error");
+                            }else{
+                                swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+                            }
+
+                        }else {
+                            var url = resp['url'];
+                            location.href = url;
+                        }
+
+                    },
+                    error: function (e) {
+                        swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+                    }
+                });
+
+                     e.preventDefault();
+             });
+
+        })
+    </script>
+{% endblock %}

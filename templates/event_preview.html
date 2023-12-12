@@ -1,0 +1,49 @@
+{% extends "welcome.html" %}
+{ {%block background%}
+<style>
+    #background-image {
+        background: url('{%if not event%}/static/images/highland_demo.png{%else%}//files.nextify.vn/{{event.photo}}{%endif%}') no-repeat bottom center;
+        background-size: cover;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+    }
+
+    #background-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: -1;
+        width: 100%;
+        background: -moz-linear-gradient(top, rgba(29, 29, 29, 0.0) 0, rgba(29, 29, 29, 0.7) 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(29, 29, 29, 0.0)), color-stop(100%, rgba(29, 29, 29, 0.7)));
+        background: -webkit-linear-gradient(top, rgba(29, 29, 29, 0.0) 0, rgba(29, 29, 29, 0.7) 100%);
+        background: -o-linear-gradient(top, rgba(29, 29, 29, 0.0) 0, rgba(29, 29, 29, 0.7) 100%);
+        background: -ms-linear-gradient(top, rgba(29, 29, 29, 0.0) 0, rgba(29, 29, 29, 0.7) 100%);
+        background: linear-gradient(to bottom, rgba(29, 29, 29, 0.0) 0, rgba(29, 29, 29, 0.7) 100%);
+        filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#801d1d1d', endColorstr='#1d1d1d', GradientType=0)
+    }
+</style>
+<div id="background-image"></div>
+<div id="background-overlay"></div>
+{%endblock%} {%block container%}
+<div style="position:absolute;bottom:0;left:0; right:0">
+
+    <div class="row signin-agile row-centered" style=" margin-right: 0px; margin-left: 0px;">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 col-centered">
+            <h4 style="font-size: 20px;color: white; line-height: 28px; font-weight: 500" id="content_product">
+                {%if not event%}Mua một tặng một cho cafe sữa đá từ 09/12 - 20/1{%else%}{{event.content|safe}}{%endif%}
+            </h4>
+        </div>
+    </div>
+    <div class="row signin-agile row-centered " style=" margin-right: 0px; margin-left: 0px; ">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 col-centered ">
+            {%include 'share_fb_box.html'%} {%include 'like_fb_box.html'%} {%include 'check_in_fb.html'%}{% include 'event_connect_fb.html' %}
+            <br/>
+        </div>
+    </div>
+
+{% include "footer_welcome.html" %}
+
+</div>{% endblock %}

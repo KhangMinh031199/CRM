@@ -1,0 +1,103 @@
+{% extends 'v2/base.html' %}
+{% block css %}
+  <link rel="stylesheet" href="/static/v2/assets/css/sign_in.css?v=3"
+        type="text/css"/>
+{% endblock %}
+{% block wrapper %}
+  <div class="page-inner background-image" style="min-height:1200px !important">
+    <div class="background error-page-wrapper background-color
+  background-image">
+      <center>
+        <div class="content-container shadow" style="text-align: left;">
+
+          <div class="subheader primary-text-color">
+            Tạo địa điểm
+          </div>
+          <div class="hr"></div>
+          <div class="context secondary-text-color">
+            <p class="lead">
+              {{ merchant.name }}
+            </p>
+          </div>
+          <form method="POST" action="/create_locations"
+                enctype="multipart/form-data" id="create_locations_form">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <input type="hidden" value="{{ merchant._id }}"
+                   name="merchant_id" />
+            {% for err in error %}
+              <div class="alert alert-danger">* {{ err }}</div>
+                  {% endfor %}
+            <div class="form-group">
+              <label for="name">Tên địa điểm:</label>
+              <input type="text" maxlength="50" class="form-control" id="name"
+                     name="name"/>
+            </div>
+            <div class="form-group">
+              <label for="name">Số điện thoại quản lý</label>
+              <input type="text" maxlength="50" class="form-control" id="phone"
+                     name="phone"/>
+            </div>
+            <div class="form-group">
+              <label for="name">Email quản lý</label>
+              <input type="text" class="form-control" id="email" name="email"/>
+            </div>
+            <div class="form-group">
+              <label for="name">Mật khẩu quản lý</label>
+              <input type="text" maxlength="50" class="form-control"
+                     id="password" name="password"/>
+            </div>
+            <div class="form-group">
+              <label for="name">Nhập lại mật khẩu</label>
+              <input type="text" maxlength="50" class="form-control"
+                     id="re_password" name="re_password"/>
+            </div>
+            <div class="form-group">
+              <label for="logo">Logo:</label>
+              <input type="file" class="form-control" id="logo"
+                     name="logo">
+            </div>
+            <div class="form-group">
+              <label for="background">Hình nền:</label>
+
+              <input type="file" class="form-control" id="background"
+                     name="background">
+            </div>
+            <div class="form-group">
+              <label for="facebook-page">Link Facebook Page:</label>
+              <input type="text" class="form-control form-input"
+                     id="facebook-page"
+                     name="facebook_page"
+                     placeholder="//www.facebook.com/fbs.vn/">
+            </div>
+            <div class="buttons-container">
+
+              <input type="submit" class="button" value="Tiếp tục"
+                      style="float:right;color: white!important;
+                      padding: 0.85rem 2rem;
+                      margin-right: 30px;
+                      vertical-align: middle;
+                      margin: 0 0 1rem 0;
+                      padding: 0.85rem 2rem;
+                      -webkit-appearance: none;
+                      border: 1px solid transparent;
+                      border-radius: 15px;
+                      transition: background-color 0.25s ease-out, color 0.25s ease-out;
+                      font-size: 0.9rem;
+                      line-height: 1;
+                      text-align: center;
+                      cursor: pointer;
+                      font-size: 18px;"/>
+            </div>
+
+          </form>
+
+
+
+        </div>
+      </center>
+
+    </div>
+
+  </div>
+
+{% endblock %}

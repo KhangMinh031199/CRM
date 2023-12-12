@@ -1,0 +1,32 @@
+<div class="panel-header-stats">
+  <div class="row">
+    <div class="col-md-2 col-xs-12" style="text-align: center">
+      <p class="lead">SMS</p>
+      <p style="font-size: 25px;"><b>{{ total_sms }}</b></p>
+    </div>
+    <div class="col-md-2 col-xs-12" style="text-align: center">
+      <p class="lead">{{ gettext("SMS_cham_soc") }}</p>
+      <p style="font-size: 25px;"><b></b></p>
+    </div>
+    <div class="col-md-2 col-xs-12" style="text-align: center">
+      <p class="lead">{{ gettext("SMS_quang_cao") }}</p>
+      <p style="font-size: 25px;"><b></b></p>
+    </div>
+    <div class="col-md-2 col-xs-12" style="text-align: center">
+      <p class="lead">Coupons</p>
+      <p style="font-size: 25px;"><b>{{ total_coupons }}</b></p>
+    </div>
+    <div class="col-md-2 col-xs-12" style="text-align: center">
+      <p class="lead">{{ gettext("Coupons_da_doi") }}</p>
+      <p style="font-size: 25px;"><b>{{ total_coupons_redeem }}</b></p>
+    </div>
+     <div class="col-md-2 col-xs-12" style="text-align: center">
+      <p class="lead">{{ gettext("Coupons_chua_doi") }}</p>
+      <p style="font-size: 25px;"><b>{{ total_coupons_avail }}</b></p>
+    </div>
+  </div>
+</div>
+<div>
+  {% line_chart smscoupons_serrie_data with
+    id='chart-smscoupons_serrie_data' %}
+</div>

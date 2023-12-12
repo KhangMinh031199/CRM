@@ -1,0 +1,85 @@
+{% extends 'nextify/base.html' %} 
+{% block main_content %}
+    <div class="c-toolbar u-mb-medium">
+        <h3 class="c-toolbar__title has-divider">Báo cáo</h3>
+        <h5 class="c-toolbar__meta u-mr-auto">{{ gettext("Bao_cao_kinh_doanh") }}</h5>
+        <!-- <div class="c-field  c-field--inline">
+            <input id="reportrange" name="reportrange" type="text"
+                   placeholder="" class="c-input">
+        </div> -->
+        <div class="c-field  c-field--inline" style="margin-right: 10px;">
+        <input id="from_date" class="c-input" type="text" name="from_date" placeholder='{{ gettext("Tu_ngay") }}'>
+        </div>
+        <div class="c-field  c-field--inline">
+            <input id="to_date" class="c-input" type="text" name="to_date" placeholder='{{ gettext("Den_ngay") }}'>
+        </div>
+        <button type="button" id="view_data" class="c-btn c-btn--warning"
+                style="margin-left: 10px; margin-right: 10px;">Xem
+        </button>
+
+        <input type="hidden" value="" id="minDate"/>
+        <input type="hidden" value="" id="maxDate"/>
+
+    </div>
+    <div class="container">
+
+        <div class="row u-mb-large">
+            <div class="col-lg-12 u-ml-auto u-mb-medium">
+                <h3 class="u-mb-small">{{ gettext("Tong_quan_dat_ban") }}</h3>
+                <div class="card c-overview-card u-p-medium u-mb-medium">
+                    <div id="booking_table"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row u-mb-large">
+            <div class="col-lg-4 u-ml-auto u-mb-medium">
+                <h3 class="u-mb-small">{{ gettext("Nguon_dat_ban") }}
+                </h3>
+
+                <div class="card c-overview-card u-p-medium u-mb-medium">
+                    <div id="source_booking_table"></div>
+                </div>
+            </div>
+            <div class="col-lg-4 u-ml-auto u-mb-medium">
+                <h3 class="u-mb-small">{{ gettext("Dia_diem_dat ban") }}
+                </h3>
+
+                <div class="card c-overview-card u-p-medium u-mb-medium">
+                    <div id="location_booking_table"></div>
+                </div>
+            </div>
+            <div class="col-lg-4 u-ml-auto u-mb-medium">
+                <h3 class="u-mb-small">{{ gettext("Tinh_trang_dat_ban") }}
+                </h3>
+
+                <div class="card c-overview-card u-p-medium u-mb-medium">
+                    <div id="status_booking_table"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row u-mb-large">
+            <div class="col-lg-12 u-ml-auto u-mb-medium">
+                <h3 class="u-mb-small">{{ gettext("Vi_tich_tien") }}
+                </h3>
+                <div class="panel-control">
+                    <a href="javascript:void(0);" data-toggle="tooltip"
+                       data-placement="top" title=""
+                       class="panel-collapse"
+                       data-original-title="Expand/Collapse"><i
+                            class="icon-arrow-down"></i></a>
+
+                </div>
+                <div class="card c-overview-card u-p-medium u-mb-medium">
+                    <div id="loyal_wallet"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+{% endblock %}
+{% block js %}
+    <script
+            src="{{ url_for('static', filename='v2/assets/js/sales_report.js') }}"></script>
+{% endblock %}

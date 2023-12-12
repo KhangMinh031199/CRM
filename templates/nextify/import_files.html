@@ -1,0 +1,158 @@
+{% extends 'nextify/base.html' %} {% block main_content %}
+   <div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-8">
+
+    <div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+              <div class="col">
+
+                <!-- Pretitle -->
+                <h6 class="header-pretitle">
+                  {{ gettext("Khach_hang") }}
+                </h6>
+
+                <!-- Title -->
+                <h1 class="header-title">
+                {{ gettext("Import_khach_hang") }}
+                </h1>
+
+              </div>
+
+            </div> <!-- / .row -->
+          </div>
+    </div>
+      </div>
+   <div class="row">
+         
+
+                    <div class="col-12 col-lg-6 d-flex flex-column">
+                       <div class="card card-fill">
+
+                            <div class="card-body text-center">
+                                <div  style="justify-content: center;">
+                                     <img class="u-mb-small"
+                                     src="/static/nextify/img/import-file.png"
+                                     alt="import manual" style="width: 50%">
+                                </div>
+
+                                <h4 class="text">
+                                    {{ gettext("Upload_tu_File_Excel_cua_ban") }}
+                                </h4>
+
+                            </div>
+                            <div class="card-footer card-footer-boxed text-center">
+                                <a href="/import_customers"
+                                   class="btn btn-lg btn-primary">{{ gettext("Import") }}</a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-12 col-lg-6 d-flex flex-column">
+                        <div class="card card-fill">
+                            <div class="card-body text-center">
+
+                                <img class="u-mb-small"
+                                     src="/static/nextify/img/ipos.png"
+                                     alt="import ipos" style="width: 50%">
+
+
+                                <h4 class="card-title mt-5">
+                                    {{ gettext("Upload_tu_file_khach_hang_IPOS") }}
+                                </h4>
+                            </div>
+                            <div class="card-footer card-footer-boxed text-center">
+
+                                    <a href="/import_ipos_files"
+                                   class="btn btn-lg btn-primary">
+                                    {{ gettext("Import") }}</a>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 d-flex flex-column">
+                         <div class="card card-fill">
+                            <div class="card-body text-center">
+
+                                  <div  style="justify-content: center;">
+                                <img class="u-mb-small"
+                                     src="/static/nextify/img/cukcuk.png"
+                                     alt="import cukcuk" style="width: 50%">
+                                  </div>
+                         
+                                 <h4 class="card-title mt-5">
+                                    {{ gettext("Upload_tu_file_khach_hang_CukCuk") }}
+                                </h4>
+
+                            </div>
+                           <div class="card-footer card-footer-boxed text-center">
+                                <a href="/import_cukcuk_files"
+                                    class="btn btn-lg btn-primary">
+                                    {{ gettext("Import") }}</a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-12 col-lg-6 d-flex flex-column">
+                       <div class="card card-fill">
+                            <div class="card-body text-center">
+                                  <div  style="justify-content: center;">
+                                <img class="u-mb-small"
+                                     src="/static/nextify/img/kiotviet.png"
+                                     alt="import kiotviet" style="width: 50%">
+                                  </div>
+
+                                <h4 class="card-title mt-5">
+                                    {{ gettext("Upload_tu_file_khach_hang_KiotViet") }}
+                                </h4>
+
+                            </div>
+                            <div class="card-footer card-footer-boxed text-center">
+                                <a href="/import_kiotviet_files"
+                                    class="btn btn-lg btn-primary">
+                                    {{ gettext("Import") }}</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 d-flex flex-column">
+                       <div class="card card-fill">
+                            <div class="card-body text-center">
+                                  <div  style="justify-content: center;">
+                                <img class="u-mb-small"
+                                     src="/static/nextify/img/haravan.jpg"
+                                     alt="import haravan" style="width: 85%">
+                                  </div>
+
+                                <h4 class="card-title mt-5">
+                                    {{ gettext("Upload_tu_file_khach_hang_Haravan") }}
+                                </h4>
+
+                            </div>
+                            <div class="card-footer card-footer-boxed text-center">
+                                <a href="/import_haravan_files"
+                                    class="btn btn-lg btn-primary">
+                                    {{ gettext("Import") }}</a>
+                            </div>
+                        </div>
+                    </div>
+             
+
+           
+        </div>
+    </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <!--  <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $("#new_location_submit").click(function () {
+         $("#create_locations_form").submit();
+
+        })
+    });
+        </script> -->
+{% endblock %}

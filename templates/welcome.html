@@ -1,0 +1,257 @@
+{% extends "base.html" %} {% block title %}{{ shop.name }} Nextify{% endblock %} {% block meta_child %} {% if event %}
+    <meta property="og:title" content="{% if card.title %}{{ card.title }}{% else %}{{ shop.name }}{% endif %}">
+    <meta property="og:description" content="{{ card.content }}">
+    <meta property="og:image" content="//files.nextify.vn/{{ card.photo }}"> {% if card.link_share|length>0 %}
+        <meta property="og:url" content="{{ card.link_share }}"> {% else %}
+        <meta property="og:url" content="{{ shop.facebook_page }}"> {% endif %}
+    <meta property="og:site_name" content="{{ shop.name }}"> {% else %}
+    <meta property="og:title" content="{{ shop.name }}">
+    <meta property="og:image" content="//files.nextify.vn/{{ shop.background }}">
+    <meta property="og:url" content="{{ shop.facebook_page }}">
+    <meta property="og:site_name" content="{{ shop.name }}"> {% endif %} {% endblock %} {% block styles %} {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/welcome.css') }}" type="text/css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}" type="text/css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}" type="text/css"/>
+    <style>
+        input[type="text"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 12px;
+            outline: none;
+            color: #7d7d7d;
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            border: 0;
+        }
+
+        form a {
+            color: #7d7d7d;
+            float: right;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            background: #1a925c;
+            padding: 10px;
+            font-size: 18px;
+            color: #fff;
+            cursor: pointer;
+            outline: none;
+            transition: .5s all;
+            -webkit-transition: .5s all;
+            -moz-transition: .5s all;
+            -o-transition: .5s all;
+            -ms-transition: .5s all;
+            width: 100%;
+            border: none;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        input[type="submit"]:hover,
+        input[type="submit"]:active {
+            background: #16a085;
+        }
+    </style>
+    {% if shop.facebook_pixel_code %}
+
+        {{ shop.facebook_pixel_code|safe }}
+    {% endif %}
+    {% block welcome_css %} {% endblock %} {% endblock %} {% block content %}
+    {% block background %} {% if shop.background %}
+        <div id="background-image"
+             style="background: url('//files.nextify.vn/{{ shop.background }}') no-repeat bottom center; background-size: cover; -webkit-background-size: cover;-moz-background-size: cover; -o-background-size: cover;"></div>
+        <div id="background-overlay"></div>
+    {% endif %} {% endblock %}
+
+    <div class="container">
+        {% block container %}
+
+            {#    <div class="row">#}
+            {#        <div class="col-lg-4 col-md-4 col-sm-8 col-xs-12 col-centered">#}
+            {#            <img class="img-responsive center-block centered-and-cropped" style="width:80px;height: 80px" src="//files.nextify.vn/{{ shop.logo }}"#}
+            {#                alt="" />#}
+            {#        </div>#}
+            {#    </div>#}
+            <div class="row">
+                <div class="col-lg-5 col-md-7 col-sm-8 col-xs-12 col-centered">
+                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                        <!-- Indicators -->
+                        <ol class="carousel-indicators">
+                            {% for index in range(0,cards|length) %}
+                                <li data-target="#myCarousel" data-slide-to="0"
+                                    {% if index==0 %}class="active" {% endif %}></li>
+                            {% endfor %}
+                        </ol>
+                        <!-- Wrapper for slides -->
+                        <div class="carousel-inner" role="listbox">
+                            {% for card in cards %}
+                                <div class="item{% if loop.index == 1 %} active{% endif %}">
+                                    <div class="img-container">
+                                        {% if loop.index == 1 %}
+                                            <img class="img-responsive center-block centered-and-cropped"
+                                                 src="//files.nextify.vn/{{ card.photo }}"
+                                                 alt="">                            {% else %}
+                                            <img class="img-responsive center-block centered-and-cropped"
+                                                 data-src="//files.nextify.vn/{{ card.photo }}"
+                                                 alt="">                            {% endif %}
+                                    </div>
+                                    <div class="carousel-caption">
+                                        {% if card.title %}
+                                            <h3 style="font-weight: 700;line-height: 32px;">{{ card.title }}</h3>
+                                            {% if card.content %}
+                                                <div style="font-weight: 500;line-height: 24px;">{{ card.content|safe }}</div>
+                                            {% endif %} {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Left and right controls -->
+                        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% block connect_method %}
+                <div class="row">
+                    <div class="col-lg-5 col-md-7 col-sm-8 col-xs-12 col-centered">
+                        {% if user %}
+                            {% if message %}
+                                <h4 style="line-height: 24px;margin: 15px 0;">
+                                    {{ message }}
+                                </h4>
+                            {% else %}
+                                <h4 style="line-height: 24px;margin: 15px 0;">
+                                    {% if user.name and user.name|length > 1 %} Chào <strong>{{ user.name }}</strong>,
+                                        <br/>
+                                        cảm ơn bạn đã ghé thăm.
+                                        <br/>Welcome back, <strong>{{ user.name }}</strong>.
+                                    {% else %}
+                                        Chào <strong>{{ user.phone }}</strong>, <br/>cảm ơn bạn đã ghé thăm.
+                                        <br/>Welcome back, <strong>{{ user.phone }}</strong>.{% endif %}
+
+                                </h4>
+                            {% endif %}
+                            {% if shop.social == "share_fb" %}
+                            {% include 'share_fb_box.html' %}
+                            {% elif shop.social == "check_in_fb" %}
+                            {% include 'check_in_fb.html' %}
+                            {% elif shop.social == "connect_fb" %}
+                            {% include 'event_connect_fb.html' %}
+                            {% else %}
+                             {% if auth_target %}
+                                    <a id="auth_target" href="{{ auth_target }}">
+                                        <button class="btn btn-md btn-success col-xs-12">
+                                            <i class="fe fe-wifi fa-lg" aria-hidden="true"></i>
+                                            {% if redirect_uri %}
+                                                Tiếp tục đến {{ redirect_uri | truncate(50) }}
+                                            {% else %}
+                                                Kết nối Wi-Fi/Go Online
+                                            {% endif %}
+                                        </button>
+                                    </a>
+                                {% else %}
+                                    <h3 style="color: #2ecc71; line-height: 24px;margin: 15px 0;"><i
+                                            class="fe fe-wifi fa-3" aria-hidden="true"></i>Kết nối thành công</h3>
+
+                                {% endif %}
+                            {% endif %}
+                            {% if  shop.facebook_pixel_id %}
+                                 <script nonce="{{ csp_nonce() }}">
+                                    fbq('init', '{{ shop.facebook_pixel_id }}', {
+                                        em: '{{ user.email }}',
+                                        // Data will be hashed automatically via a dedicated function in FB pixel
+                                        ph: '{{ user.phone|country_phone }}',
+                                        fn: '{{ user.name }}'
+                                    })
+                                </script>
+                            {% endif %}
+                        {% else %}
+                            <h4 style="line-height: 28px;text-align: center;margin: 25px 0;">
+                                Đăng ký <strong>khách hàng thân thiết</strong> để nhận các ưu đãi hấp dẫn
+                                <br/>
+                                Get connected with FREE WIFI</h4>
+                            <a href="/register?gateway_mac={{ gateway_mac }}&client_mac={{ client_mac }}">
+                                <button class="btn btn-md btn-success col-xs-12" style="margin-bottom: 10px">
+                                    <i class="fe fe-wifi fa-lg" aria-hidden="true"></i> Đăng ký & Kết nối
+                                </button>
+                            </a>
+                            {% if shop.ignore_register and shop.ignore_register|lower == "true" %}
+                                <a href="{{ auth_target }}">
+                                    <button class="btn btn-md btn-info col-xs-12" style="margin-bottom: 10px">Kết nối nhanh (15 phút)</button>
+                                </a>
+                            {% endif %}
+
+                        {% endif %}
+
+
+                        {% if shop.facebook_page %}
+                            <div class="row">
+                                <div class="col-lg-5 col-md-7 col-sm-8 col-xs-12 col-centered" style="margin: 10px">
+
+                                     <script nonce="{{ csp_nonce() }}">
+                                        (function (d, s, id) {
+                                            var js, fjs = d.getElementsByTagName(s)[0];
+                                            if (d.getElementById(id)) return;
+                                            js = d.createElement(s);
+                                            js.id = id;
+                                            js.async = true;
+                                            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.11&appId=981718895315274";
+                                            fjs.parentNode.insertBefore(js, fjs);
+                                        }(document, 'script', 'facebook-jssdk'));
+                                    </script>
+
+                                    <div class="fb-page"
+                                         data-href="{{ shop.facebook_page }}"
+                                         data-width="500"
+                                         data-hide-cover="false"
+                                         data-show-facepile="true"></div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            {% endblock %}<input type="hidden" id="facebook_page" value="{{ shop.facebook_page }}"/>
+            <input type="hidden" id="facebook_page_id" value="{{ shop.page_id }}"/>
+            <input type="hidden" id="is_mobile_phone" value="{{ is_mobile_phone }}"/>
+            <input type="hidden" id="redirect_page" value="{{ redirect_page }}"/>
+            <input type="hidden" id="ignore_register" value="{{ shop.ignore_register|lower }}"/>
+            {% include "footer_welcome.html" %} {% endblock %}
+    </div>
+
+
+{% endblock %} {% block scripts %}
+    <script type="text/javascript" src="/static/scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/scripts/jquery_mobile.js"></script>
+    <script type="text/javascript" src="/static/scripts/welcome.js?v=2"></script>
+    <input type="hidden" id="fb_token" value="{{ session.oauth_token }}"/>
+
+
+    {% block welcome_script %}{% endblock %}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108917593-1"></script>
+     <script nonce="{{ csp_nonce() }}">
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'UA-108917593-1');
+    </script>
+
+{% endblock %}

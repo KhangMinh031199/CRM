@@ -1,0 +1,212 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="container ">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="c-card u-p-medium">
+                    <div class="row u-justify-center">
+                        <div class="col-lg-12">
+                            <div class="u-mt-large u-text-center">
+                                <h2 class="u-mb-xsmall">{% if item %}
+                                    {{ item.title }}{% else %} {{ gettext("Them_moi") }} {% endif %}
+                                </h2>
+                                <p class="u-text-mute u-mb-large"></p>
+                            </div>
+                            {% if error %}
+                                <div class="alert alert-danger">
+                                    {{ error | safe }}
+                                </div>
+                            {% endif %} {% if message %}
+                            <div class="alert alert-success">
+                                {{ message | safe }}
+                            </div>
+                        {% endif %}
+                            <form method="POST"
+                                  action="/app/blogs/news/{% if not item %}add{% else %}{{ item._id }}{% endif %}"
+                                  enctype="multipart/form-data">
+                                  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                <div class="c-field u-mb-small">
+                                    <label  class="c-field__label" >{{ gettext("Chon_danh_muc") }}</label>
+                                    {% if item %}
+                                        <input type="hidden"
+                                               value="{{ item.cat_id }}"
+                                               id="exist_cat"/>
+                                    {% endif %}
+                                    <select class="c-select" id="cat_id"
+                                            name="cat_id">
+                                        {% for cat in cats %}
+                                            <option value="{{ cat._id }}">{{ cat.title }}</option>
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+
+                                <div class="c-field u-mb-small">
+                                    <label  class="c-field__label" for="photo">{{ gettext("Anh_dai_dien:") }}</label>
+                                    {% if item.photo %}
+                                        <p class="help-block">
+                                            <img
+                                                    src="//files.nextify.vn/{{ item.photo }}"
+                                                    width="200">
+                                        </p>
+                                    {% endif %}
+                                    <input type="file" class="c-input"
+                                           id="photo"
+                                           name="photo"
+                                           {% if not item.photo %}required{% endif %}>
+                                </div>
+
+                                <div class="c-field u-mb-small">
+                                    <label  class="c-field__label"  for="title">{{ gettext("Tieu_de:") }}</label>
+                                    <input type="text" maxlength="200"
+                                           class="c-input"
+                                           id="title"
+                                           name="title"
+                                           value="
+                                                   {% if item %}{{ item.title }}{% endif %}">
+                                </div>
+
+                                <div class="c-field u-mb-small">
+                                    <label  class="c-field__label"  for="editor_desc">{{ gettext("Mo_ta_ngan:") }}</label>
+                                    <textarea id="editor_desc" class="c-input"
+                                              name="desc">{% if item %}
+                                        {{ item.desc }}{% endif %}</textarea>
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <label  class="c-field__label"  for="editor_content">{{ gettext("Noi_dung:") }}</label>
+                                    <textarea id="editor_content" class="c-input"
+                                              name="content">{% if item %}
+                                        {{ item.content }}{% endif %}</textarea>
+                                </div>
+                               <div class="c-field u-mb-small">
+                                    <label  class="c-field__label" for="start_deal_date">{{ gettext("Ngay_bat_dau_DEAL:") }}</label>
+                                    <input type="text" name="start_deal_date" class="c-input"
+                                           id="start_deal_date"/>
+                                    {% if item %}<input type="hidden"
+                                                        name="ex_start_deal_date"
+                                                        id="ex_start_deal_date"
+                                                        class="c-input"
+                                                        value="{{ item.start_deal_date }}"/>{% endif %}
+                                </div>
+                                <div class="c-field u-mb-small">
+                                    <label   class="c-field__label" for="end_deal_date">{{ gettext("Ngay_het_han_DEAL:") }}</label>
+                                    <input type="text" name="end_deal_date" class="c-input"
+                                           id="end_deal_date"/>
+                                    {% if item %}<input type="hidden"
+                                                        name="ex_end_deal_date"
+                                                        id="ex_end_deal_date"
+                                                        class="c-input"
+                                                        value="{{ item.end_deal_date }}"/>{% endif %}
+                                </div>
+                               <div class="c-field u-mb-small">
+                                <div class="c-choice c-choice--checkbox">
+                                    <input class="c-choice__input"
+                                           type="checkbox"
+                                                name="is_hot" id="is_hot"
+                                                             {% if item %}{% if item.is_hot  and item.is_hot|lower == "true" %}checked
+                                                             {% endif %}{% endif %}>
+                                    <label class="c-choice__label"
+                                           for="is_hot">Hot</label>
+                                </div>
+
+                                </div>
+                                <div class="c-field u-mb-small">
+                                 <div class="c-choice c-choice--checkbox">
+                                    <input class="c-choice__input"
+                                           type="checkbox"
+                                                name="is_fav" id="is_fav"
+                                                             {% if item %}{% if item.is_fav and item.is_fav|lower == "true" %}checked
+                                        {% endif %}{% endif %}>
+                                    <label class="c-choice__label"
+                                           for="is_fav">{{ gettext("Ua_thich") }}</label>
+                                </div>
+
+                                </div>
+                                <div class="c-field u-mb-small">
+                                 <div class="c-choice c-choice--checkbox">
+                                    <input class="c-choice__input"
+                                           type="checkbox"
+                                                name="active" id="active"
+                                                             {% if item.active and item.active|lower == "true" %}checked{% endif %}>
+                                    <label class="c-choice__label"
+                                           for="active">{{ gettext("Kich_hoat") }} </label>
+                                </div>
+
+                                </div>
+                                <button id="new_splash_submit"
+                                        type="submit"
+                                        class="c-btn c-btn--info u-float-right">
+                                    {{ gettext("Luu_thong_tin") }}
+                                </button>
+
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %} {% block js %}
+      <script nonce="{{ csp_nonce() }}">
+        ClassicEditor
+            .create( document.querySelector( '#editor_desc' ) )
+            .catch( error => {
+                console.error( error );
+            } );
+             ClassicEditor
+            .create( document.querySelector( '#editor_content' ) )
+            .catch( error => {
+                console.error( error );
+            } );
+    </script>
+     <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+             $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        }
+    );
+    $('input').each(function () {
+            $(this).val($(this).val().trim());
+        }
+    );
+            if ($("#exist_cat").length > 0) {
+                $("#cat_id").val($("#exist_cat").val());
+            }
+
+            if ($("#ex_end_deal_date").length > 0 && $("#ex_end_deal_date").val()
+                    .length > 0 && $("#ex_end_deal_date").val() != 'None') {
+                flatpickr("#end_deal_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_end_deal_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#end_deal_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+                });
+            }
+
+            if ($("#ex_start_deal_date").length > 0 && $("#ex_start_deal_date").val()
+                    .length > 0 && $("#ex_end_deal_date").val() != 'None') {
+                flatpickr("#start_deal_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_start_deal_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#start_deal_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+                });
+            }
+
+        });
+
+    </script>
+
+{% endblock %}

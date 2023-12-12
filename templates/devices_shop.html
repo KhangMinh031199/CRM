@@ -1,0 +1,128 @@
+{% extends "v2/base.html" %}
+{% block right_content %}
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="col-md-12">
+        <div class="panel panel-white">
+          <div class="panel-heading clearfix">
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                <h3 class="title">Danh sách thiết bị</h3>
+                </div>
+                <div class="col-md-8 col-sm-12 col-xs-12">
+                    <button type="button" class="btn btn-success pull-right"
+                        data-toggle="modal" data-target="#add_devices"
+                        style="margin-right: 5px" id="add_device_btn">Thêm thiết bị</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-sm-12">
+               {% if error %}
+
+                  <div class="alert alert-danger">
+                {{ error | safe }}
+              </div>
+
+              {% endif %}
+                <table class="table table-striped" id="devices">
+                  <thead>
+                  <tr>
+                    <th>Mã thiết bị</th>
+                    <th>Tên mạng WIFI</th>
+                     <th>Địa điểm</th>
+                    <th>Số kết nối</th>
+                    <th>Thời gian trực tuyến</th>
+                    <th></th>
+                     <th></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for device in devices %}
+                    <tr class="{{ device.state }}">
+                      <td>{{ device.gateway_mac }}</td>
+                      <td>{{ device.ssid_cloud }}</td>
+                      <td>{% if device.shop_device %}{{ device.shop_device.name }}{% endif %}</td>
+                      <td>{{ device.num_clients }}</td>
+                      <td>{{ device.uptime }}</td>
+                      <td><a href="#">Gỡ thiết bị</a></td>
+                      <td><a href="/devices_shop/{{ device._id }}">Chỉnh sửa</a></td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+   <div class="modal fade" id="add_devices" tabindex="-1" role="dialog"
+       aria-labelledby="myModalLabel" aria-hidden="true"
+       style="display: none;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"
+                  aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h3 class="modal-title" id="myModalLabel">Thêm thiết bị</h3>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal m-t-xs"
+                action="/devices_shop"
+                id="add_device_fr"
+                enctype="multipart/form-data" method="post">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <div class="form-group">
+             <label for="select_shop">Chọn dịa điểm</label>
+              <select name="shop_mac" class="form-control" id="select_shop">
+                <option value="None">Tất cả</option>
+                {% for shop in shops_select %}
+                  <option value="{{ shop._id }}">{{ shop.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Mã thiết bị: </label>
+             <input type="text" class="form-control form-input" style="margin-top:10px;font-size: 16px;"
+                       name="mac_add"
+                              rows="2"
+                              placeholder="77:A3:51:37:18:D8"/>
+            </div>
+           </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button type="button" id="save_device" class="btn
+          btn-success" style="color:#ffffff">Lưu lại</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+{% block js %}
+
+   <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+      $('#wifi').click();
+
+      $('#save_device').click(function () {
+          $("#add_device_fr").submit();
+      });
+
+    });
+  </script>
+
+
+{% endblock %}

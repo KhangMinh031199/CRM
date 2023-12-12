@@ -1,0 +1,78 @@
+{% extends "v2/base.html" %} {% block right_content %}
+
+    <div class="row">
+        <div class="header">
+            <h4 class="title">Loại coupons</h4>
+
+        </div>
+
+        <div class="card">
+            <div id="coupon_type"></div>
+        </div>
+
+        <div class="header">
+            <h4 class="title">Coupons</h4>
+
+        </div>
+        <div class="card">
+            <div class="content">
+                <div class="row form-inline">
+                    <form method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-group">
+                            <label for="name">Loại:</label>
+                            <select name="type_coupon" class="form-control form-input" style="width: auto"
+                                    id="type_coupon">
+                                {% for coup in coupons_type_select %}
+                                    <option value="{{ coup._id }}">{{ coup.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Số lượng</label>
+                            <input type="text" class="form-control" id="quantity" name="quantity"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Ngày hết hạn</label>
+                            <input type="text" class="form-control" id="expire_date" name="expire_date"/>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-info btn-fill pull-right">Tạo</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <div id="coupon_list"></div>
+
+
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="/static/v2/assets/js/flatpickr.js"></script>
+     <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('#marketing').click();
+            flatpickr("#expire_date", {
+                enableTime: false,
+                dateFormat: "d-m-Y"
+            });
+
+            $.get("/vouchers/coupon_type", function( data ) {
+              $("#coupon_type").empty();
+              $("#coupon_type").append(data);
+            });
+
+            $.get( "/vouchers/coupon_list", function( data ) {
+              $("#coupon_list").empty();
+              $("#coupon_list").append(data);
+            });
+
+
+
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">
+            {{ gettext("Ung_dung") }}
+          </h6>
+
+          <!-- Title -->
+          <h1 class="header-title">
+            Anvui
+          </h1>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row align-items-center">
+    <div class="col-12 col-md-4 offset-xl-1 offset-md-1 order-md-2 mb-5 mb-md-0">
+
+      <!-- Image -->
+      <div class="text-center">
+        <img src="/static/nextify/img/happiness.svg" alt="..." class="img-fluid">
+      </div>
+
+    </div>
+
+    <div class="col-12 col-md-5 col-xl-6 order-md-1 my-5">
+      <div class="card u-p-medium">
+        <div class="row u-justify-center" style="margin-bottom: 20px;">
+          <h1 class="header-title l-3">
+            {{ gettext("Cau_hinh") }}
+          </h1>
+        </div>
+        <hr>
+        <div class="row u-justify-center">
+          <div class="col-12">
+            <!-- Heading -->
+
+            <!-- Form -->
+            <form id="synch_anvui" method="POST" action="/apps/anvui">
+
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+              <!-- Email address -->
+
+              <div class="form-group">
+                <label class="c-field__label"><span>Company Id:</span> (<span>
+                    <font color="red">*</font>
+                  </span> {{ gettext("bat_buoc") }}) </label>
+                <input type="text" class="form-control" id="company_id" autofocus
+                  value="{% if check_app and check_app.setting and check_app.setting.company_id|length > 0 %}{{ check_app.setting.company_id}}{% endif %}"
+                  name="company_id" />
+
+              </div>
+              <div class="form-group row">
+                <div class="col-xl-3 col-md-3 text-middle">
+                  <span>{{ gettext("Kich_hoat") }}:</span>
+                </div>
+                <div class="col-auto">
+                  <div class="form-group">
+                    <div class="custom-control custom-switch
+                              {% if check_app and check_app.status|lower==" true" %}is-active{% endif %}">
+                      <input type="checkbox" class="custom-control-input" id="is_active_app" name="is_active_app" {% if
+                        check_app and check_app.status|lower=="true" %}checked{% endif %}>
+                      <label class="custom-control-label" for="is_active_app"></label>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+
+            </form>
+
+            <div class="col-9" style="float:right">
+              <button class="btn btn-lg btn-block btn-primary" id="save_info_API">
+                {{ gettext("Luu_thong_tin") }}
+
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+
+  $(document).ready(function () {
+
+    $("#save_info_API").click(function () {
+      var company_id = $("#company_id").val()
+      console.log(company_id)
+      if (company_id.length == 0) {
+        swal('{{ gettext("Chua_nhap_company_id") }}', '', 'error')
+      }
+      else {
+        $.ajax({
+          url: $("#synch_anvui").attr("action"),
+          type: $("#synch_anvui").attr("method"),
+          data: $("#synch_anvui").serialize(),
+          success: function (response) {
+            var returnedData = JSON.parse(response);
+            swal('{{ gettext("Thao_tac_thanh_cong") }}', " ", "success");
+            location.reload();
+
+          },
+          error: function (xhr, desc, err) {
+            swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+
+
+
+          }
+        });
+      }
+    })
+
+  });
+</script>
+{% endblock %}

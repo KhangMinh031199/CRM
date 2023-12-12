@@ -1,0 +1,47 @@
+<div class="chart">
+    <canvas id="locationsChart" class="chart-canvas"></canvas>
+  </div>
+  <input type="hidden" value="{{label}}" id="label_data" />
+  <input type="hidden" value="{{dataset}}" id="dataset_data" />
+  <script>
+    var label_data = document.getElementById("label_data").value;
+    var dataset_data = document.getElementById("dataset_data").value;
+    var label_data = JSON.parse(label_data);
+    var dataset_data = JSON.parse(dataset_data);
+    var config = {
+        type: 'horizontalBar',
+        data: {
+            labels: label_data,
+            datasets: [{
+                backgroundColor: "rgba(235, 29, 29, 0.7)",
+                data: dataset_data,
+            }]
+        },
+        options: {
+            // responsive: true,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                mode: 'single',
+                callbacks: {
+                    label: function(tooltipItems, data) {
+                        return  tooltipItems.xLabel + ' khách hàng';
+                    }
+                }
+            }
+        }
+    };
+    var ctx = document.getElementById("locationsChart").getContext("2d");
+    new Chart(ctx, config);
+  </script>

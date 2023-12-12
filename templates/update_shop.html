@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+
+{% block styles %}
+  {{ super() }}
+  <link href="{{ url_for('static', filename='styles/setup.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="/static/v2/assets/css/flatpickr.css" type="text/css" />
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4 col-sm-offset-4">
+        <div class="page-header text-center">
+          <a href="{% if dealer_id %}/dealers {% else %}/clients{% endif %}">SMART CRM</a>
+        </div>
+
+        {% if message %}
+            <div class="alert alert-success">
+            {{ message | safe }}
+            </div>
+        {% endif %}
+
+        <form method="POST" action="{% if dealer_id %}/dealers/{{dealer_id}}/{{shop._id}}{% else %}/clients/{{shop._id}}{% endif %}" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <input type="hidden" value="{{ shop._id }}" name="shop_id">
+            <div class="form-group">
+                <label for="name">{{ gettext("Ten_cua_hang:") }}</label>
+                <input type="text" maxlength="50" class="form-control" name="name" value="{{shop.name}}"/>
+            </div>
+               <div class="form-group">
+                <label for="mac">Gateway MAC:</label>
+                   <textarea type="text" class="form-control" id="mac" name="gateway_mac">{{ gateway_macs }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="name">{{ gettext("Chon_chuoi:") }}</label>
+            <input type="hidden" value="{{ shop.merchant_id }}" id="ex_merchant_id">
+                <select class="form-control" name="merchant_id" id="merchant_id">
+                    <option value="0">{{ gettext("Mac_dinh") }}</option>
+                    {% for shop in list_mers %}
+                    <option value="{{ shop._id }}">{{ shop.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                    <label for="name">{{ gettext("Chon_dealer:") }}</label>
+            <input type="hidden" value="{{ shop.dealer_id }}" id="ex_dealer_id">
+                    <select class="form-control" name="dealer_id" id="dealer_id">
+                        <option value="0">{{ gettext("Mac_dinh") }}</option>
+                        {% for deal in dealers %}
+                        <option value="{{ deal._id }}">{{ deal.name }}</option>
+                        {% endfor %}
+                    </select>
+             </div>
+
+            <div class="form-group">
+                <label for="name">{{ gettext("So_quan_ly") }}</label>
+                <input type="text" maxlength="50" class="form-control" id="phone" name="phone"/>
+            </div>
+             <div class="form-group">
+                <label for="name">Email</label>
+                <input type="text" class="form-control" id="email" name="email"/>
+            </div>
+            <div class="form-group">
+                <label for="name">Password</label>
+                <input type="text" maxlength="50" class="form-control" id="password" name="password"/>
+            </div>
+            <div class="form-group">
+                <label for="name">Re-Password</label>
+                <input type="text" maxlength="50" class="form-control" id="re_password" name="re_password"/>
+            </div>
+
+            <div class="form-group">
+                <label for="name">{{ gettext("Ngay_ky_hop_dong") }}</label>
+                <input type="text" maxlength="50" class="form-control" id="date_contract_start" name="date_contract_start"/>
+            </div>
+            <div class="form-group">
+                <label for="name">{{ gettext("Ngay_het_han") }}</label>
+                <input type="text" maxlength="50" class="form-control" id="date_contract_end" name="date_contract_end"/>
+            </div>
+            <div class="form-group">
+                <label for="name">{{ gettext("So_SMS") }}</label>
+                <input type="text" maxlength="50" class="form-control" id="sms_count" name="sms_count" value="{{ shop.sms_count }}"/>
+            </div>
+            <input type="hidden" value="{{ shop.date_contract_start }}" id="ex_date_contract_start"/>
+            <input type="hidden" value="{{ shop.date_contract_end }}" id="ex_date_contract_end"/>
+            <hr>
+            <button type="submit" class="btn btn-success">{{ gettext("Luu_thong_tin") }}</button>
+        </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+
+    <script type="text/javascript" src="/static/v2/assets/js/flatpickr.js"></script>
+     <script nonce="{{ csp_nonce() }}">
+    if ($("#ex_date_contract_end").length > 0 && $("#ex_date_contract_end").val().length > 0 && $("#ex_date_contract_end").val() != 'None') {
+            var from_date = $("#ex_date_contract_end").val();
+            flatpickr("#date_contract_end", {
+                enableTime: false,
+                defaultDate: from_date
+            });
+        } else {
+            flatpickr("#date_contract_end", {
+                enableTime: false
+            });
+        }
+        if ($("#ex_date_contract_start").length > 0 && $("#ex_date_contract_start").val().length > 0 && $("#ex_date_contract_start").val() != 'None') {
+            var to_date = $("#ex_date_contract_start").val();
+            flatpickr("#date_contract_start", {
+                enableTime: false,
+                defaultDate: to_date
+            });
+        } else {
+            flatpickr("#date_contract_start", {
+                enableTime: false
+            });
+        }
+        if ($("#ex_merchant_id").length > 0){
+            $("#merchant_id").val($("#ex_merchant_id").val());
+        }
+
+        if ($("#ex_dealer_id").length > 0){
+            $("#dealer_id").val($("#ex_dealer_id").val());
+        }
+    </script>
+{% endblock %}

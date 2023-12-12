@@ -1,0 +1,11 @@
+<html>
+  <head>
+    <title>Sample Login Page</title>
+  </head>
+  <body>
+    <form method="GET" action="/submit">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+      <button type="submit">Login</button>
+    </form>
+  </body>
+</html>

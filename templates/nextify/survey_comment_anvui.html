@@ -1,0 +1,194 @@
+{% extends 'nextify/base.html' %}
+
+{% block body %}
+    <style>
+    .pt-100{
+    padding-top:100px;
+}
+.pb-100{
+    padding-bottom:100px;
+}
+.section-title {
+  margin-bottom: 60px;
+}
+.section-title p {
+    color: #777;
+    font-size: 16px;
+}
+.section-title h4 {
+    text-transform: capitalize;
+    font-size: 40px;
+    position: relative;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+.section-title h4:before {
+    position: absolute;
+    content: "";
+    width: 60px;
+    height: 2px;
+    background-color: #ff3636;
+    bottom: 0;
+    left: 50%;
+    margin-left: -30px;
+}
+.section-title h4:after {
+    position: absolute;
+    background-color: #ff3636;
+    content: "";
+    width: 10px;
+    height: 10px;
+    bottom: -4px;
+    left: 50%;
+    margin-left: -5px;
+    border-radius: 50%;
+}
+ul.timeline-list {
+    position: relative;
+    margin: 0;
+    padding: 0
+}
+ul.timeline-list:before {
+    position: absolute;
+    content: "";
+    width: 2px;
+    height: 100%;
+    background-color: #ff3636;
+    left: 50%;
+    top: 0;
+    -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+}
+ul.timeline-list li {
+    position: relative;
+    clear: both;
+    display: table;
+}
+.timeline_content {
+    border: 2px solid #ff3636;
+    background-color:#fff
+}
+ul.timeline-list li .timeline_content {
+    width: 45%;
+    color: #333;
+    padding: 30px;
+    float: left;
+    text-align: right;
+}
+ul.timeline-list li:nth-child(2n) .timeline_content {
+    float: right;
+    text-align: left;
+}
+.timeline_content h4 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 10px 0;
+}
+ul.timeline-list li:before {
+    position: absolute;
+    content: "";
+    width: 25px;
+    height: 25px;
+    background-color: #ff3636;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+    border-radius: 50%;
+}
+.timeline_content span {
+    font-size: 18px;
+    font-weight: 500;
+    font-family: poppins;
+    color: #ff3636;
+}
+.table td, .table th {
+    padding: .9375rem;
+    vertical-align: middle;
+    border-top: 1px solid #edf2f9;
+}
+</style>
+
+<div class="container-fluid">
+    <div class="row u-mb-large justify-content-center">
+        <div class="col-12 col-md-12 col-xl-12 justify-content-center">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-end">
+                        <div class="col mb-3 ml-n3 ml-md-n2">
+                            <div class="input-group input-group-lg input-group-flush input-group-merge">
+                                <h1>{{ gettext('Danh_sach_nhan_xet') }}</h1>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fa fa-email"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <a href="/splash_page/{{ shop_id_select }}/hotspot/survey"
+                               class="btn btn-flat d-block d-md-inline-block mb-4">
+                                <i class="fa fa-close"></i> {{ gettext('Dong_lai') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="col-md-12">
+                        {% if survey_result|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table table-sm card-table">
+                                <thead>
+                                <th style="font-size: 18px">{{ gettext('Ten') }}Tên</th>
+                                <th style="font-size: 18px">{{ gettext('So_dien_thoai') }}</th>
+                                <th style="font-size: 18px">{{ gettext('Danh_gia') }}</th>
+                                <th style="font-size: 18px">{{ gettext('Nhan_xet') }}</th>
+                                <th style="font-size: 18px">{{ gettext('Thoi_gian') }}</th>
+                                </thead>
+                                <tbody>
+                                {% for survey in survey_result %}
+                                <tr>
+                                    <td style="font-size: 18px">{{ survey.name }}</td>
+                                    <td style="font-size: 18px">{{ survey.phone }}</td>
+                                    <td>
+                                        <table>
+                                            <tr>
+                                                <td style="font-size: 18px">
+                                                {{ gettext('Cau_hoi_1') }} - {{ survey.answers[0] }} {{ gettext('sao') }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 18px">
+                                                 {{ gettext('Cau_hoi_2') }} - {{ survey.answers[1] }} {{ gettext('sao') }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 18px">
+                                                 {{ gettext('Cau_hoi_3') }} - {{ survey.answers[2] }} {{ gettext('sao') }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style="font-size: 18px">{{ survey.comment }}</td>
+                                    <td style="font-size: 18px">{{ survey.time }}</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <nav class="c-pagination u-justify-center">
+                            {% if pagination %}
+                                {{ pagination.links }}
+                            {% endif %}
+                        </nav>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

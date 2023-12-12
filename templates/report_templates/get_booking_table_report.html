@@ -1,0 +1,15 @@
+<div class="panel-header-stats">
+  <div class="row">
+    <div class="col-md-6 col-xs-12" style="text-align: center">
+      <p class="lead">{{ gettext("Tong") }}</p>
+      <p style="font-size: 25px;"><b>{{ total_booking }}</b></p>
+    </div>
+    <div class="col-md-6 col-xs-12" style="text-align: center">
+      <p class="lead">{{ gettext("Khach_hang") }}</p>
+      <p style="font-size: 25px;"><b>{{ total_people }}</b></p>
+    </div>
+  </div>
+</div>
+<div>
+            {% line_chart bookingtable_serrie_data with id='chart-bookingtable_serrie_data' %}
+</div>

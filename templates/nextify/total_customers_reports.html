@@ -1,0 +1,78 @@
+<div class="row u-mb-large">
+    <div class="col-sm-6 col-lg-3">
+        <div class="c-state c-state--warning">
+            <h3 class="c-state__title">{{ gettext("Khach_hang_moi") }}</h3>
+            <h4 class="c-state__number">{{ new_customers }}</h4>
+            {% if tag == "up" %}
+            <p class="c-state__status">{{ gettext("Tang") }} {{ new_cus_compare }}%</p>
+            <span class="c-state__indicator">
+                <i class="fa fa-arrow-circle-o-up"></i>
+            </span>
+            {% elif tag == "down" %}
+            <p class="c-state__status">{{ gettext("Giam") }} {{ new_cus_compare }}%</p>
+            <span class="c-state__indicator">
+                    <i class="fa fa-arrow-circle-o-down"></i>
+                </span>
+            {% endif %}
+        </div>
+        <!-- // c-state -->
+    </div>
+    
+    <div class="col-sm-6 col-lg-3">
+        <div class="c-state c-state--danger">
+            <h3 class="c-state__title">{{ gettext("Khach_hang_quay_lai") }}</h3>
+            <h4 class="c-state__number">{{ return_customers }}</h4>
+            {% if tag == "up" %}
+            <p class="c-state__status">{{ gettext("Tang") }} {{ return_cus_compare }}%</p>
+            <span class="c-state__indicator">
+                <i class="fa fa-arrow-circle-o-up"></i>
+            </span>
+            {% elif tag == "down" %}
+            <p class="c-state__status">{{ gettext("Giam") }} {{ return_cus_compare }}%</p>
+            <span class="c-state__indicator">
+                    <i class="fa fa-arrow-circle-o-down"></i>
+                </span>
+            {% endif %}
+        </div>
+        <!-- // c-state -->
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="c-state c-state--success">
+            <h3 class="c-state__title">{{ gettext("Tong_khach_hang") }}</h3>
+            <h4 class="c-state__number">{{ total_customers }}</h4>
+            {% if tag == "up" %}
+            <p class="c-state__status">{{ gettext("Tang") }} {{ total_cus_compare }}%</p>
+            <span class="c-state__indicator">
+                <i class="fa fa-arrow-circle-o-up"></i>
+            </span>
+            {% elif tag == "down" %}
+            <p class="c-state__status">{{ gettext("Giam") }} {{ total_cus_compare }}%</p>
+            <span class="c-state__indicator">
+                    <i class="fa fa-arrow-circle-o-down"></i>
+                </span>
+            {% endif %}
+        </div>
+        <!-- // c-state -->
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="c-state">
+            <h3 class="c-state__title">{{ gettext("Tong_luot_den") }}</h3>
+            <h4 class="c-state__number">{{ visit_total }}</h4>
+            {% if tag == "up" %}
+            <p class="c-state__status">{{ gettext("Tang") }} {{ visit_compare }}%</p>
+            <span class="c-state__indicator">
+                <i class="fa fa-arrow-circle-o-up"></i>
+            </span>
+            {% elif tag == "down" %}
+            <p class="c-state__status">{{ gettext("Giam") }} {{ visit_compare }}%</p>
+            <span class="c-state__indicator">
+                    <i class="fa fa-arrow-circle-o-down"></i>
+                </span>
+            {% endif %}
+        </div>
+        <!-- // c-state -->
+    </div>
+
+</div>

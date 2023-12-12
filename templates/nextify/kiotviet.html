@@ -1,0 +1,323 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">
+            {{ gettext('Ung_dung') }}
+          </h6>
+
+          <!-- Title -->
+          <h1 class="header-title">
+            {{ gettext('KiotViet') }}
+          </h1>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col">
+
+              <h1 class="header-title">
+                {{ gettext('Cau_hinh') }}
+              </h1>
+            </div>
+            <div class="col-auto">
+              <a href="https://www.kiotviet.vn/huong-dan-su-dung-kiotviet/thiet-lap-nang-cao/thiet-lap-ket-noi-api/">
+                {{ gettext('Huong_dan_thiet_lap_ket_noi') }}</a>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+
+          <!-- Heading -->
+
+          <!-- Form -->
+          <form id="kiotviet_connect" method="post" action="/check_kiotviet">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+            <!-- Email address -->
+
+            <div class="form-group">
+
+              <!-- Label -->
+              <label>{{ gettext('Ten_Cua_Hang') }}:</label>
+
+              <!-- Input -->
+              <input type="text" id="retailer" name="retailer" class="form-control"
+                placeholder="{{ gettext('ten_cua_hang...') }}" {% if retailer %} value="{{ retailer }}" {% endif %}>
+
+            </div>
+            <div class="form-group">
+
+              <!-- Label -->
+              <label>{{ gettext('Kiotviet_Client-ID') }}:</label>
+
+              <!-- Input -->
+              <input type="text" id="client_id" name="client_id" class="form-control"
+                placeholder="{{ gettext('kiot-viet_client_id...') }}" {% if client_id %} value="{{ client_id }}" {%
+                endif %}>
+
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+
+              <label>Kiotviet Secret-ID:</label>
+              <input type="text" id="secret_id" name="secret_id" {% if secret_id %} value="{{ secret_id }}" {% endif %}
+                class="form-control" placeholder="{{ gettext('kiot-viet_secret_id...') }}">
+
+            </div>
+            <!-- Input group -->
+            <div class="form-group">
+
+              <!-- Input -->
+
+
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col-3">
+                  <select id="kind_kiotviet" name="kind_kiotviet" class="form-control">
+                    <option value="FnB" {% if kind=='FnB' %} selected {% endif %}>FnB</option>
+                    <option value="Retailer" {% if kind=='Retailer' %} selected {% endif %}>{{ gettext('Ban_le') }}
+                    </option>
+                  </select>
+                </div>
+
+
+              </div>
+
+            </div>
+            <div class="form-group">
+
+              <!-- Label -->
+              <label>{{ gettext('Merchant_App_ID') }}: (<span>
+                  <font color="red">*</font>
+                </span> {{ gettext("bat_buoc") }})</label>
+
+              <!-- Input -->
+              <input type="text" id="merchant_id_app" name="merchant_id_app" class="form-control"
+                placeholder="merchant app id..." {% if merchant_id_app %} value="{{ merchant_id_app }}" {% endif %}>
+
+            </div>
+            <div class="form-group row">
+              <div class="col-3">
+                <span>{{ gettext('Thiet_lap_ket_noi') }}:</span>
+              </div>
+              <div class="col-auto">
+                <div class="custom-control custom-switch {% if status == 'True' %}is-active{% endif %}">
+                  <input class="custom-control-input" name="status" id="status" type="checkbox" {% if status=="True"
+                    %}checked="checked" {% endif %}>
+                  <label class="custom-control-label" for="status"></label>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="card-footer">
+            <div class="col-6" style="float:right">
+              <button class="btn btn-lg btn-block btn-primary" id="save_info_API">
+                {{ gettext('Luu_thong_tin') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    {% if status == 'True' %}
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <h1 class="header-title">
+            {{ gettext('Ket_noi_dia_diem') }}
+          </h1>
+        </div>
+        <form id="save_id_location" method="post" action="/apps/kiotviet">
+          <div class="card-body">
+
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <div class="form-group">
+              <label>{{ gettext('Dia_diem:') }}</label>
+              <select name="redirect_shop_select" id="redirect_shop_select" class="custom-select">
+                {% if shop_select._id %}
+                <option disabled selected>{{ shop_select.name }}</option>
+                {% else %}
+                <option disabled selected>{{ gettext('Chon_dia_diem') }}</option>
+                {% endif %}
+                {% for shop in shop_in_mer %}
+                <option value="{{ shop._id }}" pos_id="{{ shop.pos_id }}">{{ shop.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label>{{ gettext('Chi_nhanh_Kiotviet:') }}</label>
+              <select name="shop_select_app" id="shop_select_app" class="custom-select">
+                <option disabled selected value="">{{ gettext('Chon dia_diem') }}</option>
+                {% if list_shop_app and list_shop_app|length > 0%}
+                {% for shop_kiot in list_shop_app %}
+                <option value="{{ shop_kiot.id }}" name="{{ shop_kiot.locationName }}">{{ shop_kiot.locationName }}
+                </option>
+
+                {% endfor %}
+                {% endif %}
+              </select>
+            </div>
+
+          </div>
+        </form>
+        <div class="card-footer">
+
+          <button class="btn btn-lg btn-block btn-info" id="save_id_loc">
+            {{ gettext('Lien_ket_dia_diem') }}
+          </button>
+          <hr>
+          <button class="btn btn-lg btn-block btn-danger" id="sync_customer">
+            {{ gettext('Dong_bo_khach_hang') }}
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
+
+</div>
+{% endif %}
+
+</div> <!-- / .container -->
+<script nonce="{{ csp_nonce() }}">
+
+  $(document).ready(function () {
+    window.onload = function () {
+      var input = document.getElementById("retailer").focus();
+    }
+    $("#redirect_shop_select").on("change", function (e) {
+      var pos_id = $("#redirect_shop_select option:selected").attr('pos_id');
+      if (!pos_id || pos_id.toString() == 'None' || pos_id == null) {
+        pos_id = '';
+      }
+      $("#shop_select_app").val(pos_id).trigger('change');
+    });
+
+    $("#save_id_loc").click(function () {
+      $.ajax({
+        url: $("#save_id_location").attr("action"),
+        type: $("#save_id_location").attr("method"),
+        data: $("#save_id_location").serialize(),
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ('error' in returnedData) {
+            swal(returnedData['error'], " ", "error");
+            return false;
+          }
+          else {
+            swal("{{ gettext('Thao_tac_thanh_cong') }}", " ", "success");
+            location.reload();
+          }
+
+        },
+        error: function (xhr, desc, err) {
+          swal("{{ gettext('Co_loi_xay_ra,_thu_lai_sau') }}", " ", "error");
+        }
+      })
+    });
+
+    $("#sync_customer").click(function () {
+      $.ajax({
+        url: "/sync_customers_kiotviet",
+        type: "POST",
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ('error' in returnedData) {
+            swal(returnedData['error'], " ", "error");
+            return false;
+          }
+          else {
+            swal("{{ gettext('Thao_tac_thanh_cong') }}", " ", "success");
+            location.reload();
+          }
+
+        },
+        error: function (xhr, desc, err) {
+          swal("{{ gettext('Co_loi_xay_ra,_thu_lai_sau') }}", " ", "error");
+        }
+
+      })
+    })
+
+    $("#modal_shop").mouseover(function () {
+      $("#modal_shop").css("color", "#2c7be5");
+    });
+    $("#modal_shop").mouseout(function () {
+      $("#modal_shop").css("color", "#12263f");
+    });
+
+    $("#save_info_API").click(function () {
+      var retailer = $("#retailer").val();
+      var client_id = $("#client_id").val();
+      var secret_id = $("#secret_id").val();
+      var status = $("#status").is(':checked');
+      if (status == true) {
+        if (retailer.length == 0) {
+          swal("{{ gettext('Retailer_khong_duoc_de_trong') }}", " ", "error");
+          return false;
+        }
+        if (client_id.length == 0) {
+          swal("{{ gettext('Client_id_khong_duoc_de_trong') }}", " ", "error");
+          return false;
+        }
+        if (secret_id.length == 0) {
+          swal("{{ gettext('Ma_bao_mat_khong_duoc_de_trong') }}", " ", "error");
+          return false;
+        }
+      }
+      $.ajax({
+        url: $("#kiotviet_connect").attr("action"),
+        type: $("#kiotviet_connect").attr("method"),
+        data: $("#kiotviet_connect").serialize(),
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ('error' in returnedData) {
+            swal(returnedData['error'], " ", "error");
+            return false;
+          }
+          else {
+            swal("{{ gettext('Thao_tac_thanh_cong') }}", " ", "success");
+            location.reload();
+          }
+
+        },
+        error: function (xhr, desc, err) {
+          swal("{{ gettext('Co_loi_xay_ra,_thu_lai_sau') }}", " ", "error");
+        }
+      });
+
+      return false;
+    })
+
+  });
+</script>
+
+{% endblock %}
+{% block js %}
+{% endblock %}

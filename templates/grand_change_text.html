@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8>
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <title></title>
+    <link rel=icon type=image/x-icon href=/static/favicon.ico>
+    <link href=/static/css/app.73c368.css rel=stylesheet>
+</head>
+
+<body>
+    <div id=app></div>
+    <script type=text/javascript src=/static/js/vendorui.b2f43b.js></script>
+    <script type=text/javascript src=/static/js/vendorothers.e6833a.js></script>
+    <script type=text/javascript src=/static/js/vendorcharts.c73877.js></script>
+    <script type=text/javascript src=/static/js/vendor.9419b3.js></script>
+    <script type=text/javascript src=/static/js/app.98e6e5.js></script>
+    <script>
+        function bindEvent(element, eventName, eventHandler) {
+            if (element.addEventListener) {
+                element.addEventListener(eventName, eventHandler, false);
+            } else if (element.attachEvent) {
+                element.attachEvent('on' + eventName, eventHandler);
+            }
+        }
+
+        bindEvent(window, 'message', function (e) {
+
+            if (e.data == 'regular_remove') {
+                var left_sidebar = document.getElementsByClassName('left-sidebar');
+
+                if (left_sidebar.length > 0) {
+                    left_sidebar[0].remove();
+                }
+                var header = document.getElementsByClassName('header');
+
+                if (header.length > 0) { header[0].remove(); }
+                var footer = document.getElementsByClassName('footer');
+
+                if (footer.length > 0) { footer[0].remove(); }
+                var main_content = document.getElementsByClassName('main-content');
+
+                if (main_content.length > 0) main_content[0].style.left = "50px";
+
+            }
+            if (e.data == 'dashboard') {
+
+                var tabs__item = document.getElementsByClassName('el-tabs__item');
+                tabs__item[0].textContent = 'Tổng quan'; 
+
+                for (var i = 1; i < tabs__item.length; i++) {
+                    tabs__item[i].remove();
+                }
+                for (var i = 1; i < tabs__item.length; i++) {
+                    tabs__item[i].remove();
+                }
+            
+               
+                document.getElementsByClassName('color59')[1].textContent = 'Người dùng';
+                document.getElementsByClassName('color59')[2].textContent = 'Cảnh báo';
+                document.getElementsByClassName('color59')[4].textContent = 'Thời gian gần nhất';
+                document.getElementsByClassName('el-select-dropdown__item')[0].textContent = '2 giờ';
+                document.getElementsByClassName('el-select-dropdown__item')[1].textContent = '1 ngày';
+                document.getElementsByClassName('el-select-dropdown__item')[2].textContent = '1 tuần';
+                document.getElementsByClassName('el-select-dropdown__item')[3].textContent = '1 tháng';
+                document.getElementsByClassName('el-select-dropdown__item')[4].textContent = '3 tháng';
+                document.getElementsByClassName('el-select-dropdown__item')[5].textContent = '6 tháng';
+                document.getElementsByClassName('color59')[5].textContent = 'Số người dùng';
+                document.getElementsByClassName('color59')[6].textContent = 'Băng thông';
+                document.getElementsByClassName('color59')[7].textContent = 'Xếp hạng AP';
+                document.getElementsByClassName('color59')[8].textContent = 'Xếp hạng người dùng';
+                document.getElementsByClassName('color59')[9].textContent = 'Xếp hạng SSID';
+                document.getElementsByClassName('color59')[10].textContent = 'Xếp hạng websites truy cập';
+               
+
+            }
+
+
+            if (e.data == 'settext_sum_ap') {
+
+                document.getElementsByClassName('color59 fz16 bold ml10')[0].textContent = 'Báo cáo AP theo kênh';
+                document.getElementsByClassName('color59 fz16 bold ml10')[1].textContent = 'Báo cáo tổng số AP';
+                document.getElementsByClassName('numText title-online')[0].textContent = 'Trực tuyến';
+            }
+            if (e.data == 'settext_status_ap') {
+
+                document.getElementsByClassName('color59')[0].textContent = 'Trực tuyến';
+                document.getElementsByClassName('el-form-item')[1].remove();
+                document.getElementsByClassName('el-form-item')[2].remove();
+                document.getElementsByClassName('el-form-item')[3].remove();
+                document.getElementsByClassName('el-table_1_column_559')[1].innerHTML = '<div class="cell">Tên</div>';
+                document.getElementsByClassName('el-table_1_column_560')[1].innerHTML = '<div class="cell">Địa chỉ IP</div>';
+                document.getElementsByClassName('el-table_1_column_562')[1].innerHTML = '<div class="cell">Hoạt động</div>';
+                document.getElementsByClassName('el-table_1_column_563')[1].innerHTML = '<div class="cell">Kênh</div>';
+                document.getElementsByClassName('el-table_1_column_564')[1].innerHTML = '<div class="cell">Người dùng</div>';
+                document.getElementsByClassName('el-table_1_column_565')[1].innerHTML = '<div class="cell">Thao tác</div>';
+            }
+
+            if (e.data == 'firewall') {
+                document.getElementsByClassName('el-tabs__item')[0].textContent = 'Thiết lập quy tắc';
+                document.getElementsByClassName('el-tabs__item')[1].remove();
+                document.getElementsByClassName('el-button')[0].innerHTML = '<span">Hủy</span>';
+                document.getElementsByClassName('el-button')[1].innerHTML = '<span">Thêm</span>';
+                document.getElementsByClassName('el-table_1_column_1')[0].innerHTML = '<div class="cell">Ưu tiên</div>';
+                document.getElementsByClassName('el-table_1_column_2')[0].innerHTML = '<div class="cell">Giao thức</div>';
+                document.getElementsByClassName('el-table_1_column_3')[0].innerHTML = '<div class="cell">Chính sách</div>';
+                document.getElementsByClassName('el-table_1_column_4')[0].innerHTML = '<div class="cell">Áp dụng</div>';
+                document.getElementsByClassName('el-table_1_column_6')[0].innerHTML = '<div class="cell">Thao tác</div>';
+            }
+            if (e.data == 'new_firewall') {
+                document.getElementsByClassName('el-dialog__title')[2].textContent = 'Thêm mới';
+                document.getElementsByClassName('el-form-item__label')[0].textContent = 'Giao thức';
+                document.getElementsByClassName('el-form-item__label')[1].textContent = 'Chính sách';
+                document.getElementsByClassName('el-form-item__label')[2].textContent = 'Áp dụng cho';
+
+            }
+
+            if (e.data == 'ssid_config') {
+
+                document.getElementsByClassName('el-form-item__content')[1].remove();
+                document.getElementsByClassName('el-button')[1].textContent = 'Thêm';
+                document.getElementsByClassName('el-table_1_column_4')[0].innerHTML = '<div class="cell">Trực tuyến</div>';
+                document.getElementsByClassName('el-table_1_column_5')[0].innerHTML = '<div class="cell">Lập lịch</div>';
+                document.getElementsByClassName('el-table_1_column_6')[0].innerHTML = '<div class="cell">Bảo mật</div>';
+                document.getElementsByClassName('el-table_1_column_7')[0].innerHTML = '<div class="cell">Chặn MAC</div>';
+                document.getElementsByClassName('el-table_1_column_8')[0].innerHTML = '<div class="cell">Cô lập</div>';
+                document.getElementsByClassName('el-table_1_column_9')[0].innerHTML = '<div class="cell">Trang chào</div>';
+                document.getElementsByClassName('el-table_1_column_10')[0].innerHTML = '<div class="cell">Thao tác</div>';
+
+            }
+            if (e.data == 'new_ssid_config') {
+                document.getElementsByClassName('el-tabs__item')[0].textContent = 'Cấu hình WIFI';
+                document.getElementsByClassName('el-form-item__label')[0].textContent = 'Giao thức';
+                document.getElementsByClassName('el-dialog__title')[1].textContent = 'Cấu hình SSID';
+                document.getElementsByClassName('el-tabs__item')[0].textContent = 'Cấu hình WIFI';
+                document.getElementsByClassName('el-tabs__item')[1].textContent = 'Thiết bị thành viên';
+                document.getElementsByClassName('el-collapse-item__header')[1].textContent = 'Cơ bản';
+                document.getElementsByClassName('el-collapse-item__header')[2].textContent = 'Bảo mật';
+                document.getElementsByClassName('el-collapse-item__header')[3].textContent = 'Nâng cao';
+
+                document.getElementsByClassName('item-label')[0].textContent = ' SSID';
+                document.getElementsByClassName('item-label')[1].textContent = ' Kích hoạt';
+                document.getElementsByClassName('item-label')[2].textContent = ' Gán Client IP';
+                document.getElementsByClassName('item-label')[3].textContent = ' VLAN';
+                document.getElementsByClassName('item-label')[4].textContent = ' VLAN ID';
+                document.getElementsByClassName('item-label')[5].textContent = ' SSID Band';
+                document.getElementsByClassName('item-label')[6].textContent = ' Bảo mật';
+                document.getElementsByClassName('item-label')[7].textContent = ' WEP Key';
+                document.getElementsByClassName('item-label')[8].textContent = ' WPA Key Mode';
+                document.getElementsByClassName('item-label')[9].textContent = ' WPA Encryption Type';
+                document.getElementsByClassName('item-label')[10].textContent = ' WPA Pre-Shared Key';
+                document.getElementsByClassName('item-label')[11].textContent = ' Máy chủ RADIUS';
+                document.getElementsByClassName('item-label')[12].textContent = ' Port Máy chủ RADIUS';
+                document.getElementsByClassName('item-label')[13].textContent = ' Mã bí mật RADIUS';
+                document.getElementsByClassName('item-label')[14].textContent = ' Máy chủ dự phòng RADIUS';
+                document.getElementsByClassName('item-label')[15].textContent = ' Máy chủ RADIUS';
+                document.getElementsByClassName('item-label')[16].textContent = ' Port Máy chủ RADIUS';
+                document.getElementsByClassName('item-label')[17].textContent = ' Mã bí mật RADIUS';
+                document.getElementsByClassName('item-label')[18].textContent = ' Máy chủ RADIUS Accounting';
+                document.getElementsByClassName('item-label')[19].textContent = ' Port Máy chủ RADIUS Accounting';
+                document.getElementsByClassName('item-label')[20].textContent = ' Mã bí mật RADIUS Accounting';
+                document.getElementsByClassName('item-label')[21].textContent = ' Máy chủ dự phòng RADIUS Accounting';
+                document.getElementsByClassName('item-label')[22].textContent = ' Máy chủ RADIUS Accounting';
+                document.getElementsByClassName('item-label')[23].textContent = ' Port Máy chủ RADIUS Accounting';
+                document.getElementsByClassName('item-label')[24].textContent = ' Mã bí mật RADIUS Accounting';
+                document.getElementsByClassName('item-label')[25].textContent = ' RADIUS NAS ID';
+                document.getElementsByClassName('item-label')[26].textContent = ' Bật Hotspot2.0';
+                document.getElementsByClassName('item-label')[27].textContent = ' Cấu hình Hotspot2.0';
+                document.getElementsByClassName('item-label')[28].textContent = ' Bật Captive Portal';
+                document.getElementsByClassName('item-label')[29].textContent = ' Chính sách trang chào';
+                document.getElementsByClassName('item-label')[30].textContent = ' Lọc MAC';
+                document.getElementsByClassName('item-label')[31].textContent = ' Cho phép MAC';
+                document.getElementsByClassName('item-label')[32].textContent = ' Chặn MAC';
+                document.getElementsByClassName('item-label')[33].textContent = ' Bật Dynamic VLAN (beta)';
+                document.getElementsByClassName('item-label')[34].textContent = ' Cô lập thiết bị';
+                document.getElementsByClassName('item-label')[35].textContent = ' Chế độ cô lập';
+                document.getElementsByClassName('item-label')[36].textContent = ' Gateway MAC Address';
+                document.getElementsByClassName('item-label')[37].textContent = ' 802.11w';
+                document.getElementsByClassName('item-label')[38].textContent = ' Ẩn SSID';
+                document.getElementsByClassName('item-label')[39].textContent = ' DTIM Period';
+                document.getElementsByClassName('item-label')[40].textContent = ' Giới hạn kết nối';
+                document.getElementsByClassName('item-label')[41].textContent = ' Thời gian ngắt người dùng không hoạt động';
+                document.getElementsByClassName('item-label')[42].textContent = ' Cầu nối người dùng';
+                document.getElementsByClassName('item-label')[43].textContent = ' Chính sách thời gian người dùng';
+                document.getElementsByClassName('item-label')[44].textContent = ' Multicast/Broadcast Suppression';
+                document.getElementsByClassName('item-label')[45].textContent = ' Chuyển IP multicast sang unicast';
+                document.getElementsByClassName('item-label')[46].textContent = ' Đặt lịch';
+                document.getElementsByClassName('item-label')[47].textContent = ' Bật chế độ doanh nghiệp';
+                document.getElementsByClassName('item-label')[48].textContent = ' Bật 802.11r';
+            }
+
+
+            if (e.data == 'bandwidth') {
+                document.getElementsByClassName('el-form-item__content')[1].remove();
+                document.getElementsByClassName('el-button')[0].innerHTML = '<span">Hủy</span>';
+                document.getElementsByClassName('el-button')[1].innerHTML = '<span">Thêm</span>';
+                document.getElementsByClassName('el-table_1_column_2')[0].innerHTML = '<div class="cell">Địa chỉ Mac/IP</div>';
+                document.getElementsByClassName('el-table_1_column_3')[0].innerHTML = '<div class="cell">Lập lịch</div>';
+                document.getElementsByClassName('el-table_1_column_4')[0].innerHTML = '<div class="cell">Kích hoạt</div>';
+                document.getElementsByClassName('el-table_1_column_5')[0].innerHTML = '<div class="cell">Tỷ lệ Upstream</div>';
+                document.getElementsByClassName('el-table_1_column_6')[0].innerHTML = '<div class="cell">Tỷ lệ Downstream</div>';
+                document.getElementsByClassName('el-table_1_column_7')[0].innerHTML = '<div class="cell">Thao tác</div>';
+            }
+            if (e.data == 'new_bandwidth') {
+                document.getElementsByClassName('el-dialog__title')[1].textContent = 'Cấu hình quy tắc băng thông';
+                document.getElementsByClassName('el-form-item__label')[0].textContent = 'Bật cấu hình băng thông';
+                document.getElementsByClassName('el-form-item__label')[2].textContent = 'Áp dụng cho';
+                document.getElementsByClassName('el-form-item__label')[5].textContent = 'Giới hạn upload';
+                document.getElementsByClassName('el-form-item__label')[6].textContent = 'Giới hạn download';
+            }
+
+            if (e.data == 'schedule'){
+
+                document.getElementsByClassName('schedule-title')[0].textContent = 'Tạo lịch';
+                document.getElementsByClassName('comingSoonIcon')[0].textContent = 'Chưa có dữ liệu';   
+
+            }
+
+            
+            if (e.data == 'new_schedule'){
+                var titleDesc = document.getElementsByClassName('titleDesc');
+
+                if (titleDesc.length > 0) { 
+
+
+                    titleDesc[0].setAttribute('title', 'Nếu thiết lập 2 cấu hình cùng 1 ngày, thì chỉ 1 cấu hình được áp dụng.');
+                    titleDesc[0].textContent = 'Nếu thiết lập 2 cấu hình cùng 1 ngày, thì chỉ 1 cấu hình được áp dụng.';
+                    document.getElementsByClassName('schedule-name')[0].textContent = 'Thêm lịch';
+                    document.getElementsByClassName('el-form-item__label')[0].textContent = 'Tên';
+                    document.getElementsByClassName('optionItem')[0].textContent = 'Theo tuần';
+                    document.getElementsByClassName('optionItem')[1].textContent = 'Theo khoảng giờ';
+                    document.getElementsByClassName('dayDiv')[0].textContent = 'Chủ nhật';
+                    document.getElementsByClassName('dayDiv')[1].textContent = 'Thứ 2';
+                    document.getElementsByClassName('dayDiv')[2].textContent = 'Thứ 3';
+                    document.getElementsByClassName('dayDiv')[3].textContent = 'Thứ 4';
+                    document.getElementsByClassName('dayDiv')[4].textContent = 'Thứ 5';
+                    document.getElementsByClassName('dayDiv')[5].textContent = 'Thứ 6';
+                    document.getElementsByClassName('dayDiv')[6].textContent = 'Thứ 7';
+                    document.getElementsByClassName('mr10')[0].textContent = 'Thêm ngày giờ'; 
+                    document.getElementsByClassName('el-button')[0].textContent = 'Hủy'; 
+                    document.getElementsByClassName('el-button')[1].textContent = 'Lưu'; 
+                    
+                    
+                 }
+            }
+
+
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,890 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+<div class="header">
+    <div class="header bg-dark pb-5">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="container-fluid">
+                    <div class="header-body">
+                        <div class="row align-items-end">
+                            <div class="col">
+
+                                <!-- Pretitle -->
+                                <h6 class="header-pretitle">
+                                    Tổng quan
+                                </h6>
+
+                                <!-- Title -->
+                                <h1 style="color: #fff" class="header-title">
+                                    {{ merchant.name }}
+                                </h1>
+
+                            </div>
+                            <div class="col-auto">
+                                <div id="reportrange"
+                                    style="background: #fff;cursor: pointer;padding: 10px 10px;border: 1px solid #ccc;">
+                                    <i class="fa fa-calendar"></i>&nbsp;
+                                    <span>4/3/2019 - 11/3/2019</span> <i class="fa fa-caret-down"></i>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <select class="form-control" id="shop_in_mer">
+                                    <option value="all">Tất cả địa điểm</option>
+                                    {% for shop_mer in shop_in_mer %}
+                                    <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                                    {% endfor %}
+                                </select>
+
+                            </div>
+                        </div> <!-- / .row -->
+                    </div>
+                    <div class="header-footer">
+                    <canvas id="big_chart" style="display: block; width: 1517px; height: 320px;"
+                    class="chartjs-render-monitor"></canvas>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="container-fluid mt-n6">
+        <div class="row">
+            <div class="col-lg-6 u-ml-auto u-mb-medium">
+                <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__content">
+                        <div class="col-lg-6" style="float: left">
+                            <h3 class="c-graph-card__title">Tổng lượt đến</h3>
+                            <h2 class="c-graph-card__number">{{ total_visit }}</h2>
+                            <p class="c-graph-card__status">Trung bình <b
+                                    style="color: #f57a33; font-size: 18px">{{ visit_avg }}</b> lượt đến/ngày</p>
+                        </div>
+                    </div>
+
+                    <div class="c-graph-card__chart">
+                        <div class="chartjs-size-monitor"
+                            style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                            <div class="chartjs-size-monitor-expand"
+                                style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink"
+                                style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                            </div>
+                        </div>
+                        <canvas id="js-chart-earnings" width="730" height="230" class="chartjs-render-monitor"
+                            style="display: block; height: 90px; width: 365px;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 u-mr-auto u-mb-medium">
+                <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__content">
+                        <div class="col-lg-5" style="float: left">
+                            <h3 class="c-graph-card__title">Tổng khách hàng</h3>
+                            <h2 class="c-graph-card__number">{{ total_customers }}</h2>
+                            <p class="c-graph-card__status">Trung bình <b
+                                    style="color: #f57a33; font-size: 18px">{{ customers_avg }}</b> khách/ngày</p>
+                        </div>
+                        <div class="col-lg-7" style="float: right">
+                            <h3>Thu nhập (ước tính):<b style="color: #f57a33; font-size: 20px">11.365.000</b> VNĐ/ngày
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="c-graph-card__chart">
+                        <div class="chartjs-size-monitor"
+                            style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                            <div class="chartjs-size-monitor-expand"
+                                style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink"
+                                style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                            </div>
+                        </div>
+                        <canvas id='js-chart-total-customers' width="730" height="230" class="chartjs-render-monitor"
+                            style="display: block; height: 90px; width: 365px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if shop_in_mer|length and min_location and max_location > 0%}
+
+        <div class="row">
+            <div class="col-lg-4 u-ml-auto u-mb-medium">
+                <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__chart">
+                        <div class="c-graph-card__content">
+                            <h3 class="c-graph-card__title">Loại thiết bị</h3>
+                            <div class="c-graph-card__chart">
+                                <div class="chartjs-size-monitor"
+                                    style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                    <div class="chartjs-size-monitor-expand"
+                                        style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
+                                        </div>
+                                    </div>
+                                    <div class="chartjs-size-monitor-shrink"
+                                        style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                                    </div>
+                                </div>
+                                <canvas id="devices" style="display: block; width: 320px; height: 280px;"></canvas>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-8">
+                <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="row">
+                        <div class="col-xl-3">
+                            <div class="c-graph-card__content">
+                                <h3 class="c-graph-card__title">Điểm đông nhất</h3>
+                                <h2 class="c-graph-card__number">{{ max_location.total_visit }}</h2>
+                                {% set max_loc = max_location.shop_id|shop_info %}
+                                <p class="c-graph-card__status">{{ max_loc.name }}</p>
+                            </div>
+                            <div class="c-graph-card__content">
+                                <h3 class="c-graph-card__title">Điểm thấp nhất</h3>
+                                <h2 class="c-graph-card__number">{{ min_location.total_visit }}</h2>
+                                {% set min_loc = min_location.shop_id|shop_info %}
+                                <p class="c-graph-card__status">{{ min_loc.name }}</p>
+                            </div>
+                        </div>
+                        <div class="col-xl-9">
+                            <div class="c-graph-card__chart">
+                                <div class="chartjs-size-monitor"
+                                    style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                    <div class="chartjs-size-monitor-expand"
+                                        style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
+                                        </div>
+                                    </div>
+                                    <div class="chartjs-size-monitor-shrink"
+                                        style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                                    </div>
+                                </div>
+                                <canvas id="locations_pie" style="position: relative; height:40vh;"></canvas>
+                                <input type="hidden" value="{{ locations_pie }}" id="visit_locations_pie" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {% endif %}
+        <div class="row">
+
+            <div class="col-lg-6 u-mr-auto u-mb-medium">
+                <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__content">
+                        <h3 class="c-graph-card__title">SMS đã gửi</h3>
+                        <h2 class="c-graph-card__number">{{ sms_count }}</h2>
+                        <p class="c-graph-card__status">
+                            {%if sms_count|int > days_diff|int %}
+                            Trung bình <b style="color: #f57a33; font-size: 18px">{{ sms_avg }}</b> SMS/ngày
+                            {% else %}
+                            Trung bình <b style="color: #f57a33; font-size: 18px">{{ sms_avg }}</b> ngày gửi 1 SMS
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="c-graph-card__chart">
+                        <div class="chartjs-size-monitor"
+                            style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                            <div class="chartjs-size-monitor-expand"
+                                style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink"
+                                style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                            </div>
+                        </div>
+                        <canvas id="js_chart_sms" width="730" height="230" class="chartjs-render-monitor"
+                            style="display: block; height: 90px; width: 365px;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 u-mr-auto u-mb-medium">
+                <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__content">
+                        <h3 class="c-graph-card__title">Email đã gửi</h3>
+                        <h2 class="c-graph-card__number">{{ email_count }}</h2>
+                        <p class="c-graph-card__status">
+                            {%if email_count==0%}
+                            Bạn chưa gửi Email nào
+                            {%elif email_count > days_diff %}
+                            Trung bình <b style="color: #f57a33; font-size: 18px">{{ email_avg }}</b> Email/ngày
+                            {% else %}
+                            Trung bình <b style="color: #f57a33; font-size: 18px">{{ email_avg }}</b> ngày gửi 1 Email
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="c-graph-card__chart">
+                        <div class="chartjs-size-monitor"
+                            style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                            <div class="chartjs-size-monitor-expand"
+                                style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink"
+                                style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                            </div>
+                        </div>
+                        <canvas id="js_chart_email" width="730" height="230" class="chartjs-render-monitor"
+                            style="display: block; height: 90px; width: 365px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 u-mr-auto u-mb-medium">
+                <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__content">
+                        <h3 class="c-graph-card__title">Khách hàng quay lại sau khi gửi SMS và Email</h3>
+                        <h2 class="c-graph-card__number">{{ total_coupons }}</h2>
+                        <p class="c-graph-card__status">
+                            Trung bình <b style="color: #f57a33; font-size: 18px">{{ total_coupons_avg }}</b> Khách/ngày
+                        </p>
+
+                    </div>
+
+                    <div class="c-graph-card__chart">
+                        <canvas id="js_chart_coupons" width="730" height="280" class="chartjs-render-monitor"
+                            style="display: block; height: 300px; width: 605px;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 u-mr-auto u-mb-medium">
+                <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__content">
+                        <h3 class="c-graph-card__title">Nguồn khách hàng</h3>
+                        <h2 class="c-graph-card__number">7 APPS</h2>
+                        <p class="c-graph-card__status"></p>
+                    </div>
+                    <div class="c-graph-card__chart">
+                        <canvas id="js_chart_payout" width="730" height="280" class="chartjs-render-monitor"
+                            style="display: block; height: 300px; width: 605px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 u-mr-auto u-mb-medium">
+                <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__content">
+                        <h3 class="c-graph-card__title">Khách theo lượt đến</h3>
+
+                        <div class="c-graph-card__chart" style="padding: 0px">
+                            <div class="chartjs-size-monitor"
+                                style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                <div class="chartjs-size-monitor-expand"
+                                    style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                    <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                                </div>
+                                <div class="chartjs-size-monitor-shrink"
+                                    style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                    <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                                </div>
+                            </div>
+                            <canvas id="customers_by_visit"
+                                style="display: block; width: 685px; height: 300px;"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 u-mr-auto u-mb-medium">
+                <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__content">
+                        <h3 class="c-graph-card__title">Khách theo khung giờ</h3>
+                        <div class="c-graph-card__chart" style="padding: 0px">
+                            <div class="chartjs-size-monitor"
+                                style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                <div class="chartjs-size-monitor-expand"
+                                    style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                    <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                                </div>
+                                <div class="chartjs-size-monitor-shrink"
+                                    style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                    <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                                </div>
+                            </div>
+                            <canvas id="visit_by_hour" style="display: block; width: 685px; height: 300px;"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="start_date" value="{{ date_from }}" />
+<input type="hidden" id="end_date" value="{{ date_to }}" />
+<input type="hidden" value="all" id="shop_id_select" />
+{% endblock %}
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+
+    $(document).ready(function () {
+        new Chart(document.getElementById("big_chart"), {
+            type: 'line',
+            data: {
+                labels: ["T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12"],
+                datasets: [
+                    {
+                        borderWidth: 2,
+                        borderColor: "#00AAFF",
+
+                        data: [247, 526, 350, 570, 410, 600, 455, 702, 687, 851, 803, 999]
+                    }
+                ]
+            },
+            options: {
+                legend: { display: false },
+                title: {
+                    display: false,
+
+                }
+            }
+        });
+
+        var shop_id_select = $('#shop_id_select').val();
+        $('#shop_in_mer').val(shop_id_select).trigger('change');
+        $('#shop_in_mer').on("change", function (e) {
+            var shop_id = $('#shop_in_mer').val();
+            var url = "/customers_reports/" + shop_id;
+            $(location).attr('href', url);
+        });
+        var js_chart_earnings = document.getElementById("js-chart-earnings");
+        new Chart(js_chart_earnings, {
+            type: "line",
+            data: {
+                labels: ["January 1", "January 5", "January 10", "January 15", "January 20", "January 25", "January 30"],
+                datasets: [{
+                    label: "Sold",
+                    showLine: true,
+                    fill: true,
+                    lineTension: 0.4,
+                    backgroundColor: "rgba(0,172,255, 0.1)",
+                    borderWidth: 2,
+                    borderColor: "#00AAFF",
+                    borderCapStyle: "butt",
+                    borderDash: [],
+                    borderDashOffset: 0,
+                    borderJoinStyle: "miter",
+                    pointRadius: 0,
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#2a2f37",
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 6,
+                    pointHoverBackgroundColor: "#FC2055",
+                    pointHoverBorderColor: "#aff",
+                    pointHoverBorderWidth: 2,
+                    pointStyle: 'circle',
+                    data: [25, 45, 25, 32, 15, 28],
+                    spanGaps: !1
+                }]
+            },
+            options: {
+                legend: { display: !1, position: 'right' },
+                scales: {
+                    xAxes: [{
+                        display: 1,
+                        ticks: { fontSize: "11", fontColor: "#969da5" },
+                        gridLines: {
+                            color: "rgba(0,0,0,0.0)",
+                            zeroLineColor: "rgba(0,0,0,0.0)"
+                        }
+                    }],
+                    yAxes: [{
+                        display: 1,
+                        ticks: {
+                            beginAtZero: !0,
+                            max: 55
+                        }
+                    }]
+                }
+            }
+        });
+
+
+        var js_chart_customers = document.getElementById("js-chart-total-customers");
+        new Chart(js_chart_customers, {
+            type: "line",
+            data: {
+                labels: ["January 1", "January 5", "January 10", "January 15", "January 20", "January 25"],
+                datasets: [{
+                    label: "Sold",
+                    showLine: true,
+                    fill: true,
+                    lineTension: 0.4,
+                    backgroundColor: "rgba(0,172,255, 0.1)",
+                    borderWidth: 2,
+                    borderColor: "#00AAFF",
+                    borderCapStyle: "butt",
+                    borderDash: [],
+                    borderDashOffset: 0,
+                    borderJoinStyle: "miter",
+                    pointRadius: 0,
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#2a2f37",
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 6,
+                    pointHoverBackgroundColor: "#FC2055",
+                    pointHoverBorderColor: "#aff",
+                    pointHoverBorderWidth: 2,
+                    pointStyle: 'circle',
+                    data: [25, 45, 25, 32, 15, 28],
+                    spanGaps: 1
+                }]
+            },
+            options: {
+                legend: { display: !1, position: 'right' },
+                scales: {
+                    xAxes: [{
+                        display: 1,
+                        ticks: { fontSize: "11", fontColor: "#969da5" },
+                        gridLines: {
+                            color: "rgba(0,0,0,0.0)",
+                            zeroLineColor: "rgba(0,0,0,0.0)"
+                        }
+                    }],
+                    yAxes: [{
+                        display: 1,
+                        ticks: {
+                            beginAtZero: 1,
+                            max: 55
+                        }
+                    }]
+                }
+            }
+        });
+
+        var js_chart_coupons = document.getElementById("js_chart_coupons");
+        new Chart(js_chart_coupons, {
+            type: "line",
+            data: {
+                labels: ["January 1", "January 5", "January 10", "January 15", "January 20", "January 25"],
+                datasets: [{
+                    label: "Sold",
+                    showLine: true,
+                    fill: true,
+                    lineTension: 0.4,
+                    backgroundColor: "rgba(0,172,255, 0.1)",
+                    borderWidth: 2,
+                    borderColor: "#00AAFF",
+                    borderCapStyle: "butt",
+                    borderDash: [],
+                    borderDashOffset: 0,
+                    borderJoinStyle: "miter",
+                    pointRadius: 0,
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#2a2f37",
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 6,
+                    pointHoverBackgroundColor: "#FC2055",
+                    pointHoverBorderColor: "#aff",
+                    pointHoverBorderWidth: 2,
+                    pointStyle: 'circle',
+                    data: [25, 45, 25, 32, 15, 28],
+                    spanGaps: 1
+                }]
+            },
+            options: {
+                legend: { display: !1, position: 'right' },
+                scales: {
+                    xAxes: [{
+                        display: 1,
+                        ticks: { fontSize: "11", fontColor: "#969da5" },
+                        gridLines: {
+                            color: "rgba(0,0,0,0.0)",
+                            zeroLineColor: "rgba(0,0,0,0.0)"
+                        }
+                    }],
+                    yAxes: [{
+                        display: 1,
+                        ticks: {
+                            beginAtZero: 1,
+                            max: 55
+                        }
+                    }]
+                }
+            }
+        });
+
+        var js_chart_payout = document.getElementById("js_chart_payout");
+        new Chart(js_chart_payout, {
+            type: "bar",
+            data: {
+                labels: ["Loop", "Getfly", "Pos365", "Ipos", "Kiotviet", "Ahachat", "Chatfuel"],
+                datasets: [{
+                    label: "Sold",
+                    showLine: true,
+                    fill: true,
+                    lineTension: 0.4,
+                    backgroundColor: "rgba(0,172,255, 0.1)",
+                    borderWidth: 2,
+                    borderColor: "#00AAFF",
+                    borderCapStyle: "butt",
+                    borderDash: [],
+                    borderDashOffset: 0,
+                    borderJoinStyle: "miter",
+                    pointRadius: 0,
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#2a2f37",
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 6,
+                    pointHoverBackgroundColor: "#FC2055",
+                    pointHoverBorderColor: "#aff",
+                    pointHoverBorderWidth: 2,
+                    pointStyle: 'circle',
+                    data: [25, 45, 25, 32, 15, 28, 30],
+                    spanGaps: 1
+                }]
+            },
+            options: {
+                legend: { display: !1, position: 'right' },
+                scales: {
+                    xAxes: [{
+                        display: 1,
+                        ticks: { fontSize: "11", fontColor: "#969da5" },
+                        gridLines: {
+                            color: "rgba(0,0,0,0.0)",
+                            zeroLineColor: "rgba(0,0,0,0.0)"
+                        }
+                    }],
+                    yAxes: [{
+                        display: 1,
+                        ticks: {
+                            beginAtZero: 1,
+                            max: 55
+                        }
+                    }]
+                }
+            }
+        });
+
+        var js_chart_sms = document.getElementById("js_chart_sms");
+        new Chart(js_chart_sms, {
+            type: "line",
+            data: {
+                labels: ["January 1", "January 5", "January 10", "January 15", "January 20", "January 25"],
+                datasets: [{
+                    label: "Sold",
+                    showLine: true,
+                    fill: true,
+                    lineTension: 0.4,
+                    backgroundColor: "rgba(0,172,255, 0.1)",
+                    borderWidth: 2,
+                    borderColor: "#00AAFF",
+                    borderCapStyle: "butt",
+                    borderDash: [],
+                    borderDashOffset: 0,
+                    borderJoinStyle: "miter",
+                    pointRadius: 0,
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#2a2f37",
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 6,
+                    pointHoverBackgroundColor: "#FC2055",
+                    pointHoverBorderColor: "#aff",
+                    pointHoverBorderWidth: 2,
+                    pointStyle: 'circle',
+                    data: [25, 45, 25, 32, 15, 28],
+                    spanGaps: 1
+                }]
+            },
+            options: {
+                legend: { display: !1, position: 'right' },
+                scales: {
+                    xAxes: [{
+                        display: 1,
+                        ticks: { fontSize: "11", fontColor: "#969da5" },
+                        gridLines: {
+                            color: "rgba(0,0,0,0.0)",
+                            zeroLineColor: "rgba(0,0,0,0.0)"
+                        }
+                    }],
+                    yAxes: [{
+                        display: 1,
+                        ticks: {
+                            beginAtZero: 1,
+                            max: 55
+                        }
+                    }]
+                }
+            }
+        });
+        var js_chart_email = document.getElementById("js_chart_email");
+        new Chart(js_chart_email, {
+            type: "line",
+            data: {
+                labels: ["January 1", "January 5", "January 10", "January 15", "January 20", "January 25"],
+                datasets: [{
+                    label: "Sold",
+                    showLine: true,
+                    fill: true,
+                    lineTension: 0.4,
+                    backgroundColor: "rgba(0,172,255, 0.1)",
+                    borderWidth: 2,
+                    borderColor: "#00AAFF",
+                    borderCapStyle: "butt",
+                    borderDash: [],
+                    borderDashOffset: 0,
+                    borderJoinStyle: "miter",
+                    pointRadius: 0,
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#2a2f37",
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 6,
+                    pointHoverBackgroundColor: "#FC2055",
+                    pointHoverBorderColor: "#aff",
+                    pointHoverBorderWidth: 2,
+                    pointStyle: 'circle',
+                    data: [25, 45, 25, 32, 15, 28],
+                    spanGaps: 1
+                }]
+            },
+            options: {
+                legend: { display: !1, position: 'right' },
+                scales: {
+                    xAxes: [{
+                        display: 1,
+                        ticks: { fontSize: "11", fontColor: "#969da5" },
+                        gridLines: {
+                            color: "rgba(0,0,0,0.0)",
+                            zeroLineColor: "rgba(0,0,0,0.0)"
+                        }
+                    }],
+                    yAxes: [{
+                        display: 1,
+                        ticks: {
+                            beginAtZero: 1,
+                            max: 55
+                        }
+                    }]
+                }
+            }
+        });
+
+        // var visit_devices_data = eval($('#visit_by_devices').val());
+        // var visit_devices_labels = [];
+        // var visit_devices_value = [];
+
+
+        // for (i = 0; i < visit_devices_data.length; i++) {
+        //     var range_item = visit_devices_data[i];
+        //     visit_devices_labels.push(range_item[0]);
+        //     visit_devices_value.push(range_item[1]);
+        // }
+        // var visit_by_devices_chart = {
+        //     labels: visit_devices_labels,
+        //     datasets: [{
+        //         data: visit_devices_value,
+        //         backgroundColor: [
+        //             '#FF6384',
+        //             '#36A2EB',
+        //             '#FFCE56'
+        //         ]
+        //     }]
+        // };
+
+
+        var ctx3 = document.getElementById('devices').getContext('2d');
+        new Chart(ctx3, {
+            type: 'pie',
+            data: {
+                labels: ["IPHONE", "SAMSUNG", "OPPO", "XAOMI"],
+                datasets: [{
+                    backgroundColor: ["#a93226", "#f4d03f", " #148f77", " #4a235a", " #ebf5fb"],
+                    data: [10, 40, 15, 35]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    labels: {
+                        render: 'percentage',
+                        fontColor: ['green', 'white', 'red'],
+                        precision: 2
+                    }
+                }
+            }
+        });
+        var ctx2 = document.getElementById('visit_by_hour').getContext('2d');
+        new Chart(ctx2, {
+            type: 'horizontalBar',
+            data: {
+                labels: ["08:00 - 10:59", "11:00 - 13:59", "14:00 - 17:59", "18:00 - 20:59", "21:00 - 23:59", "00:00 - 07:59"],
+                datasets: [{
+                    backgroundColor: ["#f052a8", "#f052a8", "#f052a8", "#f052a8", "#f052a8"],
+                    data: [10, 40, 15, 100, 20, 0]
+                }]
+            },
+            options: {
+                legend: {
+                    display: false,
+                },
+                title: {
+                    display: false,
+                    text: 'Visit by hours'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false
+                },
+                responsive: true,
+                scales: {
+                    yAxes: [{
+                        stacked: true
+                    }],
+                    xAxes: [{
+                        stacked: true
+                    }]
+
+                }
+            }
+        });
+        var ctx1 = document.getElementById('customers_by_visit').getContext('2d');
+        window.myBar = new Chart(ctx1, {
+            type: 'horizontalBar',
+            data: {
+                labels: ["1", "2", "3-9", "10+"],
+                datasets: [{
+                    backgroundColor: ["#f052a8", "#f052a8", "#f052a8", "#f052a8", "#f052a8"],
+                    data: [10, 40, 15, 35]
+                }]
+            },
+            options: {
+                legend: {
+                    display: false,
+                },
+                title: {
+                    display: false,
+                    text: 'Chart.js Bar Chart - Stacked'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false
+                },
+                responsive: true,
+                scales: {
+                    xAxes: [{
+                        stacked: true,
+                    }],
+                    yAxes: [{
+                        stacked: true
+                    }]
+                }
+            }
+        });
+
+        if ($("#visit_locations_pie").length > 0) {
+
+            var visit_locations_pie_data = eval($('#visit_locations_pie').val());
+            var visit_location_labels = [];
+            var visit_location_value = [];
+
+
+            for (i = 0; i < visit_locations_pie_data.length; i++) {
+                var range_item = visit_locations_pie_data[i];
+                visit_location_labels.push(range_item[0]);
+                visit_location_value.push(range_item[1]);
+            }
+
+
+            var visit_by_locations_chart = {
+                labels: visit_location_labels,
+                datasets: [{
+                    data: visit_location_value,
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56'
+                    ]
+                }]
+            };
+            var ctx3 = document.getElementById('locations_pie').getContext('2d');
+            new Chart(ctx3, {
+                type: 'pie',
+                data: {
+                    labels: visit_location_labels,
+                    datasets: [{
+                        backgroundColor: ["#a93226", "#f4d03f", " #148f77", " #4a235a", " #ebf5fb"],
+                        data: [10, 20, 15, 35, 20]
+                    }]
+                },
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Thống kê lượt đến theo địa điểm'
+                    }
+                }
+            });
+
+
+        }
+        var start_date = moment().startOf('isoWeek');
+        var end_date = moment().endOf('isoWeek').add(1, 'days');
+
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('D/M/YYYY') + ' - ' + end.format('D/M/YYYY'));
+            $('#start_date').val(start.format('YYYY-M-D'));
+            $('#end_date').val(end.format('YYYY-M-D'));
+
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start_date,
+            endDate: end_date,
+            "showDropdowns": true,
+            "opens": 'right',
+            "showCustomRangeLabel": false,
+            "alwaysShowCalendars": false,
+            ranges: {
+                'Tuần này': [moment().startOf('isoWeek'), moment().endOf('isoWeek').add(1, 'days')],
+                'Tuần trước': [moment().subtract(1, 'week').startOf('isoWeek'), moment().subtract(1, 'week').endOf('isoWeek').add(1, 'days')],
+                'Tháng này': [moment().startOf('month'), moment().endOf('month')],
+                'Tháng trước': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb,
+            $("#reportrange").click(function () {
+                swal("Tính năng đang hoàn thiện", "", "warning")
+            }));
+
+        if ($('#start_date').length > 0) {
+
+            var start_date = new Date($('#start_date').val().replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3"));
+            var end_date = new Date($('#end_date').val().replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3"));
+
+            $('#reportrange span').html(moment(start_date, "YYYY-M-D").format('D/M/YYYY') + ' - ' + moment(end_date, "YYYY-M-D").format('D/M/YYYY'));
+            $('#start_date').val(moment(start_date, "YYYY-M-D").format('YYYY-M-D'));
+            $('#end_date').val(moment(end_date, "YYYY-M-D").format('YYYY-M-D'));
+        } else {
+            cb(start_date, end_date);
+        }
+
+    });
+
+
+</script>
+{% endblock %}

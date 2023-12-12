@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Nextify BOX</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+  <link rel="stylesheet" href="/static/box/style.css">
+  
+</head>
+<body>
+  <main class="page payment-page">
+    <section class="payment-form dark">
+      <div class="container">
+        <div class="block-heading">
+          <h2>BOX Setup</h2>
+          <p>Khởi tạo tài khoản WIFI CRM gói BOX.</p>
+        </div>
+        <form>
+  
+          <div class="card-details">
+           
+            <div class="row">
+              <div class="form-group col-sm-12">
+                <label for="card-holder">MAC thiết bị</label>
+                <input name="mac" type="text" class="form-control" placeholder="xx:xx:xx:xx:xx:xx" aria-label="xx:xx:xx:xx:xx:xx" aria-describedby="basic-addon1">
+              </div>
+              <div class="form-group col-sm-12">
+                <label for="">Ngày kích hoạt</label>
+                <input type="text" class="form-control datepicker" id="date_active" name="date_active">
+              </div>
+              <div class="form-group col-sm-12">
+                <label>Thời gian</label>
+                <select class="form-control" name="date_use">
+                    <option value="12">12 tháng</option>
+                    <option value="24">24 tháng</option>
+                    <option value="36">36 tháng</option>
+                </select>
+              </div>
+            
+              <div class="form-group col-sm-12">
+                <button type="button" class="btn btn-primary btn-block">Tạo tài khoản</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+</body>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="/static/box/bootstrap-datepicker.js"></script> 
+<script>
+    $( document ).ready(function() {
+        $('#date_active').datepicker({  format: 'dd/mm/yyyy' });
+    
+    });
+</script>
+
+</body>
+</html>

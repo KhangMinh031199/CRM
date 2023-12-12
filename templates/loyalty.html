@@ -1,0 +1,262 @@
+{% extends "v2/base.html" %} {% block right_content %}
+<div class="row">
+    <form method="POST" action="/loyalty" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+        <div class="panel panel-white">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="header">
+                            {% if message %}
+                            <div class="alert alert-success">
+                                {{ message | safe }}
+                            </div>
+                            {% endif %}
+                            <h4 class="title">Thiết lập</h4>
+
+                        </div>
+                        <div class="content">
+                            {#
+                            <div class="form-group form-inline">#} {#
+                                <label for="loyal_type">Loại quy đổi:</label>#} {#
+                                <select name="loyal_type" class="form-control" id="loyal_type">#} {#
+                                    <option value="visit">Lượt đến</option>#} {#
+                                    <option value="money">Tiền</option>#} {# </select>#} {#
+                                <input type="hidden" id="curr_loyal_type" value="{% if loyal_settings %}{{ loyal_settings.loyal_type }}{% endif %}" />#} {#
+                                <label for="loyaly_exchange_value" style="padding-left: 10px">Giá trị quy đổi:</label>#} {#
+                                <input type="text" id="loyaly_exchange_value" class="form-control" value="{% if loyal_settings %}{{ loyal_settings.value }}{% endif %}"
+                                    #} {# placeholder="1000" />#} {#
+                                <input type="text" class="form-control" value="= 1 điểm" readonly/>#} {#
+                                <label for="active" style="padding-left: 10px">Triển khai:</label>#} {#
+                                <input type="checkbox" id="active" {% if loyal_settings %}{% if loyal_settings.start %}checked{% endif %}{% endif %}>#} {# </div>#}
+
+                            <div class="form-group form-inline">
+                                <label for="loyal_type">Loại quy đổi:</label>
+                                <select name="loyal_type" class="form-control" id="loyal_type">
+                                    <option value="visit">Lượt đến</option>
+                                    <option value="money">Tiền</option>
+                                </select>
+                                <input type="hidden" id="curr_loyal_type" value="{% if shop.loyal_settings %}{{ shop.loyal_settings.loyal_type }}{% endif %}"
+                                />
+                                <input type="text" class="form-control" value="1 điểm" readonly/> =
+                                <input type="text" name="loyalty_exchange_value" id="loyalty_exchange_value" class="form-control" value="{% if shop.loyal_settings %}{{ shop.loyal_settings.loyal_value }}{% endif %}"
+                                    placeholder="1000" />
+                                <label for="active" style="padding-left: 10px">Bắt đầu từ:</label>
+                                <input type="text" name="sales_start_date" id="sales_start_date" class="form-control form-input" value="{% if shop.loyal_settings %}{{ shop.loyal_settings.sales_start_date }}{% endif %}"
+                                     />
+                            <input type="hidden" value="{{ shop.loyal_settings.sales_start_date }}" id="ex_sales_start_date"/>
+                                <label for="active" style="padding-left: 10px">Triển khai:</label>
+                                <input type="checkbox" name="loyalty_start" id="active" {% if shop.loyal_settings %}{% if shop.loyal_settings.start %}checked{%
+                                    endif %}{% endif %}>
+
+                            </div>
+                            <br/>
+
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header">
+                            <div class="btn-toolbar pull-right">
+                                <div class="btn-group">
+                                    <a href="#" id="add_rank" class="btn btn-info btn-fill pull-right">Thêm</a>
+                                </div>
+                            </div>
+                            <h4 class="title">Hạng thành viên</h4>
+                        </div>
+                        <div class="content">
+                            <div id="rank_content">
+                                {%if loyal_rank and loyal_rank|length >0%} {%for rank in loyal_rank%}
+                                <div class="form-group form-inline">
+                                    <label>Tên: </label>
+                                    <input type="text" class="form-control" value="{{rank.customer_type}}" />
+                                    <label>Điểm: </label>
+                                    <input type="text" class="form-control" value="{{rank.customer_point}}" />
+                                </div>
+                                {%endfor%} {%else%}
+                                <div class="form-group form-inline">
+                                    <label>Tên: </label>
+                                    <input type="text" class="form-control" value="" placeholder="Tên hạng" />
+                                    <label>Điểm: </label>
+                                    <input type="text" class="form-control" value="" placeholder="Số điểm" />
+                                </div>
+                                <div class="form-group form-inline">
+                                    <label>Tên: </label>
+                                    <input type="text" class="form-control" value="" placeholder="Tên hạng" />
+                                    <label>Điểm: </label>
+                                    <input type="text" class="form-control" value="" placeholder="Số điểm" />
+                                </div>
+                                <div class="form-group form-inline">
+                                    <label>Tên: </label>
+                                    <input type="text" class="form-control" value="" placeholder="Tên hạng" />
+                                    <label>Điểm: </label>
+                                    <input type="text" class="form-control" value="" placeholder="Số điểm" />
+                                </div>
+                                {%endif%}
+
+                            </div>
+                            <hr>
+                            <div class="btn-toolbar pull-right">
+                                <div class="btn-group">
+                                    <a href="#" id="save_loyalty" class="btn btn-info btn-fill pull-right">Lưu lại</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+   <div class="panel panel-white">
+     <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                <div class="btn-toolbar pull-right">
+                                    <div class="btn-group">
+                                        <a href="#" id="add_reward" class="btn btn-info btn-fill pull-right">Thêm</a>
+                                    </div>
+                                </div>
+                                <h3 class="title">Mức tín dụng</h3>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div id="reward_content">
+
+
+                            {%if rewards and rewards|length >0 %} {% for reward in rewards %}
+                            <div class="form-group form-inline">
+                                <label>Tiền chi tiêu: </label>
+                                <input type="text" class="form-control" value="{{reward.reward.amount}}" placeholder="Số tiền chi tiêu" />
+                                <label>% Tích: </label>
+                                <input type="text" class="form-control" value="{{reward.reward.credit}}" placeholder="" /> %
+                            </div>
+                            {%endfor%} {%else%}
+                            <div class="form-group form-inline">
+                                <label>Tiền chi tiêu: </label>
+                                <input type="text" class="form-control" value="" placeholder="Số tiền chi tiêu" />
+                                <label>% Tích: </label>
+                                <input type="text" class="form-control" value="" style="width: 50px" placeholder="" /> %
+                            </div>
+                            <div class="form-group form-inline">
+                                <label>Tiền chi tiêu: </label>
+                                <input type="text" class="form-control" value="" placeholder="Số tiền chi tiêu" />
+                                <label>% Tích: </label>
+                                <input type="text" class="form-control" value="" style="width: 50px" placeholder="" /> %
+                            </div>
+                            <div class="form-group form-inline">
+                                <label>Tiền chi tiêu: </label>
+                                <input type="text" class="form-control" value="" placeholder="Số tiền chi tiêu" />
+                                <label>% Tích: </label>
+                                <input type="text" class="form-control" value="" style="width: 50px" placeholder="" /> %
+                            </div>
+                            {%endif%}
+                        </div>
+
+                        <div class="btn-toolbar pull-right">
+                            <div class="btn-group">
+                                <button type="submit" id="save_credit" class="btn btn-info btn-fill pull-right">Lưu lại</button>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block js %}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#wallets').click();
+        if ($("#curr_loyal_type").length > 0) {
+            $("#loyal_type").val($("#curr_loyal_type").val());
+        }
+
+        $("#add_rank").click(function () {
+            var child_con = '<div class="form-group form-inline">';
+            child_con += '<label>Tên: </label> <input type="text" class="form-control" value="" placeholder="Tên hạng"/>';
+            child_con += ' <label>Điểm: </label> <input type="text" class="form-control" value="" placeholder="Số điểm"/>';
+            $("#rank_content").append(child_con)
+
+        });
+
+        $("#save_loyalty").click(function () {
+            var ranks = [];
+            $("#rank_content").children('div.form-group').each(function (i) {
+                var inputs_ranks = $(this).children("input");
+                var name_ranks = $(inputs_ranks[0]).val();
+                var points_ranks = $(inputs_ranks[1]).val();
+                if (points_ranks.length > 0 && name_ranks.length > 0) {
+                    var item = { 'point': points_ranks, 'name': name_ranks };
+                    ranks.push(item);
+                }
+            });
+            var data = {
+                'loyal_type': $("#loyal_type").val(),
+                'loyalty_exchange_value': $("#loyalty_exchange_value").val(),
+                'loyalty_start':  $("#active").is(":checked"),
+                'sales_start_date': $("#sales_start_date").val(),
+                'ranks': JSON.stringify(ranks)
+            };
+
+
+            $.ajax({ type: 'post', url: '/loyalty', data: data, success: function () { location.reload(); } });
+
+        });
+
+        $("#add_reward").click(function () {
+            var child_con = '<div class="form-group form-inline">';
+            child_con += '<label>Tiến chi tiêu: </label> <input type="text" class="form-control" value="" placeholder="Số tiền chi tiêu" />';
+            child_con += ' <label>% Tích: </label> <input type="text" class="form-control" value="" placeholder="" /> %<div/>';
+            $("#reward_content").append(child_con);
+
+        });
+        if ($("#ex_sales_start_date").length > 0 && $("#ex_sales_start_date").val().length > 0 && $("#ex_sales_start_date").val() != 'None') {
+                var to_date_arr = $("#ex_sales_start_date").val().split('-');
+                var to_date = to_date_arr[2] + '-' + to_date_arr[1] + '-' + to_date_arr[0];
+                flatpickr("#sales_start_date", {
+                    enableTime: false,
+                    defaultDate: to_date,
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#sales_start_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+                });
+            }
+        $("#save_credit").click(function () {
+            var rewards = [];
+            $("#reward_content").children('div.form-group').each(function (i) {
+                var inputs = $(this).children("input");
+                var amount = $(inputs[0]).val();
+                var credit = $(inputs[1]).val();
+
+                if (amount.length > 0 && credit.length > 0) {
+                    var item = { 'amount': amount, 'credit': credit };
+                    rewards.push(item);
+                }
+            });
+            var data = {
+                'rewards': JSON.stringify(rewards)
+            };
+
+            $.ajax({ type: 'post', url: '/settings/credit', data: data, success: function () { location.reload(); } });
+
+        });
+    });
+
+</script> {% endblock %}

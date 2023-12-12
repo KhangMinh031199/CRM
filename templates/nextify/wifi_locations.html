@@ -1,0 +1,344 @@
+{% extends 'nextify/base.html' %} {% block main_content %}
+
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-12">
+            <div class="header">
+                <div class="container-fluid">
+                    <div class="header-body">
+                        <div class="row align-items-end">
+                            <div class="col">
+
+                                <!-- Pretitle -->
+                                <h6 class="header-pretitle">
+                                    WIFI
+                                </h6>
+
+                                <!-- Title -->
+                                <h1 class="header-title">
+                                   Địa điểm
+                                </h1>
+
+                            </div>
+                            <!-- <div class="col-auto">
+                                <select class="form-select" id="shop_in_mer">
+                                    <option value="all">{{ gettext("Tat_ca_dia_diem") }}</option>
+                                    {% for shop_mer in shop_in_mer %}
+                                    <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div> -->
+<!-- {#                            <div class="col-auto">#}
+{#                              #}
+{#                                <a href="/welcome/init" class="btn btn-danger mb-3">#}
+{#                                    <i class="fa fa-plus"></i> {{ gettext("Them_dia_diem") }}#}
+{#                                </a>#}
+{#                             #}
+{#                                #}
+{#                            </div>#} -->
+                        </div> <!-- / .row -->
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="container-fluid">
+
+
+                <div class="row listAlias">
+
+                    {% for location in locations %}
+
+                    <div class="col-12 col-lg-4 d-flex flex-column">
+
+                        <!-- Card -->
+                        <div class="card card-fill">
+                          
+                            <div class="card-body text-center">
+
+                                    <a href="#" class="avatar avatar-xl mb-3">
+                                      <img src="//files.nextify.vn/{{location.logo}}" class="avatar-img rounded-circle border border-4 border-card" alt="...">
+                                    </a>
+                
+                                    <h3 class="card-title">
+                                      <a href="#">{{location.name}}</a>
+                                    </h3>
+                
+                                   
+                                     <p class="small text-muted mb-3">
+                                        {{location.address}}
+                                    </p>
+                              <p class="card-text text-center">
+                              {% for tag in location.tags|show_tag_name_splash_page %}
+
+
+                              <span class="badge badge-soft-{{ ['success','warning','info']|random }}">
+                                {{ tag }}
+                              </span>
+
+                              {% endfor %}
+
+
+                            </p>
+
+                                
+                            </div>
+                            <div class="card-footer card-footer-boxed">
+                                <div class="row align-items-center justify-content-between">
+                                    <div class="col-auto">
+
+                                        <!-- Status -->
+                                        <small>
+                                            {%if location.active %}
+                                          <span class="text-success">●</span> 
+                                          {%else%}
+                                          <span class="text-danger">●</span> 
+                                          {%endif%}
+                                        </small>
+                
+                                      </div>
+                                  <div class="col-auto">
+            
+                                    <!-- Link -->
+                                    <a href="/settings/locations/{{location._id}}" class="btn btn-outline-secondary mb-2">
+                                      Cấu hình
+                                    </a>
+            
+                               
+                                    <!-- Link -->
+                                    <a href="/customers?loc_id={{location._id}}" class="btn btn-outline-primary mb-2">
+                                      Truy cập
+                                    </a>
+            
+                                  </div>
+                                </div>
+                              </div>
+
+                        </div> 
+                        
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <nav class="c-pagination u-justify-center">
+                    {% if pagination %}
+                    {{ pagination.links }}
+                    {% endif %}
+                </nav>
+            </div>
+
+
+
+            <div class="modal fade fixed-right" id="new_location" tabindex="-1" role="dialog"
+                aria-labelledby="new_image" data-backdrop="static" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-vertical" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-body" data-toggle="lists" data-lists-values="[&quot;name&quot;]">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+
+                                        <!-- Title -->
+                                        <h4 class="card-header-title" id="exampleModalCenterTitle">
+                                            {{ gettext("Them_dia_diem") }}
+                                        </h4>
+
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <!-- Close -->
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+
+                                    </div>
+                                </div> <!-- / .row -->
+                            </div>
+                            <div class="card-body">
+
+                                <form method="POST" action="/create_locations" enctype="multipart/form-data"
+                                    id="create_locations_form">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                    <input type="hidden" value="{{ merchant._id }}" name="merchant_id" />
+                                    {% for err in error %}
+                                    <div class="alert alert-danger">* {{ err }}</div>
+                                    {% endfor %}
+                                    <div class="c-field u-mb-small">
+                                        <label class="c-field__label" for="name">{{ gettext("Ten_dia_diem:") }} <font
+                                                color="red">*</font></label>
+                                        <input type="text" maxlength="50" class="c-input" id="name" name="name" />
+                                    </div>
+                                    <div class="c-field u-mb-small">
+                                        <label class="c-field__label" for="name">{{ gettext("Dia_chi:") }} <font
+                                                color="red">*</font></label>
+                                        <input type="text" maxlength="50" class="c-input" id="address" name="address" />
+                                    </div>
+
+                                    <div class="c-field u-mb-small">
+                                        <label class="c-field__label" for="logo">Logo: <font color="red">*</font>
+                                            </label>
+                                        <input type="file" class="c-input" id="logo" name="logo">
+                                    </div>
+                                    <div class="c-field u-mb-small">
+                                        <label class="c-field__label" for="background">{{ gettext("Hinh_nen:") }} <font
+                                                color="red">*</font></label>
+
+                                        <input type="file" class="c-input" id="background" name="background">
+                                    </div>
+                                    <div class="c-field u-mb-small">
+                                        <label class="c-field__label" for="facebook-page">Link Facebook Page:</label>
+                                        <input type="text" class="c-input" id="facebook-page" name="facebook_page"
+                                            placeholder="//www.facebook.com/nextify/">
+                                    </div>
+                                    <button id="new_location_submit" type="submit"
+                                        class="c-btn c-btn--info u-float-right">
+                                        {{ gettext("Luu_thong_tin") }}
+                                    </button>
+                                </form>
+
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        function readURL(input, input_view) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                var view_id = '#' + input_view;
+                reader.onload = function (e) {
+                    $(view_id).attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function validate(photo) {
+            var file_size = $(photo)[0].files[0].size;
+            var file = $(photo).val();
+            var exts = ['jpg', 'png', 'jpeg'];
+            if (file) {
+                var get_ext = file.split('.');
+                get_ext = get_ext.reverse();
+                if ($.inArray(get_ext[0].toLowerCase(), exts) > -1) {
+                    if (file_size > 3670016) {
+                        return "big_file";
+                    } else {
+                        return true;
+                    }
+                } else {
+                    return false;
+                }
+            }
+
+        }
+
+        $("#logo").change(function () {
+            var validate_photo = validate(this);
+            if (validate_photo == true) {
+                swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                readURL(this, 'logo');
+            }
+            else {
+                if (validate_photo == "big_file") {
+                    swal('{{ gettext("File_co_kich_thuoc_qua_lon!") }}', '', 'error');
+                    return false
+                };
+                swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                $('#logo').val('');
+            }
+
+            $("#background").change(function () {
+                if (validate(this) == true) {
+                    swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                    readURL(this, 'background');
+                }
+                else {
+                    swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                    $('#background').val('');
+                }
+            })
+
+            $("create_locations_form").submit(function (e) {
+                var name = $("#name").val();
+                var address = $("#address").val();
+                if (name.length == 0) {
+                    swal('{{ gettext("Ten_khong_duoc_de_trong") }}', '', 'error');
+                    return false;
+                }
+                if (address.length == 0) {
+                    swal('{{ gettext("Dia_chi_khong_duoc_de_trong") }}', '', 'error');
+                    return false;
+                }
+                var logo = $("#logo").val();
+                var background = $("#background").val();
+                if (!logo) {
+                    swal('{{ gettext("Logo_khong_duoc_de_trong") }}', '', 'error');
+                    return false;
+                }
+                if (!background) {
+                    swal('{{ gettext("Hinh_nen_khong_duoc_de_trong") }}', '', 'error');
+                    return false;
+                }
+                swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+
+            })
+
+            $('#shop_in_mer').select2({
+        dropdownAutoWidth: true,
+    });
+            $('#shop_in_mer').on("change", function (e) {
+                var shop_id = $('#shop_in_mer').val();
+                if (shop_id == 'all'){
+                    var url = "/locations";
+                    $(location).attr('href', url);
+                }else{
+                    var url = "/locations/" + shop_id;
+                    $(location).attr('href', url);
+                }
+                
+            });
+            // $("#new_location_submit").click(function () {
+            //     var logo = $("#logo").val();
+            //     var background = $("#background").val();
+            //     var name = $("#name").val();
+            //     var address = $("#address").val();
+            //     if (name.length == 0) {
+            //     swal("Tên không được để trống", " ", "error");
+            //          return false;
+            //     }
+            //     if (address.length == 0) {
+            //             swal("Tên không được để trống", " ", "error");
+            //                 return false;
+            //     }
+            //     if (!logo) {
+            //     swal("Logo không được để trống", " ", "error");
+            //          return false;
+            //     }
+            //     if (!background) {
+            //     swal("Hình nền không được để trống", " ", "error");
+            //          return false;
+            //     }
+            //     swal('Thao tác thành công', '', 'success');
+            //     $("#create_locations_form").submit();
+
+
+            //     })
+        });
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,308 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            {{ gettext('Trang_chao') }}
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                            <a href="/wifi/{{ shop_id_select }}">{{ shop_select.name }}</a>
+                        </h1>
+
+                    </div>
+
+                </div> <!-- / .row -->
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-12 col-xl-3">
+
+                <!-- Card -->
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Title -->
+                                <h5 class="mb-0">
+                                    <a href="/wifi/{{ shop_id_select }}/new_hotspot/return" id="return_hotspot">{{ gettext('Theo_luot_den') }}</a>
+                                </h5>
+
+                            </div>
+
+                        </div> <!-- / .row -->
+                        <hr>
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Title -->
+                                <h5 class="mb-0">
+                                    <a href="/wifi/{{ shop_id_select }}/new_hotspot/birthday" id="birthday_hotspot">{{ gettext('Sinh_nhat') }}</a>
+                                </h5>
+
+                            </div>
+
+                        </div>
+                        <hr>
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Title -->
+                                <h5 class="mb-0">
+                                    <a href="/wifi/{{ shop_id_select }}/new_hotspot/survey" id="survey_hotspot">{{ gettext('Khao_sat') }}</a>
+                                </h5>
+
+                            </div>
+
+                        </div>
+                        <hr>
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Title -->
+                                <h5 class="mb-0">
+                                    <a href="/wifi/{{ shop_id_select }}/new_hotspot/event" id="event_hotspot">{{ gettext('Su_kien_&_Khuyen_mai') }}</a>
+                                </h5>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-12 col-xl-9">
+
+                <div class="tab-content">
+
+
+                    {% block item_hotspot %}
+
+                    {% endblock %}
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+{% endblock %}
+{% block js %}
+
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            var d = new Date();
+            var strDate = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+            if ($("#ex_date_from").length > 0 && $("#ex_date_from").val()
+                .length > 0 && $("#ex_date_from").val() != 'None') {
+                flatpickr("#date_from", {
+                    enableTime: false,
+                    defaultDate: $("#ex_date_from").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#date_from", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+
+                });
+            }
+            if ($("#ex_date_to").length > 0 && $("#ex_date_to").val()
+                .length > 0 && $("#ex_date_to").val() != 'None') {
+                flatpickr("#date_to", {
+                    enableTime: false,
+                    defaultDate: $("#ex_date_to").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#date_to", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+
+                });
+            }
+
+            function readURL(input, input_view) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    var view_id = '#' + input_view;
+                    reader.onload = function (e) {
+                        $(view_id).attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $("#photo").change(function () {
+                readURL(this, 'view_photo');
+            });
+             $("#multi_select").hide();
+                                $("#one_select").hide();
+                    $("#rating").hide();
+
+            $('#survey_type').on("change", function (e) {
+                var survey_type = $('#survey_type').val();
+                if (survey_type == 'multi_select') {
+                    $("#multi_select").show();
+                    $("#one_select").hide();
+                    $("#rating").hide();
+
+                } else if (survey_type == 'one_select') {
+                    $("#multi_select").hide();
+                    $("#one_select").show();
+                    $("#rating").hide();
+
+                } else if (survey_type == 'rating') {
+                    $("#multi_select").hide();
+                    $("#one_select").hide();
+                    $("#rating").show();
+
+
+                }else if (survey_type == 'comment'){
+                    $("#multi_select").hide();
+                    $("#one_select").hide();
+                    $("#rating").hide();
+
+                }
+
+            });
+
+             $("#new_result_multi").click(function () {
+                $("#an_multi_select").append('<div class="form-group form-inline">\n' +
+                    '                                    <label>{{ gettext("Noi_dung:"") }} </label>\n' +
+                    '                                    <input type="text" class="form-control"  style="margin-left: 10px"/>\n' +
+                    '                                    <label style="margin-left: 20px">Tag: </label>\n' +
+                    '                                    <input type="text" class="form-control"/>\n' +
+                    '                            </div>');
+            });
+              $("#new_result_single").click(function () {
+                $("#an_one_select").append('<div class="form-group form-inline">\n' +
+                    '                                    <label>{{ gettext("Noi_dung:") }}</label>\n' +
+                    '                                    <input type="text" class="form-control"  style="margin-left: 10px"/>\n' +
+                    '                                    <label style="margin-left: 20px">Tag: </label>\n' +
+                    '                                    <input type="text" class="form-control"/>\n' +
+                    '                            </div>');
+            });
+
+               $("#save_survey_hotspot").click(function () {
+                var survey_type = $("#survey_type").val();
+                var answers = [];
+                var question = $("#question").val();
+                if (survey_type == '0'){
+
+                     swal("{{ gettext('Ban_chua_chon_loai_khao_sat') }}", " ", "error");
+                }
+                if (question.length == '0'){
+
+                     swal("{{ gettext('Ban_chua_nhap_cau_hoi') }}", " ", "error");
+                }
+                if (survey_type == 'multi_select'){
+                     $("#an_multi_select").children('div.form-group').each(function (i) {
+                        var inputs_ranks = $(this).children("input");
+                         var name_ranks = $(inputs_ranks[0]).val();
+                        var points_ranks = $(inputs_ranks[1]).val();
+                          if (points_ranks.length > 0) {
+                            var item_array = {'id': i, 'value': name_ranks, 'tag': points_ranks};
+                            answers.push(item_array);
+                        }
+
+
+                    });
+                }
+
+                if (survey_type == 'one_select'){
+                     $("#an_one_select").children('div.form-group').each(function (i) {
+                          var inputs_ranks = $(this).children("input");
+                         var name_ranks = $(inputs_ranks[0]).val();
+                        var points_ranks = $(inputs_ranks[1]).val();
+                        if (points_ranks.length > 0) {
+                            var item_array = {'id': i, 'value': name_ranks, 'tag': points_ranks};
+                            answers.push(item_array);
+                        }
+
+                    });
+
+                }
+                 if (survey_type == 'rating'){
+
+                        if($("#max_point").val().length == 0){
+                            swal("{{ gettext('Ban_chua_nhap_thang_diem') }}", " ", "error");
+
+                        }
+                          if($("#min_point").val().length == 0){
+                              swal("{{ gettext('Ban_chua_nhap_thang_diem') }}", " ", "error");
+
+                        }
+
+                 }
+
+                 var data = {
+                     'question': question,
+                     'answers' : JSON.stringify(answers),
+                     'survey_type': survey_type,
+                     'max_point' : $("#max_point").val(),
+                     'min_point': $("#min_point").val(),
+                     'active' : $("#active").is(":checked")
+
+                 };
+                 console.log(answers);
+                 console.log(data);
+
+                 var shop_id_select = $("#shop_id_select").val();
+                 var url = '/wifi/'+ shop_id_select + '/new_hotspot/survey';
+                 $.ajax({ type: 'post', url: url, data: data, success: function (response) {
+                    var returnedData = JSON.parse(response);
+                     if ('error' in returnedData){
+
+                          swal(returnedData['error'], " ", "error");
+                     }else{
+                          var survey_page = '/wifi/' + shop_id_select + '/survey';
+                     $(location).attr('href', survey_page)
+                     }
+
+
+                  },
+                  error: function(XMLHttpRequest, textStatus, errorThrown) {
+                     swal("{{ gettext('Co_loi_xay_ra,_thu_lai_sau') }}", " ", "error");
+                  }});
+
+
+               });
+
+
+        });
+
+
+    </script>
+
+{% endblock %}

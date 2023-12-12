@@ -1,0 +1,177 @@
+{% extends "v2/base.html" %} {% block right_content %}
+
+  <div class="row">
+    <div class="panel panel-white">
+      <div class="panel-heading clearfix">
+        <h4 class="title">Loại coupons</h4>
+
+      </div>
+
+      <div class="panel-body">
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="col-md-6">
+
+              <form action="/vouchers/coupon_type" method="POST"
+                    enctype="multipart/form-data">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                {% if coupon_type_item %}
+                  <input type="hidden" value="{{ coupon_type_item._id }}"
+                         name="coupon_id">
+                {% endif %}
+                <div class="form-group">
+                  <label for="name">Tên:</label>
+                  <input type="text" class="form-control" id="name" name="name"
+                         {% if coupon_type_item %}value="{{ coupon_type_item.name }}"{% endif %}/>
+                </div>
+                <div class="form-group">
+                  <label for="name">Code: (Ex: OFF20, GIAMGIA ..)</label>
+                  <input type="text" class="form-control" id="code" name="code"
+                         {% if coupon_type_item %}value="{{ coupon_type_item.code }}"{% endif %}/>
+                </div>
+                <div class="form-group">
+                  <label for="name">Quy đổi tiền</label>
+                  <input type="text" class="form-control" id="money"
+                         name="money"
+                         placeholder="150000"
+                         {% if coupon_type_item %}value="{{ coupon_type_item.money_exchange }}"{% endif %}/>
+                </div>
+                <div class="form-group">
+                  <label for="name">Giảm giá %</label>
+                  <input type="text" class="form-control" id="discount_percent"
+                         name="discount_percent"
+                         placeholder="20%"
+                         {% if coupon_type_item %}value="{{ coupon_type_item.discount_percent }}"{% endif %}/>
+                </div>
+                <div class="form-group">
+                  <label for="name">Chi tiết</label>
+                  <textarea type="text" class="form-control" id="content"
+                            name="content">{% if coupon_type_item %}
+                    {{ coupon_type_item.content }}{% endif %}</textarea>
+                </div>
+                <div class="form-group">
+                  <button type="submit"
+                          class="btn btn-info btn-fill pull-right">Lưu
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div class="col-md-6">
+              <table class="table table-hover table-striped">
+                <thead>
+                <th>Tên</th>
+                <th>Code</th>
+                <th>Quy đổi tiền</th>
+                <th>Giảm giá %</th>
+                <th>Tạo lúc</th>
+                <th></th>
+                <th></th>
+                </thead>
+                <tbody>
+                {% for voun in coupons_type %}
+                  <tr>
+                    <td>{{ voun.name }}
+                    </td>
+                    <td>
+                      {{ voun.code }}
+                    </td>
+                    <td>{{ voun.money_exchange }}</td>
+                    <td> {{ voun.discount_percent }}</td>
+                    <td>{{ voun.when|human_time }}</td>
+                    <td><a
+                      href="/vouchers/coupon_type?id={{ voun._id }}">Edit</a>
+                    </td>
+                    {% if user_login and user_login.roles in ['1', '3'] %}
+                      <td><a href="#" class="remove"
+                             voucher_id="{{ voun._id }}">Xoá</a></td>
+                    {% endif %}
+                  </tr>
+                {% endfor %}
+
+                </tbody>
+              </table>
+              {% if pagination %}
+                <center>
+                  {{ pagination.links }}
+                </center>
+              {% endif %}
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="panel panel-white">
+      <div class="panel-heading clearfix">
+        <h4 class="title">Tạo Coupons</h4>
+
+      </div>
+      <div class=panel-body">
+        <div class="row">
+          <div class="col-md-12">
+            <form method="POST" action="/vouchers/gen_coupons"
+                  class="form-inline" enctype="multipart/form-data">
+                  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+              <div class="form-group">
+                <label for="name">Loại:</label>
+                <select name="type_coupon" class="form-control form-input"
+                        style="width: auto"
+                        id="type_coupon">
+                  {% for coup in coupons_type_select %}
+                    <option value="{{ coup._id }}">{{ coup.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="name">Số lượng</label>
+                <input type="text" class="form-control" id="quantity"
+                       name="quantity"/>
+              </div>
+              <div class="form-group">
+                <label for="name">Ngày hết hạn</label>
+                <input type="text" class="form-control" id="expire_date"
+                       name="expire_date"/>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-info btn-fill pull-right">
+                  Tạo
+                </button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}
+{% block js %}
+   <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+      $('#marketing').click();
+      flatpickr("#expire_date", {
+        enableTime: false,
+        dateFormat: "d-m-Y"
+      });
+      $('.remove').on('click', function (e) {
+        e.preventDefault();
+        var coupon_id = $(this).attr('voucher_id');
+        var result = confirm("Bạn có muốn xoá không?");
+        if (result) {
+          href = '/vouchers/coupon_type/remove?voucher_id=' + coupon_id;
+          location.href = href;
+        }
+      });
+
+
+    });
+  </script>
+{% endblock %}

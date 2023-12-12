@@ -1,0 +1,88 @@
+{% extends "v2/base.html" %} {% block right_content %}
+  <div class="row">
+    <form class="form" method="GET" action="/get_hq_customers"
+          enctype="multipart/form-data" id="form_get_cus">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+      <input type="hidden" value="{{ from_date }}" name="from_date"/>
+      <input type="hidden" value="{{ to_date }}" name="to_date"/>
+      <input type="hidden" value="{{ min_visit }}" name="min_visit"/>
+      <input type="hidden" value="{{ max_visit }}" name="max_visit"/>
+      <input type="hidden" value="{{ sort }}" name="sort"/>
+      <input type="hidden" value="{{ bday_from_date }}" name="bday_from_date"/>
+      <input type="hidden" value="{{ bday_to_date }}" name="bday_to_date"/>
+      <input type="hidden" value="{{ ranks }}" name="ranks"/>
+      <input type="hidden" value="{{ gender }}" name="gender"/>
+      <input type="hidden" value="{{ min_cash }}" name="min_cash"/>
+      <input type="hidden" value="{{ max_cash }}" name="max_cash"/>
+      <input type="hidden" value="{{ min_points }}" name="min_points"/>
+      <input type="hidden" value="{{ max_points }}" name="max_points"/>
+      <input type="hidden" value="{{ filter_tags }}" name="real_tags"/>
+    </form>
+
+
+    <div class="panel panel-white">
+      <div class="panel-heading clearfix">
+        <div class="row">
+          <div class="col-md-3 col-sm-12 col-xs-12">
+            <h3 class="panel-title" style="font-size: 20px;">{{ total }}
+              {{ gettext("khach") }}</h3>
+
+          </div>
+          <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="form-group">
+              <form role="search" method="POST" action="/search">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                <div class="input-group">
+                  <input type="search" class="form-control"
+                         placeholder="Số điện thoại" name="keyword"
+                         value="{% if keyword %}{{ keyword }}{% endif %}">
+                  <div class="input-group-btn">
+                    <button class="btn btn-default" type="submit"><i
+                      class="glyphicon glyphicon-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-12 col-xs-12">
+            <button type="button" class="btn btn-demo pull-right"
+                    data-toggle="modal" data-target="#customers_fb_filter"
+                    style="margin-right: 5px">
+              {{ gettext("Bo_loc") }}
+            </button>
+            <button type="button" class="btn btn-primary pull-right"
+                    style="color:#ffffff;margin-right: 5px;"
+                    data-toggle="modal" data-target="#create_tags">Tags
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+
+        <div id="get_customers"></div>
+        {% if pagination %}
+        <center>
+          {{ pagination.links }}
+        </center>
+        {% endif %}
+
+    </div>
+
+  </div>
+
+{% endblock %} {% block js %}
+   <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+      $('#customers').click();
+      $.ajax({
+        url: "/get_hq_customers?page=" + {{page}},
+        data: $("#form_get_cus").serialize(),
+        success: function (data) {
+          $("#get_customers").html(data);
+        }
+      });
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,177 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="pt-7 pb-8 bg-dark bg-ellipses">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-6">
+
+                    <!-- Title -->
+                    <h1 class="display-3 text-center text-white">
+                        {{ gettext('Dong_bo_Facebook_Page') }}
+                    </h1>
+
+                    <!-- Text -->
+                    <p class="lead text-center text-muted">
+                        {{ gettext('Chon_Page_ban_muon_dong_bo_voi_dia_diem_cua_ban.') }}
+                    </p>
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+    <div class="container-fluid">
+        <div class="row mt-n7 justify-content-center">
+            <div class="col-12 col-lg-8">
+
+                <!-- Card -->
+                <div class="card">
+
+                    <div class="card-body">
+
+                        <!-- List group -->
+                        <div class="list-group list-group-flush my-n3">
+                            {% for page in fb_pages %}
+                                <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+
+                                            <a href="#modal_confirm" data-toggle="modal" class="avatar">
+                                                <img src="{{ page.real_profile_pic }}" alt="..."
+                                                     class="avatar-img rounded-circle" id="{{ page.id }}_profile_img">
+                                            </a>
+
+
+                                        </div>
+                                        <div class="col ml-n2">
+
+                                            <!-- Title -->
+                                            <h4 class="mb-1">
+                                                <a href="#modal_confirm" data-toggle="modal">{{ page.name }}</a>
+                                            </h4>
+
+
+                                        </div>
+                                        <div class="col-auto">
+
+                                            <!-- Button -->
+                                            <a href="#" class="btn btn-block btn-light select_page"
+                                               data-href="/facebook/{{ page.id }}/sync?access_token={{ page.access_token }}">
+                                                {{ gettext('Chon') }}
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="modal_confirm" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    {{ gettext('Dong_bo_voi_dia_diem') }} {{ shop_select.name }}
+
+                </div>
+                <div class="modal-body">
+
+
+                <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+                    <div class="form-group">
+
+                        <label class="mb-1">
+                            {{ gettext('Dong_bo_them_cac_thong_tin_khac') }}
+                        </label>
+                        <small class="form-text text-muted">
+                            {{ gettext('Dong_bo_them_cac_thong_tin_khac_tu_facebook_Page_voi_dia_diem_nhu_anh_Cover,_logo,_ten_va_dia_chi') }}
+                        </small>
+
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="active_sync" name="active_sync"
+                                   checked>
+                            <label class="custom-control-label" for="active_sync"></label>
+                        </div>
+
+                    </div>
+                    <div class="card card-fill" id="content_fb">
+
+
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <a href="#" id="sync_fb_location_btn" class="btn btn-block btn-primary">
+                        {{ gettext('Dong_bo') }}
+                    </a>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            $('.select_page').on('click', function () {
+                var dataURL = $(this).attr('data-href');
+                $('#modal_confirm .modal-body #content_fb').load(dataURL, function () {
+                    $('#modal_confirm').modal({show: true});
+                });
+            });
+
+            $('#sync_fb_location_btn').on('click', function () {
+                var checked = $("#active_sync").is(':checked');
+                var shop_id_select = $("#shop_id_select").val();
+                var url_logo = $("#url_logo").val();
+                var url_background = $("#url_background").val();
+                var name = $("#name").val();
+                var email = $("#email").val();
+                var website = $("#website").val();
+                var facebook_page = $("#facebook_page").val();
+                var page_access_token = $("#page_access_token").val();
+                var page_id =  $("#page_id").val();
+                var url = '/facebook/'+ page_id +'/sync?shop_id_select='+ shop_id_select;
+                 $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                            'active_sync': checked,
+                            'url_logo': url_logo,
+                            'url_background': url_background,
+                            'name': name,
+                            'email': email,
+                            'website': website,
+                            'facebook_page': facebook_page,
+                            'page_access_token': page_access_token
+                        },
+                    success: function (response_ajax) {
+                        swal("{{ gettext('Dong_bo_Facebook_thanh_cong') }}", "", "success");
+                        location.href = '/settings/locations/' + shop_id_select;
+                    },
+                    error: function (xhr, desc, err) {
+                        swal("{{ gettext('Co_loi_xay_ra,_thu_lai_sau') }}", " ", "error");
+                    }
+                });
+
+
+            });
+        });
+    </script>
+{% endblock %}

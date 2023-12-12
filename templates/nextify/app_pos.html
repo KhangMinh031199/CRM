@@ -1,0 +1,486 @@
+{% extends 'nextify/base.html' %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/app_market.css" />
+{% endblock %}
+{% block main_content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-8">
+        
+            <div class="header">
+                <div class="container-fluid">
+                    <div class="header-body">
+                        <div class="row align-items-end">
+                            <div class="col">
+
+                                <!-- Pretitle -->
+                                <h6 class="header-pretitle">
+                                    {{ gettext('Ung_dung') }}
+                                </h6>
+
+                                <!-- Title -->
+                                <h1 class="header-title">
+                                    {{ gettext('Quan_ly_ung_dung') }}
+                                </h1>
+
+                            </div>
+                        </div> <!-- / .row -->
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="container-fluid">
+
+
+                <div class="row">
+
+                    <div class="card-container">
+                        <div class="card app-card">
+                            <a href="apps/client_key">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Client Key</span></div>
+                                    <div class="app-card-icon loop"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>API Key</span>
+                                    </div>
+                                </div>
+
+                                <div class="app-card-body"><span>Client Key giúp tích hợp với bên thứ 3.</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="card app-card">
+                            <a href="apps/sms_brandname">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>SMS Brandname</span></div>
+                                    <div class="app-card-icon loop"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>SMS</span>
+                                    </div>
+                                </div>
+
+                                <div class="app-card-body"><span>{{ gettext("Tich_hop_SMS_Brandname") }}</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="card app-card">
+                            <a href="apps/email">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Email</span></div>
+                                    <div class="app-card-icon loop"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>Email</span>
+                                    </div>
+                                </div>
+
+                                <div class="app-card-body"><span> {{ gettext("Cau_hinh_thong_so_tich_hop_Email") }}</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="card app-card">
+                            <a href="apps/zalo">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Zalo OA</span></div>
+                                    <div class="app-card-icon zalo"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>OTT</span></div>
+                                </div>
+
+                                <div class="app-card-body"><span>{{ gettext('Ung_dung_Chat_OTT.') }}</span>
+                                </div>
+
+                            </a>
+
+                        </div>
+                        <div class="card app-card">
+                            <a href="apps/facebook">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Facebook</span></div>
+                                    <div class="app-card-icon zalo"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>Facebook</span></div>
+                                </div>
+
+                                <div class="app-card-body"><span>Tích hợp Facebook Page và Facebook Pixel.</span>
+                                </div>
+
+                            </a>
+
+                        </div>
+                        <div class="card app-card">
+                            <a href="apps/google">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Google</span></div>
+                                    <div class="app-card-icon zalo"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>Google</span></div>
+                                </div>
+
+                                <div class="app-card-body"><span>Tích hợp Goolge Remarketing Code.</span>
+                                </div>
+
+                            </a>
+
+                        </div>
+                        <div class="card app-card">
+                            <a href="apps/tiktok">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Tiktok</span></div>
+                                    <div class="app-card-icon zalo"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>Tiktok</span></div>
+                                </div>
+
+                                <div class="app-card-body"><span>Tích hợp Tiktok Remarketing Code.</span>
+                                </div>
+
+                            </a>
+
+                        </div>
+                        <div class="card app-card">
+                            <a href="apps/bitly">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Bit.ly</span></div>
+                                    <div class="app-card-icon loop"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>Bit.ly</span>
+                                    </div>
+                                </div>
+
+                                <div class="app-card-body"><span> {{ gettext("Tich_hop_tao_link_Bit.ly_cho_khao_sat.") }}</span>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- <div class="card app-card">
+                            <a href="apps/loop">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Loop</span></div>
+                                    <div class="app-card-icon loop"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>Point Of Sale</span>
+                                    </div>
+                                </div>
+
+                                <div class="app-card-body"><span>{{
+                                        gettext('Phan_mem_quan_ly_nha_hang-cafe_thong_minh_tu_Singapore.') }}</span>
+                                </div>
+                            </a>
+                        </div> -->
+
+                        {# <div class="card app-card">#}
+                            {# <a href="apps/pos365">#}
+                                {# <div class="app-card-top">#}
+                                    {# <div class="app-card-title"><span>POS 365</span></div>#}
+                                    {# <div class="app-card-icon pos365"></div>#}
+                                    {# <div class="app-card-type app-card-pill app-card-type"><span>Point Of Sale</span>
+                                    </div>#}
+                                    {# </div>#}
+                                {##}
+                                {# <div class="app-card-body"><span>Giải pháp quản lý bán hàng hiện đại và tiết
+                                        kiệm.</span>#}
+                                    {# </div>#}
+                                {##}
+                                {# </a>#}
+                            {##}
+                            {# </div>#}
+
+                        <div class="card app-card">
+                            <a href="apps/getfly">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Getfly</span></div>
+                                    <div class="app-card-icon getfly"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>CRM</span></div>
+                                </div>
+
+                                <div class="app-card-body"><span>{{ gettext('Giai_phap_CRM_quan_tri_doanh_nghiep.')
+                                        }}</span>
+                                </div>
+
+                            </a>
+
+                        </div>
+                        <div class="card app-card">
+                            <a href="apps/kiotviet">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>KiotViet</span></div>
+                                    <div class="app-card-icon kiotviet"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>Point Of Sale</span>
+                                    </div>
+                                </div>
+
+                                <div class="app-card-body"><span>{{
+                                        gettext('Giai_phap_quan_ly_diem_ban_le,_nha_hang,_cafe.') }}</span>
+                                </div>
+
+                            </a>
+
+                        </div>
+                        <div class="card app-card">
+                            <a href="apps/chatfuel">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Chat Fuel</span></div>
+                                    <div class="app-card-icon chatfuel"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>Chat Bot</span></div>
+                                </div>
+
+                                <div class="app-card-body"><span>{{
+                                        gettext('Ung_dung_tao_va_quan_ly_Chatbot_tren_Facebook_Messenger.') }}</span>
+                                </div>
+
+                            </a>
+
+                        </div>
+                        <div class="card app-card">
+                            <a href="apps/ahachat">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>AhaChat</span></div>
+                                    <div class="app-card-icon ahachat"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>Chat Bot</span></div>
+                                </div>
+
+                                <div class="app-card-body"><span>{{
+                                        gettext('Ung_dung_tao_va_quan_ly_Chatbot_tren_Facebook_Messenger.') }}</span>
+                                </div>
+
+                            </a>
+
+                        </div>
+
+
+                        <div class="card app-card">
+                            <a href="apps/omicrm">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>OmiCRM</span></div>
+                                    <div class="app-card-icon omicrm"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>CRM</span></div>
+                                </div>
+
+                                <div class="app-card-body"><span>{{
+                                        gettext('Giai_phap_CRM_hieu_qua_cho_cham_soc_khach_hang.') }}</span>
+                                </div>
+
+                            </a>
+
+                        </div>
+
+                       
+                        {# <div class="card app-card">#}
+                            {# <a href="apps/messenger">#}
+                                {# <div class="app-card-top">#}
+                                    {# <div class="app-card-title"><span>Facebook Messenger</span></div>#}
+                                    {# <div class="app-card-icon messenger"></div>#}
+                                    {# <div class="app-card-type app-card-pill app-card-type"><span>OTT</span></div>#}
+                                    {# </div>#}
+                                {##}
+                                {# <div class="app-card-body"><span>Ứng dụng Chat OTT.</span>#}
+                                    {# </div>#}
+                                {##}
+                                {# </a>#}
+                            {##}
+                            {# </div>#}
+                        <div class="card app-card">
+                            <a href="apps/botup">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Botup</span></div>
+                                    <div class="app-card-icon botup"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>Gamification</span>
+                                    </div>
+                                </div>
+
+                                <div class="app-card-body"><span>{{
+                                        gettext('Nen_tang_tao_cac_Gamification_cho_nguoi_dung.') }}</span>
+                                </div>
+
+                            </a>
+
+                        </div>
+                        <div class="card app-card">
+                            <a href="apps/mailchimp">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>MailChimp</span></div>
+                                    <div class="app-card-icon botup"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>Mail</span></div>
+                                </div>
+
+                                <div class="app-card-body"><span>{{ gettext('Dong_bo_MailChimp_de_lam_Email_Marketing.')
+                                        }}</span>
+                                </div>
+
+                            </a>
+
+                        </div>
+
+                        <div class="card app-card">
+                            <a href="apps/anvui">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Anvui</span></div>
+                                    <div class="app-card-icon botup"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>CRM</span></div>
+                                </div>
+
+                                <div class="app-card-body"><span>{{ gettext('Dong_bo_thong_tin_khach_hang_sang_Anvui.')
+                                        }}</span>
+                                </div>
+
+                            </a>
+
+                        </div>
+
+                        <div class="card app-card">
+                            <a href="apps/zalo_pay">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Zalo Pay</span></div>
+                                    <div class="app-card-icon botup"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>Pay</span></div>
+                                </div>
+
+                                <div class="app-card-body"><span>{{ gettext('Dang_ky_tai_khoan_ZaloPay.') }}</span>
+                                </div>
+
+                            </a>
+
+                        </div>
+
+                        <div class="card app-card">
+                            <a href="apps/bizfly">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Bizfly</span></div>
+                                    <div class="app-card-icon botup"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>CRM</span></div>
+                                </div>
+                                <div class="app-card-body">
+                                    <span>{{ gettext('Dong_bo_thong_tin_khach_hang_voi') }} Bizfly.</span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="card app-card">
+                            <a href="apps/haravan">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Haravan</span></div>
+                                    <div class="app-card-icon botup"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>CRM</span></div>
+                                </div>
+                                <div class="app-card-body">
+                                    <span>{{ gettext('Dong_bo_thong_tin_khach_hang_voi') }} Haravan.</span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="card app-card">
+                            <a href="apps/pos">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>POS</span></div>
+                                    <div class="app-card-icon botup"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>POS</span></div>
+                                </div>
+                                <div class="app-card-body">
+                                    <span>{{ gettext('Cau_hinh_tich_hop_POS') }}</span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="card app-card">
+                            <a href="apps/woay">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>WOAY</span></div>
+                                    <div class="app-card-icon botup"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>Gamification</span>
+                                    </div>
+                                </div>
+                                <div class="app-card-body">
+                                    <span>{{ gettext('Nen_tang_tao_cac_Gamification_cho_nguoi_dung.') }}</span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- <div class="card app-card">
+                            <a href="apps/khai_bao_y_te">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>KHAI BÁO Y TẾ</span></div>
+                                    <div class="app-card-icon botup"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>Y tế</span>
+                                    </div>
+                                </div>
+                                <div class="app-card-body">
+                                    <span>Cấu hình tờ khai báo y tế.</span>
+                                </div>
+                            </a>
+                        </div> -->
+
+                        <div class="card app-card">
+                            <a href="apps/mms">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>MMS</span></div>
+                                    <div class="app-card-icon botup"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>MMS</span>
+                                    </div>
+                                </div>
+                                <div class="app-card-body">
+                                    <span>Cấu hình dịch vụ tin nhắn MMS.</span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- <div class="card app-card">
+                            <a href="apps/callbot">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Callbot</span></div>
+                                    <div class="app-card-icon botup"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>Callbot</span>
+                                    </div>
+                                </div>
+                                <div class="app-card-body">
+                                    <span>Cấu hình dịch vụ Callbot.</span>
+                                </div>
+                            </a>
+                        </div> -->
+
+                        <div class="card app-card">
+                            <a href="apps/abot">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>ABOT</span></div>
+                                    <div class="app-card-icon botup"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>ABOT</span></div>
+                                </div>
+                                <div class="app-card-body">
+                                    <span>{{ gettext('Cau_hinh_tich_hop_ABOT') }}</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="card app-card">
+                            <a href="apps/tracking">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Tracking Realtime</span></div>
+                                    <div class="app-card-icon botup"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>Tracking</span></div>
+                                </div>
+                                <div class="app-card-body">
+                                    <span>Cấu hình code đo đếm và ghi nhận lượt truy cập và tương tác trang chào WIFI theo thời gian thực.</span>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- <div class="card app-card">
+                            <a href="apps/redirect_settings">
+                                <div class="app-card-top">
+                                    <div class="app-card-title"><span>Chuyển hướng</span></div>
+                                    <div class="app-card-icon botup"></div>
+                                    <div class="app-card-type app-card-pill app-card-type"><span>ABOT</span></div>
+                                </div>
+                                <div class="app-card-body">
+                                    <span>Cấu hình chuyển hướng</span>
+                                </div>
+                            </a>
+                        </div> -->
+                    
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+{% endblock %}

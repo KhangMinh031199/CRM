@@ -1,0 +1,503 @@
+{% extends 'nextify/base.html' %}
+
+{% block main_content %}
+<div class="container-fluid">
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-8">
+            <div class="header">
+                <div class="header-body">
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <!-- Pretitle -->
+                            <h1 class="header-pretitle">
+                                Quản lý thiết bị Grandstream
+                            </h1>
+                            <!-- Title -->
+                            
+                        </div>
+                        <div class="col-3">
+                            <select class="custom-select control-container" id="network">
+                                <option value="all">Tất cả</option>
+                                {% for net in networks %}
+                                <option value="{{ net._id }}">{{ net.name }}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+
+
+                    </div>
+                    
+                </div>
+            </div>
+            <div id="overview_p3" class="card mb-3">
+                <div class="row">
+                    <div class="col-12 col-xl-4 mb-3">
+                        <div >
+                            <img src="/static/images/img_gr1.png" class="card-img-top img-fluid" />
+                        </div>
+                        <div class="text-center">
+                            <h2 class="header-title mt-3">
+                                {{ overview.newNum}}
+                            </h2>
+                            <h3 class="header-title mt-2">
+                                Khách mới
+                            </h3>
+                        </div>
+                    </div>
+                        
+                    <div class="col-12 col-xl-4 mb-3">
+                        <div >
+                            <img src="/static/images/img_gr2.png" class="card-img-top img-fluid" />
+                        </div>
+                        <div class="text-center">
+                            <h2 class="header-title mt-3">
+                                {{ overview.returnNum}}
+                            </h2>
+                            <h3 class="header-title mt-2">
+                                Khách quay lại
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="col-12 col-xl-4 mb-3">
+                        <div >
+                            <img src="/static/images/img_gr3.png" class="card-img-top img-fluid" />
+                        </div>
+                        <div class="text-center">
+                            <h2 class="header-title mt-3">
+                                {{ overview.avgDuration}}
+                            </h2>
+                            <h3 class="header-title mt-2">
+                                Thời gian sử dụng trung bình
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="overview">
+                <div class="row">
+                    <div class="col-12 col-xl-6">
+                        <div class="card">
+                            <div class="card-header">
+                            <div class="row">
+                                <div class="col">
+                                    <h4 class="card-header-title mt-4">
+                                        AP
+                                        </h4>
+                                </div>
+                                <div class="col-auto">
+                                    <a class="btn btn-outline-secondary d-block mt-3" id="btn_details_ap">
+                                        <i class="fe fe-details"></i> Chi tiết
+                                    </a>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="card-body">
+                            <div class="chart chart-appended">
+                                <canvas id="resultChartAP" 
+                                ></canvas>
+                            </div>
+                            <div class="text-center">
+                                <h2 class="header-title mt-5">
+                                    Tổng số: {{ total }}
+                                </h2>
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <h3 class="header-title">
+                                            Online: {{ online }}
+                                        </h3>
+                                    </div>
+                                    <div class="col">
+                                        <h3 class="header-title">
+                                            Offline: {{ offline }}
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            </div>
+                        </div>
+                        </div>
+                        
+                        <div class="col-12 col-xl-6">
+                        <div class="card">
+                            <div class="card-header">
+                            <div class="row">
+                                <div class="col">
+                                    <h4 class="card-header-title mt-4">
+                                        Clients
+                                        </h4>
+                                </div>
+                                <div class="col-auto">
+                                    <a class="btn btn-outline-secondary d-block mt-3" id="btn_detail_clients">
+                                        <i class="fe fe-details"></i> Chi tiết
+                                    </a>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="card-body">
+                            <div class="chart chart-appended">
+                                <canvas id="resultChartClients" 
+                                ></canvas>
+                            </div>
+
+                            <div class="text-center">
+                                <h2 class="header-title mt-5">
+                                    Tổng số: {{ total }}
+                                </h2>
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <h3 class="header-title">
+                                            2.4G: {{ online }}
+                                        </h3>
+                                    </div>
+                                    <div class="col">
+                                        <h3 class="header-title">
+                                            5G: {{ offline }}
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    
+                        </div>
+                </div>
+            </div>
+            <div id="overview_p2">
+                <div class="row">
+                    <div class="col-12 col-xl-4">
+                        <div class="card">
+                            <div class="card-header">
+                            <div class="row">
+                                <div class="col">
+                                    <h4 class="card-header-title mt-4">
+                                        Băng thông
+                                        </h4>
+                                </div>
+                           
+                            </div>
+                            </div>
+                            <div class="card-body">
+                            <div class="chart chart-appended">
+                                <canvas id="resultChartBandwidth" 
+                                ></canvas>
+                            </div>    
+                            </div>
+                        </div>
+                    </div>
+                        
+                    <div class="col-12 col-xl-4">
+                    <div class="card">
+                        <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h4 class="card-header-title mt-4">
+                                    Hệ điều hành
+                                    </h4>
+                            </div>
+                         
+                        </div>
+                        </div>
+                        <div class="card-body">
+                        <div class="chart chart-appended">
+                            <canvas id="resultChartSystem" 
+                            ></canvas>
+                        </div>
+                        </div>
+                    </div>
+                
+                    </div>
+                    <div class="col-12 col-xl-4">
+                        <div class="card">
+                            <div class="card-header">
+                            <div class="row">
+                                <div class="col">
+                                    <h4 class="card-header-title mt-4">
+                                        Hãng sản xuất
+                                        </h4>
+                                </div>
+                               
+                            </div>
+                            </div>
+                            <div class="card-body">
+                            <div class="chart chart-appended">
+                                <canvas id="resultChartProducer" 
+                                ></canvas>
+                            </div>
+                           
+                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div id="detail_ap" style="display: none;">
+                <div class="list-group list-group-flush my-n3">
+                    <div class="table campaigns-table v2" id="list_data">
+                        <table class="table v2">
+                            <thead>
+                                <tr>
+                                    <th data-field="actionIcons"><span class="th-contents"><span class="text">Model</span></span>
+                                    </th>
+    
+                                    <th data-field="actionIcons"><span class="th-contents"><span class="text">Mac
+                                            </span></span></th>
+                                    <th data-field="actionIcons"><span class="th-contents"><span class="text">Tên
+                                                </span></span></th>
+                                    <th data-field="actionIcons"><span class="th-contents"><span class="text">Trạngthái</span></span>
+                                        </th>
+                                    <th data-field="actionIcons"><span class="th-contents"><span class="text">Địa chỉ IP</span></span>
+                                    </th>
+                                    <th data-field="clicks"><span class="th-contents"><span class="text">Firmware</span></span>
+                                    </th>                                       
+                                    <th data-field="actionIcons"><span class="th-contents"><span class="text">Uptime</span></span>
+                                    </th>
+                                    <th data-field="actionIcons"><span class="th-contents"><span class="text">Clients</span></span>
+                                    </th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for device in devices %}
+                                <tr>
+                                    <th data-field="actionIcons"><span class="th-contents"><span class="text">{{device.model}}</span></span>
+                                    </th>      
+                                    <th data-field="actionIcons"><span class="th-contents"><span class="text">{{device.mac}}</span></span>
+                                    </th>
+                                    <th data-field="actionIcons"><span class="th-contents"><span class="text">{{device.name}}</span></span>
+                                    </th>
+                                    <th data-field="actionIcons">
+                                        <div class="custom-control custom-switch">
+                                            <input camp_id="{{ device._id }}" class="custom-control-input"
+                                                id="active_status_{{ device._id }}" status_id="active_status_{{ device._id }}"
+                                                type="checkbox" {% if device.active and device.active|lower=="true" %}checked{%
+                                                endif %}>
+                                            <label class="custom-control-label" for="active_status_{{ device._id }}"></label>
+                                        </div>
+                                    </th>
+                                    <th data-field="actionIcons"><span class="th-contents"><span class="text">{{device.ip_address}}</span></span>
+                                    </th>
+                                    <th data-field="clicks"><span class="th-contents"><span class="text">{{device.firmware}}</span></span>
+                                    </th>                                        
+                                    <th data-field="actionIcons"><span class="th-contents"><span class="text">{{device.uptime}}</span></span>
+                                    </th>
+                                    <th data-field="actionIcons"><span class="th-contents"><span class="text">{{device.clients}}</span></span>
+                                    </th>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<input id="network_selected" type="hidden" value="{{ network_selected }}" />
+<input id="online" type="hidden" value="{{ online }}">
+<input id="offline" type="hidden" value="{{ offline }}">
+<input id="samsung" type="hidden" value="{% if overview.samsung %}{{ overview.samsung }}{% else%}0{% endif %}">
+<input id="apple" type="hidden" value="{% if overview.apple %}{{ overview.apple }}{% else%}0{% endif %}">
+<input id="xiaomi" type="hidden" value="{% if overview.xiaomi %}{{ overview.xiaomi }}{% else%}0{% endif %}">
+<input id="oppo" type="hidden" value="{% if overview.oppo %}{{ overview.oppo }}{% else%}0{% endif %}">
+<input id="other_man" type="hidden" value="{% if overview.other_man %}{{ overview.other_man }}{% else%}0{% endif %}">
+<input id="Windows" type="hidden" value="{% if overview.Windows %}{{ overview.Windows }}{% else%}0{% endif %}">
+<input id="Android" type="hidden" value="{% if overview.Android %}{{ overview.Android }}{% else%}0{% endif %}">
+<input id="macOS" type="hidden" value="{% if overview.macOS %}{{ overview.macOS }}{% else%}0{% endif %}">
+<input id="IOS" type="hidden" value="{% if overview.IOS %}{{ overview.IOS }}{% else%}0{% endif %}">
+<input id="Linux" type="hidden" value="{% if overview.Linux %}{{ overview.Linux }}{% else%}0{% endif %}">
+<input id="other_os" type="hidden" value="{% if overview.other_os %}{{ overview.other_os }}{% else%}0{% endif %}">
+<input id="newNum" type="hidden" value="{% if overview.newNum %}{{ overview.newNum }}{% else%}0{% endif %}">
+<input id="returnNum" type="hidden" value="{% if overview.returnNum %}{{ overview.returnNum }}{% else%}0{% endif %}">
+<input id="avgDuration" type="hidden" value="{% if overview.avgDuration %}{{ overview.avgDuration }}{% else%}0{% endif %}">
+<input id="downrate" type="hidden" value="{% if overview.downrate %}{{ overview.downrate }}{% else%}0{% endif %}">
+<input id="uprate" type="hidden" value="{% if overview.uprate %}{{ overview.uprate }}{% else%}0{% endif %}">
+
+{% endblock %}
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $('#network').select2();
+        var network = $('#network_selected').val();
+        $('#network').val(network).trigger('change');
+        $('#network').on("change", function () {
+            var network = $('#network').val();
+            var url = "/grandstream_report?network=" + network;
+            $(location).attr('href', url);
+        });
+        //////
+        $("#detail_ap").hide();
+        $("#btn_details_ap").click(function () { 
+            $("#detail_ap").show();
+            $("#overview").hide();
+        });
+        //Chart AP
+        var online = parseInt($('#online').val());
+        var offline = parseInt($('#offline').val());
+        var config = {
+            type: 'doughnut',
+            data: {
+            labels: [
+                'Online',
+                'Offline'
+            ],
+            datasets: [{
+                data: [online, offline],
+                backgroundColor: [
+                'rgb(72, 220, 107)',
+                'rgb(255, 26, 26)'
+
+                ],
+                hoverOffset: 2
+            }]
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            }
+        };
+        var ctx = document.getElementById("resultChartAP").getContext("2d");
+        new Chart(ctx, config);
+
+        //clients
+        var g24 = 19;
+        var g5 = 10;
+        var config_clients = {
+            type: 'doughnut',
+            data: {
+            labels: [
+                '2.4G',
+                '5G'
+            ],
+            datasets: [{
+                data: [g24, g5],
+                backgroundColor: [
+                'rgb(51, 204, 255)',
+                'rgb(255, 26, 26)'
+
+                ],
+                hoverOffset: 2
+            }]
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            }
+        };
+        var ctx_clients = document.getElementById("resultChartClients").getContext("2d");
+        new Chart(ctx_clients, config_clients);
+
+        //Bandwidth
+        var upload = parseInt($('#uprate').val());
+        var download = parseInt($('#downrate').val());
+        var config_bandwidth = {
+            type: 'doughnut',
+            data: {
+            labels: [
+                'Uprate',
+                'Downrate'
+            ],
+            datasets: [{
+                data: [upload, download],
+                backgroundColor: [
+                'rgb(51, 204, 255)',
+                'rgb(255, 26, 26)'
+
+                ],
+                hoverOffset: 2
+            }]
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            }
+        };
+        var ctx_bandwidth = document.getElementById("resultChartBandwidth").getContext("2d");
+        new Chart(ctx_bandwidth, config_bandwidth);
+
+        //system
+        var Windows = parseInt($('#Windows').val());
+        var IOS = parseInt($('#IOS').val());
+        var Android = parseInt($('#Android').val());
+        var MacOS = parseInt($('#macOS').val());
+        var Linux = parseInt($('#Linux').val());
+        var Other = parseInt($('#other_man').val());
+        var config_system = {
+            type: 'doughnut',
+            data: {
+            labels: [
+                'Windows',
+                'IOS',
+                'Android',
+                'MacOS',
+                'Linux',
+                'Other'
+            ],
+            datasets: [{
+                data: [Windows, IOS, Android, MacOS, Linux, Other],
+                backgroundColor: [
+                'rgb(51, 204, 255)',
+                'rgb(255, 26, 26)',
+                'rgb(58, 117, 209)',
+                'rgb(47, 105, 49)',
+                'rgb(190, 195, 47)',
+                'rgb(162, 162, 151)'
+
+                ],
+                hoverOffset: 6
+            }]
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            }
+        };
+        var ctx_system = document.getElementById("resultChartSystem").getContext("2d");
+        new Chart(ctx_system, config_system);
+
+        //Producer
+        var Samsung = parseInt($('#samsung').val());
+        var Apple = parseInt($('#apple').val());
+        var Xioami = parseInt($('#xiaomi').val());
+        var Oppo = parseInt($('#oppo').val());
+        var Other = parseInt($('#other_os').val());
+        var config_producer = {
+            type: 'doughnut',
+            data: {
+            labels: [
+                'Samsung',
+                'Apple',
+                'Xioami',
+                'Oppo',
+                'Other'
+            ],
+            datasets: [{
+                data: [Samsung, Apple, Xioami, Oppo, Other],
+                backgroundColor: [
+                'rgb(51, 204, 255)',
+                'rgb(255, 26, 26)',
+                'rgb(58, 117, 209)',
+                'rgb(47, 105, 49)',
+                'rgb(162, 162, 151)'
+
+                ],
+                hoverOffset: 6
+            }]
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            }
+        };
+        var ctx_producer = document.getElementById("resultChartProducer").getContext("2d");
+        new Chart(ctx_producer, config_producer);
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,161 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            {{ gettext("Tao_dia_diem") }}
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                          {{ merchant.name }}
+                        </h1>
+
+                    </div>
+                    <div class="col-auto">
+
+
+                    </div>
+                </div> <!-- / .row -->
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card u-p-medium">
+                    <div class="row u-justify-center">
+                        <div class="col-lg-6">
+                            <div class="u-mt-large u-text-center">
+                                <h2 class="u-mb-xsmall">{{ gettext("Tao_dia_diem") }}</h2>
+                                <p class="u-text-mute u-mb-large"></p>
+                            </div>
+                            <form method="POST" action="/create_locations"
+                            enctype="multipart/form-data" id="create_locations_form">
+                             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <input type="hidden" value="{{ merchant._id }}"
+                               name="merchant_id" />
+                        {% if error %}
+                          <div class="alert alert-danger">* {{ error }}</div>
+                              {% endif %}
+                        <div class="c-field u-mb-small">
+                          <label class="c-field__label" for="name">{{ gettext("Ten_dia_diem") }}: <font color="red">*</font></label>
+                          <input type="text" maxlength="50" class="c-input" id="name"
+                                 name="name"/>
+                        </div>
+                        <div class="c-field u-mb-small">
+                            <label class="c-field__label" for="name">{{ gettext("Dia_chi") }}: <font color="red">*</font></label>
+                            <input type="text" maxlength="50" class="c-input" id="address"
+                                   name="address"/>
+                        </div>
+
+                        <div class="c-field u-mb-small">
+                          <label class="c-field__label"
+                                 for="logo">Logo: <font color="red">*</font></label>
+                          <input type="file" class="c-input" id="logo"
+                                 name="logo">
+                        </div>
+                        <div class="c-field u-mb-small">
+                          <label class="c-field__label"
+                                 for="background">{{ gettext("Hinh_nen") }}: <font color="red">*</font></label>
+
+                          <input type="file" class="c-input" id="background"
+                                 name="background">
+                        </div>
+                        <div class="c-field u-mb-small">
+                          <label class="c-field__label"
+                                 for="facebook-page">Link Facebook Page:</label>
+                          <input type="text"
+                                 class="c-input"
+                                 id="facebook-page"
+                                 name="facebook_page"
+                                 placeholder="//www.facebook.com/nextify/">
+                        </div>
+                       </form>
+                         <button id="new_location_submit"
+                                class="c-btn c-btn--info u-float-right">
+                            {{ gettext("Luu_thong_tin") }}
+                        </button>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}
+{% block js %}
+
+    <script nonce="{{ csp_nonce() }}" >
+                                         $(document).ready(function () {
+                                            function readURL(input, input_view) {
+                                                             if (input.files && input.files[0]) {
+                                                             var reader = new FileReader();
+                                                             var view_id = '#' + input_view;
+                                                             reader.onload = function (e) {
+                                                         $(view_id).attr('src', e.target.result);
+                                                                                                 }
+                        
+                                                             reader.readAsDataURL(input.files[0]);
+                                                                     }
+                                                                         }
+                                                         function validate(photo) {
+                                                             var file_size = $(photo)[0].files[0].size;
+                                                             var file = $(photo).val();
+                                                             var exts = ['jpg', 'png', 'jpeg'];
+                                                         if (file) {
+                                                             var get_ext = file.split('.');
+                                                             get_ext = get_ext.reverse();
+                                                         if ($.inArray ( get_ext[0].toLowerCase(), exts) > -1){
+                                                         if(file_size > 3670016){
+                                                                 return false;
+                                                             }else{
+                                                         return true;
+                                                                     }
+                                                             }else {
+                                                         return false;
+                                                                     }
+                                                                     }
+                        
+                                                                         }
+                                                         $("#logo").change(function () {
+                                                             
+                                                             if (validate(this)==true){
+                                                             swal('Upload thành công', '', 'success');
+                                                     
+                                                             readURL(this, 'logo');
+                                                             } else {
+                                                             swal('File không đúng định dạng', '', 'error');
+                                                             $('#logo').val('');
+                                                            ;}})
+
+                                                         $("#background").change(function () {
+                                                            
+                                                             if (validate(this)==true){
+                                                             swal('Upload thành công', '', 'success');
+                                                         
+                                                             readURL(this, 'background');
+                                                             } else {
+                                                             swal('File không đúng định dạng', '', 'error');
+                                                             $('#background').val('');
+                                                             }})
+                        
+                                                     $("#new_location_submit").click(function () {
+                                                     $("#create_locations_form").submit();
+                        
+                                                             });
+
+            });
+        
+    </script>
+{% endblock %}

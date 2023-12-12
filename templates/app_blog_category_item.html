@@ -1,0 +1,71 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+    <div class="container ">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="c-card u-p-medium">
+                    <div class="row u-justify-center">
+                        <div class="col-lg-6">
+                            <div class="u-mt-large u-text-center">
+                                <h2 class="u-mb-xsmall">{% if item %}
+                                    {{ item.title }}{% else %} {{ gettext("Them_moi") }} {% endif %}
+                                </h2>
+                                <p class="u-text-mute u-mb-large"></p>
+                            </div>
+                            {% if error %}
+                                <div class="alert alert-danger">
+                                    {{ error | safe }}
+                                </div>
+                            {% endif %} {% if message %}
+                            <div class="alert alert-success">
+                                {{ message | safe }}
+                            </div>
+                        {% endif %}
+                            <form method="POST"
+                                  action="/app/blogs/category/{% if not item %}add{% else %}{{ item._id }}{% endif %}"
+                                  enctype="multipart/form-data">
+                                  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                <div class="c-field u-mb-small">
+                                    <label  class="c-field__label" for="name">{{ gettext("Tieu_de:") }}</label>
+                                    <input type="text"
+                                           class="c-input"
+                                           id="title" name="title"
+                                           {% if item %}value="{{ item.title }}"
+                                           {% else %}autofocus{% endif %}>
+                                </div>
+                               <div class="c-field u-mb-small">
+                                   <label  class="c-field__label" for="name">{{ gettext("Mo_ta:") }}</label>
+                                    <input type="text"
+                                           class="c-input"
+                                           id="desc" name="desc"
+                                           {% if item %}value="{{ item.desc }}" {% endif %}>
+                                </div>
+
+                                <div class="c-choice c-choice--checkbox">
+                                    <input class="c-choice__input"
+                                           type="checkbox"
+                                                name="active"
+                                           id="active" {% if item
+                                           .active %}checked{% endif %}>
+                                    <label class="c-choice__label"
+                                           for="active">{{ gettext("Kich_hoat") }}</label>
+                                </div>
+                                     <button id="new_splash_submit"
+                                             type="submit"
+                                        class="c-btn c-btn--info u-float-right">
+                                    {{ gettext("Luu_thong_tin") }}
+                                </button>
+
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

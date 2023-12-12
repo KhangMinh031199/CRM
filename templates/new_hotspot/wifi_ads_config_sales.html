@@ -1,0 +1,118 @@
+{% extends 'nextify/base.html' %} {% block main_content %}
+
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10 col-xl-8">
+      <div class="header mt-md-5">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <!-- Pretitle -->
+              <h6 class="header-pretitle">Chiến dịch WIFI</h6>
+
+              <!-- Title -->
+              <h1 class="header-title">Cấu hình thông số quảng cáo</h1>
+            </div>
+          </div>
+          <!-- / .row -->
+        </div>
+      </div>
+      <div class="row align-items-center">
+        <div class="col">
+          <!-- Nav -->
+          <ul class="nav nav-tabs nav-overflow header-tabs">
+            <li class="nav-item">
+              <a href="/wifi_ads_config" class="nav-link">
+                {{ gettext('Cau_hinh_chung') }}
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/wifi_ads_config/sales" class="nav-link active">
+                Kinh doanh</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row mt-md-5">
+        <div class="card">
+          <div class="card-body">
+            <!-- Form -->
+            <form>
+              <div class="form-group">
+                <label  class="form-label"
+                  >Chi phí 1 lượt hiển thị</label
+                >
+                <input
+                  type="text"
+                  class="form-control mb-3"
+                  placeholder="đ0"
+                  data-inputmask="'alias': 'currency', 'numericInput': 'true', 'prefix': 'đ'"
+                />
+              </div>
+              <div class="form-group">
+                <label  class="form-label"
+                  >Chi phí 1 lượt kết nối</label
+                >
+                <input
+                  type="text"
+                  class="form-control mb-3"
+                  placeholder="đ0"
+                  data-inputmask="'alias': 'currency', 'numericInput': 'true', 'prefix': 'đ'"
+                />
+              </div>
+              <div class="form-group">
+                <label  class="form-label"
+                  >Chi phí 1 lượt đăng ký</label
+                >
+                <input
+                  type="text"
+                  class="form-control mb-3"
+                  placeholder="đ0"
+                  data-inputmask="'alias': 'currency', 'numericInput': 'true', 'prefix': 'đ'"
+                />
+              </div>
+              <div class="form-group">
+                <label  class="form-label"
+                  >Chi phí 1 lượt khảo sát</label
+                >
+                <input
+                  type="text"
+                  class="form-control mb-3"
+                  placeholder="đ0"
+                  data-inputmask="'alias': 'currency', 'numericInput': 'true', 'prefix': 'đ'"
+                />
+              </div>
+              <div class="form-group">
+                <label  class="form-label"
+                  >Chi phí 1 lượt xem video</label
+                >
+                <input
+                  type="text"
+                  class="form-control mb-3"
+                  placeholder="đ0"
+                  data-inputmask="'alias': 'currency', 'numericInput': 'true', 'prefix': 'đ'"
+                />
+              </div>
+              <div class="form-group">
+                <label  class="form-label"
+                  >Chi phí 1 lượt gửi tin</label
+                >
+                <input
+                  type="text"
+                  class="form-control mb-3"
+                  placeholder="đ0"
+                  data-inputmask="'alias': 'currency', 'numericInput': 'true', 'prefix': 'đ'"
+                />
+              </div>
+
+              <!-- Button -->
+              <button type="submit" class="btn btn-primary">Lưu</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%endblock%}

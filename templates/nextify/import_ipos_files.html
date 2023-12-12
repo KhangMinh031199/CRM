@@ -1,0 +1,159 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">
+            {{ gettext("Khach_hang") }}
+          </h6>
+
+          <!-- Title -->
+          <h1 class="header-title">
+            {{ gettext("Import_khach_hang") }}
+          </h1>
+
+        </div>
+        <div class="col-auto">
+
+          <!-- Button -->
+          {# <a href="#!" class="btn btn-primary">#}
+            {# Create Report#}
+            {# </a>#}
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-lg-6" style="margin: auto">
+      <div class="card" data-mh="landing-cards">
+        <div class="card-body">
+          {% if message %}
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          {% endif %}
+
+          {% if error %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ error }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          {% endif %}
+
+          <img class="u-mb-small mb-3" src="/static/nextify/img/ipos.png" alt="import manual"
+            style="width: 30%; margin-left: 30%;">
+
+          <h4 class="mb-3" style='text-align: center;'>
+            {{
+            gettext("Upload_tu_File_Excel_cua_Ipos._Chon_File_co_dinh_dang_CSV,_XLS_hoac_XLSX._File_can_su_dung_theo_mau_cua_Ipos.")
+            }}
+            <div>
+              {% if 'viettel.vn' in request.url %}
+              <a href="/static/sample/ipos_sample.xls">{{ gettext("Tai_file_mau") }}</a> | <a
+                href="https://blog.nextify.vn/san-pham/huong-dan-xuat-nhap-file-khach-hang-tu-excel.html">{{
+                gettext("Huong_dan") }}</a>
+              {% elif 'crmx' in request.url %}
+              <a href="/static/sample/ipos_sample.xls">{{ gettext("Tai_file_mau") }}</a> | <a
+                href="https://vhttelecom.freshdesk.com/support/solutions/folders/4400101997">{{ gettext("Huong_dan")
+                }}</a>
+              {% else %}
+              <a href="/static/sample/ipos_sample.xls">{{ gettext("Tai_file_mau") }}</a> | <a
+                href="https://blog.nextify.vn/san-pham/huong-dan-xuat-nhap-file-khach-hang-tu-excel.html">{{
+                gettext("Huong_dan") }}</a>
+              {% endif %}
+            </div>
+          </h4>
+          <form method="post" action="/import_ipos_files" enctype="multipart/form-data" id="import_customers_manual">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <div class="form-group">
+              <label class="c-field__label">{{ gettext("Dia_diem") }}</label>
+
+              <select class="custom-select" id="shop_select" name="shop_select">
+                {% for shop_mer in shop_in_mer %}
+                <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                {% endfor %}
+
+              </select>
+
+            </div>
+
+            <div class="form-group">
+              <label class="c-field__label">{{ gettext("Phan_nhom") }}</label>
+
+              <select class="custom-select" name="tags" style="width: 100%;" id="tags_selects" multiple="multiple">
+                {% for tag in tags %}
+                <option value="{{ tag._id }}">{{ tag.name }}</option>
+                {% endfor %}
+
+              </select>
+              <input type="hidden" id="select_tags_filter" name="real_tags_filter" />
+              <input type="hidden" name="source_tags" id="source_tags" value="{{
+                              source_tags }}" />
+
+            </div>
+            <div class="form-group">
+              <input class="form-control" type="file" class="form-control" id="new_file_import" name="files" required>
+            </div>
+            {% if merchant.active_detection == "True" %}
+            <div class="c-search-form__section">
+              <h5 class="c-search-form__label" style="text-align:left">{{ gettext("Nhan_vien") }}</h5>
+            </div>
+            <div class="c-switch is-active align-items-end" style="float: left;">
+              <input class="c-switch__input" name="is_employee" id="is_employee" type="checkbox" checked="checked">
+            </div>
+            {% endif %}
+            <input type="hidden" value="manual" name="import_method">
+
+            <br />
+
+            <button type="submit" class="btn btn-lg btn-block btn-primary"> Upload
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+{% endblock %}
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+  $(document).ready(function () {
+    $('#shop_select').select2({
+        dropdownAutoWidth: true
+    });
+    $('#tags_selects').select2({
+      dropdownAutoWidth: true
+    });
+    $('#tags_selects').on("change", function (e) {
+      if ($('#tags_selects').val()) {
+        $('#select_tags_filter').val($('#tags_selects').val().toString());
+      } else {
+        $('#select_tags_filter').val("");
+      }
+    });
+    {% if source_tags %}
+    var source_tags = $("#source_tags").val();
+    var data_soure_tags = JSON.parse(source_tags.replace(/\'/g, '"'));
+
+    $("#tags_selects").val(data_soure_tags);
+    $('#tags_selects').trigger('change');
+    {% endif %}
+  });
+
+</script>
+{% endblock %}

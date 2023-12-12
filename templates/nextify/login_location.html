@@ -1,0 +1,95 @@
+{% extends 'nextify/base.html' %}
+
+
+{% block body %}
+
+    <div class="container-fluid">
+
+        <div class="row justify-content-left">
+            <div class="col-12 col-xl-12">
+                    <div class="card">
+                            <div class="card-body">
+                                <div class="row align-items-end">
+                                    <div class="col mb-3 ml-n3 ml-md-n2">
+        
+                                        <div class="input-group input-group-lg input-group-flush input-group-merge">
+                                            <input type="text" class="form-control form-control-appended" name="name"
+                                                   value="Chọn địa điểm" class="form-control"
+                                                   style="font-size: 2rem" readonly>
+                                            <div class="input-group-append">
+                                                <div class="input-group-text">
+                                                    <span class="fa fa-email"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+        
+        
+                                    </div>
+                                    <div class="col-auto">
+                                        <a href="/logout"
+                                           class="btn btn-flat d-block d-md-inline-block mb-4">
+                                            <i class="fa fa-close"></i> Đăng xuất
+                                        </a>
+        
+                                    </div>
+        
+        
+                                </div>
+        
+                            </div>
+                        </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-end">
+
+                            {% for location in locations %}
+
+                                <div class="col-12 col-md-4 col-xl-4">
+
+                                    <!-- Card -->
+                                    <div class="card align-items-center">
+                                        <a href="{% if 'wifi_register' in request.path %}/wifi_register/
+                                            {{ location._id }}{% elif 'wifi' in request.path %}
+                /wifi/{{ location._id }}{% elif 'customers_reports' in request.path %}/customers_reports/
+                                            {{ location._id }}{% elif 'locations' in request.path %}locations/
+                                            {{ location._id }}{% elif 'surveys_reports' in request.path %}surveys_reports/
+                                            {{ location._id }}{% else %}/marketing_automation/{{ location._id }}{% endif %}">
+
+                                            <img src="//files.nextify.vn/{{ location.logo }}"
+                                                 alt="..." class="card-img-top"
+                                                 style="width:80px;height: 80px;border-radius: 50%;margin-top:10px">
+                                        </a>
+                                        <div class="card-body">
+                                            <div class="row align-items-center">
+                                                <div class="col">
+
+                                                    <!-- Title -->
+                                                    <h4 class="card-title mb-2 name"><a
+                                                            href="{% if 'wifi_register' in request.path %}/wifi_register/
+                                                                {{ location._id }}{% elif 'wifi' in request.path %}
+                /wifi/{{ location._id }}{% elif 'customers_reports' in request.path %}/customers_reports/
+                                                                {{ location._id }}{% elif 'locations' in request.path %}locations/
+                                                                {{ location._id }}{% elif 'surveys_reports' in request.path %}surveys_reports/
+                                                                {{ location._id }}{% else %}/marketing_automation/{{ location._id }}{% endif %}"
+                                                            class="interestContent">{{ location.name }}</a></h4>
+
+
+                                                </div>
+
+                                            </div> <!-- / .row -->
+
+                                        </div> <!-- / .row -->
+
+                                    </div> <!-- / .card-body -->
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

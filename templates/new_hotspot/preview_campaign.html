@@ -1,0 +1,372 @@
+<div class="card-body text-center">
+    <div class="row"
+        style="justify-content: center; display: flex; align-items: center;" {%
+        if camp.step_1=='0' and camp.step_2 !='0' %} data-step=2 data-min_step=2
+        {% elif camp.step_1=='0' and camp.step_2=='0' and camp.step_3 !='0' %}
+        data-step=3 data-min_step=3 {% elif camp.step_1=='0' and
+        camp.step_2=='0' and camp.step_3=='0' and camp.step_4 !='0' %}
+        data-step=4 data-min_step=4 {% else %} data-step=1 data-min_step=1 {%
+        endif %} data-campaign_id='{{ camp._id }}'
+        data-step_1='{{ camp.step_1 }}' data-step_2='{{ camp.step_2 }}'
+        data-step_3='{{ camp.step_3 }}'>
+        <a class="unactive-step btn prev-step-camp disabled prev-step"
+            style="margin-right: 30px;">
+            <i class="fa fa-caret-left fa-5x"></i>
+        </a>
+
+        <div class="detail" id="preview_campaign"></div>
+        {% if camp.step_1 == '0' and camp.step_2 != '0'%}
+        <script nonce="{{ csp_nonce() }}">
+            $(document).ready(function () {
+                $('.next-step').show();
+                $('.prev-step').show();
+                var step_2 = '{{ camp.step_2 }}';
+                if (step_2 == 'woay' || step_2 == "khai_bao_y_te") {
+                    var url_preview = '{{ link_woay }}' + '?shop_id=' + '{{ shop_id_woay }}';
+                    if (step_2 == 'khai_bao_y_te'){
+                        var url_preview = '/tokhaiyte/{{ shop_id_select }}'
+                    }
+                    $("#preview_campaign").empty();
+                    bioMp(document.getElementById('preview_campaign'), {
+                        url: url_preview,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        width: 200
+                    });
+                }
+                else if(step_2 == 'terms'){
+                    var url_preview = '/preview_tc_starbucks/{{ shop_id_select }}/{{ camp._id }}';
+                    $("#preview_campaign").empty();
+                    bioMp(document.getElementById('preview_campaign'), {
+                        url: url_preview,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        width: 200
+                    });
+                }
+                else {
+                    var url_preview = '/preview/' + step_2 + '/{{ shop_id_select }}/{{ camp._id }}/2';
+                    $("#preview_campaign").empty();
+                    bioMp(document.getElementById('preview_campaign'), {
+                        url: url_preview,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        width: 200
+                    });
+                }
+            });
+        </script>
+        {% elif camp.step_1 == '0' and camp.step_2 == '0' and camp.step_3 != '0'
+        %}
+        <script nonce="{{ csp_nonce() }}">
+            $(document).ready(function () {
+                $('.next-step').show();
+                $('.prev-step').show();
+                var step_3 = '{{ camp.step_3 }}';
+                if (step_3 == 'woay' || step_3 == "khai_bao_y_te") {
+                    var url_preview = '{{ link_woay }}' + '?shop_id=' + '{{ shop_id_woay }}';
+                    if (step_3 == 'khai_bao_y_te'){
+                        var url_preview = '/tokhaiyte/{{ shop_id_select }}'
+                    }
+                    $("#preview_campaign").empty();
+                    bioMp(document.getElementById('preview_campaign'), {
+                        url: url_preview,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        width: 200
+                    });
+                }
+                else if(step_3 == 'terms'){
+                    var url_preview = '/preview_tc_starbucks/{{ shop_id_select }}/{{ camp._id }}';
+                    $("#preview_campaign").empty();
+                    bioMp(document.getElementById('preview_campaign'), {
+                        url: url_preview,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        width: 200
+                    });
+                }
+                else {
+                    var url_preview = '/preview/' + step_3 + '/{{ shop_id_select }}/{{ camp._id }}/3';
+                    $("#preview_campaign").empty();
+                    bioMp(document.getElementById('preview_campaign'), {
+                        url: url_preview,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        width: 200
+                    });
+                }
+
+            });
+        </script>
+        {% elif camp.step_1 == '0' and camp.step_2 == '0' and camp.step_3 == '0'
+        and camp.step_4 != '0' %}
+        <script nonce="{{ csp_nonce() }}">
+            $(document).ready(function () {
+                $('.next-step').hide();
+                $('.prev-step').hide();
+                var url_preview = '/splash_page/{{ shop_id_select }}/preview/connect_success';
+                $("#preview_campaign").empty();
+                bioMp(document.getElementById('preview_campaign'), {
+                    url: url_preview,
+                    view: 'front',
+                    image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                    width: 200
+                });
+            });
+        </script>
+        {% else %}
+        <script nonce="{{ csp_nonce() }}">
+            $(document).ready(function () {
+                $('.next-step').show();
+                $('.prev-step').show();
+                var step_1 = '{{ camp.step_1 }}';
+                if (step_1 == 'woay' || step_1 == "khai_bao_y_te") {
+                    var url_preview = '{{ link_woay }}' + '?shop_id=' + '{{ shop_id_woay }}';
+                    if (step_1 == 'khai_bao_y_te'){
+                        var url_preview = '/tokhaiyte/{{ shop_id_select }}'
+                    }
+                    $("#preview_campaign").empty();
+                    bioMp(document.getElementById('preview_campaign'), {
+                        url: url_preview,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        width: 200
+                    });
+                }
+                else if(step_1 == 'terms'){
+                    var url_preview = '/preview_tc_starbucks/{{ shop_id_select }}/{{ camp._id }}';
+                    $("#preview_campaign").empty();
+                    bioMp(document.getElementById('preview_campaign'), {
+                        url: url_preview,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        width: 200
+                    });
+                }
+                else {
+                    var url_preview = '/preview/' + step_1 + '/{{ shop_id_select }}/{{ camp._id }}/1';
+                    $("#preview_campaign").empty();
+                    bioMp(document.getElementById('preview_campaign'), {
+                        url: url_preview,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        width: 200
+                    });
+                }
+            })
+
+        </script>
+        {% endif %}
+
+
+
+        <a class="active-step btn next-step-camp next-step"
+            style="margin-left: 30px;">
+            <i class="fa fa-caret-right fa-5x"></i>
+        </a>
+    </div>
+</div>
+
+
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        function show_preview(current_step, campaign_id, step_1, step_2, step_3) {
+            if (current_step == 1) {
+                if (step_1 == '0' ) {
+                    $("#preview_campaign" ).empty();
+                    bioMp(document.getElementById('preview'), {
+                        url: '',
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 418,
+                        width: 200
+                    });
+                }
+                else {
+                    if (step_1 == 'woay' || step_1 == "khai_bao_y_te") {
+                        var url_preview = '{{ link_woay }}' + '?shop_id=' + '{{ shop_id_woay }}';
+                        if (step_1 == 'khai_bao_y_te'){
+                        var url_preview = '/tokhaiyte/{{ shop_id_select }}'
+                    }
+                        $("#preview_campaign" ).empty();
+                        bioMp(document.getElementById('preview_campaign' ), {
+                            url: url_preview,
+                            view: 'front',
+                            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                            width: 200
+                        });
+                    }
+                    else if(step_1 == 'terms'){
+                        var url_preview = '/preview_tc_starbucks/{{ shop_id_select }}/{{ camp._id }}';
+                        $("#preview_campaign").empty();
+                        bioMp(document.getElementById('preview_campaign'), {
+                            url: url_preview,
+                            view: 'front',
+                            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                            width: 200
+                        });
+                    }
+                    else {
+                        var url_preview = '/preview/' + step_1 + '/{{ shop_id_select }}/{{ camp._id }}/1' ;
+                        $("#preview_campaign" ).empty();
+                        bioMp(document.getElementById('preview_campaign' ), {
+                            url: url_preview,
+                            view: 'front',
+                            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                            width: 200
+                        });
+                    }
+                }
+            }
+            if (current_step == 2) {
+                if (step_2 == '0') {
+                    $("#preview_campaign" ).empty();
+                    bioMp(document.getElementById('preview_campaign' ), {
+                        url: '',
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 418,
+                        width: 200
+                    });
+                }
+                else {
+                    if (step_2 == 'woay' || step_2 == "khai_bao_y_te") {
+                        var url_preview = '{{ link_woay }}' + '?shop_id=' + '{{ shop_id_woay }}';
+                        if (step_2 == 'khai_bao_y_te'){
+                        var url_preview = '/tokhaiyte/{{ shop_id_select }}'
+                    }
+                        $("#preview_campaign" ).empty();
+                        bioMp(document.getElementById('preview_campaign' ), {
+                            url: url_preview,
+                            view: 'front',
+                            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                            width: 200
+                        });
+                    }
+                    else if(step_2 == 'terms'){
+                        var url_preview = '/preview_tc_starbucks/{{ shop_id_select }}/{{ camp._id }}';
+                        $("#preview_campaign").empty();
+                        bioMp(document.getElementById('preview_campaign'), {
+                            url: url_preview,
+                            view: 'front',
+                            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                            width: 200
+                        });
+                    }
+                    else {
+                        var url_preview = '/preview/' + step_2 + '/{{ shop_id_select }}/{{ camp._id }}/2' ;
+                        $("#preview_campaign" ).empty();
+                        bioMp(document.getElementById('preview_campaign' ), {
+                            url: url_preview,
+                            view: 'front',
+                            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                            width: 200
+                        });
+                    }
+                }
+            }
+            else if (current_step == 3) {
+                if (step_3 == '0') {
+                    $("#preview_campaign" ).empty();
+                    bioMp(document.getElementById('preview_campaign' ), {
+                        url: '',
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 418,
+                        width: 200
+                    });
+                }
+                else {
+                    if (step_3 == 'woay' || step_3 == "khai_bao_y_te") {
+                        var url_preview = '{{ link_woay }}' + '?shop_id=' + '{{ shop_id_woay }}';
+                        if (step_3 == 'khai_bao_y_te'){
+                        var url_preview = '/tokhaiyte/{{ shop_id_select }}'
+                    }
+                        $("#preview_campaign" ).empty();
+                        bioMp(document.getElementById('preview_campaign' ), {
+                            url: url_preview,
+                            view: 'front',
+                            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                            width: 200
+                        });
+                    }
+                    else if(step_3 == 'terms'){
+                        var url_preview = '/preview_tc_starbucks/{{ shop_id_select }}/{{ camp._id }}';
+                        $("#preview_campaign").empty();
+                        bioMp(document.getElementById('preview_campaign'), {
+                            url: url_preview,
+                            view: 'front',
+                            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                            width: 200
+                        });
+                    }
+                    else {
+                        var url_preview = '/preview/' + step_3 + '/{{ shop_id_select }}/{{ camp._id }}/3' ;
+                        $("#preview_campaign" ).empty();
+                        bioMp(document.getElementById('preview_campaign' ), {
+                            url: url_preview,
+                            view: 'front',
+                            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                            width: 200
+                        });
+                    }
+                }
+            }
+            else if (current_step == 4) {
+                var url_preview = '/preview/connect_success/{{ shop_id_select }}/{{ camp._id }}/4';
+                $("#preview_campaign").empty();
+                bioMp(document.getElementById('preview_campaign' ), {
+                    url: url_preview,
+                    view: 'front',
+                    image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                    width: 200
+                });
+            }
+        }
+
+        $('.next-step-camp').click(function () {
+            var current_step = $(this).closest('div').data('step');
+            console.log(current_step);
+            var min_step = $(this).closest('div').data('min_step');
+            var campaign_id = $(this).closest('div').data('campaign_id');
+            var step_1 = $(this).closest('div').data('step_1');
+            var step_2 = $(this).closest('div').data('step_2');
+            var step_3 = $(this).closest('div').data('step_3');
+            current_step = current_step + 1;
+            if (current_step == 2 && step_2 == '0') current_step = current_step + 1;
+            if (current_step == 3 && step_3 == '0') current_step = current_step + 1;
+            $(this).closest('div').data('step', current_step);
+            show_preview(current_step, campaign_id, step_1, step_2, step_3);
+            if (current_step == 4) {
+                $(this).addClass("disabled");
+            }
+            if (current_step > min_step) {
+
+                $(this).closest('div').find('a.prev-step-camp').removeClass("disabled");
+            }
+        });
+        $('.prev-step-camp').click(function () {
+            var current_step = $(this).closest('div').data('step');
+            console.log(current_step);
+            var min_step = $(this).closest('div').data('min_step');
+            var campaign_id = $(this).closest('div').data('campaign_id');
+            var step_1 = $(this).closest('div').data('step_1');
+            var step_2 = $(this).closest('div').data('step_2');
+            var step_3 = $(this).closest('div').data('step_3');
+
+            current_step = current_step - 1;
+            if (current_step == 3 && step_3 == '0') current_step = current_step - 1;
+            if (current_step == 2 && step_2 == '0') current_step = current_step - 1;
+            $(this).closest('div').data('step', current_step);
+            show_preview(current_step, campaign_id, step_1, step_2, step_3);
+
+            if (current_step == min_step) {
+                $(this).addClass("disabled");
+            }
+            if (current_step < 4) {
+                $(this).closest('div').find('a.next-step-camp').removeClass("disabled");
+            }
+        });
+    });
+</script>

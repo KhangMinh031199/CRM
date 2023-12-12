@@ -1,0 +1,510 @@
+{% extends 'nextify/base.html' %}
+
+
+{% block body %}
+<style>
+    .preview{
+        max-height:256px;
+        height:auto;
+        width:auto;
+        margin-left: auto;
+        margin-right: auto;
+        padding:5px;
+        }
+    .img_container{
+        border-radius:5px;
+        margin-top:20px;
+        width:auto;
+    }
+    .imgInp{
+        margin-top:10px;
+        padding:10px;
+        background-color:#d3d3d3;
+    }
+    .imagePreview {
+        width: 100%;
+        height: 180px;
+        background-position: center center;
+        background: url('/static/images/iphone_simulator/no-image-e3699ae23f866f6cbdf8ba2443ee5c4e.jpeg');
+        background-color: #fff;
+        background-size: cover;
+        background-repeat: no-repeat;
+        display: inline-block;
+        box-shadow: 0px -3px 6px 2px rgba(0, 0, 0, 0.2);
+    }
+    .imgAdd {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: #4bd7ef;
+        color: #fff;
+        box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        line-height: 30px;
+        margin-top: 0px;
+        cursor: pointer;
+        font-size: 15px;
+    }
+    .del {
+        position: absolute;
+        top: 0px;
+        right: 15px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        background-color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+    }
+
+    .dele {
+        position: absolute;
+        top: 0px;
+        right: 15px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        background-color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+    }
+
+</style>
+    <div class="container-fluid">
+        <div class="row mb-4 align-items-center justify-content-center">
+            <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-lg-block my-5">
+             <div class="card card-body p-5">
+              <div class="row mb-4">
+                <div class="col text-center">
+
+                  <h1 class="mb-2">
+                               {{ gettext("Trang_chao_mac_dinh") }}
+                  </h1>
+
+                </div>
+              </div> <!-- / .row mb-4 -->
+              <div class="row mb-4 align-items-center justify-content-center">
+                <div class="col-sm-6 col-sm-offset-3">
+
+                    {% for card in cards %}
+                <div class="card">
+                    <div class="card-body">
+                        <a href="#" data-toggle="modal" data-target="#{{ card._id }}_update_image">
+                            <img style="height:250px; width:100%" src="//files.nextify.vn/{{ card.photo }}" />
+                        </a>
+                    </div>
+                </div>
+                <div class="modal hide fade" id="{{ card._id }}_update_image" tabindex="-1" role="dialog" aria-labelledby="{{ card._id }}_update_image" data-backdrop="static" style="display: none;" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="mdal-title">{{ gettext("Cap_nhat") }}</h3>
+                                <a class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </a>
+                            </div>
+                            <form method="POST" id="form_update_image_{{ card._id }}" enctype="multipart/form-data">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                <div class="modal-body">
+                                <small class="form-text text-muted">
+                                   {{ gettext("De_anh_hien_thi_dep_nhat_vui_long_su_dung_ich_thuoc_2048_x_2048_px.") }}
+                                  </small>
+                                   <div class='img_container'>
+                                        {% if card and card.photo %}
+
+                                            <img class="preview" src="//files.nextify.vn/{{ card.photo }}" width="200" card_id="{{ card._id }}" id="{{ card._id }}_img_photo" />
+
+                                        {% endif %}
+                                        <input class="imgInp" type="file" id="{{ card._id }}_update_photo" name="photo" {% if card and not card.photo %}required{% endif %}>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    {% if card %}
+                                    <a id="remove_{{card._id}}" class="u-float-left">
+                                        {{ gettext("Xoa") }}
+                                    </a> {% endif %}
+                                    <button class="btn btn-lg btn-primary update_image_submit" card_id="{{ card._id }}" href="#">{{ gettext("Luu_lai") }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div><!-- // .c-modal__content -->
+                    </div><!-- // .c-modal__dialog -->
+                </div>
+                <script nonce="{{ csp_nonce() }}">
+                    $(document).ready(function () {
+                                $('#remove_{{card._id}}').click(function () {
+
+                                    Swal.fire({
+                                        title: '{{ gettext("Ban_co_chac_chan_muon_xoa_anh_khong?") }}',
+
+                                        type: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+focusCancel: true,
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: '{{ gettext("Co!") }}',
+                                        cancelButtonText: '{{ gettext("Khong!")}}'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            $('#{{ card._id }}_update_image').modal('hide');
+                                            $('body').removeClass('modal-open');
+                                            $('.modal-backdrop').remove();
+                                            var url = "/new_splash_page/{{ shop_id_select }}/item/{{ page._id }}?card_id={{ card._id }}&action=remove";
+                                            $.ajax({
+                                                type: 'GET',
+                                                url: url,
+                                                success: function () {
+                                                    $.ajax({
+                                                        url: "/hotspot_type/default",
+                                                        type: 'GET',
+                                                        data: {
+                                                            'shop_id_select': '{{ shop_id_select }}'
+                                                        },
+                                                        success: function (data) {
+                                                            $(".detail-splash").append(data);
+                                                            swal('{{ gettext("Xoa_anh_thanh_cong") }}', '', 'success');
+                                                            location.reload();
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    })
+                                });
+                                function readURL(input, input_view) {
+                                    if (input.files && input.files[0]) {
+                                        var reader = new FileReader();
+                                        var view_id = '#' + input_view;
+                                        reader.onload = function (e) {
+                                            $(view_id).attr('src', e.target.result);
+                                        };
+
+                                        reader.readAsDataURL(input.files[0]);
+                                    }
+                                }
+                                function validate(photo) {
+                                    var file_size = $(photo)[0].files[0].size;
+                                    var file = $(photo).val();
+                                    var exts = ['jpg', 'png', 'jpeg'];
+                                    if (file) {
+                                        var get_ext = file.split('.');
+                                        get_ext = get_ext.reverse();
+                                        if ($.inArray(get_ext[0].toLowerCase(), exts) > -1) {
+                                            if (file_size > 3670016) {
+                                                return false;
+                                            } else {
+                                                return true;
+                                            }
+                                        } else {
+                                            return false;
+                                        }
+                                    }
+
+                                }
+                                $("#{{ card._id }}_update_photo").change(function () {
+                                    if (validate(this) == true) {
+                                        swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                                        $('#{{ card._id }}_img_photo').show();
+                                        readURL(this, '{{ card._id }}_img_photo');
+                                    } else {
+                                        swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                                        $('#{{ card._id }}_update_photo').val('');
+                                        $('#{{ card._id }}_img_photo').hide();
+
+                                    }
+                                    $("#form_update_image_{{ card._id }}").submit(function (e) {
+                                        e.preventDefault();
+                                        $('#{{ card._id }}_update_image').modal('hide');
+                                        $('body').removeClass('modal-open');
+                                        $('.modal-backdrop').remove();
+                                        var form_data = new FormData(this);
+
+                                        $.ajax({
+                                            headers: {"X-CSRFToken": '{{ csrf_token() }}'},
+                                            url: "/new_splash_page/{{ shop_id_select }}/item/{{ card._id }}?page_type=default",
+                                            type: 'POST',
+                                            data: form_data,
+                                            contentType: false,
+                                            processData: false,
+                                            success: function () {
+                                                $.ajax({
+                                                    url: "/hotspot_type/default",
+                                                    type: 'GET',
+                                                    data: {
+                                                            'shop_id_select': '{{ shop_id_select }}'
+                                                    },
+                                                    success: function (data) {
+                                                        location.reload();
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    });
+                                });
+                            });
+                        </script>
+                {% endfor %}
+                 <a data-toggle="modal" href="#new_image" class="btn btn-lg btn-light btn-block text-uppercase my-2">
+                    <i class="fa fa-plus"></i> {{ gettext("Them_anh") }}
+                </a>
+                <a href="/welcome/init_automation/{{shop_id_select}}">
+                    <button class="btn btn-lg btn-primary btn-block text-uppercase">{{ gettext("Tiep_tuc:_Den_trang_quan_tri") }}</button>
+               </a>
+                    </div>
+              </div>
+             </div>
+            </div>
+
+
+            <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5">
+                <div id="preview"></div>
+
+            </div>
+        </div>
+    <!-- </div><div class="modal hide fade" id="new_image" tabindex="-1" role="dialog" aria-labelledby="new_image" data-backdrop="static" style="display: none;" aria-hidden="true"> -->
+    <!-- <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">{{ gettext('HotspotAddText') }}</h3>
+                <a class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </a>
+            </div>
+            <form method="POST" enctype="multipart/form-data" id="form_new_image">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                <div class="modal-body">
+                    <div class="c-field u-mb-xsmall">
+                        <small class="form-text text-muted">
+                                    {{ gettext("De_anh_hien_thi_dep_nhat_vui_long_su_dung_ich_thuoc_2048_x_2048_px.") }}
+                                  </small>
+                      <div class='img_container'>
+                                 <img class="preview" id="view_image">
+
+                            </div>
+
+                        <input class="imgInp" type="file" id="new_photo" name="photo" {% if card and not card.photo %}required{% endif %}>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-lg btn-primary" id="new_image_submit">{{ gettext('HotspotSaveText') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div> -->
+    <input type="hidden" value="{{ camp_id_default }}" id="camp_id" />
+
+    <div class="modal fade" id="new_image" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Thêm ảnh trang chào</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form id="slide_form">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    <div class="card-body">
+                        <div class="row align-items-center justify-content-between slides">
+                            
+                            <div class="col-sm-4  text-center imgUp count-slide">
+                                <div class="imagePreview"></div>
+                                <label class="btn btn-outline-danger mb-2">
+                                    Upload<input type="file" class="uploadFile img img-slide"
+                                        value="Upload Photo"
+                                        style="width: 0px;height: 0px;overflow: hidden;">
+                                </label>
+
+                            </div>
+                            <i class="fa fa-plus imgAdd"></i>
+                            
+                        </div>
+
+                    </div>
+                </form>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-danger" style="float: right;" id="save_slide"
+                        data-dismiss="modal">
+                        Lưu
+                    </button>
+                </div>
+
+                <script nonce="{{ csp_nonce() }}">
+                    $(document).ready(function () {
+                        $(".imgAdd").click(function () {
+                            $(this).closest(".row").find('.imgAdd').before('<div class="col-sm-4  text-center imgUp count-slide"><div class="imagePreview"></div><label class="btn btn-outline-danger mb-2">Upload<input type="file" class="uploadFile img img-slide" value="Upload Photo" style="width: 0.1px;height: 0.1px;opacity: 0;overflow: hidden;position: absolute;z-index: -1;"></label><i class="fa fa-times del"></i></div>');
+                        });
+                        $(document).on("click", "i.del", function () {
+                            $(this).parent().remove();
+                        });
+                        $(function () {
+                            $(document).on("change", ".uploadFile", function () {
+                                var uploadFile = $(this);
+                                var files = !!this.files ? this.files : [];
+                                if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
+
+                                if (/^image/.test(files[0].type)) { // only image file
+                                    var reader = new FileReader(); // instance of the FileReader
+                                    reader.readAsDataURL(files[0]); // read the local file
+
+                                    reader.onloadend = function () { // set image data as background of div
+                                        //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
+                                        uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
+                                    }
+                                }
+
+                            });
+                        });
+                    })
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id"/>
+<input type="hidden" value="{{ page_id }}" id="page_id"/>
+{% endblock %}
+{% block js %}
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('textarea').each(function() {
+            $(this).val($(this).val().trim());
+            });
+            $('input').each(function() {
+                $(this).val($(this).val().trim());
+            });
+            function readURL(input, input_view) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    var view_id = '#' + input_view;
+                    reader.onload = function (e) {
+                        $(view_id).attr('src', e.target.result);
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $("#new_photo").change(function () {
+                readURL(this, 'view_image');
+            });
+   
+            var shop_id = $('#shop_id').val();
+            var page_id = $('#page_id').val();
+            var url_preview = '/splash_page/' + shop_id + '/preview/' + page_id;
+            $("#preview").empty();
+            bioMp(document.getElementById('preview'), {
+                url: url_preview,
+                view: 'front',
+                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                height:618,
+                width: 308
+            });
+
+
+            function validate(photo) {
+                var file_size = $(photo)[0].files[0].size;
+                var file = $(photo).val();
+                var exts = ['jpg', 'png', 'jpeg'];
+                if (file) {
+                    var get_ext = file.split('.');
+                    get_ext = get_ext.reverse();
+                    if ($.inArray(get_ext[0].toLowerCase(), exts) > -1) {
+                        if (file_size > 3670016) {
+                            return "big_file";
+                        } else {
+                            return true;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+
+            }
+            $("#new_photo").change(function () {
+                var validate_photo = validate(this);
+                if (validate_photo == true) {
+                    swal('{{ gettext("Chon_File_thanh_cong") }}', '', 'success');
+                    $('#view_image').show();
+                    readURL(this, 'view_logo');
+                } else {
+                    if (validate_photo == "big_file"){
+                        swal('{{ gettext("File_co_kich_thuoc_qua_lon!") }}', '', 'error');
+                        return false
+                    };
+                    swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                    $('#new_photo').val('');
+                    $('#view_image').hide();
+                }
+            });
+
+
+
+
+            $("#form_new_image").submit(function(e) {
+                e.preventDefault();
+                $('#new_image').modal('hide');
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+                var form_data = new FormData(this);
+
+                $.ajax({
+                    headers: { "X-CSRFToken": '{{ csrf_token() }}' },
+                    url: "/new_splash_page/{{ shop_id_select }}/item/add?page_type=default",
+                    type: 'POST',
+                    data: form_data,
+                    contentType: false,
+                    processData: false,
+                    success: function() {
+                    location.reload();
+                    }
+                });
+            });
+
+            $("#save_slide").click(function () {
+            var current_step = '1';
+            var camp_id = $("#camp_id").val();
+            var shop_id_select = $("#shop_id_select").val();
+            var type_page = 'slides'
+            var form_data = new FormData();
+            var countDiv = $('.slides').children('.count-slide').length;
+            var num = 1
+            $('.slides').children('div.count-slide').each(function (i) {
+                $.each($(this).find(":input.img-slide[type='file']"), function (i, file) {
+                    form_data.append('img_slide_' + num, this.files[0]);
+                })
+                num = num + 1;
+            });
+            form_data.append('number_slide', countDiv)
+            form_data.append('camp_id', camp_id)
+            form_data.append('shop_id_select', shop_id)
+            form_data.append('current_step', current_step)
+            form_data.append('type_page', 'slides')
+            form_data.append('init', 'True')
+            $.ajax({
+                headers: { "X-CSRFToken": '{{ csrf_token() }}' },
+                url: "/save_step_campaign/" + shop_id + "/" + camp_id,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function () {
+                    var url_preiew = '/preview/' + type_page + '/' + shop_id + '/' + camp_id;
+                    $("#preview").empty();
+                    bioMp(document.getElementById('preview'), {
+                        url: url_preiew,
+                        view: 'front',
+                        image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                        height: 618,
+                        width: 308
+                    });
+                }
+            });
+
+        });
+        });
+
+
+    </script>
+{% endblock %}

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Connect With Haravan</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="static/images/image_1/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/js/vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/fonts/fonts_1/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/fonts/fonts_1/Linearicons-Free-v1.0.0/icon-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/js/vendor/animate/animate.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="static/js/vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/js/vendor/select2/select2.min.css">
+	<link rel="stylesheet" href="/static/nextify/css/sweetalert.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/css/css_1/util.css">
+	<link rel="stylesheet" type="text/css" href="static/css/css_1/main.css">
+
+<!--===============================================================================================-->
+</head>
+<body>
+	
+	<div class="limiter">
+		<div class="container-login100" style="background-image: url('static/images/images_1/img-01.jpg');">
+			<div class="wrap-login100 p-t-30 p-b-30">
+				<div class="login100-form validate-form">
+					<div class="login100-form-avatar">
+						<img src="/static/nextify/img/logo_2.png" alt="AVATAR">
+					</div>
+
+					<span class="login100-form-title p-t-20 p-b-10" style="color: #f45e37; font-size: 250%">
+						Nextify
+					</span>
+					<div class="text-center w-full" style="margin-bottom: 5px; color: #f45e37">
+						Nếu chưa có tài khoản CRM 
+						<button class="txt1" href="#signup_crm" style="color: blue" data-toggle="modal">
+							đăng ký				
+						</button> để tạo tài khoản dùng thử.
+					</div>
+					<form class="login100-form validate-form" method="post" action="/update_haravan" enctype="multipart/form-data" id="info_haravan">
+						<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+						<input type="hidden" name="domain" value="{{ domain }}" />
+						<input type="hidden" name="access_token" value="{{ access_token }}" />
+						<input type="hidden" name="haravan_id_shop" value="{{ haravan_id_shop }}" />
+					<div class="wrap-input100 validate-input m-b-10" data-validate = "Username is required">
+						<input class="input100" type="text" name="name" placeholder="Email hoặc sđt đăng nhập trên CRM" id="name">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-user"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-10" data-validate = "Password is required">
+						<input class="input100" type="text" name="client_key" placeholder="Client Key" id="client_key">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-lock"></i>
+						</span>
+					</div>
+				
+					<div class="container-login100-form-btn p-t-10">
+						<button class="login100-form-btn" id="save_info">
+							Lưu 
+						</button>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	  
+
+<div class="modal hide fade" id="signup_crm" tabindex="-1" role="dialog"
+         data-backdrop="static" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background: #f8f9fa">
+            <div class="modal-header">
+                <h3 class="modal-title">Đăng ký thông tin.</h3>
+
+                <a class="close" data-dismiss="modal"
+                   aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </a>
+            </div>
+            <div class="modal-body">
+            	<form class="login100-form validate-form" id='info_sign_up_crm' method="post" action="/signup_from_haravan" enctype="multipart/form-data">
+            		<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+					<input type="hidden" name="domain" value="{{ domain }}" />
+					<input type="hidden" name="access_token" value="{{ access_token }}" />
+					<input type="hidden" name="haravan_id_shop" value="{{ haravan_id_shop }}" />
+					<input type="hidden" name="email_haravan" value="{{ email_haravan }}" />
+					<div class="wrap-input100 m-b-10">
+						<input class="input100" type="text" id ="name_company" name="name_company" placeholder="Tên công ty">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-building"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 m-b-10" >
+						<input class="input100" type="text" id ="address" name="address" placeholder="Địa chỉ">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-location-arrow"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 m-b-10">
+						<input class="input100" type="text" id ="business" name="business" placeholder="Ngành kinh doanh(vd: quán cafe)">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-bars"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 m-b-10">
+						<input class="input100" type="text" id ="number_res" name="number_res" placeholder="Số lượng cửa hàng:">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-pie-chart"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 m-b-10">
+						<input class="input100" type="text" id ="website" name="website" placeholder="Website/Fanpage">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-facebook"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 m-b-10">
+						<input class="input100" type="text" id ="user_contact" name="user_contact" placeholder="Họ tên người liên hệ">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-user"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 m-b-10">
+						<input class="input100" type="text" id ="professional_titles" name="professional_titles" placeholder="Chức danh">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-briefcase"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 m-b-10">
+						<input class="input100" type="text" id="email_contact" name="email_contact" placeholder="Email">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-envelope"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 m-b-10">
+						<input class="input100" type="text" id="phone_contact" name="phone_contact" placeholder="Số điện thoại">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-phone"></i>
+						</span>
+					</div>
+
+
+					<div class="container-login100-form-btn p-t-10">
+						<button class="login100-form-btn" id="info_sign_up">
+							Đăng ký
+						</button>
+					</div>
+
+				</form>
+            </div>
+            
+        </div>
+    </div>
+</div>
+	
+	
+<!--===============================================================================================-->	
+	<script src="static/js/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/js/vendor/bootstrap/js/popper.js"></script>
+	<script src="static/js/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/js/vendor/select2/select2.min.js"></script>
+	<script src="/static/v2/assets/js/sweetalert2.all.js"></script>
+<!--===============================================================================================-->
+<script nonce="{{ csp_nonce() }}">	
+	$(document).ready(function () {
+	    $("#save_info").click(function () {
+	            var name = $("#name").val()
+	            var client_key = $("#client_key").val()
+	            
+	            if(name.length == 0){
+	            	swal('Bạn chưa nhập  email, sđt', '', 'error')
+	            	return false
+	            }
+	            else if(client_key.length == 0){
+	            	swal('Bạn chưa nhập client_key', '', 'error')
+	            	return false
+	            }
+	            else{
+	            	
+	            	$.ajax({
+	                    url: $("#info_haravan").attr("action"),
+              			type: $("#info_haravan").attr("method"),
+             			data: $("#info_haravan").serialize(),
+	                    success: function (response) {
+	                        var returnedData = JSON.parse(response);
+	                        if ('error' in returnedData) {
+	                            swal(returnedData['error'], " ", "error");
+	                            return false
+	                        } else {
+	                            swal('Thành công', '', 'success');
+
+	                        }
+
+	                    }});
+	            	return false;
+	            }
+
+	        });
+
+
+	    $("#info_sign_up").click(function () {
+	            var name_company = $("#name_company").val()
+	            var address = $("#address").val()
+	            var business = $("#business").val()
+	            var user_contact = $("#user_contact").val()
+	            var professional_titles = $("#professional_titles").val()
+	            var email_contact = $("#email_contact").val()
+	            var phone_contact = $("#phone_contact").val()
+	            if(name_company.length == 0){
+	            	swal('Bạn chưa nhập tên công ty', '', 'error')
+	            	return false
+	            }
+	            else if(address.length == 0){
+	            	swal('Bạn chưa nhập địa chỉ', '', 'error')
+	            	return false
+	            }
+	            else if(business.length == 0){
+	            	swal('Bạn chưa nhập ngành kinh doanh', '', 'error')
+	            	return false
+	            }
+	            else if(user_contact.length == 0){
+	            	swal('Bạn chưa nhập họ tên người liên hệ', '', 'error')
+	            	return false
+	            }
+	            else if(professional_titles.length == 0){
+	            	swal('Bạn chưa nhập chức vụ', '', 'error')
+	            	return false
+	            }
+	            else if(email_contact.length == 0){
+	            	swal('Bạn chưa nhập email', '', 'error')
+	            	return false
+	            }
+	            else if(phone_contact.length == 0){
+	            	swal('Bạn chưa nhập sđt', '', 'error')
+	            	return false
+	            }
+	            else{
+	            	
+	            	$.ajax({
+	                    url: $("#info_sign_up_crm").attr("action"),
+              			type: $("#info_sign_up_crm").attr("method"),
+             			data: $("#info_sign_up_crm").serialize(),
+	                    success: function (response) {
+	                        var returnedData = JSON.parse(response);
+	                        if ('error' in returnedData) {
+	                            swal(returnedData['error'], " ", "error");
+	                            return false
+	                        } else {
+	                            swal('Thành công', '', 'success');
+
+	                        }
+
+	                    }});
+	            	return false;
+	            }
+
+	        });
+
+});
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,691 @@
+{% extends 'nextify/base.html' %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/table.css">
+{% endblock %}
+{% block main_content %}
+<div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                        {{ gettext("Cham_soc_tu_dong") }}
+                    </h6>
+
+                    <!-- Title -->
+                    <h1 class="header-title">
+                        {{ shop_select.name }}
+                    </h1>
+
+                </div>
+                <div class="col-lg-3">
+                    <select class="custom-select control-container" id="shop_in_mer">
+                        {% for shop_mer in shop_in_mer %}
+                        <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+                <div class="col-auto">
+                    <a class="btn btn-outline-primary d-block d-md-inline-block" data-target="#settings_modal"
+                        data-toggle="modal" href="#">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                </div>
+
+            </div> <!-- / .row -->
+            <div class="row align-items-center">
+                <div class="col">
+
+                    <!-- Nav -->
+                    <ul class="nav nav-tabs nav-overflow header-tabs">
+                        <li class="nav-item">
+                            <a href="/marketing_automation/{{ shop_id_select }}" class="nav-link active">
+                                {{ gettext("Kich_ban") }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/marketing_automation/{{ shop_id_select }}/activity" class="nav-link">
+                                {{ gettext("Hoat_dong") }}
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-8 col-lg-4">
+
+            <!-- Card -->
+            <div class="card bg-transparent">
+                <div class="card-body">
+
+                    <!-- Heading -->
+
+                    <h3>SMS</h3>
+
+                    <!-- Text -->
+                    <p class="text-muted">
+                        Để gửi được tin nhắn SMS Brandname, cần có Brandname, nếu chưa có vui lòng liên hệ để đăng ký
+                        với các đơn vị cung cấp. Sau đó cấu hình tính hợp với hệ thống.
+                    </p>
+
+                    <!-- Button -->
+
+                </div>
+                <div class="card-footer">
+                    <a href="/buyform/sms" class="btn btn-outline-danger" autofocus>
+                        Mua tin
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-8 col-lg-4">
+
+            <!-- Card -->
+            <div class="card bg-transparent">
+                <div class="card-body">
+                    <h3>MMS</h3>
+                    <!-- Text -->
+                    <p class="text-muted">
+                        Để gửi được tin nhắn MMS Brandname, cần có Brandname, nếu chưa có vui lòng liên hệ để đăng ký
+                        với các đơn vị cung cấp. Sau đó cấu hình tính hợp với hệ thống.
+                    </p>
+
+                    <!-- Button -->
+
+                </div>
+                <div class="card-footer">
+                    <a href="/buyform/mms" class="btn btn-outline-danger">
+                        Mua tin
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-8 col-lg-4">
+
+            <!-- Card -->
+            <div class="card bg-transparent">
+                <div class="card-body">
+
+                    <!-- Heading -->
+                    <h3>ZNS</h3>
+
+                    <!-- Text -->
+                    <p class="text-muted">
+                        Để gửi được tin nhắn ZNS Brandname, cần có Brandname, nếu chưa có vui lòng liên hệ để đăng ký
+                        với các đơn vị cung cấp. Sau đó cấu hình tính hợp với hệ thống.
+                    </p>
+
+                    <!-- Button -->
+
+                </div>
+                <div class="card-footer">
+                    <a href="/buyform/zns" class="btn btn-outline-danger">
+                        Mua tin
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-8 col-lg-4">
+
+            <!-- Card -->
+            <div class="card bg-transparent">
+                <div class="card-body">
+
+                    <!-- Heading -->
+                    <h3>Email</h3>
+
+                    <!-- Text -->
+                    <p class="text-muted">
+                        Để gửi được Email, cần có Email Server SMTP hoặc đăng ký 1 tài khoản Email Server miễn phí tại
+                        Sendgrid, Mailgun. Sau đó cấu hình tích hợp với hệ thống.
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <!-- Button -->
+                    <a href="/buyform/email" class="btn btn-outline-danger">
+                        Mua tin
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-8 col-lg-4">
+
+            <!-- Card -->
+            <div class="card bg-transparent">
+                <div class="card-body">
+                    <h3>Callbot</h3>
+                    <!-- Text -->
+                    <p class="text-muted">
+                        Để sử dụng Callbot cần cấu hình Api Key tích hợp với hệ thống. Nếu chưa có vui lòng liên hệ với
+                        đơn vị cung cấp dịch vụ để đăng ký.
+                    </p>
+
+                </div>
+                <div class="card-footer" style="margin-top: 25px;">
+                    <a href="/buyform/call" class="btn btn-outline-danger">
+                        Mua tin
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-8 col-lg-4">
+
+            <!-- Card -->
+            <div class="card bg-transparent">
+                <div class="card-body">
+
+                    <!-- Heading -->
+                    <h3>Chatbot</h3>
+
+                    <!-- Text -->
+                    <p class="text-muted">
+                        Đang cập nhật...
+                    </p>
+
+                </div>
+                <div class="card-footer" style="margin-top: 50px;">
+                    <a href="/buyform/chatbot" class="btn btn-outline-danger">
+                        Mua tin
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="settings_modal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cấu hình</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="all_channel" {%if send_settings and
+                            send_settings.all%}checked{%endif%}>
+                        <label class="custom-control-label text-muted mr-3" for="all_channel"> Gửi tất cả</label>
+                    </div>
+
+                    <p class="text-muted mt-4 mb-4">Thứ tự ưu tiên:</p>
+                    {%set channels = send_settings.top.split(',') %}
+                    <div class="list-group list-group-flush my-n3 mt-4 sortable" id="sort_channel">
+
+                        {%for channel in channels%}
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-auto">
+
+                                    <!-- Avatar -->
+                                    <div class="avatar avatar-sm">
+                                        <div
+                                            class="avatar-title font-size-lg bg-primary-soft rounded-circle text-primary">
+                                            <i class="fa fa-comment-alt"></i>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col">
+
+                                    <!-- Text -->
+                                    <p class="small mt-3">
+                                        <strong>{{channel}}</strong>
+                                    </p>
+
+
+                                </div>
+                            </div> <!-- / .row -->
+                        </div>
+                        {%endfor%}
+
+
+
+                    </div>
+                    <input type="hidden" value="{{send_settings.top}}" id="channel_list" name="channel_list">
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row align-items-center">
+                        <div class="col">
+                        </div>
+                        <div class="col-auto">
+                            <!-- Button -->
+                            <a href="#" id="save_channel_list" class="btn btn-primary">
+                                Lưu cấu hình
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row u-mb-large">
+        <div class="col-lg-12">
+            <div class="card">
+
+                <div class="smart-emails-table">
+                    <div class="table smart-emails v2">
+
+                        <table class="table v2">
+                            <thead>
+                                <tr>
+                                    <th data-field="smartEmailType" style="width: 30%">
+                                        <span class="th-contents"><span class="text">{{
+                                                gettext("Khach_hang")}}</span></span>
+                                    </th>
+                                    <th data-field="sent"><span class="th-contents"><span class="text">
+                                                SMS
+                                            </span></span></th>
+                                    <th data-field="sent"><span class="th-contents"><span class="text">
+                                                Email
+                                            </span></span></th>
+                                    <th data-field="sent"><span class="th-contents"><span class="text">
+                                                Zalo OA
+                                            </span></span></th>
+                                    <th data-field="sent"><span class="th-contents"><span class="text">
+                                                Zalo ZNS
+                                            </span></span></th>
+                                    <th data-field="sent"><span class="th-contents"><span class="text">
+                                                Facebook
+                                            </span></span></th>
+
+                                    <th data-field="sent"><span class="th-contents"><span class="text">
+                                            </span></span></th>
+                                    <th data-field="sent"><span class="th-contents"><span class="text">
+                                            </span></span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-field="smartEmailType"><span class="th-contents"><span class="text">{{
+                                                gettext("Khach_den_lan_dau") }} </span></span><span>
+                                            
+                                            <div class="email-title-container">
+                                                <div class="email-title"><span>{{ gettext("Khach_den_lan_dau") }}</span>
+                                                    <span class="d-inline-block" tabindex="0" data-toggle="tooltip"
+                                                        title='{{ gettext("Khach_lan_dau_ghe_tham_dia_diem,_he_thong_tu_gui_tin_nhan_chao_mung_sau_3_phut.") }}'>
+                                                        <button
+                                                            class="btn btn-rounded-circle btn-white"><span class="fe fe-help-circle"></span></button>
+
+                                                    </span>
+
+                                                </div>
+                                            </div>
+                                        </span></td>
+
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ welcome_sms_count }}</span></td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ welcome_email_count }}</span>
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ welcome_zalo_count }}</span>
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ welcome_zalo_zns_count }}</span>
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ welcome_facebook_count }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="welcome_active" {%if
+                                                shop_select.sms.welcome%}{%if
+                                                shop_select.sms.welcome.status%}checked{%endif%}{%endif%}>
+                                            <label class="custom-control-label" for="welcome_active"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="/marketing_automation/{{ shop_id_select }}/config/welcome">
+                                            <span class="fe fe-edit mr-4" data-toggle="tooltip"
+                                                title="Chỉnh sửa"></span>
+                                        </a>
+
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        <div class="email-title-container">
+                                            <div class="email-title"><span>{{ gettext("Khach_quay_lai") }} </span>
+                                                <span class="d-inline-block" tabindex="0" data-toggle="tooltip"
+                                                    title='{{ gettext("Khach_quay_lai_dia_diem,_tuy_chon_so_lan_quay_lai,_tin_nhan_tu_dong_gui_sau_khi_khach_dang_nhap_WIFI.") }}'>
+                                                    <button
+                                                    class="btn btn-rounded-circle btn-white"><span class="fe fe-help-circle"></span></button>
+
+
+                                                </span>
+                                            </div>
+                                        </div>
+
+
+                                    </td>
+
+
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ return_sms_count }}</span></td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ return_email_count }}</span>
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ return_zalo_count }}</span></td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ return_zalo_zns_count }}</span>
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ return_facebook_count }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="return_active" {%if
+                                                shop_select.sms.return%}{%if
+                                                shop_select.sms.return.status%}checked{%endif%}{%endif%}>
+                                            <label class="custom-control-label" for="return_active"></label>
+                                        </div>
+                                    </td>
+
+
+                                    <td>
+                                        <a href="/marketing_automation/{{ shop_id_select }}/config/return">
+                                            <span class="fe fe-edit mr-4" data-toggle="tooltip"
+                                                title="Chỉnh sửa"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        <div class="email-title-container">
+                                            <div class="email-title"><span>{{ gettext("Khach_than_thiet") }} </span>
+                                                <span class="d-inline-block" tabindex="0" data-toggle="tooltip"
+                                                    title='{{ gettext("Khach_hang_co_so_luot_den_tu_X_->_Y_lan_trong_31_ngay_gan_nhat.") }}'>
+                                                    <button
+                                                    class="btn btn-rounded-circle btn-white"><span class="fe fe-help-circle"></span></button>
+
+
+                                                </span>
+
+                                            </div>
+                                        </div>
+
+                                    </td>
+
+
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ loyal_sms_count }}</span></td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ loyal_email_count }}</span></td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ loyal_zalo_count }}</span></td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ loyal_zalo_zns_count }}</span>
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ loyal_facebook_count }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="loyal_active" {%if
+                                                shop_select.sms.loyal%}{%if
+                                                shop_select.sms.loyal.status%}checked{%endif%}{%endif%}>
+                                            <label class="custom-control-label" for="loyal_active"></label>
+                                        </div>
+                                    </td>
+
+
+                                    <td>
+                                        <a href="/marketing_automation/{{ shop_id_select }}/config/loyal">
+                                            <span class="fe fe-edit mr-4" data-toggle="tooltip"
+                                                title="Chỉnh sửa"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        <div class="email-title-container">
+                                            <div class="email-title"><span>{{ gettext("Khach_lau_chua_quay_lai") }}
+                                                </span>
+                                                <span class="d-inline-block" tabindex="0" data-toggle="tooltip"
+                                                    title='{{ gettext("Khach_hang_da_X_ngay_chua_quay_lai_dia_diem,_he_thong_tu_dong_tim_va_gui_de_moi_khach_quay_lai.") }}'>
+                                                    <button
+                                                    class="btn btn-rounded-circle btn-white"><span class="fe fe-help-circle"></span></button>
+
+
+                                                </span>
+                                            </div>
+                                        </div>
+
+
+                                    </td>
+
+
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ lost_sms_count }}</span></td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ lost_email_count }}</span></td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ lost_zalo_count }}</span></td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ lost_zalo_zns_count }}</span>
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ lost_facebook_count }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="lost_active" {%if
+                                                shop_select.sms.lost%}{%if
+                                                shop_select.sms.lost.status%}checked{%endif%}{%endif%}>
+                                            <label class="custom-control-label" for="lost_active"></label>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <a href="/marketing_automation/{{ shop_id_select }}/config/lost">
+                                            <span class="fe fe-edit mr-4" data-toggle="tooltip"
+                                                title="Chỉnh sửa"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        <div class="email-title-container">
+                                            <div class="email-title"><span>{{ gettext("Chuc_mung_sinh_nhat") }}
+                                                </span>
+                                                <span class="d-inline-block" tabindex="0" data-toggle="tooltip"
+                                                    title='{{ gettext("Tin_nhan_chuc_mung_sinh_nhat_khi_khach_den_dia_diem_vao_ngay_sinh_nhat,_tuy_chon_tu_dong_nhac_truoc_sinh_nhat_X_ngay.") }}'>
+                                                    <button
+                                                            class="btn btn-rounded-circle btn-white"><span class="fe fe-help-circle"></span></button>
+
+
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </td>
+
+
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ birthday_sms_count }}</span>
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ birthday_email_count }}</span>
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ birthday_zalo_count }}</span>
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ birthday_zalo_zns_count
+                                            }}</span>
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ birthday_facebook_count
+                                            }}</span></td>
+
+                                    <td>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="birthday_active"
+                                                {%if shop_select.sms.happy_birthday%}{%if
+                                                shop_select.sms.happy_birthday.status%}checked{%endif%}{%endif%}>
+                                            <label class="custom-control-label" for="birthday_active"></label>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <a href="/marketing_automation/{{ shop_id_select }}/config/happy_birthday">
+                                            <span class="fe fe-edit mr-4" data-toggle="tooltip"
+                                                title="Chỉnh sửa"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        <div class="email-title-container">
+                                            <div class="email-title"><span>{{ gettext("Khuyen_mai_chung") }}
+                                                </span>
+                                                <span class="d-inline-block" tabindex="0" data-toggle="tooltip"
+                                                    title='{{ gettext("Cac_chuong_trinh_khuyen_mai_chung_dang_co,_gui_toi_tat_ca_khach_hang_sau_khi_ket_noi_WIFI_trong_3_phut.") }}'>
+                                                    <button
+                                                    class="btn btn-rounded-circle btn-white"><span class="fe fe-help-circle"></span></button>
+
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ anoun_sms_count }}</span></td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ anoun_email_count }}</span></td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ anoun_zalo_count }}</span></td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ anoun_zalo_zns_count }}</span>
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ anoun_facebook_count }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="anoun_active" {%if
+                                                shop_select.sms.announcement%}{%if
+                                                shop_select.sms.announcement.status%}checked{%endif%}{%endif%}>
+                                            <label class="custom-control-label" for="anoun_active"></label>
+                                        </div>
+                                    </td>
+
+
+                                    <td>
+                                        <a href="/marketing_automation/{{ shop_id_select }}/config/anoun">
+                                            <span class="fe fe-edit mr-4" data-toggle="tooltip"
+                                                title="Chỉnh sửa"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="email-title-container">
+                                            <div class="email-title"><span>
+
+                                                    {{ gettext("Cam_on_&_Khao_sat") }}</span>
+                                                <span class="d-inline-block" tabindex="0" data-toggle="tooltip"
+                                                    title='{{ gettext("Gui_loi_cam_on_va_khao_sat_toi_khach_hang_sau_khi_ghe_tham.") }}'>
+                                                    <button
+                                                    class="btn btn-rounded-circle btn-white"><span class="fe fe-help-circle"></span></button>
+
+
+                                                </span>
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ thank_you_sms_count }}</span>
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ thank_you_email_count }}</span>
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ thank_you_zalo_count }}</span>
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ thank_you_zalo_zns_count
+                                            }}</span>
+                                    </td>
+                                    <td data-field="sent"><span class="th-contents"><span
+                                                class="text">Sent</span></span><span>{{ thank_you_facebook_count
+                                            }}</span></td>
+                                    <td>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="thankyou_active"
+                                                {%if shop_select.sms.thank_you%}{%if
+                                                shop_select.sms.thank_you.status%}checked{%endif%}{%endif%}>
+                                            <label class="custom-control-label" for="thankyou_active"></label>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <a href="/marketing_automation/{{ shop_id_select }}/config/thank_you">
+                                            <span class="fe fe-edit mr-4" data-toggle="tooltip"
+                                                title="Chỉnh sửa"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+</div>
+
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id_select" />
+
+{% endblock %}
+{% block js %}
+<script src="/static/js/html5sortable.min.js"></script>
+<script src="/static/js/smart_message.js"></script>
+
+{% endblock %}

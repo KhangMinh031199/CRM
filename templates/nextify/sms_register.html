@@ -1,0 +1,314 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                        {{ gettext("Ung_dung") }}
+                    </h6>
+
+                    <!-- Title -->
+                    <h1 class="header-title">
+                        Đăng ký SMS
+                    </h1>
+
+                </div>
+            </div> <!-- / .row -->
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="header-title">
+                        {{ gettext("Cau_hinh") }}
+                    </h1>
+                </div>
+                <div class="card-body">
+                    <!-- Heading -->
+
+                    <!-- Form -->
+
+                    <form id="register_form" method="post" action="/apps/sms_register">
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        {% if brandname and brandname.status %}
+                        <div class="form-group">
+                            <label class="c-field__label">Tình trạng: <span class="badge badge-soft-danger">
+                                {% if brandname and brandname.status == "pending" %}
+                                Đang xử lý
+                                {% else %}
+                                Hoàn thành
+                                {% endif%}
+                            </span></label>
+                        </div>
+                        {% endif %}
+                        <div class="form-group">
+                            <label for="photo">Giấy đăng ký kinh doanh: (<span>
+                                    <font color="red">*</font>
+                                </span> {{ gettext("bat_buoc") }})</label>
+                            <p class="help-block">
+                                <img id="img_new_photo" width="200"
+                                src="{% if brandname and brandname.photo %}//files.nextify.vn/{{ brandname.photo }}{% endif %}">
+                            </p>
+                            <!-- <input type="file" class="imgInp" id="photo" name="photo"> -->
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input"  name="photo" id="photo">
+                                <label class="custom-file-label">{{ gettext('Click_chon_file') }}</label>
+                              </div>
+                        </div>
+                        <script nonce="{{ csp_nonce() }}">
+                            $(document).ready(function () {
+                                function readURL(input, input_view) {
+                                    if (input.files && input.files[0]) {
+                                        var reader = new FileReader();
+                                        var view_id = '#' + input_view;
+                                        reader.onload = function (e) {
+                                            $(view_id).attr('src', e.target.result);
+                                        };
+
+                                        reader.readAsDataURL(input.files[0]);
+                                    }
+                                }
+
+                                // $("#photo").change(function () {
+                                //     readURL(this, 'view_logo');
+                                // });
+
+                                function validate(photo) {
+                                    var file_size = $(photo)[0].files[0].size;
+                                    var file = $(photo).val();
+                                    var exts = ['jpg', 'png', 'jpeg'];
+                                    if (file) {
+                                        var get_ext = file.split('.');
+                                        get_ext = get_ext.reverse();
+                                        if ($.inArray(get_ext[0].toLowerCase(), exts) > -1) {
+                                            if (file_size > 3670016) {
+                                                return "big_file";
+                                            } else {
+                                                return true;
+                                            }
+                                        } else {
+                                            return false;
+                                        }
+                                    }
+
+                                }
+
+                                $("#photo").change(function () {
+                                    var validate_photo = validate(this);
+                                    if (validate_photo == true) {
+                                        swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                                        $('#img_new_photo').show();
+                                        readURL(this, 'img_new_photo');
+                                    } else {
+                                        if (validate_photo == "big_file") {
+                                            swal('{{ gettext("File_co_kich_thuoc_qua_lon") }}!', '', 'error');
+                                            return false
+                                        };
+                                        swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                                        $('#photo').val('');
+                                        $('#img_new_photo').hide();
+
+                                    }
+                                });
+                            });
+                        </script>
+
+                        <div class="form-group">
+                            <label class="c-field__label">Tên website/dịch vụ: (<span>
+                                    <font color="red">*</font>
+                                </span> {{ gettext("bat_buoc") }})</label>
+                            <input type="text" class="form-control" {% if brandname %}value="{{ brandname.website }}"{% endif %} name="website_name" />
+                        </div>
+                        <div class="form-group">
+                            <label class="c-field__label">Tên công ty: (<span>
+                                <font color="red">*</font>
+                            </span> {{ gettext("bat_buoc") }})</label>
+                            <input type="text" class="form-control" {% if brandname %}value="{{ brandname.company_name }}"{% endif %} name="company_name" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="c-field__label">Công văn ủy quyền chạy thông tin dịch vụ: </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="c-field__label">Brandname khai báo: (<span>
+                                <font color="red">*</font>
+                            </span> {{ gettext("bat_buoc") }})</label>
+                            <input type="text" class="form-control" {% if brandname %}value="{{ brandname.brandname }}"{% endif %} name="brandname" />
+                        </div>
+                        <div class="form-group">
+                            <label class="c-field__label">Loại tin nhắn: (<span>
+                                <font color="red">*</font>
+                            </span> {{ gettext("bat_buoc") }})</label>
+                            <div class="form-group">
+
+                                <div class="c-choice c-choice--checkbox">
+                                    <input class="c-choice__input" id="custom_mess" name="custom_mess" type="checkbox"
+                                    {% if brandname and brandname.type_message.custom_mess|string == "True" %}checked{% endif %}>
+                                    <label class="c-choice__label" for="checkbox1">Tin nhắn CSKH</label>
+                                </div>
+
+                                <div class="c-choice c-choice--checkbox">
+                                    <input class="c-choice__input" id="info_mess" name="info_mess" type="checkbox"
+                                    {% if brandname and brandname.type_message.info_mess|string == "True" %}checked{% endif %}>
+                                    <label class="c-choice__label" for="checkbox2">Tin nhắn thông tin nội bộ</label>
+                                </div>
+
+                                <div class="c-choice c-choice--checkbox">
+                                    <input class="c-choice__input" id="ads_mess" name="ads_mess" type="checkbox"
+                                    {% if brandname and brandname.type_message.ads_mess|string == "True" %}checked{% endif %}>
+                                    <label class="c-choice__label" for="checkbox3">Tin nhắn quảng cáo</label>
+                                </div>
+
+                                <div class="c-choice c-choice--checkbox">
+                                    <input class="c-choice__input" id="lba_ads_mess" name="lba_ads_mess"type="checkbox"
+                                    {% if brandname and brandname.type_message.lba_ads_mess|string == "True" %}checked{% endif %}>
+                                    <label class="c-choice__label" for="checkbox4">Tin nhắn quảng cáo LBA</label>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="c-field__label">Lĩnh vực: (<span>
+                                <font color="red">*</font>
+                            </span> {{ gettext("bat_buoc") }})</label>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" type="checkbox" name="education" id="education"
+                                {% if brandname and brandname.feilds.education|string == "True" %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox1">
+                                    Y tế, giáo dục, hành chính sự nghiệp phục vụ cộng đồng
+                                </label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" type="checkbox" name="bank" id="bank"
+                                {% if brandname and brandname.feilds.bank|string == "True" %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox2">
+                                    Ngân hàng, bảo hiểm, chứng khoán, tài chính
+                                </label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" type="checkbox" name="elec" id="elec"
+                                {% if brandname and brandname.feilds.elec|string == "True" %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox3">
+                                    Ngành điện, nước
+                                </label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" type="checkbox" name="economic" id="economic"
+                                {% if brandname and brandname.feilds.economic|string == "True" %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox4">
+                                    Ngành TMĐT
+                                </label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" type="checkbox" name="estate" id="estate"
+                                {% if brandname and brandname.feilds.estate|string == "True" %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox5">
+                                    Ngành Bất động sản
+                                </label>
+                            </div>
+
+                            <div class="c-choice c-choice--checkbox">
+                                <input class="c-choice__input" type="checkbox" name="diff" id="diff"
+                                {% if brandname and brandname.feilds.diff|string == "True" %}checked{% endif %}>
+                                <label class="c-choice__label" for="checkbox6">
+                                    Lĩnh vực khác (nêu rõ lĩnh vực):....
+                                </label>
+                            </div>
+
+                        </div>
+                        
+                    </form>
+                </div>
+
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col">
+
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-lg btn-block btn-primary" id="save_id">
+                                {{ gettext("Luu_thong_tin") }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div> <!-- / .row -->
+</div>
+
+
+{% endblock %}
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+       
+        $("#save_id").click(function (e) {
+            e.preventDefault();
+            var website_name = $("input[name='website_name']").val();
+            if (website_name.length == 0) {
+                swal('{{ gettext("Chua_nhap_website_name") }}', '', 'error');
+                return false
+            }
+            var company_name = $("input[name='company_name']").val();
+            if (company_name.length == 0) {
+                swal('{{ gettext("Chua_nhap_company_name") }}', '', 'error');
+                return false
+            }
+            var brandname = $("input[name='brandname']").val();
+            if (brandname.length == 0) {
+                swal('{{ gettext("Chua_nhap_brandname") }}', '', 'error');
+                return false
+            }
+            var form = $('#register_form')[0];
+            var form_data = new FormData(form);
+            $.ajax({
+                url: $("#register_form").attr("action"),
+                type: $("#register_form").attr("method"),
+                data: form_data,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    var returnedData = JSON.parse(response);
+                    if ('error' in returnedData) {
+                        swal(returnedData['error'], " ", "error");
+                        return false;
+                    }
+                    else {
+                        swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+                        location.reload();
+                    }
+
+                },
+                error: function (xhr, desc, err) {
+                    swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+
+
+
+                }
+            });
+
+            return false;
+        })
+
+    });
+</script>
+{% endblock %}

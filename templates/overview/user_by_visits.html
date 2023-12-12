@@ -1,0 +1,47 @@
+<div class="chart">
+    <canvas id="visitsChart" class="chart-canvas"></canvas>
+  </div>
+  <input type="hidden" value="{{label}}" id="label_data_visit" />
+  <input type="hidden" value="{{dataset}}" id="dataset_data_visit" />
+  <script>
+    var label_data_visit = document.getElementById("label_data_visit").value;
+    var dataset_data_visit = document.getElementById("dataset_data_visit").value;
+    var label_data_visit = JSON.parse(label_data_visit);
+    var dataset_data_visit = JSON.parse(dataset_data_visit);
+    var config = {
+        type: 'horizontalBar',
+        data: {
+            labels: label_data_visit,
+            datasets: [{
+                backgroundColor: "rgba(235, 29, 29, 0.7)",
+                data: dataset_data_visit,
+            }]
+        },
+        options: {
+            // responsive: true,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                mode: 'single',
+                callbacks: {
+                    label: function(tooltipItems, data) {
+                        return  tooltipItems.xLabel + ' khách hàng';
+                    }
+                }
+            }
+        }
+    };
+    var ctx = document.getElementById("visitsChart").getContext("2d");
+    new Chart(ctx, config);
+  </script>

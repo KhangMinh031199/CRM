@@ -1,0 +1,20 @@
+<table class="table table-hover table-striped">
+                        <thead>
+                        <th>Sale ID</th>
+                        <th>{{ gettext("Tong_tien") }}</th>
+                        <th>{{ gettext("Dia_diem") }}</th>
+                        <th>{{ gettext("Ngay_mua") }}</th>
+                        </thead>
+                        <tbody>
+                        {% for sale in user_sales %}
+                        <tr>
+                            <td>{{sale.sale_id}}</td>
+                        <td>{{sale.total|format_price}}</td>
+                        <td>{{sale.shop_name}}</td>
+                        <td>{{sale.update_pos|human_time}}</td>
+                        </tr>
+                         {% endfor %}
+                         </tbody>
+                    </table>
+ <input type="hidden" id="sales_page" value="{{page}}"/>
+ <input type="hidden" id="sales_total_page" value="{{total_page}}"/>

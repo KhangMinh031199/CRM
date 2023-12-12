@@ -1,0 +1,1342 @@
+{% extends "v2/base.html" %}
+
+{% block right_content %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-white">
+        <div class="panel-heading clearfix">
+          <h3 class="panel-title breadcrumb-header">Chăm sóc tự động chuỗi</h3>
+        </div>
+        <div class="panel-body">
+          <div class="table-responsive">
+            {% if error %}
+              <div class="alert alert-danger">
+                {{ error | safe }}
+              </div>
+            {% endif %} {% if message %}
+            <div class="alert alert-success">
+              {{ message | safe }}
+            </div>
+          {% endif %}
+            <table class="table">
+              <thead>
+              <tr>
+                <th>Tập khách hàng</th>
+                <th></th>
+                <th>Số lượng</th>
+                <th>SMS</th>
+                <th>Zalo</th>
+                <th>Coupon</th>
+                <th>Kích hoạt</th>
+                <th>Chi tiết</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+
+                <th scope="row" title="Khách đến lần đầu">Khách đến lần đầu
+                </th>
+                <td>
+                  <div class="help-tip">
+                    <p>Khách lần đầu ghé thăm địa điểm, hệ thống tự gửi tin nhắn chào mừng sau 3 phút.</p>
+                  </div>
+                </td>
+
+                <td></td>
+                <td><input type="checkbox" disabled="disabled"
+                           name="active_welcome"
+                           style="margin-left: 5px;margin-top:10px"
+                           {% if merchant.sms.welcome %}{% if merchant.sms.welcome.active %}checked
+                           {% endif %}{% endif %}></td>
+                <td><input type="checkbox" disabled="disabled"
+                           name="zalo_welcome"
+                           style="margin-left: 5px;margin-top:10px"
+                           {% if merchant.sms.welcome %}{% if merchant.sms.welcome.zalo %}checked
+                           {% endif %}{% endif %}></td>
+                <td></td>
+                <td><input type="checkbox" disabled="disabled" {% if
+                merchant.sms.welcome %}{% if merchant.sms.welcome.enable %}checked
+                {% endif %}{% endif %}/></td>
+                <td><a href="#" data-target="#first_time"
+                       data-toggle="modal"><span
+                  class="menu-icon icon-pencil"></span></a></td>
+              </tr>
+              <tr>
+
+                <th scope="row">Khách quay lại</th>
+                <td>
+                  <div class="help-tip">
+                    <p>Khách quay lại địa điểm, tuỳ chọn số lần quay lại, tin nhắn tự động gửi sau khi khách đăng nhập WIFI.</p>
+                  </div>
+                </td>
+
+                <td></td>
+                <td><input type="checkbox" disabled="disabled"
+                           style="margin-left: 5px;margin-top:10px"
+                           name="active_returning"
+                           {% if merchant.sms.return %}{% if merchant.sms.return.active %}checked
+                           {% endif %}{% endif %}></td>
+                <td><input type="checkbox" disabled="disabled"
+                           style="margin-left: 5px;margin-top:10px"
+                           name="zalo_return"
+                           {% if merchant.sms.return %}{% if merchant.sms.return.zalo %}checked
+                           {% endif %}{% endif %}></td>
+                <td></td>
+                <td><input type="checkbox" disabled="disabled"
+                           name="enable_return"
+                           {% if merchant.sms.return %}{% if merchant.sms.return.enable %}checked
+                           {% endif %}{% endif %}></td>
+                <td><a href="#" data-target="#return" data-toggle="modal"><span
+                  class="menu-icon icon-pencil"></span></a></td>
+              </tr>
+              <tr>
+
+                <th scope="row">Khách thân thiết</th>
+                <td>
+                  <div class="help-tip">
+                    <p>Khách hàng có số lượt đến từ X -> Y lần trong 31 ngày gần nhất.</p>
+                  </div>
+                </td>
+
+                <td></td>
+                <td><input type="checkbox" disabled="disabled"
+                           name="active_regular_cus"
+                           style="margin-left: 5px;margin-top:10px"
+                           {% if merchant.sms.loyal %}{% if merchant.sms.loyal.active %}checked
+                           {% endif %}{% endif %}></td>
+                <td><input type="checkbox" disabled="disabled"
+                           name="zalo_loyal"
+                           style="margin-left: 5px;margin-top:10px"
+                           {% if merchant.sms.loyal %}{% if merchant.sms.loyal.zalo %}checked
+                           {% endif %}{% endif %}></td>
+                <td></td>
+                <td><input type="checkbox" disabled="disabled"
+                           {% if merchant.sms.loyal %}{% if merchant.sms.loyal.enable %}checked
+                           {% endif %}{% endif %}></td>
+                <td><a href="#" data-target="#loyal" data-toggle="modal"><span
+                  class="menu-icon icon-pencil"></span></a></td>
+              </tr>
+              <tr>
+
+                <th scope="row">Khách lâu chưa quay lại</th>
+                <td>
+                  <div class="help-tip">
+                    <p>Khách hàng đã  X ngày chưa quay lại địa điếm, hệ thống tự động tìm và gửi để mời khách quay lại.</p>
+                  </div>
+               </td>
+
+                <td></td>
+                <td><input type="checkbox" disabled="disabled"
+                           style="margin-left: 5px;margin-top:10px"
+                           {% if merchant.sms.lost %}{% if merchant.sms.lost.active %}checked
+                           {% endif %}{% endif %}/></td>
+                <td><input type="checkbox" disabled="disabled"
+                           style="margin-left: 5px;margin-top:10px"
+                           {% if merchant.sms.lost %}{% if merchant.sms.lost.zalo %}checked
+                           {% endif %}{% endif %}></td>
+                <td></td>
+                <td><input type="checkbox" disabled="disabled"
+                           name="enable_lost" style="margin-top:10px"
+                           {% if merchant.sms.lost %}{% if merchant.sms.lost.enable %}checked
+                           {% endif %}{% endif %}></td>
+                <td><a href="#" data-target="#lost_customers"
+                       data-toggle="modal"><span
+                  class="menu-icon icon-pencil"></span></a></td>
+              </tr>
+              <tr>
+
+                <th scope="row">Chúc mừng sinh nhật</th>
+                <td>
+                  <div class="help-tip">
+                    <p>Tin nhắn chúc mừng sinh nhật khi khách đến địa điểm vào ngày sinh nhật, tuỳ chọn tự động nhắc trước sinh nhật X ngày.</p>
+                  </div>
+                </td>
+
+                <td></td>
+                <td><input type="checkbox" disabled="disabled"
+                           style="margin-left: 5px;margin-top:10px"
+                           name="active_birthday"
+                           {% if merchant.sms.happy_birthday %}{% if merchant.sms.happy_birthday.active %}checked
+                           {% endif %}{% endif %}/></td>
+                <td><input type="checkbox" disabled="disabled"
+                           style="margin-left: 5px;margin-top:10px"
+                           name="zalo_happy_birthday"
+                           {% if merchant.sms.happy_birthday %}{% if merchant.sms.happy_birthday.zalo %}checked
+                           {% endif %}{% endif %}></td>
+                <td></td>
+                <td><input type="checkbox" disabled="disabled"
+                           name="enable_birthday"
+                           {% if  merchant.sms.happy_birthday %}{% if  merchant.sms.happy_birthday.enable %}checked
+                           {% endif %}{% endif %}></td>
+                <td><a href="#" data-target="#birthday"
+                       data-toggle="modal"><span
+                  class="menu-icon icon-pencil"></span></a></td>
+              </tr>
+              <tr>
+
+                <th scope="row">Khuyến mãi chung</th>
+                <td>
+                  <div class="help-tip">
+                    <p>Các chương trình khuyến mãi chung đang có, gửi tới tất cả khách hàng sau khi kết nối WIFI trong 3 phút.</p>
+                  </div>
+                </td>
+
+                <td></td>
+                <td><input type="checkbox" disabled="disabled"
+                           name="active_announ"
+                           style="margin-left: 5px;margin-top:10px"
+                           {% if merchant.sms.announcement %}{% if merchant.sms.announcement.active %}checked
+                           {% endif %}{% endif %}></td>
+                <td><input type="checkbox" disabled="disabled"
+                           name="zalo_announcement"
+                           style="margin-left: 5px;margin-top:10px"
+                           {% if merchant.sms.announcement %}{% if merchant.sms.announcement.zalo %}checked
+                           {% endif %}{% endif %}></td>
+                <td></td>
+                <td><input type="checkbox" disabled="disabled"
+                           name="enable_announ" style="margin-top:10px"
+                           {% if  merchant.sms.announcement %}{% if  merchant.sms.announcement.enable %}checked
+                           {% endif %}{% endif %}></td>
+                <td><a href="#" data-target="#anoun" data-toggle="modal"><span
+                  class="menu-icon icon-pencil"></span></a></td>
+              </tr>
+
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal fade bs-example-modal-lg" id="first_time" tabindex="-1"
+       role="dialog"
+       aria-labelledby="myModalLabel" aria-hidden="true"
+       style="display: none;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"
+                  aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h3 class="modal-title" id="myModalLabel">Khách đến lần đầu</h3>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal m-t-xs"
+                action="/auto_marketing_hq/welcome"
+                enctype="multipart/form-data" id="welcome_form" method="post">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <div class="form-group">
+              <label>Thông điệp : </label>
+              <textarea class="form-control form-input"
+                        style="margin-top:10px;font-size: 16px;"
+                        id="welcome-sms"
+                        name="welcome" rows="2"
+                        title="SMS sẽ được gửi sau khoảng 1 phút khách hàng kết nối wifi">{% if merchant.sms.welcome %}
+                {{ merchant.sms.welcome.mess | default('') }}{% endif %}</textarea>
+            </div>
+            <div class="form-group">
+              <label>Chi tiết : </label>
+              <textarea class="form-control form-input"
+                        style="margin-top:10px;font-size: 16px;"
+                        id="welcome-info"
+                        name="info_welcome"
+                        rows="2">{% if merchant.sms.welcome %}
+                {{ merchant.sms.welcome.info | default('') }}{% endif %}</textarea>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="welcome_type_coupon">Loại Coupon:</label>
+                  {% if merchant.sms.welcome %}
+                    {% if merchant.sms.welcome.type_coupon %}
+                      <input type="hidden" id="ex_welcome_type_coupon"
+                             value="{{ merchant.sms.welcome.type_coupon }}"/>
+                    {% endif %}{% endif %}
+                  <select name="welcome_type_coupon"
+                          class="form-control form-input"
+                          style="width: auto" id="welcome_type_coupon">
+                    <option value="no">Không</option>
+                    {% for coup in coupons_type_select %}
+                      <option value="{{ coup._id }}">{{ coup.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>Hạn dùng Coupon:</label>
+                  <input type="text" class="form-control" style="width: 100px"
+                         value="
+
+                           {% if merchant.sms.welcome %}{% if merchant.sms.welcome.expire %}{{ merchant.sms.welcome.expire }}{% endif %}{% endif %}"
+                         name="ex_welcome" placeholder="ngày"/>
+
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label>Giới tính:</label>
+                {% if merchant.sms.welcome %}
+                {% if merchant.sms.welcome.gender %}
+                <input type="hidden" value="{{ merchant.sms.welcome.gender }}"
+                       id="ex_welcome_gender"/>
+                {% endif %}
+                {% endif %}
+                <select class="form-control" id="welcome_gender"
+                        name="welcome_gender"
+                        style="width: 100%">
+                  <option value="all">Tất cả</option>
+                  <option value="0">Chưa xác định</option>
+                  <option value="1">Nam</option>
+                  <option value="2">Nữ</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                {% if loyal_settings and loyal_rank|length > 0 %}
+                  {% if merchant.sms.welcome %}
+                {% if merchant.sms.welcome.ranks %}
+                <input type="hidden" value="{{ merchant.sms.welcome.ranks }}"
+                       id="ex_welcome_ranks"/>
+                {% endif %}
+                {% endif %}
+                  <div class="form-group">
+                    <label>Hạng thẻ </label>
+                    <select name="welcome_ranks" class="form-control
+                        form-input" style="width: auto" id="welcome_ranks">
+                      <option value="all">Tất cả</option>
+                      {% for rank in loyal_rank %}
+                        <option
+                          value="{{ rank.customer_point }}">{{ rank.customer_type }}</option>
+                      {% endfor %}
+                    </select>
+
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="enable_welcome"
+                                                      {% if merchant.sms.welcome %}{% if merchant.sms.welcome.enable %}checked
+                                                      {% endif %}{% endif %}></span>
+                    </div>
+                    Kích hoạt
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="active_welcome"
+                                                      {% if merchant.sms.welcome %}{% if merchant.sms.welcome.active %}checked
+                                                      {% endif %}{% endif %}></span>
+                    </div>
+                    SMS
+                  </label>
+                </div>
+
+              </div>
+              <div class="col-md-4">
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="zalo_welcome"
+                                                      {% if merchant.sms.welcome %}{% if merchant.sms.welcome.zalo %}checked
+                                                      {% endif %}{% endif %}></span>
+                    </div>
+                    ZALO
+                  </label>
+                </div>
+
+              </div>
+            </div>
+
+
+          </form>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button type="button" id="save_welcome" class="btn btn-success"
+                  style="color:#ffffff">Lưu
+            lại
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade bs-example-modal-lg" id="return" tabindex="-1"
+       role="dialog"
+       aria-labelledby="myModalLabel" aria-hidden="true"
+       style="display: none;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"
+                  aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h3 class="modal-title" id="myModalLabel">Khách quay lại</h3>
+        </div>
+        <div class="modal-body">
+
+          <form class="form-horizontal m-t-xs"
+                action="/auto_marketing_hq/return"
+                enctype="multipart/form-data" id="return_form" method="post">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-6">
+                  <label>Lần thứ: </label>
+                  <input type="text" class="form-control" style="width: 100px"
+                         value="
+                           {% if merchant.sms.return %}{% if merchant.sms.return.count %}{{ merchant.sms.return.count }}{% endif %}{% endif %}"
+                         name="return_count"/>
+                </div>
+                <div class="col-md-6">
+                  <label>Đến: </label>
+                  <input type="text" class="form-control" style="width: 100px"
+                         value="
+                           {% if merchant.sms.return %}{% if merchant.sms.return.count_max %}{{ merchant.sms.return.count_max }}{% endif %}{% endif %}"
+                         name="return_count_max"/>
+                </div>
+
+              </div>
+
+            </div>
+            <div class="form-group">
+              <label>Thông điệp : </label>
+              <textarea class="form-control form-input"
+                        style="margin-top:10px;font-size: 16px;"
+                        id="returning-sms" name="returning"
+                        rows="2">{% if merchant.sms.return %}
+                {{ merchant.sms.return.mess | default('') }}{% endif %}</textarea>
+            </div>
+            <div class="form-group">
+              <label>Chi tiết : </label>
+              <textarea class="form-control form-input"
+                        style="margin-top:10px;font-size: 16px;"
+                        name="info_returning"
+                        rows="2">{% if merchant.sms.return %}
+                {{ merchant.sms.return.info | default('') }}{% endif %}</textarea>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="welcome_type_coupon">Loại Coupon:</label>
+                  {% if merchant.sms.return %}
+                    {% if merchant.sms.return.type_coupon %}
+                      <input type="hidden" id="ex_returning_type_coupon"
+                             value="{{ merchant.sms.return.type_coupon }}"/>
+                    {% endif %}{% endif %}
+                  <select name="returning_type_coupon"
+                          class="form-control form-input"
+                          style="width: auto" id="returning_type_coupon">
+                    <option value="no">Không</option>
+                    {% for coup in coupons_type_select %}
+                      <option value="{{ coup._id }}">{{ coup.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>Hạn dùng Coupon (ngày):</label>
+                  <input type="text" class="form-control" style="width: 100px"
+                         value="
+                           {% if merchant.sms.return %}{% if merchant.sms.return.expire %}{{ merchant.sms.return.expire }}{% endif %}{% endif %}"
+                         name="ex_returning" placeholder="ngày"/>
+
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label>Giới tính:</label>
+                {% if merchant.sms.return %}
+                {% if merchant.sms.return.gender %}
+                <input type="hidden" value="{{ merchant.sms.return.gender }}"
+                       id="ex_return_gender"/>
+                {% endif %}
+                {% endif %}
+                <select class="form-control" id="return_gender"
+                        name="return_gender"
+                        style="width: 100%">
+                  <option value="all">Tất cả</option>
+                  <option value="0">Chưa xác định</option>
+                  <option value="1">Nam</option>
+                  <option value="2">Nữ</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                {% if loyal_settings and loyal_rank|length > 0 %}
+                   {% if merchant.sms.return %}
+                {% if merchant.sms.return.ranks %}
+                <input type="hidden" value="{{ merchant.sms.return.ranks }}"
+                       id="ex_return_ranks"/>
+                {% endif %}
+                {% endif %}
+                  <div class="form-group">
+                    <label>Hạng thẻ </label>
+                    <select name="return_ranks" class="form-control
+                        form-input" style="width: auto" id="return_ranks">
+                      <option value="all">Tất cả</option>
+                      {% for rank in loyal_rank %}
+                        <option
+                          value="{{ rank.customer_point }}">{{ rank.customer_type }}</option>
+                      {% endfor %}
+                    </select>
+
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="enable_return"
+                                                      {% if merchant.sms.return %}{% if merchant.sms.return.enable %}checked
+                                                      {% endif %}{% endif %}></span>
+                    </div>
+                    Kích hoạt
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="active_returning"
+                                                      {% if merchant.sms.return %}{% if merchant.sms.return.active %}checked
+                                                      {% endif %}{% endif %}></span>
+                    </div>
+                    SMS
+                  </label>
+                </div>
+
+              </div>
+              <div class="col-md-4">
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="zalo_return"
+                                                      {% if merchant.sms.return %}{% if merchant.sms.return.zalo %}checked
+                                                      {% endif %}{% endif %}></span>
+                    </div>
+                    ZALO
+                  </label>
+                </div>
+
+              </div>
+            </div>
+
+
+          </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button type="button" id="save_return" class="btn
+          btn-success" style="color:#ffffff">Lưu lại
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade bs-example-modal-lg" id="loyal" tabindex="-1"
+       role="dialog"
+       aria-labelledby="myModalLabel" aria-hidden="true"
+       style="display: none;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"
+                  aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h3 class="modal-title" id="myModalLabel">Khách hàng thân thiết</h3>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal m-t-xs"
+                action="/auto_marketing_hq/loyal"
+                enctype="multipart/form-data" id="loyal_form" method="post">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-6">
+                  <label>Lần thứ: </label>
+                  <input type="text" class="form-control" style="width: 100px"
+                         value="
+                           {% if merchant.sms.loyal %}{% if merchant.sms.loyal.count %}{{ merchant.sms.loyal.count }}{% endif %}{% endif %}"
+                         name="loyal_count"/>
+                </div>
+                <div class="col-md-6">
+                  <label>Đến: </label>
+                  <input type="text" class="form-control" style="width: 100px"
+                         value="
+                           {% if merchant.sms.loyal %}{% if merchant.sms.loyal.count_max %}{{ merchant.sms.loyal.count_max }}{% endif %}{% endif %}"
+                         name="loyal_count_max"/>
+                </div>
+
+              </div>
+
+
+            </div>
+            <div class="form-group">
+              <label>Thông điệp : </label>
+              <textarea class="form-control form-input"
+                        style="margin-top:10px;font-size: 16px;"
+                        id="regular-customer-sms"
+                        name="regular_customer" rows="2"
+                        title="SMS sẽ được gửi sau khoảng 1 phút khách hàng kết nối wifi"
+                        placeholder="Ví dụ: Chào {{ name }}, đừng quên đọc số điện thoại khi thanh toán để được giảm 10% cho khách hàng thân thiết nhé.">{% if merchant.sms.loyal %}
+                {{ merchant.sms.loyal.mess | default('') }}{% endif %}</textarea>
+            </div>
+            <div class="form-group">
+              <label>Chi tiết : </label>
+              <textarea class="form-control form-input"
+                        style="margin-top:10px;font-size: 16px;"
+                        name="info_regular_customer"
+                        rows="2">{% if merchant.sms.loyal %}
+                {{ merchant.sms.loyal.info | default('') }}{% endif %}</textarea>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="welcome_type_coupon">Loại Coupon:</label>
+                  {% if merchant.sms.loyal %}
+                    {% if merchant.sms.loyal.type_coupon %}
+                      <input type="hidden" id="ex_regular_customer_type_coupon"
+                             value="{{ merchant.sms.loyal.type_coupon }}"/>
+                    {% endif %}{% endif %}
+                  <select name="regular_customer_type_coupon"
+                          class="form-control form-input"
+                          style="width: auto"
+                          id="regular_customer_type_coupon">
+                    <option value="no">Không</option>
+                    {% for coup in coupons_type_select %}
+                      <option value="{{ coup._id }}">{{ coup.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>Hạn dùng Coupon (theo ngày nếu có):</label>
+                  <input type="text" class="form-control" style="width: 100px"
+                         value="
+                           {% if merchant.sms.loyal %}{% if merchant.sms.loyal.expire %}{{ merchant.sms.loyal.expire }}{% endif %}{% endif %}"
+                         name="ex_regular_customer" placeholder="ngày"/>
+
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label>Giới tính:</label>
+                 {% if merchant.sms.loyal %}
+                {% if merchant.sms.loyal.gender %}
+                <input type="hidden" value="{{ merchant.sms.loyal.gender }}"
+                       id="ex_loyal_gender"/>
+                {% endif %}
+                {% endif %}
+                <select class="form-control" id="loyal_gender"
+                        name="loyal_gender"
+                        style="width: 100%">
+                  <option value="all">Tất cả</option>
+                  <option value="0">Chưa xác định</option>
+                  <option value="1">Nam</option>
+                  <option value="2">Nữ</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                {% if loyal_settings and loyal_rank|length > 0 %}
+                   {% if merchant.sms.loyal %}
+                {% if merchant.sms.loyal.ranks %}
+                <input type="hidden" value="{{ merchant.sms.loyal.ranks }}"
+                       id="ex_loyal_ranks"/>
+                {% endif %}
+                {% endif %}
+                  <div class="form-group">
+                    <label>Hạng thẻ </label>
+                    <select name="loyal_ranks" class="form-control
+                        form-input" style="width: auto" id="loyal_ranks">
+                      <option value="all">Tất cả</option>
+                      {% for rank in loyal_rank %}
+                        <option
+                          value="{{ rank.customer_point }}">{{ rank.customer_type }}</option>
+                      {% endfor %}
+                    </select>
+
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span> <input type="checkbox"
+                                                       name="enable_loyal"
+                                                       style="margin-top:10px"
+                                                       {% if merchant.sms.loyal %}{% if merchant.sms.loyal.enable %}checked
+                                                       {% endif %}{% endif %}></span>
+                    </div>
+                    Kích hoạt
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="active_regular_cus"
+                                                      style="margin-left: 5px;margin-top:10px"
+                                                      {% if merchant.sms.loyal %}{% if merchant.sms.loyal.active %}checked
+                                                      {% endif %}{% endif %}/></span>
+                    </div>
+                    SMS
+                  </label>
+                </div>
+
+              </div>
+              <div class="col-md-4">
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="zalo_loyal"
+                                                      style="margin-left: 5px;margin-top:10px"
+                                                      {% if merchant.sms.loyal %}{% if merchant.sms.loyal.zalo %}checked
+                                                      {% endif %}{% endif %}></span>
+                    </div>
+                    ZALO
+                  </label>
+                </div>
+
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button type="button" id="save_loyal" class="btn btn-success" style="color:#ffffff">Lưu
+            lại
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade bs-example-modal-lg" id="lost_customers" tabindex="-1"
+       role="dialog"
+       aria-labelledby="myModalLabel" aria-hidden="true"
+       style="display: none;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"
+                  aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h3 class="modal-title" id="myModalLabel">Khách lâu chưa quay
+            lại</h3>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal m-t-xs" action="/auto_marketing_hq/lost"
+                enctype="multipart/form-data" id="lost_form" method="post">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <div class="form-group">
+
+              <label>Số ngày : </label>
+              <input type="text" class="form-control" style="width: 100px"
+                     value="
+
+                       {% if merchant.sms.lost %}{% if merchant.sms.lost.count %}{{ merchant.sms.lost.count }}{% endif %}{% endif %}"
+                     name="lost_count"/>
+            </div>
+            <div class="form-group">
+              <label>Thông điệp : </label>
+              <textarea class="form-control form-input"
+                        style="margin-top:10px;font-size: 16px;" id="30day-sms"
+                        name="one_month" rows="2"
+                        placeholder="Ví dụ: Hi {{ name }}, đã lâu bạn chưa quay lại, chúng tôi gửi tặng bạn coupon OFF20 cho lần ghé thăm tới. Hẹn gặp lại bạn.">{% if merchant.sms.lost %}
+                {{ merchant.sms.lost.mess| default('') }}{% endif %}</textarea>
+            </div>
+            <div class="form-group">
+              <label>Chi tiết : </label>
+              <textarea class="form-control form-input"
+                        style="margin-top:10px;font-size: 16px;"
+                        name="info_one_month"
+                        rows="2">{% if merchant.sms.lost %}
+                {{ merchant.sms.lost.info| default('') }}{% endif %}</textarea></textarea>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="welcome_type_coupon">Loại Coupon:</label>
+                  {% if merchant.sms.lost %}
+                    {% if merchant.sms.lost.type_coupon %}
+                      <input type="hidden" id="ex_one_month_type_coupon"
+                             value="{{ merchant.sms.lost.type_coupon }}"/>
+                    {% endif %}{% endif %}
+                  <select name="one_month_type_coupon"
+                          class="form-control form-input"
+                          style="width: auto" id="one_month_type_coupon">
+                    <option value="no">Không</option>
+                    {% for coup in coupons_type_select %}
+                      <option value="{{ coup._id }}">{{ coup.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>Hạn dùng Coupon (theo ngày nếu có):</label>
+                  <input type="text" class="form-control" style="width: 100px"
+                         value="
+                           {% if merchant.sms.lost %}{% if merchant.sms.lost.expire %}{{ merchant.sms.lost.expire }}{% endif %}{% endif %}"
+                         name="ex_one_month" placeholder="ngày"/>
+
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label>Giới tính:</label>
+                  {% if merchant.sms.lost %}
+                {% if merchant.sms.lost.gender %}
+                <input type="hidden" value="{{ merchant.sms.lost.gender }}"
+                       id="ex_lost_gender"/>
+                {% endif %}
+                {% endif %}
+                <select class="form-control" id="lost_gender"
+                        name="lost_gender"
+                        style="width: 100%">
+                  <option value="all">Tất cả</option>
+                  <option value="0">Chưa xác định</option>
+                  <option value="1">Nam</option>
+                  <option value="2">Nữ</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                {% if loyal_settings and loyal_rank|length > 0 %}
+                    {% if merchant.sms.lost %}
+                {% if merchant.sms.lost.ranks %}
+                <input type="hidden" value="{{ merchant.sms.lost.ranks }}"
+                       id="ex_lost_ranks"/>
+                {% endif %}
+                {% endif %}
+                  <div class="form-group">
+                    <label>Hạng thẻ </label>
+                    <select name="lost_ranks" class="form-control
+                        form-input" style="width: auto" id="lost_ranks">
+                      <option value="all">Tất cả</option>
+                      {% for rank in loyal_rank %}
+                        <option
+                          value="{{ rank.customer_point }}">{{ rank.customer_type }}</option>
+                      {% endfor %}
+                    </select>
+
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span> <input type="checkbox"
+                                                       style="margin-top:10px"
+                                                       name="enable_lost"
+                                                       {% if merchant.sms.lost %}{% if merchant.sms.lost.enable %}checked
+                                                       {% endif %}{% endif %}></span>
+                    </div>
+                    Kích hoạt
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="active_one_month"
+                                                      style="margin-left: 5px;margin-top:10px"
+                                                      {% if merchant.sms.lost %}{% if merchant.sms.lost.active %}checked
+                                                      {% endif %}{% endif %}></span>
+                    </div>
+                    SMS
+                  </label>
+                </div>
+
+              </div>
+              <div class="col-md-4">
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="zalo_lost"
+                                                      style="margin-left: 5px;margin-top:10px"
+                                                      {% if merchant.sms.lost %}{% if merchant.sms.lost.zalo %}checked
+                                                      {% endif %}{% endif %}></span>
+                    </div>
+                    ZALO
+                  </label>
+                </div>
+
+              </div>
+            </div>
+
+          </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button type="button" id="save_lost" class="btn btn-success" style="color:#ffffff">Lưu lại
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade bs-example-modal-lg" id="birthday" tabindex="-1"
+       role="dialog"
+       aria-labelledby="myModalLabel" aria-hidden="true"
+       style="display: none;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"
+                  aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h3 class="modal-title" id="myModalLabel">Chúc mừng sinh nhật</h3>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal m-t-xs"
+                action="/auto_marketing_hq/birthday"
+                enctype="multipart/form-data" id="birthday_form" method="post">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <div class="form-group">
+              <label>Thông điệp : </label>
+              <textarea class="form-control" style="margin-top:10px;
+              font-size: 16px;" id="happy-birthday-sms" name="happy_birthday"
+                        rows="2">{% if merchant.sms.happy_birthday %}
+                {{ merchant.sms.happy_birthday.message | default('') }}{% endif %}</textarea>
+            </div>
+            <div class="form-group">
+              <label>Chi tiết : </label>
+              <textarea class="form-control"
+                        style="margin-top:10px;font-size: 16px;"
+                        name="info_birthday"
+                        rows="2">{% if merchant.sms.happy_birthday %}
+                {{ merchant.sms.happy_birthday.info | default('') }}{% endif %}</textarea>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="welcome_type_coupon">Loại Coupon:</label>
+                  {% if merchant.sms.happy_birthday %}
+                    {% if merchant.sms.happy_birthday.type_coupon %}
+                      <input type="hidden" id="ex_happy_birthday_type_coupon"
+                             value="{{ merchant.sms.happy_birthday.type_coupon }}"/>
+                    {% endif %}{% endif %}
+                  <select name="happy_birthday_type_coupon"
+                          class="form-control form-input"
+                          style="width: auto" id="happy_birthday_type_coupon">
+                    <option value="no">Không</option>
+                    {% for coup in coupons_type_select %}
+                      <option value="{{ coup._id }}">{{ coup.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>Hạn dùng Coupon (theo ngày nếu có):</label>
+                  <input type="text" class="form-control" style="width: 100px"
+                         value="
+                           {% if merchant.sms.happy_birthday %}{% if merchant.sms.happy_birthday.expire %}{{ merchant.sms.happy_birthday.expire }}{% endif %}{% endif %}"
+                         name="ex_happy_birthday" placeholder="ngày"/>
+
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label>Giới tính:</label>
+                 {% if merchant.sms.happy_birthday %}
+                {% if merchant.sms.happy_birthday.gender %}
+                <input type="hidden" value="{{ merchant.sms.happy_birthday.gender }}"
+                       id="ex_happy_birthday_gender"/>
+                {% endif %}
+                {% endif %}
+                <select class="form-control" id="happy_birthday_gender"
+                        name="happy_birthday_gender"
+                        style="width: 100%">
+                  <option value="all">Tất cả</option>
+                  <option value="0">Chưa xác định</option>
+                  <option value="1">Nam</option>
+                  <option value="2">Nữ</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                {% if loyal_settings and loyal_rank|length > 0 %}
+                  {% if merchant.sms.happy_birthday %}
+                {% if merchant.sms.happy_birthday.ranks %}
+                <input type="hidden" value="{{ merchant.sms.happy_birthday.ranks }}"
+                       id="ex_happy_birthday_ranks"/>
+                {% endif %}
+                {% endif %}
+                  <div class="form-group">
+                    <label>Hạng thẻ </label>
+                    <select name="happy_birthday_ranks" class="form-control
+                        form-input" style="width: auto"
+                            id="happy_birthday_ranks">
+                      <option value="all">Tất cả</option>
+                      {% for rank in loyal_rank %}
+                        <option
+                          value="{{ rank.customer_point }}">{{ rank.customer_type }}</option>
+                      {% endfor %}
+                    </select>
+
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Gửi tin nhắn trước (ngày): </label>
+
+              <input type="text" class="form-control" style="width: 100px"
+                     value="
+                       {% if merchant.sms.happy_birthday %}{% if merchant.sms.happy_birthday.date_send %}{{ merchant.sms.happy_birthday.date_send }}{% endif %}{% endif %}"
+                     name="bday_date_send"/>
+
+
+            </div>
+
+            <div class="row">
+              <div class="col-md-3">
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="enable_birthday"
+                                                      {% if  merchant.sms.happy_birthday %}{% if  merchant.sms.happy_birthday.enable %}checked
+                                                      {% endif %}{% endif %}></span>
+                    </div>
+                    Kích hoạt
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-3">
+
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="active_birthday"
+                                                      {% if merchant.sms.happy_birthday %}{% if merchant.sms.happy_birthday.active %}checked
+                                                      {% endif %}{% endif %}></span>
+                    </div>
+                    SMS
+                  </label>
+                </div>
+
+              </div>
+              <div class="col-md-3">
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="zalo_happy_birthday"
+                                                      {% if merchant.sms.happy_birthday %}{% if merchant.sms.happy_birthday.zalo %}checked
+                                                      {% endif %}{% endif %}></span>
+                    </div>
+                    ZALO
+                  </label>
+                </div>
+
+              </div>
+              <div class="col-md-3">
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="reminder_bday"
+                                                      {% if merchant.sms.happy_birthday %}{% if merchant.sms.happy_birthday.reminder %}checked
+                                                      {% endif %}{% endif %}></span>
+                    </div>
+                    Nhắc lại ngày sinh nhật
+                  </label>
+                </div>
+              </div>
+
+            </div>
+
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button type="button" id="save_birthday" class="btn btn-success" style="color:#ffffff">Lưu
+            lại
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade bs-example-modal-lg" id="anoun" tabindex="-1"
+       role="dialog"
+       aria-labelledby="myModalLabel" aria-hidden="true"
+       style="display: none;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"
+                  aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h3 class="modal-title" id="myModalLabel">Khuyến mãi chung</h3>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal m-t-xs"
+                action="/auto_marketing_hq/anoun"
+                enctype="multipart/form-data" id="anoun_form" method="post">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <div class="form-group">
+              <label>Thông điệp : </label>
+              <textarea class="form-control form-input"
+                        style="margin-top:10px;font-size: 16px;"
+                        id="announcement"
+                        name="announcement"
+                        rows="2"
+                        placeholder="Ví dụ: Nhân dịp 8/3 chúng tôi giảm giá 10% cho hoá đơn nhóm 3 bạn gái.">{% if merchant.sms.announcement %}
+                {{ merchant.sms.announcement.mess | default('') }}{% endif %}</textarea>
+            </div>
+            <div class="form-group">
+              <label>Chi tiết : </label>
+              <textarea class="form-control form-input"
+                        style="margin-top:10px;font-size: 16px;"
+                        name="info_announcement"
+                        rows="2">{% if merchant.sms.announcement %}
+                {{ merchant.sms.announcement.info| default('') }}{% endif %}</textarea>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="welcome_type_coupon">Loại Coupon:</label>
+                  {% if merchant.sms.announcement %}
+                    {% if merchant.sms.announcement.type_coupon %}
+                      <input type="hidden" id="ex_announ_type_coupon"
+                             value="{{ merchant.sms.announcement.type_coupon }}"/>
+                    {% endif %}{% endif %}
+                  <select name="announ_type_coupon"
+                          class="form-control form-input"
+                          style="width: auto" id="announ_type_coupon">
+                    <option value="no">Không</option>
+                    {% for coup in coupons_type_select %}
+                      <option value="{{ coup._id }}">{{ coup.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>Hạn dùng Coupon (theo ngày nếu có):</label>
+                  <input type="text" class="form-control" style="width: 100px"
+                         value="
+                           {% if merchant.sms.announcement %}{% if merchant.sms.announcement.expire %}{{ merchant.sms.announcement.expire }}{% endif %}{% endif %}"
+                         name="ex_announ" placeholder="ngày"/>
+
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label>Giới tính:</label>
+                 {% if merchant.sms.announcement %}
+                {% if merchant.sms.announcement.gender %}
+                <input type="hidden" value="{{ merchant.sms.announcement.gender }}"
+                       id="ex_anoun_gender"/>
+                {% endif %}
+                {% endif %}
+                <select class="form-control" id="anoun_gender"
+                        name="anoun_gender"
+                        style="width: 100%">
+                  <option value="all">Tất cả</option>
+                  <option value="0">Chưa xác định</option>
+                  <option value="1">Nam</option>
+                  <option value="2">Nữ</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                {% if loyal_settings and loyal_rank|length > 0 %}
+                  {% if merchant.sms.announcement %}
+                {% if merchant.sms.announcement.ranks %}
+                <input type="hidden" value="{{ merchant.sms.announcement.ranks }}"
+                       id="ex_anoun_ranks"/>
+                {% endif %}
+                {% endif %}
+                  <div class="form-group">
+                    <label>Hạng thẻ </label>
+                    <select name="anoun_ranks" class="form-control
+                        form-input" style="width: auto" id="anoun_ranks">
+                      <option value="all">Tất cả</option>
+                      {% for rank in loyal_rank %}
+                        <option
+                          value="{{ rank.customer_point }}">{{ rank.customer_type }}</option>
+                      {% endfor %}
+                    </select>
+
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="enable_announ"
+                                                      style="margin-top:10px"
+                                                      {% if  merchant.sms.announcement %}{% if  merchant.sms.announcement.enable %}checked
+                                                      {% endif %}{% endif %}></span>
+                    </div>
+                    Kích hoạt
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="active_announ"
+                                                      style="margin-left: 5px;margin-top:10px"
+                                                      {% if merchant.sms.announcement %}{% if merchant.sms.announcement.active %}checked
+                                                      {% endif %}{% endif %}></span>
+                    </div>
+                    SMS
+                  </label>
+                </div>
+
+              </div>
+              <div class="col-md-4">
+                <div class="checkbox" style="padding-left: 0px">
+                  <label class="no-s">
+                    <div class="checker"><span><input type="checkbox"
+                                                      name="zalo_announcement"
+                                                      style="margin-left: 5px;margin-top:10px"
+                                                      {% if merchant.sms.announcement %}{% if merchant.sms.announcement.zalo %}checked
+                                                      {% endif %}{% endif %}></span>
+                    </div>
+                    ZALO
+                  </label>
+                </div>
+
+              </div>
+            </div>
+
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button type="button" id="save_anoun" class="btn btn-success" style="color:#ffffff">Lưu
+            lại
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block js %}
+   <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+      $('#marketing').click();
+      $('textarea').each(function () {
+          $(this).val($(this).val().trim());
+        }
+      );
+      $('input').each(function () {
+          $(this).val($(this).val().trim());
+        }
+      );
+      if ($("#ex_welcome_type_coupon").length > 0) {
+        $("#welcome_type_coupon").val($("#ex_welcome_type_coupon").val());
+      }
+      if ($("#ex_returning_type_coupon").length > 0) {
+        $("#returning_type_coupon").val($("#ex_returning_type_coupon").val());
+      }
+      if ($("#ex_regular_customer_type_coupon").length > 0) {
+        $("#regular_customer_type_coupon").val($("#ex_regular_customer_type_coupon").val());
+      }
+      if ($("#ex_one_month_type_coupon").length > 0) {
+        $("#one_month_type_coupon").val($("#ex_one_month_type_coupon").val());
+      }
+      if ($("#ex_happy_birthday_type_coupon").length > 0) {
+        $("#happy_birthday_type_coupon").val($("#ex_happy_birthday_type_coupon").val());
+      }
+      if ($("#ex_announ_type_coupon").length > 0) {
+        $("#announ_type_coupon").val($("#ex_announ_type_coupon").val());
+      }
+      $("#save_welcome").click(function () {
+        $("#welcome_form").submit();
+
+      });
+      $("#save_return").click(function () {
+        $("#return_form").submit();
+      });
+      $("#save_loyal").click(function () {
+        $("#loyal_form").submit();
+      });
+      $("#save_lost").click(function () {
+        $("#lost_form").submit();
+      });
+      $("#save_birthday").click(function () {
+        $("#birthday_form").submit();
+      });
+      $("#save_anoun").click(function () {
+        $("#anoun_form").submit();
+      });
+      if ($("#ex_welcome_gender").length > 0) {
+        $("#welcome_gender").val($("#ex_welcome_gender").val());
+      }
+      if ($("#ex_return_gender").length > 0) {
+        $("#return_gender").val($("#ex_return_gender").val());
+      }
+      if ($("#ex_loyal_gender").length > 0) {
+        $("#loyal_gender").val($("#ex_loyal_gender").val());
+      }
+      if ($("#ex_lost_gender").length > 0) {
+        $("#lost_gender").val($("#ex_lost_gender").val());
+      }
+      if ($("#ex_happy_birthday_gender").length > 0) {
+        $("#happy_birthday_gender").val($("#ex_happy_birthday_gender").val());
+      }
+      if ($("#ex_anoun_gender").length > 0) {
+        $("#anoun_gender").val($("#ex_anoun_gender").val());
+      }
+
+      if ($("#ex_welcome_ranks").length > 0) {
+        $("#welcome_ranks").val($("#ex_welcome_ranks").val());
+      }
+      if ($("#ex_return_ranks").length > 0) {
+        $("#return_ranks").val($("#ex_return_ranks").val());
+      }
+      if ($("#ex_loyal_ranks").length > 0) {
+        $("#loyal_ranks").val($("#ex_loyal_ranks").val());
+      }
+      if ($("#ex_lost_ranks").length > 0) {
+        $("#lost_ranks").val($("#ex_lost_ranks").val());
+      }
+      if ($("#ex_happy_birthday_ranks").length > 0) {
+        $("#happy_birthday_ranks").val($("#ex_happy_birthday_ranks").val());
+      }
+      if ($("#ex_anoun_ranks").length > 0) {
+        $("#anoun_ranks").val($("#ex_anoun_ranks").val());
+      }
+
+    });
+
+  </script>
+
+{% endblock %}

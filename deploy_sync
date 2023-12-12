@@ -1,0 +1,5 @@
+#! /bin/bash
+
+ssh -p 8282 root@45.119.82.182 'cd /root/code/cms && git checkout cms_brand && git pull --rebase'
+ssh -p 8282 root@45.119.82.182 'sudo supervisorctl restart easy_pos_sync_crm_to_cus easy_pos_sync_customer easy_pos_sync_sale_user'
+

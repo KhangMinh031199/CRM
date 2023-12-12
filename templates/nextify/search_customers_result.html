@@ -1,0 +1,84 @@
+
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-hover table-sm table-nowrap card-table">
+            <thead>
+                <tr>
+                    <th>
+                    </th>
+                    <th>
+                        <h3 class="mb-1" style="font-weight: 700;">{{ gettext("Khach_hang") }} ({{ total }}) </h3>
+                    </th>
+                    <th>
+                        <h3 class="mb-1" style="font-weight: 700;">{{ gettext("Luot_den") }}</h3>
+                    </th>
+                    <th>
+                        <h3 class="mb-1" style="font-weight: 700;">{{ gettext("Lan_cuoi") }}</h3>
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="list">
+                {% for cus in customers %}
+                <tr>
+                    <td>
+                        <a href="/customer_details?cus_id={{ cus._id }}" class="avatar">
+                            {% if cus.user.avatar and cus.user.avatar|length > 0 %}
+                            <img class="avatar-img rounded-circle"
+                                src="{{ cus.user.avatar.replace('http:', 'https:') }}" />
+                            {% else %}
+                            {%set avatar = cus.user|human_avatar%}
+                            <img class="avatar-img rounded-circle" src="{{ avatar }}" />
+                            {% endif %}
+                        </a>
+                    </td>
+                   <td class="orders-product" cus_id="{{ cus._id }}">
+                   <a href="/customer_details?cus_id={{ cus._id }}">
+
+
+                        <div class="name" style="font-size: 16px;font-weight: 700;text-overflow: ellipsis;overflow: hidden;">
+                            {% if cus.user.phone and cus.user.phone|string != 'None' and cus.user.phone|length != 0 %}
+                                {{ cus.user.phone }}
+                            {% else %}
+                                {% if cus.user.email | string != 'None' %}{{ cus.user.email }}{% endif %}
+                            {% endif %}
+                        </div>
+                        {% if (not cus.user.name and not cus.user.phone and not cus.user.email) or (cus.user.phone | string == 'None' and cus.user.name|string == 'None' and cus.user.phone|length == 0 and cus.user.email | string == 'None' and cus.user.client_mac|string != 'None') and cus.user.client_mac | length > 0%}
+                        <div class="name">
+                            {{ cus.user.client_mac[0] if cus.user.client_mac[0] |string != 'None' else ''}}
+                        </div>
+                        {% endif %}
+                        <div class="contact">
+                            {% if cus.user.name and cus.user.name|string != 'None' and cus.user.name|length != 0 %}
+                            {{ cus.user.name }} {% else %} {% endif %}
+                        </div>
+                   </a>
+                    </td>
+                    <td class="orders-date">
+                        {{ cus.total_visit }}
+                    </td>
+                    <td class="orders-total">
+                        {{ cus.last_visit|human_time }}
+                    </td>
+                    <td class="orders-status">
+
+                        <a href="#" user_id="{{ cus.user._id }}" class="btn btn-flat d-block d-md-inline-block detail_customer"><i
+                                    class="fa fa-eye"></i></a>
+                        <a href="#" user_id="{{ cus.user._id }}" class="btn btn-flat d-block d-md-inline-block remove_customer">
+                            <i class="fa fa-minus-circle"></i> </a>
+                    </td>
+                </tr>
+                {%endfor%}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="card-footer">
+    <ul class="pagination mb-0 u-justify-center">
+        {% if pagination %}
+        {{ pagination.links }}
+        {% endif %}
+    </ul>
+</div>

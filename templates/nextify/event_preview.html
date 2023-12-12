@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <!-- include css file -->
+    <link rel="stylesheet" href="/static/wifi_portal/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/wifi_portal/css/fonts.css">
+    <link rel="stylesheet" href="/static/wifi_portal/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/wifi_portal/css/styles.css">
+
+</head>
+<body class="wifi_app_event blur_bg" >
+
+<div class="container main_event">
+    <div class="row" style="height: 100%;">
+        <div class="col-sm col-md-8 col-lg-6 mg-auto box_layout" style="background-image: url('https://files.nextify.vn/{{ card.photo }}');
+                            -webkit-background-size: cover;
+                            -moz-background-size: cover;
+                            -o-background-size: cover;
+                            background-size: cover;
+                            height: 100%;
+                            overflow: hidden;">
+
+                <div class="box_content">
+
+                {% if title and title|length > 0 %}
+
+                    <h3 class="title" style="margin-bottom: 10px; text-align: center">
+                        {{ title|safe }}
+                    </h3>
+
+                {% endif %}
+                    {% if content and content|length > 0 %}
+                <h3 class="title" style="margin-bottom: 10px;text-align: center;font-size: 16px;font-weight: 500;line-height: 25px;">
+                    {{ content|safe }}
+                </h3>
+                {% endif %}
+                    <div class="btn_action" id="makingdifferenttimer" style="text-align: center">
+
+                                <button class="btn btn btn_bg_blue mg-bt-10 white_text"
+                                        style="background-image: linear-gradient(90deg,#f65e38 0,#f68a39 51%,#f65e38);" onclick="doLogin()">
+                                    <i class="fe fe-wifi font_size_24" aria-hidden="true"></i>
+                                    {% if shop_select.connect_button %}
+                                        <span>{{ shop_select.connect_button }}</span>
+                                    {% else %}
+                                        <span>{{ gettext("Ket_noi_Wi-Fi/Go_Online") }}</span>
+                                    {% endif %}
+                                </button>
+                            </div>
+
+
+{#                <div id="wftimer">#}
+{#                    <div><p>Please Wait <span>5</span> seconds</p></div>#}
+{#                </div>#}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- include js file -->
+<script src="/static/wifi_portal/js/jquery-3.3.1.min.js"></script>
+<script src="/static/wifi_portal/js/bootstrap.min.js"></script>
+<script nonce="{{ csp_nonce() }}">
+    jQuery(document).ready(function () {
+        var sec = 5
+        var timer = setInterval(function () {
+            $("#wftimer span").text(sec--);
+            if (sec == -2) {
+                $("#makingdifferenttimer").delay(500).show();
+                $("#wftimer").hide(1000).css("display", "none");
+            }
+        }, 1000);
+    });
+</script>
+
+
+
+
+<!-- end include js file -->
+</body>
+</html>

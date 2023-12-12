@@ -1,0 +1,197 @@
+<div class="table-responsive">
+    <table class="table table-sm card-table">
+        <thead>
+        <tr>
+            <th>Code</th>
+            <th>{{ gettext('Tao_luc') }}</th>
+            <th>SMS</th>
+            <th>Email</th>
+            <th>{{ gettext('Loai') }}</th>
+            <th>{{ gettext('Tin_du_kien') }}</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+    <tbody>
+    {% for record in list_camp %}
+        <tr>
+            <td ><a
+                    href="/marketing_campaign/detail/{{ record._id }}">{{ record.code }}</a>
+            </td>
+            <td >{{ record.when_str }}</td>
+          <td >
+          <div class="c-switch {% if record.is_sms %}is-active{% endif %}">
+                                        <input class="c-switch__input"
+                                               name="active_sms"
+                                               id="quick_active_sms"
+                                               type="checkbox"
+                                               {% if record.is_sms %}checked="checked"{% endif %}>
+                                    </div>
+
+            </td>
+           <td>
+              <div class="c-switch {% if record.is_email %}is-active{% endif %}">
+                                        <input class="c-switch__input"
+                                               name="active_email"
+                                               id="quick_active_email"
+                                               type="checkbox"
+                                               {% if record.is_email %}checked="checked"{% endif %}>
+                                    </div>
+           </td>
+           <td >
+                {% if record.is_spam %}{% if record.is_spam == 'care' %}Chămsóc
+                {% else %}Quảng cáo{% endif %}{% endif %}
+           </td>
+{#           <td >#}
+{#                {% if sms_provider and sms_provider|upper == 'FPT' %}#}
+{#                    {% if record.code_fpt %}#}
+{#                        {{ record.code_fpt }}{% endif %} {% endif %}#}
+{#            </td>#}
+            <td >{{ record.predict_message }}</td>
+
+{#            <td >#}
+{#                {% if sms_provider and user_sms and pass_sms and brand_name and#}
+{#          sms_provider|length > 0 and user_sms|length > 0 and#}
+{#          pass_sms|length > 0 and brand_name|length > 0 %}#}
+{#                    {% if merchant.quota == '-1'  or merchant.quota|int > 0 %}#}
+{#                        {% if not record.status != '0' %}#}
+{#                            {% if merchant.sms_provider == 'FPT' %}#}
+{#                                {% if record.is_spam == 'care' %}#}
+{#                                    <a#}
+{#                                            {% if is_hq %}href="/sms_marketing_hq/{{ record._id }}/send"#}
+{#                                            {% else %}href="/sms_marketing/{{ record._id }}/send" {% endif %}>#}
+{#                                       <button class="c-btn c-btn--success">#}
+{#                                            Gửi tin#}
+{#                                        </button>#}
+{#                                    </a>#}
+{#                                {% else %}#}
+{#                                    {% if record.code_fpt %}#}
+{#                                        <a#}
+{#                                                {% if is_hq %}href="/sms_marketing_hq/{{ record._id }}/send"#}
+{#                                                {% else %}href="/sms_marketing/{{ record._id }}/send" {% endif %}>#}
+{#                                            <button class="c-btn c-btn--success">#}
+{#                                                Gửi tin#}
+{#                                            </button>#}
+{#                                        </a>#}
+{#                                    {% else %}#}
+{##}
+{#                                        <a {% if is_hq %}href="/sms_marketing_hq/{{ record._id }}/fpt_campaign"#}
+{#                                           {% else %}href="/sms_marketing/{{ record._id }}/fpt_campaign"{% endif %}>#}
+{#                                            <button class="c-btn c-btn--warning">#}
+{#                                                Đăng ký chiến#}
+{#                                                dịch#}
+{#                                            </button>#}
+{#                                        </a>#}
+{##}
+{#                                    {% endif %}#}
+{##}
+{#                                {% endif %}#}
+{#                            {% else %}#}
+{##}
+{#                                <a {% if is_hq %}href="/sms_marketing_hq/{{ record._id }}/send"#}
+{#                                   {% else %}href="/sms_marketing/{{ record._id }}/send" {% endif %}>#}
+{#                                    <button class="c-btn c-btn--success">#}
+{#                                        Gửi tin#}
+{#                                    </button>#}
+{#                                </a>#}
+{#                            {% endif %}#}
+{#                        {% endif %}#}
+{#                    {% endif %}#}
+{#                {% endif %}#}
+{#            </td>#}
+            <td>
+                {% if not record.status or record.status == '0' and not record.active %}
+                    <a href="#" active_url="/marketing_campaign/detail/{{ record._id }}/active" id="register_camp_{{ record._id }}"><i
+                            class="fa fa-bullseye"></i> {{ gettext('Dang_ky') }}</a>
+                {% elif record.status =='1' %}
+                    <span class="badge badge-soft-secondary">{{ gettext('Dang_cho_xet_duyet) }}</span>
+                {% elif record.status =='2' %}
+                    <span class="badge badge-soft-success">{{ gettext('Da_gui') }}</span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="/marketing_campaign/detail/{{ record._id }}"><i class="fa fa-edit"></i> {{ gettext('Chi_tiet') }}</a>
+            </td>
+            <td>
+                <a href="#" remove_url="/marketing_campaign/detail/{{ record._id }}/remove" id="remove_camp_{{ record._id }}"><i
+                        class="fa fa-remove"></i> {{ gettext('Xoa') }}</a>
+            </td>
+
+        </tr>
+        <script nonce="{{ csp_nonce() }}">
+
+    $(document).ready(function () {
+
+        $('#register_camp_{{ record._id }}').click(function () {
+            var url = $(this).attr('active_url');
+            $.ajax({
+                type: 'get',
+                url: url,
+                success: function () {
+                    swal("{{ gettext('Dang_ky_chien_dich_thanh_cong') }}", " ", "success");
+                    $(location).attr('href', '/marketing_campaign');
+
+                }
+            });
+
+
+        });
+        $('#remove_camp_{{ record._id }}').click(function () {
+            var url = $(this).attr('remove_url');
+            Swal.fire({
+                    title: '{{ gettext("Ban_co_chac_chan_muon_xoa_chien_dich_khong?") }}',
+                            
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+focusCancel: true,
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '{{ gettext("Co!") }}',
+                    cancelButtonText: '{{ gettext("Khong!")}}'
+            }).then((result) => {
+            if (result.value) {
+            $.ajax({
+                type: 'get',
+                url: url,
+                success: function () {
+                    swal("{{ gettext('Xoa_chien_dich_thanh_cong') }}", " ", "success");
+                    $(location).attr('href', '/marketing_campaign');
+
+                }
+            });
+
+
+        }})});
+
+
+
+    });
+</script>
+
+    {% endfor %}
+  
+    </tbody>
+</table>
+
+
+    </div>
+    <input type="hidden" value="{{ total_camp }}" id="total_camp">
+
+<script nonce="{{ csp_nonce() }}">
+
+    $(document).ready(function () {
+        var total_camp = $("#total_camp").val() + " {{ gettext('chien_dich') }}";
+        $("#view_total_camp").text(total_camp);
+  $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+
+
+
+    });
+</script>

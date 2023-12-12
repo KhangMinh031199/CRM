@@ -1,0 +1,273 @@
+<div class="row">
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="content">
+                <div class="form">
+                    <div class="form-group">
+                        <label for="date_from">{{ gettext("Tu_ngay") }}</label>
+                        <input type="text" class="form-control" id="date_from" value="{{ date_from }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="date_to">{{ gettext("Den_ngay") }}</label>
+                        <input type="text" class="form-control" id="date_to" value="{{ date_to }}">
+                    </div>
+                    <div class="form-group">
+                        <div style="text-align: right">
+                            <button id="report_range" class="btn btn-info btn-fill">{{ gettext("Thong_ke") }}
+                    </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">{{ gettext("Khach_than_thiet") }}</h4>
+            </div>
+            <div class="content" style="text-align: center">
+                <h3 class="title"><b>{{ total_loyal }}</b></h3>
+                <h4 style="color: #00a65a">
+                    {% if loyal_percent < 0 %}
+                        <span class="glyphicon glyphicon-arrow-down red"></span>{% else %}
+                        <span class="glyphicon glyphicon-arrow-up blue"></span>{% endif %}{{ loyal_percent|abs }}%
+                </h4>
+                <h5>{{ gettext("so_voi") }}</h5>
+                <h5>{{ gettext("tu") }} <b>{{ date_prev }}</b> đến <b>{{ date_from }}</b></h5>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">{{ gettext("Khach_chua_quay_lai") }}</h4>
+            </div>
+            <div class="content" style="text-align: center">
+                <h3 class="title"><b>{{ total_lost }}</b></h3>
+                <h4 style="color: #00a65a">
+                    {% if lost_percent < 0 %}
+                        <span class="glyphicon glyphicon-arrow-down red"></span>{% else %}
+                        <span class="glyphicon glyphicon-arrow-up blue"></span>{% endif %}{{ lost_percent|abs }}%
+                </h4>
+                <h5>{{ gettext("so_voi") }}</h5>
+                <h5>{{ gettext("tu") }} <b>{{ date_prev }}</b> đến <b>{{ date_from }}</b></h5>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="row">
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">{{ gettext("Tong_luot_den") }}</h4>
+            </div>
+            <div class="content" style="text-align: center">
+                <h3 class="title"><b>{{ total_visit }}</b></h3>
+                <h4 style="color: #00a65a">
+                    {% if total_visit_percent < 0 %}
+                        <span class="glyphicon glyphicon-arrow-down red"></span>{% else %}
+                        <span class="glyphicon glyphicon-arrow-up blue"></span>{% endif %}{{ total_visit_percent|abs }}%
+                </h4>
+                <h5>{{ gettext("so_voi") }}</h5>
+                <h5>{{ gettext("tu") }} <b>{{ date_prev }}</b> đến <b>{{ date_from }}</b></h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">{{ gettext("Khach_den_moi") }}</h4>
+            </div>
+            <div class="content" style="text-align: center">
+                <h3 class="title"><b>{{ total_new }}</b></h3>
+                   <h4 style="color: #00a65a">
+                    {% if new_visit_percent < 0 %}
+                        <span class="glyphicon glyphicon-arrow-down red"></span>{% else %}
+                        <span class="glyphicon glyphicon-arrow-up blue"></span>{% endif %}{{ new_visit_percent|abs }}%
+                </h4>
+
+                <h5>{{ gettext("so_voi") }}</h5>
+                <h5>{{ gettext("tu") }} <b>{{ date_prev }}</b> đến <b>{{ date_from }}</b></h5>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">{{ gettext("Khach_quay_lai") }}</h4>
+            </div>
+            <div class="content" style="text-align: center">
+                <h3 class="title"><b>{{ total_return }}</b></h3>
+                     <h4 style="color: #00a65a">
+                    {% if return_visit_percent < 0 %}
+                        <span class="glyphicon glyphicon-arrow-down red"></span>{% else %}
+                        <span class="glyphicon glyphicon-arrow-up blue"></span>{% endif %}{{ return_visit_percent|abs }}
+                    % </h4>
+
+                <h5>{{ gettext("so_voi") }}</h5>
+                <h5>{{ gettext("tu") }} <b>{{ date_prev }}</b> đến <b>{{ date_from }}</b></h5>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">{{ gettext("Thong_ke_theo_ngay") }}</h4>
+            </div>
+            <div class="content">
+                {% column_chart visit_dict_by_date %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">SMS & Coupons</h4>
+            </div>
+
+            <div class="content table-responsive table-full-width">
+                <table class="table">
+                    <thead>
+                        <th>
+                            {{ gettext("SMS_da_gui") }}
+                        </th>
+                        <th>
+                            {{ gettext("Tong_coupons") }}
+                        </th>
+                        <th>
+                            {{ gettext("Da_su_dung") }}
+                        </th>
+                        <th>
+                            {{ gettext("Ti_le_doi") }}
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>{{ sms_count }}</strong></td>
+                            <td><strong>{{ total_coupons }}</strong></td>
+                            <td><strong>{{ coupons_redeem }}</strong></td>
+                            <td><strong>{{ coupons_percent }} %</strong></td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">SMS</h4>
+            </div>
+            <div class="content">
+                {% line_chart sms_by_date%}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">{{ gettext("Thiet_bi") }}</h4>
+            </div>
+            <div class="content">
+                {% pie_chart os_stats %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">Coupons</h4>
+            </div>
+            <div class="content">
+                {% line_chart coupon_by_date%}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="header">
+                <h4 class="title"> {{ gettext("Coupon_da_doi") }}</h4>
+            </div>
+            <div class="content">
+                {% line_chart coupon_redeem_by_date %}
+            </div>
+        </div>
+    </div>
+
+
+</div>
+ <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+
+        function today_date(fullDate) {
+            var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1) ? (fullDate.getMonth() + 1) : (fullDate.getMonth() + 1);
+
+            var curr_date = fullDate.getDate() + "-" + twoDigitMonth + "-" + fullDate.getFullYear();
+            return curr_date;
+        }
+
+        function addDays(dateObj, numDays) {
+            dateObj.setDate(dateObj.getDate() - numDays);
+            return dateObj;
+        }
+
+        $('#date_from').datepicker({
+            format: "dd-mm-yyyy"
+        });
+        $('#date_to').datepicker({
+            format: "dd-mm-yyyy"
+        });
+        $("#report_range").click(function () {
+            var date_from = $('#date_from').val();
+            var date_to = $('#date_to').val();
+            var url = "/reports?date_from=" + date_from + '&date_to=' + date_to;
+            $(location).attr('href', url);
+        });
+
+        $("#range_7d").click(function () {
+            var date_to = today_date(new Date());
+            var date_from = today_date(addDays(new Date(), 7));
+            var url = "/reports?date_from=" + date_from + '&date_to=' + date_to;
+            $(location).attr('href', url);
+        });
+        $("#range_30d").click(function () {
+            var date_to = today_date(new Date());
+            var date_from = today_date(addDays(new Date(), 30));
+            var url = "/reports?date_from=" + date_from + '&date_to=' + date_to;
+            $(location).attr('href', url);
+        });
+
+        $("#range_60d").click(function () {
+            var date_to = today_date(new Date());
+            var date_from = today_date(addDays(new Date(), 60));
+            var url = "/reports?date_from=" + date_from + '&date_to=' + date_to;
+            $(location).attr('href', url);
+        });
+
+    });
+
+</script>

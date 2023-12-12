@@ -1,0 +1,117 @@
+{% extends 'nextify/base.html' %}
+
+
+{% block main_content %}
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            Zalo Marketing
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                            {{ camp.code }}
+                        </h1>
+
+
+                    </div>
+
+
+                </div>
+                <div class="row align-items-center">
+                  <div class="col">
+
+                    <!-- Nav -->
+                    <ul class="nav nav-tabs nav-overflow header-tabs">
+                      <li class="nav-item">
+                        <a href="#!" class="nav-link text-nowrap active">
+                          {{ gettext("Du_kien") }} <span class="badge badge-pill badge-soft-secondary">{{ camp.predict_message }}</span>
+                        </a>
+                      </li>
+                    </ul>
+
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+            <div class="row justify-content-center">
+              <div class="col-12">
+
+                <!-- Card -->
+                <div class="card" id="email_lists">
+
+                  <div class="table-responsive">
+                    <table class="table table-sm table-hover table-nowrap card-table">
+                        <thead>
+                        <tr>
+
+                            <th>
+                                <a class="list-sort text-muted" href="#">Phone</a>
+                            </th>
+                             <th>
+                                <a class="list-sort text-muted" href="#">{{ gettext("Message") }}</a>
+                            </th>
+                            <th>
+                                <a class="list-sort text-muted" href="#">{{ gettext("Trang_thai") }}</a>
+                            </th>
+                            <th>
+                                <a class="list-sort text-muted" href="#">{{ gettext("Luc") }}</a>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="list font-size-base">
+                         {% for email_log in list_camp %}
+                        <tr>
+
+                            <td>
+                                 <span class="item-stage">{{ email_log.phone }}</span>   
+
+
+                            </td>
+
+                           <td>
+                                <span class="item-name text-reset"> {{ email_log.message }}</span>
+
+                            </td>
+
+                            <td>
+                                 {% if  email_log.status and email_log.status == 1 %}
+                              <span class="badge badge-soft-primary ml-1 mt-n1">{{ gettext("Thanh_cong") }}</span>
+
+
+                          {% else %}
+                                <span class="badge badge-soft-danger ml-1 mt-n1">{{ gettext("That_bai") }}</span>
+
+                          {% endif %}
+
+                            </td>
+                            <td>
+                                 <time class="item-contacted"> {{ email_log.update_at|human_time }}</time>
+                                
+
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                   <nav class="c-pagination u-justify-center">
+                            {% if pagination %}
+                                {{ pagination.links }}
+                            {% endif %}
+                        </nav>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

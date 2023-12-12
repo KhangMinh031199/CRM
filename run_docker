@@ -1,0 +1,3 @@
+#! /bin/bash
+docker build -t crm:latest .
+docker run -ti -p 8096:8096 crm:latest

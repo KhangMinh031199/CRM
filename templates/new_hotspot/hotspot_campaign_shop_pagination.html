@@ -1,0 +1,346 @@
+{% for campaign in hotspot_campaign_shop %}
+    <div class="col-6 col-lg-6 col-sm-12">
+        <!-- Card -->
+        <div class="card">
+                    <div class="card-footer card-footer-boxed">
+                        <div class="row align-items-center">
+                            <div class="col ml-n2">
+
+                                <!-- Title -->
+                                <a href="/hotspot_details?shop_id={{ shop_id_select }}&campaign_id={{ campaign._id }}">
+                                    <h4 class="card-title">
+                                        {% if campaign.name %}
+                                            {{ campaign.name }}
+                                        {% endif %}
+
+                                    </h4>
+                                </a>
+                                <!-- Time -->
+                                <p class="card-text small text-muted">
+                                    <span class="fe fe-clock"></span>
+                                    {% if campaign.updated_at %}
+                                        {{ campaign.updated_at|human_time }}
+                                    {% else %}
+                                        {{ campaign.created_at|human_time }}
+                                    {% endif %}
+                                </p>
+
+                            </div>
+                            <div class="col-auto">
+                                <div class="custom-control custom-switch {% if campaign.status and campaign.status|lower == 'true' %}is-active{% endif %}"
+                                id="campaign_active_{{ campaign._id }}">
+                               <input class="custom-control-input" id="status_{{ campaign._id }}" type="checkbox"
+                                      {% if campaign.status and campaign.status|lower=="true" %}checked{% endif %}>
+                                      <label class="custom-control-label"
+                                     for="status_{{ campaign._id }}"></label>
+                           </div>
+                                <script nonce="{{ csp_nonce() }}">
+                                    $(document).ready(function () {
+                                        $("#campaign_active_{{ campaign._id }}").click(function (e) {
+                                            var status = !($("#status_{{ campaign._id }}").is(":checked"));
+                                            $.ajax({
+                                                type: 'POST',
+                                                url: '/wifi_camp/{{ shop_id_select }}/active/{{ campaign._id }}',
+                                                data: {
+                                                    'status': status
+                                                },
+                                                success: function (response) {
+                                                    // Check exist visit
+                                                    if (JSON.parse(response).exist == 1){
+                                                        swal({
+                                                            title: "Lượt đến trùng với " + JSON.parse(response).exist_camp_name,
+                                                            text: " ",
+                                                            type: "error",
+                                                            timer: 4000
+                                                        });
+                                                        $(checkbox).removeClass('is-active');
+                                                        $("#status_{{ campaign._id }}").prop('checked', false);
+                                                        return 0;
+                                                    }
+                                                    if (response.includes('false')) {
+                                                        swal('{{ gettext("Ban_phai_kich_hoat_it_nhat_1_chien_dich") }}', " ", "error");
+
+                                                    } else {
+
+                                                        swal({
+                                                            title: '{{ gettext("Thanh_cong!") }}',
+                                                            text: " ",
+                                                            type: "success"
+                                                        });
+                                                        location.reload();
+                                                    }
+                                                }
+                                            });
+                                            return false;
+                                        });
+                                    });
+                                </script>
+                            </div>
+
+                            {% if campaign.status|lower == "false" and campaign.campaign_type == 'default' %}
+                                <div class="col-auto">
+                                    <!-- Dropdown -->
+                                    <div class="dropdown">
+
+                                        <a href="#" class="dropdown-ellipses dropdown-toggle" role="button"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fe fe-more-vertical"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a href="#" id="remove_{{ campaign._id }}" class="dropdown-item">
+                                                {{ gettext("Xoa") }}
+                                            </a>
+                                            <script nonce="{{ csp_nonce() }}">
+                                                $(document).ready(function () {
+                                                    $("#remove_{{ campaign._id }}").click(function (e) {
+                                                        Swal.fire({
+                                                            title: '{{ gettext("Ban_co_chac_chan_muon_xoa_khong?") }}',
+                                                            type: 'warning',
+                                                            showCancelButton: true,
+                                                            confirmButtonColor: '#3085d6',
+focusCancel: true,
+                                                            cancelButtonColor: '#d33',
+                                                            confirmButtonText: 'Có!',
+                                                            cancelButtonText: 'Không!'
+                                                        }).then((result) => {if(result.value){
+                                                            $.ajax({
+                                                                type: 'POST',
+                                                                url: '/wifi',
+                                                                data: {
+                                                                    'campaign_id': '{{ campaign._id }}',
+                                                                    'shop_id_select': '{{ shop_id_select }}',
+                                                                    'action': 'remove'
+                                                                },
+                                                                success: function (response) {
+                                                                    location.reload()
+                                                                    $.ajax({
+                                                                        type: 'GET',
+                                                                        url: '/wifi',
+                                                                        data: {
+                                                                            'shop_id_select': '{{ shop_id_select }}',
+                                                                        },
+                                                                        success: function (response) {
+                                                                            $('#body').empty();
+                                                                            $('#body').append(response);
+                                                                        }
+                                                                    });
+                                                                }
+                                                            });
+                                                        }
+                                                    })
+                                                    });
+                                                });
+                                            </script>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div> <!-- / .row -->
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="row"
+                             style="justify-content: center; display: flex; align-items: center;"
+                             {% if campaign.step_1 == '0' and campaign.step_2 != '0' %}
+                                data-step = 2
+                                data-min_step = 2
+                             {% elif campaign.step_1 == '0' and campaign.step_2 == '0' and campaign.step_3 != '0' %}
+                                data-step = 3
+                                data-min_step = 3
+                             {% elif campaign.step_1 == '0' and campaign.step_2 == '0' and campaign.step_3 == '0' and campaign.step_4 != '0' %}
+                                data-step = 4
+                                data-min_step = 4
+                             {% else %}
+                                data-step = 1
+                                data-min_step = 1
+                             {% endif %}
+                             data-campaign_id = '{{ campaign._id }}'
+                             data-step_1 = '{{ campaign.step_1 }}'
+                             data-step_1_id = '{{ campaign.step_1_id }}'
+                             data-survey_step_1 = '{{ campaign.survey_step_1 }}'
+                             data-spin_step_1 = '{{ campaign.spin_step_1 }}'
+                             data-step_2 = '{{ campaign.step_2 }}'
+                             data-step_2_id = '{{ campaign.step_2_id }}'
+                             data-survey_step_2 = '{{ campaign.survey_step_2 }}'
+                             data-spin_step_2 = '{{ campaign.spin_step_2 }}'
+                             data-step_3 = '{{ campaign.step_3 }}'
+                             data-step_3_id = '{{ campaign.step_3_id }}'
+                             data-survey_step_3 = '{{ campaign.survey_step_3 }}'
+                             data-spin_step_3 = '{{ campaign.spin_step_3 }}'
+                        >
+                            <a class="unactive-step btn prev-step-camp disabled" style="margin-right: 30px;">
+                                <i class="fa fa-caret-left fa-5x"></i>
+                            </a>
+
+                        <div class="detail" id="preview_campaign_{{ campaign._id }}" ></div>
+                        {% if campaign.step_1 == '0' and campaign.step_2 != '0'%}
+                            <script nonce="{{ csp_nonce() }}">
+                                $(document).ready(function () {
+                                    var step_2 = '{{ campaign.step_2 }}';
+                                    var step_2_id = '{{ campaign.step_2_id }}';
+                                    var arr = ['register', 'plus_register', 'spin'];
+                                    if (arr.includes(step_2)) {
+                                        if (step_2 != 'spin') {
+                                            var url_preview = '/preview/{{ shop_id_select }}/' + step_2;
+                                            $("#preview_campaign_{{ campaign._id }}").empty();
+                                            bioMp(document.getElementById('preview_campaign_{{ campaign._id }}'), {
+                                                url: url_preview,
+                                                view: 'front',
+                                                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                width: 200
+                                            });
+                                        } else {
+                                            var url_preview = '/game/' + '{{ campaign.spin_step_2 }}';
+                                            $("#preview_campaign_{{ campaign._id }}").empty();
+                                            bioMp(document.getElementById('preview_campaign_{{ campaign._id }}'), {
+                                                url: url_preview,
+                                                view: 'front',
+                                                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                width: 200
+                                            });
+                                        }
+                                    } else {
+                                        if (step_2 == 'survey') {
+                                            var url_preview = '/wifi/{{ shop_id_select }}/survey/' + '{{ campaign.survey_step_2 }}' + '/preview';
+                                            $("#preview_campaign_{{ campaign._id }}").empty();
+                                            bioMp(document.getElementById('preview_campaign_{{ campaign._id }}'), {
+                                                url: url_preview,
+                                                view: 'front',
+                                                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                width: 200
+                                            });
+                                        } else {
+                                            var url_preview = '/splash_page/{{ shop_id_select }}/preview/' + step_2_id;
+                                            $("#preview_campaign_{{ campaign._id }}").empty();
+                                            bioMp(document.getElementById('preview_campaign_{{ campaign._id }}'), {
+                                                url: url_preview,
+                                                view: 'front',
+                                                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                width: 200
+                                            });
+                                        }
+                                    }
+                                });
+                            </script>
+                             {% elif campaign.step_1 == '0' and campaign.step_2 == '0' and campaign.step_3 != '0' %}
+                                <script nonce="{{ csp_nonce() }}">
+                                    $(document).ready(function () {
+                                        var step_3 = '{{ campaign.step_3 }}';
+                                        var step_3_id = '{{ campaign.step_3_id }}';
+                                        var arr = ['register', 'plus_register', 'spin'];
+                                        if (arr.includes(step_3)) {
+                                            if (step_3 != 'spin') {
+                                                var url_preview = '/preview/{{ shop_id_select }}/' + step_3;
+                                                $("#preview_campaign_{{ campaign._id }}").empty();
+                                                bioMp(document.getElementById('preview_campaign_{{ campaign._id }}'), {
+                                                    url: url_preview,
+                                                    view: 'front',
+                                                    image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                    width: 200
+                                                });
+                                            } else {
+                                                var url_preview = '/game/' + '{{ campaign.spin_step_3 }}';
+                                                $("#preview_campaign_{{ campaign._id }}").empty();
+                                                bioMp(document.getElementById('preview_campaign_{{ campaign._id }}'), {
+                                                    url: url_preview,
+                                                    view: 'front',
+                                                    image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                    width: 200
+                                                });
+                                            }
+                                        } else {
+                                            if (step_3 == 'survey') {
+                                                var url_preview = '/wifi/{{ shop_id_select }}/survey/' + '{{ campaign.survey_step_3 }}'+ '/preview';
+                                                $("#preview_campaign_{{ campaign._id }}").empty();
+                                                bioMp(document.getElementById('preview_campaign_{{ campaign._id }}'), {
+                                                    url: url_preview,
+                                                    view: 'front',
+                                                    image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                    width: 200
+                                                });
+                                            } else {
+                                                var url_preview = '/splash_page/{{ shop_id_select }}/preview/' + step_3_id;
+                                                $("#preview_campaign_{{ campaign._id }}").empty();
+                                                bioMp(document.getElementById('preview_campaign_{{ campaign._id }}'), {
+                                                    url: url_preview,
+                                                    view: 'front',
+                                                    image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                    width: 200
+                                                });
+                                            }
+                                        }
+                                    });
+                                </script>
+                             {% elif campaign.step_1 == '0' and campaign.step_2 == '0' and campaign.step_3 == '0' and campaign.step_4 != '0' %}
+                                <script nonce="{{ csp_nonce() }}">
+                                    $(document).ready(function () {
+                                        var url_preview = '/splash_page/{{ shop_id_select }}/preview/connect_success';
+                                        $("#preview_campaign_{{ campaign._id }}").empty();
+                                        bioMp(document.getElementById('preview_campaign_{{ campaign._id }}'), {
+                                            url: url_preview,
+                                            view: 'front',
+                                            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                            width: 200
+                                        });
+                                    });
+                                </script>
+                             {% else %}
+                                <script nonce="{{ csp_nonce() }}">
+                                    $(document).ready(function () {
+                                        var step_1 = '{{ campaign.step_1 }}';
+                                        var step_1_id = '{{ campaign.step_1_id }}';
+                                        var arr = ['register', 'plus_register', 'spin'];
+
+                                        if (arr.includes(step_1)) {
+                                            if (step_1 != 'spin') {
+                                                var url_preview = '/preview/{{ shop_id_select }}/' + step_1;
+                                                $("#preview_campaign_{{ campaign._id }}").empty();
+                                                bioMp(document.getElementById('preview_campaign_{{ campaign._id }}'), {
+                                                    url: url_preview,
+                                                    view: 'front',
+                                                    image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                    width: 200
+                                                });
+                                            } else {
+                                                var url_preview = '/game/' + '{{ campaign.spin_step_1 }}';
+                                                $("#preview_campaign_{{ campaign._id }}").empty();
+                                                bioMp(document.getElementById('preview_campaign_{{ campaign._id }}'), {
+                                                    url: url_preview,
+                                                    view: 'front',
+                                                    image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                    width: 200
+                                                });
+                                            }
+                                        } else {
+                                            if (step_1 == 'survey') {
+                                                var url_preview = '/wifi/{{ shop_id_select }}/survey/' + '{{ campaign.survey_step_1 }}' + '/preview';
+                                                $("#preview_campaign_{{ campaign._id }}").empty();
+                                                bioMp(document.getElementById('preview_campaign_{{ campaign._id }}'), {
+                                                    url: url_preview,
+                                                    view: 'front',
+                                                    image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                    width: 200
+                                                });
+                                            } else {
+                                                var url_preview = '/splash_page/{{ shop_id_select }}/preview/' + step_1_id;
+                                                $("#preview_campaign_{{ campaign._id }}").empty();
+                                                bioMp(document.getElementById('preview_campaign_{{ campaign._id }}'), {
+                                                    url: url_preview,
+                                                    view: 'front',
+                                                    image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                                    width: 200
+                                                });
+                                            }
+                                        }
+                                    });
+                                </script>
+                             {% endif %}
+
+                       <a class="active-step btn next-step-camp" style="margin-left: 30px;">
+                            <i class="fa fa-caret-right fa-5x"></i>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}

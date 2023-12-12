@@ -1,0 +1,506 @@
+{% extends 'nextify/base.html' %} {% block main_content %}
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">{{ gettext("Bao_cao_khao_sat") }}</h6>
+
+          <!-- Title -->
+          <h1 class="header-title">{{ survey_item.question }}</h1>
+        </div>
+
+        <div class="col-auto">
+          <a
+            href="/surveys_reports/{{ survey_item.shop_id }}"
+            class="btn btn-flat btn-dark"
+          >
+            {{ gettext("Dong_lai") }}
+          </a>
+        </div>
+      </div>
+      <!-- / .row -->
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row mt-4 mt-md-5">
+    <div class="col-12 col-md-6 col-xl-6">
+      <form
+        action="/surveys_reports/{{ shop_id_select }}/update/{{ survey_id }}"
+        method="POST"
+        enctype="multipart/form-data"
+        id="fr_update_survey"
+      >
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+        <div class="card">
+          <div class="card-header">
+            <!-- Title -->
+            <h4 class="card-header-title">
+              {{ gettext("Cap_nhat_khao_sat") }}
+            </h4>
+          </div>
+
+          <div class="card-body">
+            <div class="form-group">
+              <label for="photo"
+                >{{ gettext("Anh_Cover") }} <font color="red">*</font> (<span
+                  >{{ gettext("Kich_thuoc_goi_y_1,280_px_×_720_px") }}</span
+                >)</label
+              >
+            </div>
+            <div class="form-group">
+              <img
+                class="preview"
+                id="view_background"
+                src="{% if survey_item.photo %}{% if survey_item.photo|length == 12 %}//files.nextify.vn/{{ survey_item.photo }} {% else %}//files.nextify.vn/{{ survey_item.photo }}{% endif %}{% endif %}"
+                style="width: auto; height: 200px"
+              />
+
+              <div class="custom-file" style="margin-top: 15px">
+                <input
+                  type="file"
+                  class="custom-file-input"
+                  name="photo"
+                  id="photo"
+                />
+                <label class="custom-file-label"
+                  >{{ gettext("Tai_anh_nen") }}</label
+                >
+              </div>
+            </div>
+            <div class="form-group">
+              <label> {{ gettext("Cau_hoi") }} </label>
+              <input
+                type="text"
+                class="form-control"
+                id="question"
+                name="question"
+                autofocus
+                value="{{ survey_item.question }}"
+              />
+            </div>
+
+            {% if survey_item.survey_type in ['multi_select', 'one_select'] %}
+
+            <div class="form-group" id="an_multi_select">
+              <label>{{ gettext('Gan_tag')}}</label>
+              {% for ans in survey_item.answers %}
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input
+                      type="text"
+                      value="{{ ans.value }}"
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <select class="form-control" id="select_{{ ans.id }}">
+                      <option value="">{{ gettext('Chon_tag')}}</option>
+                      {% for tag in tags %}
+                      <option id="{{ tag._id }}" value="{{ tag._id }}">
+                        {{ tag.name }}
+                      </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <input
+                  type="hidden"
+                  value="{{ ans.tag }}"
+                  id="tag_{{ ans.id }}"
+                />
+                <script nonce="{{ csp_nonce() }}">
+                  $(document).ready(function () {
+                    if ($("#tag_{{ ans.id }}").val().length > 0) {
+                      $("#select_{{ ans.id }}").val(
+                        $("#tag_{{ ans.id }}").val()
+                      );
+                    }
+                  });
+                </script>
+              </div>
+
+              {% endfor %}
+            </div>
+            {% endif %}
+            <div class="form-group">
+              <label>Số điện thoại nhận phản hồi</label>
+              <input
+                type="text"
+                class="form-control"
+                id="phone_reply"
+                name="phone_reply"
+                value="{{ survey_item.phone_reply }}"
+              />
+            </div>
+            <div class="form-group">
+              <label>Gửi tin khi khách phản hồi</label>
+              <select class="form-control" name="cus_reply">
+                {% for ans in survey_item.answers %}
+                <option value="{{ ans.id }}" {%if survey_item.cus_reply == ans.id |string %}selected{%endif%}>{{ ans.value }}</option>
+                {%endfor%}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>{{ gettext("Nut_xac_nhan_khao_sat") }}</label>
+              <input
+                type="text"
+                class="form-control"
+                id="connect_button"
+                name="connect_button"
+                value="{{ survey_item.connect_button }}"
+              />
+            </div>
+            <div class="form-group row mt-5">
+              <div class="col-2">
+                <span>{{ gettext("Mau_nut") }}</span>
+              </div>
+              <div class="col-2">
+                <input
+                  type="color"
+                  class=""
+                  id="connect_button_color"
+                  name="connect_button_color"
+                  value="{% if survey_item.connect_button_color %}{{ survey_item.connect_button_color }}{% else %}#f57a33{% endif %}"
+                />
+              </div>
+            </div>
+            <div class="form-group row mt-5">
+              <span class="col-4">
+                {{ gettext("Hien_thị_dong_gop_y_kien") }}
+              </span>
+              <div class="custom-control custom-switch">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="active_comment"
+                  name="active_comment"
+                  {%
+                  if
+                  survey_item.active_comment
+                  %}checked{%
+                  endif
+                  %}
+                />
+                <label
+                  class="custom-control-label"
+                  for="active_comment"
+                ></label>
+              </div>
+            </div>
+            <div class="form-group mt-5">
+              <div class="row">
+                <div class="col">
+                  <label>URL </label>
+                </div>
+                <div class="col-auto">
+                  {% if survey_item.unique_id %}
+                  <div
+                    class="fb-share-button"
+                    data-href="http://survey.{{ request.host|get_top_domain }}/{{ survey_item.unique_id }}"
+                    data-layout="button_count"
+                    data-size="large"
+                  >
+                    <a
+                      target="_blank"
+                      href="https://www.facebook.com/sharer/sharer.php?u=https://survey.{{ request.host|get_top_domain }}/{{ survey_item.unique_id }};src=sdkpreparse"
+                      class="fb-xfbml-parse-ignore"
+                      >{{ gettext("Chia_se") }}</a
+                    >
+                  </div>
+                  {% else %}
+                  <div
+                    class="fb-share-button"
+                    data-href="http://survey.{{ request.host|get_top_domain }}/{{ survey_item._id }}"
+                    data-layout="button_count"
+                    data-size="large"
+                  >
+                    <a
+                      target="_blank"
+                      href="https://www.facebook.com/sharer/sharer.php?u=https://survey.{{ request.host|get_top_domain }}/{{ survey_item._id }};src=sdkpreparse"
+                      class="fb-xfbml-parse-ignore"
+                      >{{ gettext("Chia_se") }}</a
+                    >
+                  </div>
+
+                  {% endif %}
+                </div>
+              </div>
+              <div class="mt-3">
+                {% if survey_item.unique_id %}
+                <input
+                  readonly
+                  type="text"
+                  class="form-control"
+                  value="http://survey.{{ request.host|get_top_domain }}/{{ survey_item.unique_id }}"
+                />
+                {% else %}
+                <input
+                  readonly
+                  type="text"
+                  class="form-control"
+                  value="http://survey.{{ request.host|get_top_domain }}/{{ survey_item._id }}"
+                />
+                {% endif %} {% if survey_item.bitly_url and
+                survey_item.bitly_url|length > 0 %}
+                <input
+                  readonly
+                  type="text"
+                  class="form-control mt-3"
+                  value="{{ survey_item.bitly_url.url }}"
+                />
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="row align-items-center justify-content-between">
+              <button class="btn btn-block btn-primary" type="submit">
+                {{ gettext("Cap_nhat") }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <!-- Content -->
+    </div>
+    <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-9">
+      <div id="preview"></div>
+    </div>
+  </div>
+  <div class="row mt-4 mt-md-5">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <!-- Title -->
+          <h4 class="card-header-title">
+            {{ total }} {{ gettext("khach_hang") }}
+          </h4>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-sm table-nowrap card-table">
+            <thead>
+              <tr>
+                <th>
+                  <a href="#" class="text-muted sort" data-sort="content-title">
+                    {{ gettext("Ten") }}
+                  </a>
+                </th>
+                <th>
+                  <a
+                    href="#"
+                    class="text-muted sort"
+                    data-sort="content-pageviews"
+                  >
+                    Phone
+                  </a>
+                </th>
+                <th>
+                  <a
+                    href="#"
+                    class="text-muted sort"
+                    data-sort="content-pagewview"
+                  >
+                    Email
+                  </a>
+                </th>
+                <th>
+                  <a href="#" class="text-muted sort" data-sort="content-time">
+                    {{ gettext("Thiet_bi") }}
+                  </a>
+                </th>
+                <th>
+                  <a href="#" class="text-muted sort" data-sort="content-time">
+                    {{ gettext("Chon") }}
+                  </a>
+                </th>
+                <th>
+                  <a href="#" class="text-muted sort" data-sort="content-time">
+                    {{ gettext("Binh_luan") }}
+                  </a>
+                </th>
+                <th>
+                  <a href="#" class="text-muted sort" data-sort="content-time">
+                    {{ gettext("Luc") }}
+                  </a>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for survey in list_survey %}
+              <tr>
+                <td>{% if survey.user %} {{ survey.user.name }} {% endif %}</td>
+                <td>
+                  {% if survey.user %} {{ survey.user.phone }} {% endif %}
+                </td>
+                <td>
+                  {% if survey.user %} {{ survey.user.email }} {% endif %}
+                </td>
+                <td>
+                  {% if survey.client_mac %} {{ survey.client_mac }}{% endif %}
+                </td>
+                <td>
+                  {% if survey.survey_type == 'one_select' or survey.survey_type
+                  == 'multi_select' %} {% if survey.results | length > 0 %} {%
+                  for res in survey.results %}
+                  <span
+                    class="badge badge-soft-{%if res.id|string == '0' %}danger {%elif res.id|string == '1'%}success{%else%}{{ ['info', 'success' , 'primary', 'danger', 'warning']|random }}{%endif%}"
+                    >{{ res.value }}</span
+                  >
+                  <br />{% endfor %} {% endif %} {% else %} {{ survey.answers }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if survey.comment %} {{ survey.comment }} {% endif %}
+                </td>
+                <td>{{ survey.when|human_time }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer u-justify-center">
+          <ul class="pagination mb-0 text-center">
+            {% if pagination %} {{ pagination.links }} {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<input type="hidden" value="{{ survey_item.survey_type }}" id="survey_type" />
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id_select" />
+
+{% endblock %} {% block js %}
+
+<script nonce="{{ csp_nonce() }}">
+  $(document).ready(function () {
+    function validate(photo) {
+      var file_size = $(photo)[0].files[0].size;
+      var file = $(photo).val();
+      var exts = ["jpg", "png", "jpeg"];
+      if (file) {
+        var get_ext = file.split(".");
+        get_ext = get_ext.reverse();
+        if ($.inArray(get_ext[0].toLowerCase(), exts) > -1) {
+          if (file_size > 1048576) {
+            return "big_file";
+          } else {
+            return true;
+          }
+        } else {
+          return false;
+        }
+      }
+    }
+
+    function readURL(input, input_view) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        var view_id = "#" + input_view;
+        reader.onload = function (e) {
+          $(view_id).attr("src", e.target.result);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    var url_preview =
+      "/wifi/{{ shop_id_select }}" +
+      "/survey/" +
+      "{{ survey_item._id }}/preview";
+    $("#preview").empty();
+    bioMp(document.getElementById("preview"), {
+      url: url_preview,
+      view: "front",
+      image: "/static/images/iphone_simulator/img_preview_mobile.svg",
+      height: 618,
+      width: 308,
+    });
+
+    $("#photo").change(function () {
+      if (validate(this) == true) {
+        swal('{{ gettext("Chon_File_thanh_cong") }}', "", "success");
+        $("#view_background").show();
+        readURL(this, "view_background");
+      } else {
+        swal('{{ gettext("File_khong_dung_dinh_dang") }}', "", "error");
+        $("#photo").val("");
+        $("#view_background").hide();
+      }
+    });
+    $("#fr_update_survey").on("submit", function (e) {
+      e.preventDefault();
+
+      var action = $("#fr_update_survey").attr("action");
+      var survey_type = $("#survey_type").val();
+      var answers = [];
+      if ($("#question").val().length == 0) {
+        swal('{{ gettext("Cau_hoi_khong_duoc_de_trong") }}', " ", "error");
+        return false;
+      }
+      if ($("#connect_button").val().length == 0) {
+        swal('{{ gettext("Nut_khao_sat_khong_duoc_de_trong") }}', " ", "error");
+        return false;
+      }
+
+      if (["multi_select", "one_select"].indexOf(survey_type) !== -1) {
+        $("#an_multi_select")
+          .children("div.row")
+          .each(function (i) {
+            var item = [];
+            $(this)
+              .find(":input")
+              .each(function () {
+                item.push($(this).val());
+              });
+            var name_ranks = item[0];
+            var points_ranks = item[1];
+            if (name_ranks.length > 0) {
+              var item_array = { id: i, value: name_ranks, tag: points_ranks };
+              answers.push(item_array);
+            }
+          });
+      }
+
+      var answers_json = JSON.stringify(answers);
+
+      var formData = new FormData(this);
+      formData.append("answers", answers_json);
+      $.ajax({
+        headers: { "X-CSRFToken": "{{ csrf_token() }}" },
+        type: "post",
+        url: action,
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ("error" in returnedData) {
+            swal(returnedData["error"], " ", "error");
+            return false;
+          } else {
+            swal(ngettext("Thanh_cong"), " ", "success");
+            location.reload();
+          }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+          return false;
+        },
+      });
+    });
+  });
+</script>
+
+{% endblock %}

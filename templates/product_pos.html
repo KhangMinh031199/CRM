@@ -1,0 +1,56 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+<div class="c-toolbar u-mb-medium">
+        <h3 class="c-toolbar__title has-divider"><a
+                href="/app_products">{{ gettext('San_pham') }}</a></h3>
+        <h5 class="c-toolbar__meta u-mr-auto">{{ cat_info.category_name }}</h5>
+        <div class="c-field c-field--inline has-icon-right u-hidden-down@tablet">
+            <div class="c-search-form__section">
+                <a href="/products/{{cat_info._id }}/product/add">
+                    <button class="c-btn c-btn--success u-ml-small">{{ gettext('Them_moi') }}
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+       <div class="container">
+        <div class="row">
+
+            <div class="col-lg-12">
+                <div class="c-card u-p-medium">
+                    <div class="c-table-responsive@desktop">
+                        <table class="c-table c-table--zebra u-mb-small"
+                               id="datatable2">
+                            <thead class="c-table__head">
+                            <tr class="c-table__row">
+                                    <th class="c-table__cell
+                                c-table__cell--head">
+                                    Tên</th>
+                                    <th class="c-table__cell
+                                                c-table__cell--head">{{ gettext('Ma') }}</th>
+                                    <th class="c-table__cell
+                                                c-table__cell--head">{{ gettext('Gia') }}</th>
+                                   <th class="c-table__cell
+                                                c-table__cell--head">{{ gettext('Kich_hoat') }}</th>
+                                    </thead>
+                                <tbody>
+                                {% for prod in products %}
+                                    <tr>
+                                        <td class="c-table__cell"><a href="/products/{{ cat_info._id }}/product/{{ prod._id }}">{{ prod.item_desc }}</a></td>
+                                        <td class="c-table__cell">{{ prod.item_code }}</td>
+                                        <td class="c-table__cell">{%if prod.retail_price %}{{prod.retail_price|format_price}}{%endif%}</td>
+                                        <td class="c-table__cell">
+                                            <div class="c-switch {% if prod.active %}is-active{% endif%}">
+                                        <input type="checkbox"
+                                               class="c-switch__input"
+                                              {% if prod.active %}checked{% endif %}/>
+                                    </div></td>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+
+        {% endblock %}
+

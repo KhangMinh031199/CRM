@@ -1,0 +1,67 @@
+{% extends "v2/base.html" %}
+
+{% block right_content %}
+
+<div class="row">
+
+    <div class="col-md-12">
+        <div class="card">
+          <div class="header">
+            Phân loại khách hàng
+          </div>
+
+            <div class="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% if error %}
+                                <div class="alert alert-danger">
+                                    {{ error | safe }}
+                                </div>
+                                {% endif %} {% if message %}
+                                <div class="alert alert-success">
+                                    {{ message | safe }}
+                                </div>
+                                {% endif %}
+                                <form method="POST"
+                                      action="/create_tags/{%if
+                                      tag_item%}{{tag_item
+                                      ._id}}{%else%}add{%endif%}">
+                                      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                {% if tag_item %}
+                                <input type="hidden" value="{{ tag_item._id
+                                  }}" name="tag_id"/>
+                                {% endif %}
+                                    <div class="form-group">
+                                        <label for="name">Tên:</label>
+                                        <input type="tel"
+                                               class="form-control
+                                               form-input" id="name"
+                                               name="name"
+                                               placeholder="Loại tag"
+                                               value="{%if tag_item%}{{tag_item.name}}{%endif%}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="desc">Mô tả:</label>
+                                        <input type="tel"
+                                               class="form-control
+                                               form-input" id="desc"
+                                               name="desc" placeholder="Mô tả"
+                                               value="{%if tag_item%}{{tag_item.description}}{%endif%}"/>
+                                    </div>
+                                    <div class="form-group">
+                                     <input type="submit" class="btn
+                                     btn-success" style="color: #ffffff;" value="Lưu lại"/>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

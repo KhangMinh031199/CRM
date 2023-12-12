@@ -1,0 +1,9 @@
+version: "2"
+syncs:
+# this name has to be unique and is used in docker-compose.yml as well
+  neos-data-sync: 
+    src: '.' # the directory on the host system
+    dest: '/app' # the directory on the container
+    sync_host_ip: 'localhost' # localhost for docker for mac
+    sync_host_port: 8096 # unique port
+    sync_strategy: 'unison' 

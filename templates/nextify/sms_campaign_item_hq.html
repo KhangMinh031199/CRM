@@ -1,0 +1,1505 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            {{ gettext('Chien_dich') }}
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                            {% if camp %} {{ gettext('Chien_dich') }}
+                                {{ camp.code }}{% else %}{{ gettext('Tao_chien_dich') }}{% endif %}
+                        </h1>
+
+                    </div>
+                   
+                    <div class="col-auto">
+                        <a href="#!" data-target="#select_filter" data-toggle="modal"
+                           class="btn btn-flat d-block d-md-inline-block mb-4">
+                            <i class="fa fa-filter"></i> {{ gettext('Chon_muc_tieu') }}
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row u-mb-large">
+
+            <div class="col-lg-12">
+                <div class="card u-p-medium">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-white">
+
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            {% if error %}
+                                                <div class="alert alert-danger">
+                                                    {{ error | safe }}
+                                                </div>
+                                            {% endif %}
+                                            {% if message %}
+                                                <div class="alert alert-success">
+                                                    {{ message | safe }}
+                                                </div>
+                                            {% endif %}
+
+
+                                            <form method="POST"
+                                                  id="sms_campaign_item"
+                                                  action="/marketing_campaign/detail/{% if camp %}{{ camp._id }}{% else %}add{% endif %}">
+
+ <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                                <div class="row">
+
+                                                    <div class="col-md-12">
+                                                        <div class="row">
+                                                            <div
+                                                                    class="col-md-3">
+                                                                <div class="c-field u-mb-small">
+                                                                    <label for="name"
+                                                                           class="c-field__label">{{ gettext('Ten_chien_dich:') }}</label>
+                                                                    <input type="text"
+                                                                           class="c-input"
+                                                                           id="code_camp"
+                                                                           name="code_camp"
+                                                                           value="{% if camp %} {{ camp.code }}{% endif %}"/>
+                                                                </div>
+
+                                                            </div>
+                                                            <div
+                                                                    class="col-md-3">
+                                                                <div class="c-field u-mb-small">
+                                                                    <label class="c-field__label">{{ gettext('Loai_chien_dich') }}</label>
+                                                                    {% if camp.is_spam and camp.is_spam!='None' %}
+                                                                        <input type="hidden"
+                                                                               id="ex_is_spam"
+                                                                               value="
+                                                                                       {% if camp.is_spam and camp.is_spam!='None' %}{{ camp.is_spam }}{% endif %}"/>
+                                                                    {% endif %}
+                                                                    <select name="is_spam"
+                                                                            id="is_spam"
+                                                                            class="c-select"
+                                                                            style="width: 100%;">
+                                                                        <option value="care">
+                                                                            {{ gettext('Cham_soc') }}
+                                                                        </option>
+                                                                        <option value="spam">
+                                                                            {{ gettext('Quang_cao') }}
+                                                                        </option>
+                                                                    </select>
+                                                                    <input type="hidden"
+                                                                           id="camp_is_spam"
+                                                                           name="camp_is_spam"/>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-md-3">
+
+                                                                <div class="c-field u-mb-small">
+                                                                    <label for="name"
+                                                                           class="c-field__label">{{ gettext('Dia_diem:') }}</label>
+                                                                    {% if camp and camp.shop_select %}
+                                                                        <input type="hidden"
+                                                                               value="{{ camp
+                                                            .shop_select|format_list_json }}"
+                                                                               id="current_shops"/>
+                                                                    {% endif %}
+                                                                    <select class="c-select c-select--multiple"
+                                                                            style="width: 100%;"
+                                                                            id="locations_selects">
+                                                                        {% for shop_mer in shop_in_mer %}
+                                                                            <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                                                                        {% endfor %}
+
+                                                                    </select>
+                                                                    <input type="hidden"
+                                                                           id="camp_locations"
+                                                                           name="camp_locations"/>
+                                                                </div>
+
+
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="row">
+                                                                    <label for="name"
+                                                                           class="c-field__label">{{ gettext('Kenh_gui:') }}</label>
+                                                                    <div class="col-md-6">
+                                                                        <div class="c-choice c-choice--checkbox">
+                                                                            <input class="c-choice__input"
+                                                                                   type="checkbox"
+                                                                                   name="is_sms"
+                                                                                   id="is_sms"
+                                                                                   {% if camp %}{% if camp.is_sms %}checked
+                                                                                   {% endif %}{% endif %}>
+                                                                            <label class="c-choice__label"
+                                                                                   for="is_sms">SMS</label>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="c-choice c-choice--checkbox">
+                                                                            <input class="c-choice__input"
+                                                                                   type="checkbox"
+                                                                                   name="is_email"
+                                                                                   id="is_email"
+                                                                                   {% if
+                                                                   camp %}{% if camp.is_email %}checked
+                                                                                   {% endif %}{% endif %}>
+                                                                            <label class="c-choice__label"
+                                                                                   for="is_email">Email</label>
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+
+                                                                <div class="c-field u-mb-small">
+                                                                    <label class="c-field__label"
+                                                                           for="announcement">{{ gettext('Tin_nhan_SMS') }}</label>
+                                                                    <textarea class="c-input"
+                                                                              id="announcement"
+                                                                              name="announcement"
+                                                                              rows="6">{% if camp %}
+                                                                        {{ camp.message }} {% endif %}</textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="c-field u-mb-small">
+                                                                    <label class="c-field__label"
+                                                                           for="name">Mô tả:
+                                                                        <a style="float: right" href="/black_list_keywords" target="_black">
+                                                                             {{ gettext('Danh_sach_cac_tu_cam_tu_nha_mang') }}
+                                                                        </a>
+                                                                    </label>
+                                                                    <textarea
+                                                                            class="c-input"
+                                                                            id="desc_camp"
+                                                                            name="desc_camp"
+                                                                            rows="6">
+                                                                            {% if camp %} {{ camp.desc }}{% endif %}</textarea>
+                                                                </div>
+                                                               
+                                                            </div>
+
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-md-12">
+
+                                                        {% if camp and camp.email_design %}
+
+                                                            <input type="hidden" value="{{ camp.email_design }}"
+                                                                   id="email_ex_design"/>
+
+
+                                                        {% endif %}
+
+                                                        <input type="hidden" id="design" name="design"/>
+                                                        <input type="hidden" id="email_content" name="email_content"/>
+
+
+                                                        <div class="c-field u-mb-small">
+                                                            <label class="c-field__label">Email templates</label>
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <div class="input-group input-group-lg input-group-flush input-group-merge">
+                                                                        <input type="text"
+                                                                               class="form-control form-control-appended"
+                                                                               id="email_title" name="email_title"
+                                                                               placeholder="Tiêu đề Email"
+                                                                               value="
+                                                                                       {% if camp %}{% if camp.email_title %}{{ camp.email_title }}{% endif %}{% endif %}"/>
+                                                                        <div class="input-group-append">
+                                                                            <div class="input-group-text">
+                                                                                <span class="fa fa-email"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="col-auto">
+                                                                    <a href="#" data-target="#select_email_template"
+                                                                       data-toggle="modal"
+                                                                       class="c-btn c-btn--info u-float-right"
+                                                                       style="color:#ffffff">{{ gettext('Chon_mau_email') }}
+                                                                    </a>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="row justify-content-left">
+                                                                <div id="editor-container"
+                                                                     style="width: 100%; height: 900px"></div>
+                                                            </div>
+
+                                                        </div>
+
+
+                                                    </div>
+
+
+                                                </div>
+
+                                                <input type="hidden"
+                                                       id="ex_from_date"
+                                                       value="{{ camp.b_day_from_date }}">
+                                                <input type="hidden"
+                                                       id="ex_to_date"
+                                                       value="{{ camp.b_day_to_date }}">
+
+
+                                                <div class="modal" id="select_filter"
+                                                     tabindex="-1"
+                                                     role="dialog"
+                                                     aria-labelledby="myModalLabel" aria-hidden="true"
+                                                     style="display: none;">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-card card" data-toggle="lists"
+                                                                 data-lists-values="[&quot;name&quot;]">
+                                                                <div class="card-header">
+                                                                    <div class="row align-items-center">
+                                                                        <div class="col">
+
+                                                                            <!-- Title -->
+                                                                            <h4 class="card-header-title"
+                                                                                id="exampleModalCenterTitle">
+                                                                                {{ gettext('Thiet_lap_muc_tieu') }}
+                                                                            </h4>
+
+                                                                        </div>
+                                                                        <div class="col-auto">
+                                                                            <a href="#!" id="clear_data"
+                                                                               style="padding-right: 5px">
+                                                                                <i class="fa fa-undo"></i>
+                                                                            </a>
+
+                                                                            <!-- Close -->
+                                                                            <button type="button" class="close"
+                                                                                    data-dismiss="modal"
+                                                                                    aria-label="Close">
+                                                                                <span aria-hidden="true"> <i
+                                                                                        class="fa fa-close"></i></span>
+                                                                            </button>
+
+                                                                        </div>
+                                                                    </div> <!-- / .row -->
+                                                                </div>
+
+                                                                <div class="card-body" style="max-height: 100%">
+
+
+                                                                    <div class="c-field u-mb-small">
+                                                                        {% if camp.type_coupon and camp.type_coupon!='None' %}
+                                                                            <input type="hidden"
+                                                                                   id="ex_type_coupon"
+                                                                                   value="{{ camp.type_coupon }}"/>
+                                                                        {% endif %}
+                                                                        <div class="row">
+                                                                            <div class="col-md-6">
+                                                                                <label class="c-field__label" for="type_coupon">{{ gettext('Loai_coupon:') }}</label>
+                                                                                <select name="type_coupon"
+                                                                                        class="c-select"
+                                                                                        style="width: 100%;"
+                                                                                        id="type_coupon">
+                                                                                    <option value="no">
+                                                                                        Không
+                                                                                    </option>
+                                                                                    {% for coup in coupons_type_select %}
+                                                                                        <option
+                                                                                                value="{{ coup._id }}">{{ coup.name }}</option>
+                                                                                    {% endfor %}
+                                                                                </select>
+                                                                                <input type="hidden"
+                                                                                       id="camp_type_coupon"
+                                                                                       name="camp_type_coupon"/>
+
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <label class="c-field__label" for="ex_manual">{{ gettext('Han_dung_coupon:') }} </label>
+                                                                                <input type="text"
+                                                                                       class="c-input"
+                                                                                       id="ex_manual"
+                                                                                       name="ex_manual"
+                                                                                       value="{% if camp %} {{ camp.expire_coupon }}{% endif %}">
+
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                    {% if camp %}
+                                                                        <input type="hidden"
+                                                                               name="camp_id"
+                                                                               value="{{ camp._id }}"/>
+
+                                                                        <input type="hidden"
+                                                                               id="current_target"
+                                                                               value="{{ camp.target }}"/> {% endif %}
+
+                                                                    <div class="c-field u-mb-small">
+                                                                        <label class="c-field__label">{{ gettext('Luot_den_tinh_theo:') }}</label>
+
+                                                                          <div class="row">
+                                                                            <div class="col-md-6">
+                                                                                 <div class="c-choice c-choice--radio">
+                                                                            <input class="c-choice__input"
+                                                                                   id="checkbox1"
+                                                                                   name="visit_by"
+                                                                                   value="merchant" type="radio"
+                                                                                   {% if camp %}{% if camp.visit_by == "merchant" %}checked
+                                                                                   {% endif %}{% endif %}>
+                                                                            <label class="c-choice__label"
+                                                                                   for="checkbox1">{{ gettext('Theo_chuoi') }}</label>
+                                                                        </div>
+
+
+                                                                            </div>
+                                                                                <div class="col-md-6">
+                                                                                    <div class="c-choice c-choice--radio">
+                                                                            <input class="c-choice__input"
+                                                                                   id="checkbox2"
+                                                                                   name="visit_by" value="shop"
+                                                                                   type="radio" 
+                                                                                   {% if camp %}{% if camp.visit_by == "shop" %}checked
+                                                                                   {% endif %}{% endif %}>
+                                                                            <label class="c-choice__label"
+                                                                                   for="checkbox2">{{ gettext('Theo_dia_diem') }}</label>
+                                                                        </div>
+
+                                                                            </div>
+                                                                          </div>
+
+                                                                    </div>
+
+
+                                                                    <label
+                                                                            class="c-field__label"> {{ gettext('Khoang_luot_den:') }}
+                                                                    </label>
+                                                                    <div class="row">
+                                                                        <div
+                                                                                class="col-md-6">
+                                                                            <input type="text"
+                                                                                   name="min_visit"
+                                                                                   placeholder="Lớn hơn"
+                                                                                   class="c-input"
+                                                                                   value="
+                                                                                           {% if camp.min_visit and camp.min_visit!='None' %}{{ camp.min_visit }}{% endif %}">
+
+                                                                        </div>
+                                                                        <div
+                                                                                class="col-md-6">
+                                                                            <input type="text"
+                                                                                   name="max_visit"
+                                                                                   placeholder="Nhỏ hơn"
+                                                                                   class="c-input"
+                                                                                   value="
+                                                                                           {% if camp.max_visit and camp.max_visit!='None' %}{{ camp.max_visit }}{% endif %}">
+
+                                                                        </div>
+
+                                                                    </div>
+
+
+                                                                    <div class="c-field u-mb-small"
+                                                                         style="padding-top:5px">
+                                                                        <label class="c-field__label">{{ gettext('Gioi_tinh:') }} </label>
+                                                                        {% if camp.gender and camp.gender!='None' %}
+                                                                            <input type="hidden"
+                                                                                   value="{{ camp.gender }}"
+                                                                                   id="ex_gender"/>
+                                                                        {% endif %}
+                                                                        <select class="c-select c-select--multiple"
+                                                                                name="gender"
+                                                                                id="gender"
+                                                                                multiple="multiple"
+                                                                                style="width: 100%;">
+                                                                            <option value="0">
+                                                                                {{ gettext('Chua_xac_dinh') }}
+                                                                            </option>
+                                                                            <option value="1">
+                                                                                {{ gettext('Nam') }}
+                                                                            </option>
+                                                                            <option value="2">
+                                                                                {{ gettext('Nu') }}
+                                                                            </option>
+
+                                                                        </select>
+                                                                        <input type="hidden"
+                                                                               id="gender_filter"
+                                                                               name="gender_filter"/>
+
+                                                                    </div>
+
+
+                                                                    <div class="c-field u-mb-small">
+                                                                        <label class="c-field__label">{{ gettext('Sinh_nhat:') }} </label>
+                                                                        <div class="row">
+                                                                            <div class="col-md-6">
+                                                                                <input id="from_date"
+                                                                                       name="from_date"
+                                                                                       type="text"
+                                                                                       placeholder="{{ gettext('Tu_ngay..') }}"
+                                                                                       class="c-input">
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <input id="to_date"
+                                                                                       name="to_date"
+                                                                                       type="text"
+                                                                                       placeholder="{{ gettext('Den_ngay..') }}"
+                                                                                       class="c-input">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="c-field u-mb-small">
+                                                                        <label class="c-field__label">{{ gettext('Thoi_gian_den') }} </label>
+                                                                        <div class="row">
+                                                                            <div class="col-md-6">
+                                                                                <input id="visit_from_date"
+                                                                                       name="visit_from_date"
+                                                                                       type="text"
+                                                                                       placeholder="{{ gettext('Tu_ngay..') }}"
+                                                                                       class="c-input">
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <input id="visit_to_date"
+                                                                                       name="visit_to_date"
+                                                                                       type="text"
+                                                                                       placeholder="{{ gettext('Den_ngay..') }}"
+                                                                                       class="c-input">
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div class="c-field u-mb-small">
+                                                                        <label
+                                                                                class="c-field__label">{{ gettext('Nhom_khach_hang') }}</label>
+
+                                                                        <select class="c-select c-select--multiple"
+                                                                                name="tags"
+                                                                                id="select_tags_input"
+                                                                                multiple="multiple"
+                                                                                style="width: 100%;">
+                                                                            {% for tag in tags %}
+                                                                                <option value="{{ tag._id }}">{{ tag.name }}</option>
+                                                                            {% endfor %}
+
+                                                                        </select>
+                                                                        <input type="hidden"
+                                                                               id="select_tags_filter"
+                                                                               name="real_tags_filter"/>
+                                                                        {% if camp %}
+                                                                            <input type="hidden"
+                                                                                   name="source_tags"
+                                                                                   id="source_tags_filter"
+                                                                                   value="{{ camp.tags }}"/>
+
+                                                                        {% endif %}
+                                                                    </div>
+
+
+                                                                    <div class="c-field u-mb-small">
+                                                                        {% if  camp %}
+                                                                            {% if camp.date_send %}
+
+                                                                                <input type="hidden"
+                                                                                       value="{{ camp.date_send }}"
+                                                                                       id="ex_date_send"/>
+                                                                            {% endif %}
+                                                                        {% endif %}
+                                                                        <div class="c-field u-mb-small">
+                                                                            <label class="c-field__label"
+                                                                                   for="date_send">{{ gettext('Thoi_gian_gui:') }}</label>
+                                                                            <input type="text"
+                                                                                   class="c-input"
+                                                                                   id="date_send"
+                                                                                   name="date_send"/>
+                                                                        </div>
+
+                                                                    </div>
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </form>
+
+                                            <div class="row" style="float: right">
+
+                                                <button class="c-btn c-btn--warning" style="margin-left:10px"
+                                                        id="save_camp"> {% if camp %}{{ gettext('Cap_nhat') }}{% else %} {{ gettext('Luu_chien_dich') }} {% endif %} </button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="c-modal c-modal--xlarge modal fade" id="select_email_template" tabindex="-1"
+         role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true"
+         style="display: none;">
+        <div class="c-modal__dialog modal-dialog">
+            <div class="c-modal__content modal-content">
+                <div class="modal-card card" data-toggle="lists" data-lists-values="[&quot;name&quot;]">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Title -->
+                                <h4 class="card-header-title" id="exampleModalCenterTitle">
+                                    {{ gettext('Chon_mau_Email') }}
+                                </h4>
+
+                            </div>
+                            <div class="col-auto">
+
+                                <!-- Close -->
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+
+                            </div>
+                        </div> <!-- / .row -->
+                    </div>
+
+                    <div class="card-body" id="email_templates">
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %} {% block js %}
+    <script type="text/javascript"  nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $.ajax({
+                url: "/marketing_automation/select_email_template", success: function (result) {
+                    // alert("success"+result);
+                    $("#email_templates").empty();
+                    $("#email_templates").append(result);
+
+                }
+            });
+
+            $('#locations_selects').select2({
+                dropdownAutoWidth: true
+            });
+
+
+            if ($("#current_shops").length > 0) {
+                $('#locations_selects').select2().val(JSON.parse($("#current_shops").val().replace(/\'/g, '"')))
+                    .trigger("change");
+                $('#camp_locations').val($('#locations_selects').val().toString());
+            }
+
+            $('#locations_selects').on("change", function (e) {
+                if ($('#locations_selects').val().length > 0) {
+                    $('#camp_locations').val($('#locations_selects').val()
+                        .toString());
+                } else {
+                    $('#camp_locations').val("");
+                }
+            });
+
+            $('#is_spam').select2({
+                dropdownAutoWidth: true
+            });
+
+            if ($("#ex_is_spam").length > 0) {
+                $('#is_spam').select2().val($("#ex_is_spam").val()).trigger("change");
+                $('#camp_is_spam').val($('#is_spam').val().toString());
+            }
+            $('#is_spam').on("change", function (e) {
+                if ($('#is_spam').val().length > 0) {
+                    $('#camp_is_spam').val($('#is_spam').val().toString());
+                } else {
+                    $('#camp_is_spam').val("");
+                }
+            });
+            $('#type_coupon').select2({
+                dropdownAutoWidth: true
+            });
+
+            if ($("#ex_type_coupon").length > 0) {
+                $('#type_coupon').select2().val($("#ex_type_coupon").val()).trigger("change");
+                $('#camp_type_coupon').val($('#type_coupon').val().toString());
+            }
+
+            $('#type_coupon').on("change", function (e) {
+                if ($('#type_coupon').val().length > 0) {
+                    $('#camp_type_coupon').val($('#type_coupon').val().toString());
+                } else {
+                    $('#camp_type_coupon').val("");
+                }
+            });
+
+
+            if ($("#ex_gender").length > 0) {
+                $("#gender").val($("#ex_gender").val());
+            }
+
+            if ($("#current_target").length > 0) {
+                $("#target").val($("#current_target").val());
+            }
+
+            if ($("#ex_date_send").length > 0 && $("#ex_date_send").val().length > 0 && $("#ex_date_send").val() != 'None') {
+                flatpickr("#date_send", {
+                    enableTime: true,
+                    defaultDate: $("#ex_date_send").val(),
+                    dateFormat: "H:i d-m-Y",
+                });
+            } else {
+                flatpickr("#date_send", {
+                    enableTime: true,
+                    dateFormat: "H:i d-m-Y",
+
+                });
+            }
+
+
+            if ($("#ex_from_date").length > 0 && $("#ex_from_date").val().length > 0 && $("#ex_from_date").val() != 'None') {
+                flatpickr("#from_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_from_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#from_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+
+                });
+            }
+            if ($("#ex_to_date").length > 0 && $("#ex_to_date").val().length > 0 && $("#ex_to_date").val() != 'None') {
+                flatpickr("#to_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_to_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#to_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+                });
+            }
+            if ($("#ex_visit_from_date").length > 0 && $("#ex_visit_from_date").val().length > 0 &&
+                $("#ex_visit_from_date").val() != 'None') {
+                flatpickr("#visit_from_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_visit_from_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#visit_from_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+
+                });
+            }
+            if ($("#ex_visit_to_date").length > 0 && $("#ex_visit_to_date").val().length > 0 && $("#ex_visit_to_date").val() != 'None') {
+                flatpickr("#visit_to_date", {
+                    enableTime: false,
+                    defaultDate: $("#ex_visit_to_date").val(),
+                    dateFormat: "d-m-Y"
+                });
+            } else {
+                flatpickr("#visit_to_date", {
+                    enableTime: false,
+                    dateFormat: "d-m-Y"
+                });
+            }
+
+            $('#select_tags_input').select2({});
+            $('#select_tags_input').select2({
+                dropdownAutoWidth: true
+            });
+            $('#select_tags_input').on("change", function (e) {
+                if ($('#select_tags_input').val()) {
+                    $('#select_tags_filter').val($('#select_tags_input').val().toString());
+                } else {
+                    $('#select_tags_filter').val("");
+                }
+            });
+
+            $('#gender').select2({
+                dropdownAutoWidth: true
+            });
+
+            $('#gender').select2().val(ex_gender)
+                .trigger("change");
+            $('#gender').on("change", function (e) {
+                if ($('#gender').val()) {
+                    $('#gender_filter').val($('#gender').val()
+                        .toString());
+                } else {
+                    $('#gender_filter').val("");
+                }
+            });
+
+
+            var ex_gender = $("#ex_gender").val();
+            if (ex_gender && ex_gender.length > 0 && ex_gender.toString() != 'None') {
+                var ex_gender = ex_gender.replace(/\u'/g, "'");
+                var ex_gender = ex_gender.replace(/\'/g, '"');
+                var data_ex_gender = JSON.parse(ex_gender);
+                $("#gender").val(data_ex_gender);
+                $('#gender').trigger('change');
+            }
+
+            var source_tags = $("#source_tags_filter").val();
+            if (source_tags && source_tags.length > 0 && source_tags.toString() != 'None') {
+                var source_tags = source_tags.replace(/\u'/g, "'");
+                var source_tags = source_tags.replace(/\'/g, '"');
+                var data_soure_tags = JSON.parse(source_tags);
+                $("#select_tags_input").val(data_soure_tags);
+                $('#select_tags_input').trigger('change');
+            }
+
+            $("#clear_data").click(function () {
+                $("#checkbox1").removeAttr('checked')
+                $("#checkbox2").removeAttr('checked')
+                $("#select_filter input[type='text']").val("");
+                 $("#gender").val(null).trigger('change');
+                 $("#select_tags_input").val(null).trigger('change');
+
+            });
+
+            $("#save_camp").click(function () {
+                var keywords = ['CTKM', 'Communist', 'Dang VN', 'Dang cong san', 'SUCK', 'Tinh duc', 'alcohol', 'bieu tinh',
+                                'call boy', 'call girl', 'chan dai', 'chong My', 'chong Trung Quoc', 'cigarette', 'demonstrate',
+                                'demonstration', 'dit cha', 'dit con me','dit me', 'fuck', 'gai goi', 'game online', 'hotgirl',
+                                'khuyen mai', 'lo de', 'long leg', 'postitude', 'quang cao', 'ruou', 'sex', 'soi cau', 'soicau',
+                                'suck', 'thuoc la', 'tobbaco', 'trai bao', 'ty le ca cuoc', 'giam gia', 'uu dai', 'chiet khau',
+                                'trung thuong', 'rut tham', 'sale', 'free', 'co hoi nhan', 'mien phi', 'Qua tang', 'C/K x %',
+                                'chiet khau x %', 'dit', 'lon'];
+                for (i = 0; i < keywords.length; i++){
+                    var announcement = $("#announcement").val();
+                    if (announcement.includes(keywords[i])){
+                        swal("{{ gettext('SMS_su_dung_tu_cam') }}", '', 'error');
+                    return false;
+                    }
+                    var desc_camp = $("#desc_camp").val();
+                    if (desc_camp.includes(keywords[i])){
+                        swal("{{ gettext('Mo_ta_su_dung_tu_cam') }}", '', 'error');
+                    return false;
+                    }
+                }
+                unlayer.exportHtml(function (data) {
+                    var json = data.design; // design json
+                    var html = data.html; // final html
+                    $("#design").val(JSON.stringify(json));
+                    $("#email_content").val(html);
+
+                    $("#sms_campaign_item").submit();
+
+
+                });
+
+
+            });
+
+
+            unlayer.init({id: 'editor-container'});
+            var email_ex_design = $("#email_ex_design").val();
+            if ($("#email_ex_design").length > 0 && email_ex_design.length > 0) {
+
+                var design = JSON.parse(email_ex_design);
+                unlayer.loadDesign(design);
+
+            } else {
+
+                var design = {
+                    "body": {
+                        "rows": [{
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "image",
+                                    "values": {
+                                        "maxWidth": "100%",
+                                        "src": {
+                                            "url": "https://a.mailmunch.co/user_data/landing_pages/1500310730675-logosample_03.png",
+                                            "width": 266,
+                                            "height": 62
+                                        },
+                                        "draggable": true,
+                                        "containerPadding": "10px 10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "action": {
+                                            "url": "",
+                                            "target": ""
+                                        },
+                                        "altText": "Image",
+                                        "fullWidth": false,
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 10px 5px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "center",
+                                        "lineHeight": "120%",
+                                        "text": "<div><span style=\"color: #f10693; font-family: Pacifico, cursive; font-size: 14px; line-height: 16.8px;\"><strong><span style=\"font-size: 80px; line-height: 96px;\">Relax &amp; Plan</span></strong></span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "center",
+                                        "lineHeight": "120%",
+                                        "text": "<div><span style=\"color: #6fbb7b; font-family: Pacifico, cursive; font-size: 58px; text-align: center; line-height: 69.6px;\">&nbsp;Your Summer Break</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "20px 10px 9px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "center",
+                                        "lineHeight": "140%",
+                                        "text": "<div><span style=\"font-size: 24px; color: #505050; line-height: 33.6px;\">Time to plan a vacation for your kids?</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "5px 10px 10px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "center",
+                                        "lineHeight": "160%",
+                                        "text": "<div><span style=\"font-size: 18px; line-height: 28.8px;\"><span style=\"color: #505050; font-size: 18px; line-height: 28.8px;\">Check-out our summer break offers for&nbsp;</span><span style=\"color: #505050; font-size: 18px; line-height: 28.8px;\">children who are creative, full of energy,&nbsp;</span><span style=\"color: #505050; font-size: 18px; line-height: 28.8px;\">and can&rsquo;t sit still for a minute.</span></span></div>"
+                                    }
+                                }, {
+                                    "type": "divider",
+                                    "values": {
+                                        "containerPadding": "20px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "width": "100%",
+                                        "border": {
+                                            "borderTopWidth": "1px",
+                                            "borderTopStyle": "solid",
+                                            "borderTopColor": "#CCC"
+                                        },
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "20px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "text": "<div><strong><span style=\"font-size: 30px; font-family: Montserrat, sans-serif; color: #2790d2; line-height: 36px;\">Upcoming Events:</span></strong></div>"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "0px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1, 2],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "image",
+                                    "values": {
+                                        "maxWidth": "100%",
+                                        "src": {
+                                            "url": "https://a.mailmunch.co/user_data/landing_pages/1500313461528-1.png",
+                                            "width": 500,
+                                            "height": 500
+                                        },
+                                        "draggable": true,
+                                        "containerPadding": "0px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "action": {
+                                            "url": "",
+                                            "target": ""
+                                        },
+                                        "altText": "Image",
+                                        "fullWidth": true,
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }, {
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px 8px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#6eba79",
+                                        "textAlign": "left",
+                                        "lineHeight": "160%",
+                                        "text": "<div><span style=\"font-size: 20px; line-height: 32px;\">JET SKI RIDE</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#4f4f4f",
+                                        "textAlign": "left",
+                                        "lineHeight": "150%",
+                                        "text": "<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</div>"
+                                    }
+                                }, {
+                                    "type": "button",
+                                    "values": {
+                                        "buttonColors": {
+                                            "color": "#FFF",
+                                            "backgroundColor": "#fa9302",
+                                            "hoverColor": "#cf7a04"
+                                        },
+                                        "calculatedHeight": 36,
+                                        "calculatedWidth": 132,
+                                        "href": "",
+                                        "border": {},
+                                        "text": "ORDER NOW<br />",
+                                        "draggable": true,
+                                        "containerPadding": "5px 15px",
+                                        "padding": "10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "borderRadius": "20px"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "divider",
+                                    "values": {
+                                        "containerPadding": "1px 20px 5px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "width": "100%",
+                                        "border": {
+                                            "borderTopWidth": "1px",
+                                            "borderTopStyle": "solid",
+                                            "borderTopColor": "#CCC"
+                                        },
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "0px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [2, 1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px 8px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#6eba79",
+                                        "textAlign": "left",
+                                        "lineHeight": "160%",
+                                        "text": "<div><span style=\"font-size: 20px; line-height: 32px;\">BOAT RIDE</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#4f4f4f",
+                                        "textAlign": "left",
+                                        "lineHeight": "150%",
+                                        "text": "<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</div>"
+                                    }
+                                }, {
+                                    "type": "button",
+                                    "values": {
+                                        "buttonColors": {
+                                            "color": "#FFF",
+                                            "backgroundColor": "#fa9302",
+                                            "hoverColor": "#cf7a04"
+                                        },
+                                        "calculatedHeight": 36,
+                                        "calculatedWidth": 132,
+                                        "href": "",
+                                        "border": {},
+                                        "text": "ORDER NOW<br />",
+                                        "draggable": true,
+                                        "containerPadding": "5px 15px",
+                                        "padding": "10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "borderRadius": "20px"
+                                    }
+                                }]
+                            }, {
+                                "contents": [{
+                                    "type": "image",
+                                    "values": {
+                                        "maxWidth": "100%",
+                                        "src": {
+                                            "url": "https://a.mailmunch.co/user_data/landing_pages/1500313783372-2.png",
+                                            "width": 500,
+                                            "height": 500
+                                        },
+                                        "draggable": true,
+                                        "containerPadding": "0px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "action": {
+                                            "url": "",
+                                            "target": ""
+                                        },
+                                        "altText": "Image",
+                                        "fullWidth": true,
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "divider",
+                                    "values": {
+                                        "containerPadding": "1px 20px 5px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "width": "100%",
+                                        "border": {
+                                            "borderTopWidth": "1px",
+                                            "borderTopStyle": "solid",
+                                            "borderTopColor": "#CCC"
+                                        },
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "0px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1, 2],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "image",
+                                    "values": {
+                                        "maxWidth": "100%",
+                                        "src": {
+                                            "url": "https://a.mailmunch.co/user_data/landing_pages/1500314095876-3.png",
+                                            "width": 500,
+                                            "height": 500
+                                        },
+                                        "draggable": true,
+                                        "containerPadding": "0px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "action": {
+                                            "url": "",
+                                            "target": ""
+                                        },
+                                        "altText": "Image",
+                                        "fullWidth": true,
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }, {
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px 8px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#6eba79",
+                                        "textAlign": "left",
+                                        "lineHeight": "160%",
+                                        "text": "<div><span style=\"font-size: 20px; line-height: 32px;\">BEACH DAY</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#4f4f4f",
+                                        "textAlign": "left",
+                                        "lineHeight": "150%",
+                                        "text": "<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</div>"
+                                    }
+                                }, {
+                                    "type": "button",
+                                    "values": {
+                                        "buttonColors": {
+                                            "color": "#FFF",
+                                            "backgroundColor": "#fa9302",
+                                            "hoverColor": "#cf7a04"
+                                        },
+                                        "calculatedHeight": 36,
+                                        "calculatedWidth": 132,
+                                        "href": "",
+                                        "border": {},
+                                        "text": "ORDER NOW<br />",
+                                        "draggable": true,
+                                        "containerPadding": "5px 15px",
+                                        "padding": "10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "borderRadius": "20px"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "divider",
+                                    "values": {
+                                        "containerPadding": "1px 20px 5px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "width": "100%",
+                                        "border": {
+                                            "borderTopWidth": "1px",
+                                            "borderTopStyle": "solid",
+                                            "borderTopColor": "#CCC"
+                                        },
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "0px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "15px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#fa9302",
+                                        "textAlign": "center",
+                                        "lineHeight": "130%",
+                                        "text": "<div><span style=\"font-size: 36px; line-height: 46.8px;\">NEED MORE INFORMATION?</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#4f4f4f",
+                                        "textAlign": "center",
+                                        "lineHeight": "120%",
+                                        "text": "<div><span style=\"font-size: 20px; line-height: 24px;\">Subscribe to get updates.</span></div>"
+                                    }
+                                }, {
+                                    "type": "button",
+                                    "values": {
+                                        "buttonColors": {
+                                            "color": "#FFF",
+                                            "backgroundColor": "#6eba79",
+                                            "hoverColor": "#58a864"
+                                        },
+                                        "calculatedHeight": 52,
+                                        "calculatedWidth": 214,
+                                        "href": "",
+                                        "border": {},
+                                        "text": "<span style=\"font-size: 20px; line-height: 32px;\">SUBSCRIBE NOW</span>",
+                                        "draggable": true,
+                                        "containerPadding": "20px",
+                                        "padding": "10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "textAlign": "center",
+                                        "lineHeight": "160%",
+                                        "borderRadius": "37px"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "20px",
+                                        "selectable": false,
+                                        "draggable": false,
+                                        "deletable": false,
+                                        "color": "#000",
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "text": "<div style=\"font-family: arial, helvetica, sans-serif;\"><span style=\"font-size: 12px; color: #999999; line-height: 14.4px;\">You received this email because you signed up for [[business_name]].</span></div>\n<div style=\"font-family: arial, helvetica, sans-serif;\">&nbsp;</div>\n<div style=\"font-family: arial, helvetica, sans-serif;\"><span style=\"font-size: 12px; color: #999999; line-height: 14.4px;\">[[{unsubscribe}]]</span></div>"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "#f0f0f0",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "30px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": false,
+                                "draggable": false,
+                                "deletable": false
+                            }
+                        }],
+                        "values": {
+                            "backgroundColor": "#ffffff",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": true,
+                                "cover": false
+                            },
+                            "contentWidth": "600px",
+                            "fontFamily": {
+                                "label": "Montserrat",
+                                "value": "'Montserrat',sans-serif",
+                                "type": "google",
+                                "weights": "400,700"
+                            }
+                        }
+                    }
+                };
+
+                unlayer.loadDesign(design);
+            }
+
+
+        });
+    </script>
+{% endblock %}

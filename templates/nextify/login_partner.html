@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    {% if 'viettel.vn' in request.url %}
+        <title>Viettel | vmarketing</title>
+    {% elif 'unitel.com.la' in request.url %}
+        <title>Unitel | WIFI</title>
+    {% elif 'maxsolution' in request.url %}
+        <title>MAX SOLUTION | MAX CRM</title>
+    {% else %}
+        <title>Nextify | The Next Generation of Loyalty</title>
+    {% endif %}
+    <meta name="description" content="The Next Generation of Loyalty">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600"
+          rel="stylesheet">
+    <link rel="apple-touch-icon" href="/static/nextify/apple-touch-icon.png">
+<!--     <link rel="shortcut icon" href="/static/nextify/favicon.ico"
+          type="image/x-icon"> -->
+    <!-- Libs CSS -->
+    <link rel="stylesheet" href="/static/nextify/css/feather/feather.min.css">
+    <link rel="stylesheet" href="/static/nextify/css/dash_kit_theme.min.css" />
+
+    
+    <style>body {
+        display: none;
+    }</style>
+
+</head>
+
+<body class="d-flex align-items-center bg-auth border-top border-top-2 border-primary" style="display: block;">
+
+<!-- CONTENT
+================================================== -->
+<div class="container">
+    <div class="row align-items-center">
+        <div class="col-12 col-md-6 offset-xl-2 offset-md-1 order-md-2 mb-5 mb-md-0">
+        </div>
+        <div class="col-12 col-md-5 col-xl-4 order-md-1 my-5">
+
+            <!-- Heading -->
+            <h1 class="display-4 text-center mb-3">
+                {% if 'viettel.vn' in request.url %}
+                <img alt="" src="/static/nextify/img/logo_viettel2.png"/>
+                {% elif 'unitel.com.la' in  request.url %}
+                    <img alt="" src="/static/images/unitel_logo.png" style="width: 250px" />
+                {% else %}
+                <img alt="" src="/static/nextify/img/logo.png"/>
+                {% endif %}
+            </h1>
+
+            <!-- Subheading -->
+            <p class="text-muted text-center mb-5">
+                The next generation of loyalty
+            </p>
+
+            <!-- Form -->
+            <form id="sign_in_form" method="post" action="/login_partner">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                {% if error %}
+
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{error}}!!
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+
+                {% endif %}
+                
+                {% if message %}
+                <div class="alert alert-success" role="alert">
+                    {{message}}
+                </div>
+                {% endif %}
+                <!-- Email address -->
+                <div class="form-group">
+
+                    <!-- Label -->
+                    <label>ID, số điện thoại hoặc email</label>
+
+                    <!-- Input -->
+                    <input type="text" name="phone" class="form-control" placeholder="name@address.com">
+
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+
+                            <label>Mật khẩu</label>
+
+                        <input type="password" name="password" class="form-control form-control-appended"
+                               placeholder="Nhập mật khẩu">
+
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-4">
+                        <div class="custom-control custom-switch">
+                            <input type="radio" class="custom-control-input" id="customSwitch1" name="role" value="admin">
+                            <label class="custom-control-label" for="customSwitch1">Admin</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="custom-control custom-switch">
+                            <input type="radio" class="custom-control-input" id="customSwitch2" name="role" value="ops" checked>
+                            <label class="custom-control-label" for="customSwitch2">OPS</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="custom-control custom-switch">
+                            <input type="radio" class="custom-control-input" id="customSwitch3" name="role" value="sup" checked>
+                            <label class="custom-control-label" for="customSwitch3">SUP</label>
+                        </div>
+                    </div>
+                </div>
+
+<!--                <div class="g-recaptcha" data-sitekey="6LcpAnEUAAAAAK7BBktmXRvVt2f3Gk8hqSLiINT6"></div>-->
+                
+            </form>
+            <!-- Submit -->
+            <button class="btn btn-lg btn-block btn-primary mb-3" id="sign_in_btn">
+                Đăng nhập
+            </button>
+
+            <!-- Link -->
+
+        </div>
+    </div> <!-- / .row -->
+</div> <!-- / .container -->
+
+<!-- JAVASCRIPT
+================================================== -->
+<!-- Libs JS -->
+
+
+<script type="text/javascript" src="/static/wifi_portal/js/jquery-3.3.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#sign_in_btn").click(function () {
+            $("#sign_in_form").submit();
+
+        });
+    });
+</script>
+
+</body>
+</html>

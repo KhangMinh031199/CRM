@@ -1,0 +1,14 @@
+/*@media only screen
+and (max-device-width : 320px)
+and (orientation : portrait) {
+    body {
+        background: #fff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+
+    #background-overlay, #background-image {
+        display: none !important;
+    }
+}*/

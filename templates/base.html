@@ -1,0 +1,10 @@
+{% extends "bootstrap/base.html" %} {% import "bootstrap/fixes.html" as fixes %} {% import "bootstrap/utils.html" as util %} {% block metas %}
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> {%block meta_child%}{%endblock%} {% endblock %} {% block styles %} {{ fixes.ie8() }}
+
+<link href="{{ url_for('static', filename='logoNextify.ico') }}" rel="shortcut icon">
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" type="text/css" />
+<link rel="stylesheet" href="/static/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}" type="text/css" />
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}" type="text/css" />
+
+{% endblock %}

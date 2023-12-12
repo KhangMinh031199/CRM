@@ -1,0 +1,137 @@
+{% extends 'nextify/wifi.html' %}
+
+{% block main_content %}
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                           {{ gettext("Khao_sat") }}
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                            <a href="/wifi/{{ shop_select_id_select }}">{{ shop_select_select.name }}</a>
+                        </h1>
+
+                    </div>
+                    <div class="col-auto">
+
+
+                    </div>
+                </div> <!-- / .row -->
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="{{ shop_select_id_select }}" id="shop_select_id_select"/>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+
+                <div class="card u-p-medium">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <h4 class="card-title mb-1">
+                                    {% if survey_item.survey_type == 'multi_select' %}
+                                        {{ gettext("Chon_nhieu_dap_an") }}
+                                    {% elif survey_item.survey_type == 'one_select' %}
+                                        {{ gettext("Chi_mot_dap_an") }}
+                                    {% elif survey_item.survey_type == 'rating' %}
+                                        {{ gettext("Cham_diem") }}
+                                    {% elif survey_item.survey_type == 'comment' %}
+                                        {{ gettext("Binh_luan") }}
+                                    {% endif %}
+                                </h4>
+                            </div>
+                            <div class="form-group">
+                                <label class="c-field__label">{{ gettext("Cau_hoi") }}</label>
+                                <input class="form-control" type="text" value="{{ survey_item.question }}" readonly/>
+                            </div>
+                            {% if survey_item.survey_type == 'multi_select' or  survey_item.survey_type == 'one_select' %}
+                                <div class="form-group">
+                                    <label class="c-field__label">{{ gettext("Dap_an") }}</label>
+                                    {% for ans in survey_item.answers %}
+                                        <div class="form-group form-inline">
+                                            <label>{{ gettext("Noi_dung:") }}</label>
+                                            <input type="text" class="form-control" value="{{ ans.value }}"
+                                                   style="margin-left: 10px" readonly/>
+                                            <label style="margin-left: 20px">Tag: </label>
+                                            <input type="text" class="form-control" value="{{ ans.tag }}" readonly/>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                            {% elif survey_item.survey_type == 'rating' %}
+
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <label class="c-field__label">{{ gettext("Tu:") }} </label>
+                                        <input type="text" class="c-input"
+                                               value="{{ survey_item.min_point }}" readonly/>
+                                    </div>
+                                    <div class="col-lg-6">
+
+                                        <label class="c-field__label">
+                                            {{ gettext("den:") }} </label>
+                                        <input type="text" class="c-input"
+                                               value="{{ survey_item.max_point }}" readonly/>
+
+                                    </div>
+
+                                </div>
+
+                            {% endif %}
+
+
+                        </div>
+                        <div class="col-lg-6">
+
+                            <div id="preview"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+    <input type="hidden" value="{{ survey_item._id }}" id="survey_id"/>
+    <input type="hidden" value="{{ shop_select_id_select }}" id="shop_select_id_select"/>
+{% endblock %}
+{% block js %}
+    <script src="{{ url_for('static', filename='v2/assets/js/biomp.js') }}"></script>
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            var survey_id = $("#survey_id").val();
+            var shop_select_id_select = $("#shop_select_id_select").val();
+            var url_preview = '/wifi/' + shop_select_id_select + '/survey/' + survey_id + '/preview';
+            $("#preview").empty();
+            bioMp(document.getElementById('preview'), {
+                url: url_preview,
+                view: 'front',
+                image: '/static/images/iphone_simulator/img_preview_mobile.svg'
+            });
+
+
+        });
+
+
+    </script>
+
+
+
+{% endblock %}

@@ -1,0 +1,1505 @@
+{% extends 'nextify/base.html' %}
+
+{% block body %}
+<style>
+    ul.timeline {
+        list-style-type: none;
+        position: relative;
+    }
+
+    ul.timeline:before {
+        content: ' ';
+        background: #d4d9df;
+        display: inline-block;
+        position: absolute;
+        left: 29px;
+        width: 2px;
+        height: 100%;
+        z-index: 400;
+    }
+
+    ul.timeline>li {
+        margin: 20px 50px;
+
+            {
+            #padding-left: 20px;
+            #
+        }
+    }
+
+    ul.timeline>li:before {
+        content: ' ';
+        background: white;
+        display: inline-block;
+        position: absolute;
+        border-radius: 50%;
+        border: 3px solid #F26633;
+        left: 20px;
+        width: 20px;
+        height: 20px;
+        z-index: 400;
+    }
+
+    ul.timeline>li>a {
+        color: #6e84a3;
+    }
+
+    .weekDays-selector input {
+        display: none !important;
+    }
+
+    .weekDays-selector input[type=checkbox]+label {
+        display: inline-block;
+        border-radius: 30px;
+        background: #dddddd;
+        height: 40px;
+        width: 40px;
+        margin-right: 3px;
+        line-height: 40px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .weekDays-selector input[type=checkbox]:checked+label {
+        background: #fa952e;
+        color: #ffffff;
+    }
+
+    .method-form-control {
+        height: calc(1.5em + 1rem + 2px);
+    }
+</style>
+<div class="container-fluid">
+    <div class="row justify-content-left">
+        <div class="col-12 col-xl-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-end">
+                        <div class="col mb-3 ml-n3 ml-md-n2">
+
+                            <div class="input-group input-group-lg input-group-flush input-group-merge">
+                                <input type="text" class="form-control form-control-appended" name="name"
+                                    value="{{ gettext('HotspotManageText') }}" class="form-control"
+                                    style="font-size: 2rem" readonly />
+                            </div>
+                            <h3 class="header-pretitle">
+                                {{ shop_select.name }}
+                            </h3>
+
+
+                        </div>
+                        <div class="col-auto">
+                            <a href="#apply_shop_select" data-toggle="modal"
+                                class="btn btn-flat d-block d-md-inline-block mb-2">
+                                <i class="fa fa-list"></i> Áp dụng theo địa điểm
+                            </a>
+                            <a href="#hotspot_config" data-toggle="modal"
+                                class="btn btn-flat d-block d-md-inline-block mb-2">
+                                <i class="fa fa-gears"></i> {{ gettext('HotspotGeneralsettingText') }}
+                            </a>
+                            <a href="#priority_splash" data-toggle="modal" class="btn btn-flat d-block d-md-inline-block mb-2">
+                                <i class="fa fa-wrench"></i> Thiết lập thứ tự trang chào
+                            </a>
+                            <a href="/wifi" class="btn btn-flat d-block d-md-inline-block mb-2">
+                                <i class="fa fa-close"></i> {{ gettext('HotspotCloseText') }}
+                            </a>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-12 col-xl-3">
+
+                    <div class="card">
+
+                        <div class="card-body">
+
+                            <ul class="navbar-nav timeline">
+                                <li class="nav-item">
+                                    <a href="/splash_page/{{ shop_id_select }}/hotspot/register">
+                                        {{ gettext('HotspotRegisterScreenText') }}
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/splash_page/{{ shop_id_select }}/hotspot/default">
+                                        {{ gettext('HotspotDefaultWelcomeScreenText') }}
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/splash_page/{{ shop_id_select }}/hotspot/survey">
+                                        {{ gettext('HotspotSurveyScreenText') }}
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="/splash_page/{{ shop_id_select }}/hotspot/birthday">
+                                        {{ gettext('HotspotHappyBirthdayScreenText') }}
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/splash_page/{{ shop_id_select }}/hotspot/hour">
+                                        Trang chào theo khung giờ
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/splash_page/{{ shop_id_select }}/hotspot/promotion">
+                                        Trang chào theo khoảng ngày
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/splash_page/{{ shop_id_select }}/hotspot/tags">
+                                        Trang chào theo tag
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/splash_page/{{ shop_id_select }}/hotspot/loyal">
+                                        {{ gettext('HotspotNumberofvisitsScreenText') }}
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/splash_page/{{ shop_id_select }}/hotspot/weekday">
+                                        Trang chào theo ngày trong tuần
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/splash_page/{{ shop_id_select }}/hotspot/connect_success">
+                                        Trang chào kết nối thành công
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="modal-title">Gắn Tag tự động</h3>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="row mb-4">
+                                <div class="col-lg-12">
+
+                                    <select class="form-control select2" name="tags" id="new_tags_selects">
+                                        <option value="">Chọn một Tag</option>
+                                        {% for tag in tags %}
+                                        <option value="{{ tag._id }}">{{ tag.name }}</option>
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+                                <script nonce="{{ csp_nonce() }}">
+                                    $(document).ready(function () {
+                                        $('#new_tags_selects').select2();
+                                        $('#new_tags_selects').on('select2:select', function (e) {
+                                            var data = e.params.data;
+                                            console.log(data);
+                                            if (data['id'] != '') {
+                                                $('#tag_name_hotspot').text(data['text']);
+                                                $('#tag_name').val(data['id']);
+                                                $('#tags_hotspot').modal('show');
+
+                                            }
+
+                                        });
+                                    });
+
+                                </script>
+                            </div>
+                            <div class="row  mb-4 ">
+                                <div class="col-lg-12">
+
+                                    <!-- {#                            <span class="badge badge-soft-primary">Primary</span>#}
+{#                            <span class="badge badge-soft-secondary">Secondary</span>#}
+{#                            <span class="badge badge-soft-success">Success</span>#}
+{#                            <span class="badge badge-soft-info">Info</span>#}
+{#                            <span class="badge badge-soft-warning">Warning</span>#}
+{#                            <span class="badge badge-soft-danger">Danger</span>#} -->
+                                    {% if tag_list.count() != 0 %}
+
+                                    <table class="table table-sm card-table">
+                                        <tbody>
+                                            <div>
+                                                {% for tag in tag_list%}
+
+                                                <a data-toggle="modal"
+                                                    class="badge badge-pill badge-{{ ['success','warning','info']|random }}"
+                                                    data-target="#tag_name_hotspot_{{ tag._id }}"
+                                                    style="color: white">{{ tag.tag_name }}
+                                                </a>
+
+
+                                                <script nonce="{{ csp_nonce() }}">
+                                                    $(document).ready(function () {
+                                                        $('#remove_{{ tag._id }}').click(function () {
+                                                            var url = "/splash_page_tags/remove/{{tag._id}}";
+                                                            Swal.fire({
+                                                                title: 'Bạn có chắc chắn muốn xóa tag không?',
+                                                                type: 'warning',
+                                                                showCancelButton: true,
+                                                                confirmButtonColor: '#3085d6',
+focusCancel: true,
+                                                                cancelButtonColor: '#d33',
+                                                                confirmButtonText: 'Có!',
+                                                                cancelButtonText: '{{ gettext("Khong!")}}'
+                                                            }).then((result) => {
+                                                                if (result.value) {
+                                                                    $.ajax({
+                                                                        type: 'POST',
+                                                                        url: url,
+                                                                        success: function () {
+                                                                            swal("Thao tác thành công", " ", "success");
+                                                                            location.reload();
+
+                                                                        }
+                                                                    });
+
+
+                                                                }
+                                                            })
+                                                        });
+
+
+                                                    });
+                                                </script>
+
+                                                <!-- 11111 -->
+
+
+                                                <div class="modal hide fade" id="tag_name_hotspot_{{ tag._id }}" tabindex="-1"
+                                                    role="dialog" aria-labelledby="tags_hotspot" data-backdrop="static"
+                                                    style="display: none;" aria-hidden="true">
+
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h3 class="modal-title">Gắn Tag tự động</h3>
+
+                                                                <a class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">×</span>
+                                                                </a>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="row mb-2">
+                                                                    <div class="col-lg-12">
+                                                                        <div align="center" class="alert alert-primary"
+                                                                            id="tag_name_hotspot_{{ tag._id }}">
+                                                                            <h2>
+                                                                                <font color="white">{{ tag.tag_name }}
+                                                                                </font>
+                                                                            </h2>
+                                                                        </div>
+
+                                                                    </div>
+
+
+                                                                </div>
+                                                                <div class="row mb-2">
+                                                                    <div class="col-lg-12">
+                                                                        <h3 class="modal-title">Gắn Tag cho nhóm khách
+                                                                            hàng: </h3>
+                                                                    </div>
+                                                                    <form id="tag_for_customers_{{ tag._id }}"
+                                                                        method="POST"
+                                                                        action="/splash_page_tags/{{ shop_id_select }}">
+                                                                        <input type="hidden" name="_csrf_token"
+                                                                            value="{{ csrf_token() }}" />
+                                                                        <div class="col-lg-12">
+                                                                            <input name="tag_name"
+                                                                                id="tag_name_hotspot1_{{tag._id}}"
+                                                                                value={{tag.tag_id}} type="hidden" />
+                                                                            <label class="header-subtitle mb-2">
+                                                                                <input type="radio" name="options"
+                                                                                    id="option1_{{tag._id}}" checked=""
+                                                                                    {% if tag.tag_type == 'all_customers' %}
+                                                                                    checked {% endif %}
+                                                                                    value="all_customers"> Tất cả khách
+                                                                                hàng
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-lg-12">
+                                                                            <label class="header-subtitle mb-2">
+                                                                                <input type="radio" name="options"
+                                                                                    value="by_visit"
+                                                                                    {% if tag.tag_type == 'by_visit' %}
+                                                                                    checked="" {% endif %}
+                                                                                    id="option2_{{tag._id}}"> Khách theo
+                                                                                lượt đến
+                                                                            </label>
+                                                                            <div class="alert alert-light">
+                                                                                <div class="row"
+                                                                                    style="margin-left: 0px">
+                                                                                    <label class="c-field__label">Sô
+                                                                                        lượt đến tính theo:</label>
+                                                                                    <div class="col-md-6">
+                                                                                        <div
+                                                                                            class="c-choice c-choice--radio">
+                                                                                            <input
+                                                                                                class="c-choice__input"
+                                                                                                type="radio"
+                                                                                                name="visits_by"
+                                                                                                {% if tag.settings.type_visit == "merchant" %}
+                                                                                                checked="" {% else %}
+                                                                                                {%endif%}
+                                                                                                id="return_visit_by_merchant_{{ tag._id }}"
+                                                                                                value="merchant">
+                                                                                            <label
+                                                                                                class="c-choice__label"
+                                                                                                for="return_visit_by_merchant_{{ tag._id }}">Chuỗi</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-6">
+                                                                                        <div
+                                                                                            class="c-choice c-choice--radio">
+                                                                                            <input
+                                                                                                class="c-choice__input"
+                                                                                                type="radio"
+                                                                                                {% if tag.settings.type_visit == "shop" %}
+                                                                                                checked="" {% else %}
+                                                                                                {%endif%}
+                                                                                                name="visits_by"
+                                                                                                id="return_visit_by_shop_{{ tag._id }}"
+                                                                                                value="shop">
+                                                                                            <label
+                                                                                                class="c-choice__label"
+                                                                                                for="return_visit_by_shop_{{ tag._id }}">Địa
+                                                                                                điểm</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-lg-6">
+                                                                                        <input type="text"
+                                                                                            id="min_visit_{{ tag._id }}"
+                                                                                            name="min_visit"
+                                                                                            value="{% if tag.settings.min_visit %}{{ tag.settings.min_visit }}{% else %}{% endif %}"
+                                                                                            placeholder="Lớn hơn"
+                                                                                            class="form-control" />
+                                                                                    </div>
+
+                                                                                    <div class="col-lg-6">
+                                                                                        <input type="text"
+                                                                                            id="max_visit_{{ tag._id }}"
+                                                                                            name="max_visit"
+                                                                                            value="{% if tag.settings.max_visit %}{{tag.settings.max_visit}}{% else %}{% endif %}"
+                                                                                            placeholder="Nhỏ hơn"
+                                                                                            class="form-control" />
+
+                                                                                    </div>
+
+                                                                                </div>
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="col-lg-12">
+                                                                            <label class="header-subtitle mb-2">
+                                                                                <input type="radio" name="options"
+                                                                                    id="option3_{{tag._id}}"
+                                                                                    {% if tag.tag_type == 'by_datetime' %}
+                                                                                    checked="" {% endif %}
+                                                                                    value="by_datetime"> Khách đến theo
+                                                                                ngày, giờ
+                                                                            </label>
+                                                                            <div class="alert alert-light">
+
+                                                                                <div class="row mb-2">
+                                                                                    <div class="col-lg-12">
+                                                                                        <label
+                                                                                            class="c-field__label">Chọn
+                                                                                            ngày:</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-12">
+
+                                                                                        <div class="weekDays-selector">
+                                                                                            <input type="checkbox"
+                                                                                                id="weekday-sun_{{tag._id}}"
+                                                                                                class="weekday"
+                                                                                                {% if tag.settings.weekday_sun %}
+                                                                                                checked="" {% endif %}
+                                                                                                name="weekday_sun" />
+                                                                                            <label
+                                                                                                for="weekday-sun_{{tag._id}}">S</label>
+                                                                                            <input type="checkbox"
+                                                                                                id="weekday-mon_{{tag._id}}"
+                                                                                                class="weekday"
+                                                                                                {% if tag.settings.weekday_mon %}
+                                                                                                checked="" {% endif %}
+                                                                                                name="weekday_mon" />
+                                                                                            <label
+                                                                                                for="weekday-mon_{{tag._id}}">M</label>
+                                                                                            <input type="checkbox"
+                                                                                                id="weekday-tue_{{tag._id}}"
+                                                                                                class="weekday"
+                                                                                                {% if tag.settings.weekday_tue %}
+                                                                                                checked="" {% endif %}
+                                                                                                name="weekday_tue" />
+                                                                                            <label
+                                                                                                for="weekday-tue_{{tag._id}}">T</label>
+                                                                                            <input type="checkbox"
+                                                                                                id="weekday-wed_{{tag._id}}"
+                                                                                                class="weekday"
+                                                                                                {% if tag.settings.weekday_wed %}
+                                                                                                checked="" {% endif %}
+                                                                                                name="weekday_wed" />
+                                                                                            <label
+                                                                                                for="weekday-wed_{{tag._id}}">W</label>
+                                                                                            <input type="checkbox"
+                                                                                                id="weekday-thu_{{tag._id}}"
+                                                                                                class="weekday"
+                                                                                                {% if tag.settings.weekday_thu %}
+                                                                                                checked="" {% endif %}
+                                                                                                name="weekday_thu" />
+                                                                                            <label
+                                                                                                for="weekday-thu_{{tag._id}}">T</label>
+                                                                                            <input type="checkbox"
+                                                                                                id="weekday-fri_{{tag._id}}"
+                                                                                                class="weekday"
+                                                                                                {% if tag.settings.weekday_fri %}
+                                                                                                checked="" {% endif %}
+                                                                                                name="weekday_fri" />
+                                                                                            <label
+                                                                                                for="weekday-fri_{{tag._id}}">F</label>
+                                                                                            <input type="checkbox"
+                                                                                                id="weekday-sat_{{tag._id}}"
+                                                                                                class="weekday"
+                                                                                                {% if tag.settings.weekday_sat %}
+                                                                                                checked="" {% endif %}
+                                                                                                name="weekday_sat" />
+                                                                                            <label
+                                                                                                for="weekday-sat_{{tag._id}}">S</label>
+                                                                                        </div>
+
+
+                                                                                    </div>
+
+
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-lg-12">
+                                                                                        <label
+                                                                                            class="c-field__label">Chọn
+                                                                                            khung giờ trong
+                                                                                            ngày:</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-4">
+                                                                                        <input type="text"
+                                                                                            id="min_hour_in_date_{{tag._id}}"
+                                                                                            name="min_hour_in_date"
+                                                                                            value=""
+                                                                                            placeholder="Lớn hơn"
+                                                                                            class="form-control" />
+                                                                                    </div>
+                                                                                    <div class="col-lg-4">
+                                                                                        <input type="text"
+                                                                                            id="max_hour_in_date_{{tag._id}}"
+                                                                                            name="max_hour_in_date"
+                                                                                            value=""
+                                                                                            placeholder="Nhỏ hơn"
+                                                                                            class="form-control" />
+                                                                                    </div>
+                                                                                    <div class="col-lg-4">
+                                                                                        <div
+                                                                                            class="custom-control custom-switch">
+                                                                                            <input type="checkbox"
+                                                                                                class="custom-control-input"
+                                                                                                name="all_hours"
+                                                                                                {% if tag.settings.all_hours %}
+                                                                                                checked="" {% endif %}
+                                                                                                id="customSwitch1_{{tag._id}}">
+                                                                                            <label
+                                                                                                class="custom-control-label"
+                                                                                                for="customSwitch1_{{tag._id}}">Cả
+                                                                                                ngày</label>
+                                                                                        </div>
+                                                                                        {% if tag.settings.min_hour_in_date %}
+                                                                                        <input type="hidden"
+                                                                                            class="c-input"
+                                                                                            value="{{ tag.settings.min_hour_in_date }}"
+                                                                                            id="ex_min_hour_in_date_{{tag._id}}" />
+                                                                                        {% endif %}
+
+                                                                                        {% if tag.settings.max_hour_in_date %}
+                                                                                        <input type="hidden"
+                                                                                            class="c-input"
+                                                                                            value="{{ tag.settings.max_hour_in_date }}"
+                                                                                            id="ex_max_hour_in_date_{{tag._id}}" />
+                                                                                        {% endif %}
+                                                                                    </div>
+                                                                                    <script nonce="{{ csp_nonce() }}">
+                                                                                        $(document).ready(function () {
+                                                                                            if ($("#ex_min_hour_in_date_{{tag._id}}").length > 0 && $("#ex_min_hour_in_date_{{tag._id}}").val()
+                                                                                                .length > 0 && $("#ex_min_hour_in_date_{{tag._id}}").val() != 'None') {
+                                                                                                flatpickr("#min_hour_in_date_{{tag._id}}", {
+                                                                                                    enableTime: true,
+                                                                                                    defaultDate: $("#ex_min_hour_in_date_{{tag._id}}").val(),
+                                                                                                    noCalendar: true,
+
+                                                                                                    dateFormat: "H:i", static: true,
+                                                                                                });
+                                                                                            } else {
+                                                                                                flatpickr("#min_hour_in_date_{{tag._id}}", {
+                                                                                                    enableTime: true,
+                                                                                                    noCalendar: true,
+
+                                                                                                    dateFormat: "H:i", static: true,
+
+                                                                                                });
+                                                                                            }
+                                                                                            if ($("#ex_max_hour_in_date_{{tag._id}}").length > 0 && $("#ex_max_hour_in_date_{{tag._id}}").val()
+                                                                                                .length > 0 && $("#ex_max_hour_in_date_{{tag._id}}").val() != 'None') {
+                                                                                                flatpickr("#max_hour_in_date_{{tag._id}}", {
+                                                                                                    enableTime: true,
+                                                                                                    defaultDate: $("#ex_max_hour_in_date_{{tag._id}}").val(),
+                                                                                                    noCalendar: true,
+
+                                                                                                    dateFormat: "H:i", static: true,
+                                                                                                });
+                                                                                            } else {
+                                                                                                flatpickr("#max_hour_in_date_{{tag._id}}", {
+                                                                                                    enableTime: true,
+                                                                                                    noCalendar: true,
+
+                                                                                                    dateFormat: "H:i", static: true,
+
+                                                                                                });
+                                                                                            }
+
+
+                                                                                        })
+
+                                                                                    </script>
+
+                                                                                </div>
+
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                        <div class="col-lg-12">
+                                                                            <label class="header-subtitle mb-2">
+                                                                                <input type="radio" name="options"
+                                                                                    id="option3_{{tag._id}}"
+                                                                                    {% if tag.tag_type == 'by_event' %}
+                                                                                    checked="" {% endif %}
+                                                                                    value="by_event"> Khách hàng theo sự
+                                                                                kiện
+                                                                            </label>
+                                                                            <div class="alert alert-light">
+
+                                                                                <div class="row mb-4">
+                                                                                    <div class="col-lg-12">
+                                                                                        <label
+                                                                                            class="c-field__label">Khoảng
+                                                                                            ngày:</label>
+                                                                                    </div>
+                                                                                    {% if tag.settings.min_date %}
+                                                                                    <input type="hidden" class="c-input"
+                                                                                        value="{{ tag.settings.min_date }}"
+                                                                                        id="ex_min_date_{{tag._id}}" />
+                                                                                    {% endif %}
+
+                                                                                    {% if tag.settings.max_date %}
+                                                                                    <input type="hidden" class="c-input"
+                                                                                        value="{{ tag.settings.max_date }}"
+                                                                                        id="ex_max_date_{{tag._id}}" />
+                                                                                    {% endif %}
+
+                                                                                    <div class="col-lg-6">
+                                                                                        <input type="text"
+                                                                                            class="c-input"
+                                                                                            id="min_date_{{tag._id}}"
+                                                                                            placeholder="Từ ngày"
+                                                                                            name="date_from" value="" />
+                                                                                    </div>
+                                                                                    <div class="col-lg-6">
+                                                                                        <input type="text"
+                                                                                            class="c-input"
+                                                                                            placeholder="Đến ngày"
+                                                                                            id="max_date_{{tag._id}}"
+                                                                                            name="date_to" value="" />
+                                                                                    </div>
+
+
+                                                                                    <script nonce="{{ csp_nonce() }}">
+                                                                                        $(document).ready(function () {
+                                                                                            if ($("#ex_min_date_{{tag._id}}").length > 0 && $("#ex_min_date_{{tag._id}}").val()
+                                                                                                .length > 0 && $("#ex_min_date_{{ tag._id }}").val() != 'None') {
+                                                                                                flatpickr("#min_date_{{tag._id}}", {
+                                                                                                    enableTime: false,
+                                                                                                    defaultDate: $("#ex_min_date_{{tag._id}}").val(),
+                                                                                                    dateFormat: "d-m-Y"
+                                                                                                });
+                                                                                            } else {
+                                                                                                flatpickr("#min_date_{{tag._id}}", {
+                                                                                                    enableTime: false,
+                                                                                                    dateFormat: "d-m-Y"
+
+                                                                                                });
+                                                                                            }
+                                                                                            if ($("#ex_max_date_{{tag._id}}").length > 0 && $("#ex_max_date_{{tag._id}}").val()
+                                                                                                .length > 0 && $("#ex_max_date_{{ tag._id }}").val() != 'None') {
+                                                                                                flatpickr("#max_date_{{tag._id}}", {
+                                                                                                    enableTime: false,
+                                                                                                    defaultDate: $("#ex_max_date_{{tag._id}}").val(),
+                                                                                                    dateFormat: "d-m-Y"
+                                                                                                });
+                                                                                            } else {
+                                                                                                flatpickr("#max_date_{{tag._id}}", {
+                                                                                                    enableTime: false,
+                                                                                                    dateFormat: "d-m-Y"
+
+                                                                                                });
+                                                                                            }
+
+
+                                                                                        });
+                                                                                    </script>
+
+
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-lg-12">
+                                                                                        <label
+                                                                                            class="c-field__label">Khoảng
+                                                                                            giờ:</label>
+                                                                                    </div>
+                                                                                    {% if tag.settings.min_hour %}
+                                                                                    <input type="hidden" class="c-input"
+                                                                                        value="{{ tag.settings.min_hour }}"
+                                                                                        id="ex_min_hour_{{tag._id}}" />
+                                                                                    {% endif %}
+
+                                                                                    {% if tag.settings.max_hour %}
+                                                                                    <input type="hidden" class="c-input"
+                                                                                        value="{{ tag.settings.max_hour }}"
+                                                                                        id="ex_max_hour_{{tag._id}}" />
+                                                                                    {% endif %}
+                                                                                    <div class="col-lg-6">
+                                                                                        <input type="text"
+                                                                                            id="min_hour_{{tag._id}}"
+                                                                                            name="min_hour"
+                                                                                            placeholder="Lớn hơn"
+                                                                                            class="form-control" />
+                                                                                    </div>
+                                                                                    <div class="col-lg-6">
+                                                                                        <input type="text"
+                                                                                            id="max_hour_{{tag._id}}"
+                                                                                            name="max_hour"
+                                                                                            placeholder="Nhỏ hơn"
+                                                                                            class="form-control" />
+                                                                                    </div>
+                                                                                    <script nonce="{{ csp_nonce() }}">
+                                                                                        $(document).ready(function () {
+                                                                                            if ($("#ex_min_hour_{{tag._id}}").length > 0 && $("#ex_min_hour_{{tag._id}}").val()
+                                                                                                .length > 0 && $("#ex_min_hour_{{tag._id}}").val() != 'None') {
+                                                                                                flatpickr("#min_hour_{{tag._id}}", {
+                                                                                                    enableTime: true,
+                                                                                                    defaultDate: $("#ex_min_hour_{{tag._id}}").val(),
+                                                                                                    noCalendar: true,
+
+                                                                                                    dateFormat: "H:i", static: true,
+                                                                                                });
+                                                                                            } else {
+                                                                                                flatpickr("#min_hour_{{tag._id}}", {
+                                                                                                    enableTime: true,
+                                                                                                    noCalendar: true,
+
+                                                                                                    dateFormat: "H:i", static: true,
+
+                                                                                                });
+                                                                                            }
+                                                                                            if ($("#ex_max_hour_{{tag._id}}").length > 0 && $("#ex_max_hour_{{tag._id}}").val()
+                                                                                                .length > 0 && $("#ex_max_hour_{{tag._id}}").val() != 'None') {
+                                                                                                flatpickr("#max_hour_{{tag._id}}", {
+                                                                                                    enableTime: true,
+                                                                                                    defaultDate: $("#ex_max_hour_{{tag._id}}").val(),
+                                                                                                    noCalendar: true,
+
+                                                                                                    dateFormat: "H:i", static: true,
+                                                                                                });
+                                                                                            } else {
+                                                                                                flatpickr("#max_hour_{{tag._id}}", {
+                                                                                                    enableTime: true,
+                                                                                                    noCalendar: true,
+
+                                                                                                    dateFormat: "H:i", static: true,
+
+                                                                                                });
+                                                                                            }
+
+
+                                                                                        });
+                                                                                    </script>
+
+
+
+                                                                                </div>
+
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                    </form>
+                                                                    <script nonce="{{ csp_nonce() }}">
+                                                                        $(document).ready(function () {
+                                                                            $("#min_visit_{{ tag._id }}").keypress(function (e) {
+                                                                                //if the letter is not digit then display error and don't type anything
+                                                                                if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                                                                                    //display error message
+                                                                                    $("#errmsg").html("Chỉ nhập số").show().fadeOut("slow");
+                                                                                    return false;
+                                                                                }
+                                                                            });
+                                                                            $("#max_visit_{{ tag._id }}").keypress(function (e) {
+                                                                                //if the letter is not digit then display error and don't type anything
+                                                                                if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                                                                                    //display error message
+                                                                                    $("#errmsg1").html("Chỉ nhập số").show().fadeOut("slow");
+                                                                                    return false;
+                                                                                }
+                                                                            });
+                                                                            $("#new_tag_hotspot_btn_{{ tag._id }}").click(function () {
+
+                                                                                $.ajax({
+                                                                                    type: 'POST',
+                                                                                    url: $("#tag_for_customers_{{ tag._id }}").attr("action"),
+                                                                                    data: $("#tag_for_customers_{{ tag._id }}").serialize(),
+                                                                                    success: function (response) {
+                                                                                        var returnedData = JSON.parse(response);
+                                                                                        if ('error' in returnedData) {
+                                                                                            swal(returnedData['error'], " ", "error");
+                                                                                            return false;
+                                                                                        }
+                                                                                        else {
+                                                                                            swal('Thao tác thành công', '', 'success');
+                                                                                            location.reload(true);
+                                                                                        }
+
+                                                                                    },
+                                                                                    error: function (xhr, desc, err) {
+                                                                                        swal("Có lỗi xảy ra, thử lại sau", " ", "error");
+                                                                                        return false;
+                                                                                    }
+                                                                                });
+
+
+                                                                            })
+
+                                                                        });
+
+                                                                    </script>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <a id="new_tag_hotspot_btn_{{ tag._id }}"
+                                                                    class="c-btn c-btn--info u-float-right">
+                                                                    Lưu lại
+                                                                </a>
+                                                                <a id="remove_{{ tag._id }}"
+                                                                    class="btn btn-flat d-block d-md-inline-block">
+                                                                    Xóa</a </div> </div> </div> </div> </div>
+                                                                    {% endfor %} </div> </tbody> </table> {% endif %}
+                                                                    </div> </div> </div> </div> </div> <div
+                                                                    class="col-12 col-xl-9">
+
+                                                                {% block hotspot_item %}
+
+                                                                {% endblock %}
+                                                            </div>
+                                                        </div>
+                                                        <!-- 11111 -->
+                                                    </div>
+
+
+
+                                                    <!-- 11111 -->
+
+                                                </div>
+
+
+                                            </div>
+                                </div>
+                            </div>
+
+                            <div class="modal hide fade" id="tags_hotspot" tabindex="-1" role="dialog"
+                                aria-labelledby="tags_hotspot" data-backdrop="static" style="display: none;"
+                                aria-hidden="true">
+
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title">Gắn Tag tự động</h3>
+
+                                            <a class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </a>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row mb-2">
+                                                <div class="col-lg-12">
+                                                    <div class="alert alert-primary" id="tag_name_hotspot">
+
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-lg-12">
+                                                    <h3 class="modal-title">Gắn Tag cho nhóm khách hàng: </h3>
+                                                </div>
+                                                <form id="tag_for_customers" method="POST"
+                                                    action="/splash_page_tags/{{ shop_id_select }}">
+                                                    <input type="hidden" name="_csrf_token"
+                                                        value="{{ csrf_token() }}" />
+                                                    <input type="hidden" value="{{ shop_id_select }}"
+                                                        name="shop_id_select" />
+                                                    <div class="col-lg-12">
+                                                        <input name="tag_name" id="tag_name" type="hidden">
+                                                        <label class="header-subtitle mb-2">
+                                                            <input type="radio" name="options" id="option1" checked=""
+                                                                value="all_customers"> Tất cả khách hàng
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <label class="header-subtitle mb-2">
+                                                            <input type="radio" name="options" value="by_visit"
+                                                                id="option2"> Khách theo lượt đến
+                                                        </label>
+                                                        <div class="alert alert-light">
+                                                            <div class="row" style="margin-left: 0px">
+                                                                <label
+                                                                    class="c-field__label">{{gettext('HotspotNumberofvisitsScreenBaseText')}}:</label>
+                                                                <div class="col-md-6">
+                                                                    <div class="c-choice c-choice--radio">
+                                                                        <input class="c-choice__input" type="radio"
+                                                                            name="visits_by"
+                                                                            id="return_visit_by_merchant"
+                                                                            value="merchant" checked>
+                                                                        <label class="c-choice__label"
+                                                                            for="return_visit_by_merchant">{{gettext('HotspotNumberofvisitsScreenChainText')}}</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="c-choice c-choice--radio">
+                                                                        <input class="c-choice__input" type="radio"
+                                                                            name="visits_by" id="return_visit_by_shop"
+                                                                            value="shop">
+                                                                        <label class="c-choice__label"
+                                                                            for="return_visit_by_shop">{{gettext('HotspotNumberofvisitsScreenLocationText')}}</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <input type="text" id="min_visit" name="min_visit"
+                                                                        placeholder="Lớn hơn" class="form-control"
+                                                                        value="" />
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <input type="text" id="max_visit" name="max_visit"
+                                                                        placeholder="Nhỏ hơn" class="form-control"
+                                                                        value="" />
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <label class="header-subtitle mb-2">
+                                                            <input type="radio" name="options" id="option3"
+                                                                value="by_datetime"> Khách đến theo ngày, giờ
+                                                        </label>
+                                                        <div class="alert alert-light">
+
+                                                            <div class="row mb-2">
+                                                                <div class="col-lg-12">
+                                                                    <label class="c-field__label">Chọn ngày:</label>
+                                                                </div>
+                                                                <div class="col-lg-12">
+
+                                                                    <div class="weekDays-selector">
+                                                                        <input type="checkbox" id="weekday-sun"
+                                                                            class="weekday" name="weekday_sun" />
+                                                                        <label for="weekday-sun">S</label>
+                                                                        <input type="checkbox" id="weekday-mon"
+                                                                            class="weekday" name="weekday_mon" />
+                                                                        <label for="weekday-mon">M</label>
+                                                                        <input type="checkbox" id="weekday-tue"
+                                                                            class="weekday" name="weekday_tue" />
+                                                                        <label for="weekday-tue">T</label>
+                                                                        <input type="checkbox" id="weekday-wed"
+                                                                            class="weekday" name="weekday_wed" />
+                                                                        <label for="weekday-wed">W</label>
+                                                                        <input type="checkbox" id="weekday-thu"
+                                                                            class="weekday" name="weekday_thu" />
+                                                                        <label for="weekday-thu">T</label>
+                                                                        <input type="checkbox" id="weekday-fri"
+                                                                            class="weekday" name="weekday_fri" />
+                                                                        <label for="weekday-fri">F</label>
+                                                                        <input type="checkbox" id="weekday-sat"
+                                                                            class="weekday" name="weekday_sat" />
+                                                                        <label for="weekday-sat">S</label>
+                                                                    </div>
+
+
+                                                                </div>
+
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <label class="c-field__label">Chọn khung giờ trong
+                                                                        ngày:</label>
+                                                                </div>
+                                                                <div class="col-lg-4">
+                                                                    <input type="text" id="min_hour_in_date"
+                                                                        name="min_hour_in_date" placeholder="12:00"
+                                                                        class="form-control" value="" />
+                                                                </div>
+                                                                <div class="col-lg-4">
+                                                                    <input type="text" id="max_hour_in_date"
+                                                                        name="max_hour_in_date" placeholder="15:00"
+                                                                        class="form-control" value="" />
+                                                                </div>
+                                                                <div class="col-lg-4">
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="checkbox"
+                                                                            class="custom-control-input"
+                                                                            id="customSwitch1" name="all_hours">
+                                                                        <label class="custom-control-label"
+                                                                            for="customSwitch1">Cả ngày</label>
+                                                                    </div>
+
+                                                                </div>
+                                                                <script nonce="{{ csp_nonce() }}">
+                                                                    $(document).ready(function () {
+                                                                        flatpickr("#min_hour_in_date", {
+                                                                            enableTime: true,
+                                                                            noCalendar: true,
+
+                                                                            dateFormat: "H:i", static: true,
+
+                                                                        });
+                                                                        flatpickr("#max_hour_in_date", {
+                                                                            enableTime: true,
+                                                                            noCalendar: true,
+
+                                                                            dateFormat: "H:i", static: true,
+
+                                                                        });
+
+
+                                                                    });
+                                                                </script>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-lg-12">
+                                                        <label class="header-subtitle mb-2">
+                                                            <input type="radio" name="options" id="option3"
+                                                                value="by_event"> Khách hàng theo sự kiện
+                                                        </label>
+                                                        <div class="alert alert-light">
+
+                                                            <div class="row mb-4">
+                                                                <div class="col-lg-12">
+                                                                    <label class="c-field__label">Khoảng ngày:</label>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <input type="text" class="c-input" id="date_from"
+                                                                        placeholder="Từ ngày" name="date_from"
+                                                                        value="" />
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <input type="text" class="c-input"
+                                                                        placeholder="Đến ngày" id="date_to"
+                                                                        name="date_to" />
+                                                                </div>
+
+
+                                                                <script nonce="{{ csp_nonce() }}">
+                                                                    $(document).ready(function () {
+                                                                        flatpickr("#date_from", {
+                                                                            enableTime: false,
+                                                                            dateFormat: "d-m-Y"
+
+                                                                        });
+                                                                        flatpickr("#date_to", {
+                                                                            enableTime: false,
+                                                                            dateFormat: "d-m-Y"
+
+                                                                        });
+
+
+                                                                    });
+                                                                </script>
+
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <label class="c-field__label">Khoảng giờ:</label>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <input type="text" id="min_hour" name="min_hour"
+                                                                        placeholder="12:00" class="form-control" />
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <input type="text" id="max_hour" name="max_hour"
+                                                                        placeholder="15:00" class="form-control" />
+                                                                </div>
+                                                                <script nonce="{{ csp_nonce() }}">
+                                                                    $(document).ready(function () {
+                                                                        flatpickr("#min_hour", {
+                                                                            enableTime: true,
+                                                                            noCalendar: true,
+                                                                            dateFormat: "H:i", static: true,
+
+                                                                        });
+                                                                        flatpickr("#max_hour", {
+                                                                            enableTime: true,
+                                                                            noCalendar: true,
+                                                                            dateFormat: "H:i", static: true,
+
+                                                                        });
+
+
+                                                                    });
+                                                                </script>
+
+
+
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="#" id="new_tag_hotspot_btn"
+                                                class="c-btn c-btn--info u-float-right">
+                                                Lưu lại
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script nonce="{{ csp_nonce() }}">
+                                $(document).ready(function () {
+                                    var min_visit = $("#min_visit").val();
+                                    var max_visit = $("#max_visit").val();
+
+                                    if (max_visit < min_visit) {
+                                        swal("Lượt đến nhập sai", "", "error");
+                                    }
+                                    $("#min_visit").keypress(function (e) {
+                                        //if the letter is not digit then display error and don't type anything
+                                        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                                            //display error message
+                                            $("#errmsg").html("Chỉ nhập số").show().fadeOut("slow");
+                                            return false;
+                                        }
+                                    });
+                                    $("#max_visit").keypress(function (e) {
+                                        //if the letter is not digit then display error and don't type anything
+                                        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                                            //display error message
+                                            $("#errmsg1").html("Chỉ nhập số").show().fadeOut("slow");
+                                            return false;
+                                        }
+                                    });
+                                    $("#new_tag_hotspot_btn").click(function () {
+
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: $("#tag_for_customers").attr("action"),
+                                            data: $("#tag_for_customers").serialize(),
+                                            success: function (response) {
+                                                var returnedData = JSON.parse(response);
+                                                if ('error' in returnedData) {
+                                                    swal(returnedData['error'], " ", "error");
+                                                    return false;
+                                                }
+                                                else {
+                                                    swal('Thao tác thành công', '', 'success');
+                                                    location.reload();
+                                                }
+
+                                            },
+                                            error: function (xhr, desc, err) {
+                                                swal("Có lỗi xảy ra, thử lại sau", " ", "error");
+                                                return false;
+                                            }
+                                        });
+
+
+                                    })
+
+                                });
+
+                            </script>
+
+
+                            <div class="modal hide fade" id="hotspot_config" tabindex="-1" role="dialog"
+                                aria-labelledby="hotspot_config" data-backdrop="static" style="display: none;"
+                                aria-hidden="true">
+
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title">Cấu hình chung</h3>
+
+                                            <a class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </a>
+                                        </div>
+                                        <form method="POST" action="/wifi_settings/{{ shop_id_select }}"
+                                            enctype="multipart/form-data" id="home">
+                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                            <div class="modal-body">
+                                                        <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group">
+                                                            <label for="auto_popup">Chuyển hướng sau đăng nhập:</label>
+                                                            <input type="text" class="form-control" id="auto_popup"
+                                                                name="auto_popup"
+                                                                value="{% if shop_select.auto_popup|string != 'None' %}{{ shop_select.auto_popup }}{% endif %}"
+                                                                placeholder="">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="welcome_member_text_splash">Cấu hình lời
+                                                                chào:</label>
+                                                            <textarea class="form-control"
+                                                                id="welcome_member_text_splash"
+                                                                name="welcome_member_text_splash" rows="2">
+                                                           {{ shop_select.welcome_member_text_splash or 'Chào {{ name }}, cảm ơn bạn đã ghé thăm.' }}
+
+                                                        </textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="connect_button">Nút kết nối WIFI:</label>
+                                                            <textarea class="form-control" id="connect_button"
+                                                                name="connect_button" rows="2">
+                                                          {% if shop_select.connect_button and shop_select.connect_button|length > 1 %}
+                                                              {{ shop_select.connect_button }}
+                                                          {% else %}
+                                                              Kết nối
+                                                          {% endif %}
+                                                    </textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>
+
+                                                                Bỏ qua đăng ký
+                                                            </label>
+
+                                                            <div
+                                                                class="c-switch {% if
+                                                   shop_select.ignore_register and shop_select.ignore_register|lower == "true" %} is-active{% endif %}">
+                                                                <input class="c-switch__input"
+                                                                    id="switch_ignore_register" type="checkbox"
+                                                                    name="ignore_register"
+                                                                    {% if shop_select.ignore_register and shop_select.ignore_register|lower == "true" %}checked{% endif %}>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+
+
+
+                                                        <div class="form-group">
+                                                            <label for="page_id">Pixel
+                                                                ID:</label>
+                                                            <input type="text" class="form-control"
+                                                                id="facebook_pixel_id" name="facebook_pixel_id"
+                                                                value="
+                                                   {% if shop_select.facebook_pixel_id|string != 'None' %}{{ shop_select.facebook_pixel_id }}{% endif %}">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="pixel_code">Pixel
+                                                                Code:</label>
+                                                            <textarea class="form-control" id="pixel_code"
+                                                                name="facebook_pixel_code" rows="6">{% if shop_select.facebook_pixel_code|string != 'None' %}
+                                        {{ shop_select.facebook_pixel_code }}{% endif %}</textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="pixel_code">Google
+                                                                Remarketing
+                                                                Code:</label>
+                                                            <textarea class="form-control" id="google_pixel_code"
+                                                                name="google_pixel_code" rows="6">{% if shop_select.google_pixel_code|string != 'None' %}
+                                        {{ shop_select.google_pixel_code }}{% endif %}</textarea>
+                                                        </div>
+
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="modal-footer">
+                                                <button class="c-btn c-btn--success" type="submit">Lưu lại
+                                                </button>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="modal hide fade" id="priority_splash" tabindex="-1" role="dialog"
+                                aria-labelledby="priority_splash" data-backdrop="static" style="display: none;"
+                                aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title">Thiết lập thứ tự trang chào</h3>
+                                            <a class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </a>
+                                        </div>
+                                        <form method="POST" action="/priority_splash/{{ shop_id_select }}" enctype="multipart/form-data" id="home">
+                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                            
+                                            <div class="modal-body">
+                                                <div class="list-group-item" data-key="1" style="text-align: left; margin-left: 40px; margin-right: 40px; height: 80px">
+                                                    <i class="fa fa-angle-double-down fa-fw" style="margin-top: 15px"></i>  Trang chào đăng ký
+                                                </div>
+                                                <div id="sortable" name="sortable">
+                                                    {% for priority in priority_splash %}
+                                                        <div class="list-group-item" data-key="{{ priority.data_key }}" style="text-align: left; margin-left: 40px; margin-right: 40px; height: 80px">
+                                                            <i class="fa fa-arrows-alt handle" style="margin-top: 15px"></i>
+                                                                {{ priority.description }}
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <div class="modal-footer">
+                                            <button class="c-btn c-btn--success" id="priority_splash_button" type="button">Lưu lại
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script src="/static/nextify/js/Sortable.min.js"></script>
+                            <script nonce="{{ csp_nonce() }}">
+                                $(document).ready(function () {
+                                    sortable = document.getElementById('sortable');
+                                    var kq = [];
+                                    new Sortable(sortable, {
+                                        animation: 150,
+                                        ghostClass: 'blue-background-class',
+                                        onSort: function (e) {
+                                            var result = [];
+                                            var items = e.to.children;
+                                            for (var i = 0; i < items.length; i++) {
+                                                result.push($(items[i]).data('key'));
+                                            }
+                                            kq = result;
+                                        }
+                                    });
+                                    $("#priority_splash_button").click(function () {
+                                                var url = "/priority_splash/{{ shop_id_select }}";
+                                                var data = {"result": kq}
+                                                $.ajax({
+                                                    type: 'POST',
+                                                    url: url,
+                                                    data: data,
+                                                    success: function (response) {
+                                                        var returnedData = JSON.parse(response);
+                                                        if ('error' in returnedData) {
+                                                            swal(returnedData['error'], " ", "error");
+
+                                                        } else {
+                                                            swal("Thao tác thành công", "", "success");
+                                                            location.reload();
+                                                        }
+                                                    },
+                                                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                                        swal("Có lỗi xảy ra, thử lại sau", " ", "error");
+                                                    }
+                                                });
+                                            });
+                                })
+                            </script>
+
+                            <div class="modal hide fade" id="apply_shop_select" tabindex="-1" role="dialog"
+                                aria-labelledby="hotspot_config" data-backdrop="static" style="display: none;"
+                                aria-hidden="true">
+
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title">Chọn địa điểm muốn áp dụng</h3>
+
+                                            <a class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </a>
+                                        </div>
+                                        <form method="POST"
+                                            action="/splash_page/{{ merchant_id }}/apply_shop_select/{{ shop_id_select }}"
+                                            enctype="multipart/form-data" id="home">
+                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                            <div class="modal-body">
+                                                <div class="table-responsive">
+                                                    <!-- Projects table -->
+                                                    <style>
+                                                        /* checkbox */
+                                                        ul.timeline {
+                                                            list-style-type: none;
+                                                            position: relative;
+                                                        }
+
+                                                        table,
+                                                        th,
+                                                        td {
+                                                            border-collapse: collapse;
+                                                        }
+
+                                                        th,
+                                                        td {
+                                                            padding: 15px;
+                                                        }
+                                                    </style>
+                                                    <table class="table-hover table-bordered table-striped"
+                                                        style="width: 434px;">
+                                                        <thead class="thead-light">
+                                                            <tr>
+                                                                <th scope="col">Địa điểm</th>
+                                                                <th scope="col">Áp dụng</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for shop in merchant_id|shops_in_merchant %}
+                                                            <tr>
+                                                                <th scope="row">
+                                                                    {{ shop.name }}
+                                                                </th>
+                                                                <td>
+                                                                    <div class="c-switch" id="apply_{{ shop._id }}">
+                                                                        <input class="c-switch__input"
+                                                                            name="inp_apply_{{ shop._id }}"
+                                                                            id="inp_apply_{{ shop._id }}"
+                                                                            value="{{ shop._id }}" type="checkbox">
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <script nonce="{{ csp_nonce() }}">
+                                                                $(document).ready(function () {
+                                                                    $('#apply_{{ shop._id }}').mouseup(function () {
+                                                                        if (!$("#inp_apply_{{ shop._id }}").is(":checked")) {
+                                                                            $("#shop_apply_select").val($("#shop_apply_select").val() + "," + $('#inp_apply_{{ shop._id }}').val().toString())
+                                                                        } else {
+                                                                            $("#shop_apply_select").val($("#shop_apply_select").val().replace("," + $('#inp_apply_{{ shop._id }}').val().toString(), ""))
+                                                                        }
+                                                                    });
+
+
+                                                                })
+                                                            </script>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                        <input type="hidden" id="shop_apply_select">
+                                        <div class="modal-footer">
+                                            <button class="c-btn c-btn--success" id="btn_apply_shop_select"
+                                                type="button">Áp dụng
+                                            </button>
+                                            <button href="#" id="apply_merchant"
+                                            class="c-btn c-btn--danger">
+                                                Áp dụng chuỗi
+                                            </button>
+                                            <script nonce="{{ csp_nonce() }}">
+                                                $(document).ready(function () {
+                                                    var shop_id_select = $("#shop_id_select").val();
+                                                    var merchant_id = $("#merchant_id").val();
+                                                    $("#apply_merchant").click(function () {
+
+
+                                                        var url = '/splash_page/' + merchant_id + '/apply_merchant/' + shop_id_select;
+                                                        $.ajax({
+                                                            type: 'get',
+                                                            url: url,
+                                                            success: function () {
+                                                                swal("Cập nhật thành công", " ", "success");
+                                                                location.reload();
+                                                            }
+                                                        });
+
+
+                                                    });
+
+
+                                                });
+
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <script nonce="{{ csp_nonce() }}">
+                                $(document).ready(function () {
+                                    $("#btn_apply_shop_select").click(function () {
+                                        var url = "/splash_page/{{ merchant_id }}/apply_shop_select/{{ shop_id_select }}";
+                                        var shops_id = $("#shop_apply_select").val().slice(1);
+                                        var data = { "shops_id": shops_id }
+                                        console.log(shops_id);
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: url,
+                                            data: data,
+                                            success: function (response) {
+                                                var returnedData = JSON.parse(response);
+                                                if ('error' in returnedData) {
+                                                    swal(returnedData['error'], " ", "error");
+
+                                                } else {
+                                                    swal("Thao tác thành công", "", "success");
+                                                    location.reload();
+                                                }
+                                            },
+                                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                                swal("Có lỗi xảy ra, thử lại sau", " ", "error");
+                                            }
+                                        });
+
+                                    });
+
+                                })
+                            </script>
+                            <input type="hidden" value="{{ shop_id_select }}" name="shop_id_select" />
+                            <input type="hidden" value="{{ merchant_id }}" id="merchant_id" />
+                            {% endblock %}

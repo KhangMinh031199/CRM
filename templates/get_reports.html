@@ -1,0 +1,284 @@
+<div class="row">
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="content">
+                <div class="form">
+                    <div class="form-group">
+                        <label for="date_from">Từ</label>
+                        <input type="text" class="form-control" id="date_from" value="{{ date_from }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="date_to">Đến</label>
+                        <input type="text" class="form-control" id="date_to" value="{{ date_to }}">
+                    </div>
+                    <div class="form-group">
+                        <div style="text-align: right">
+                            <button id="report_range" class="btn btn-info btn-fill">Thống
+                        kê
+                    </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">Khách thân thiết</h4>
+            </div>
+            <div class="content" style="text-align: center">
+                <h3 class="title"><b></b></h3>
+
+                <h3 class="title" style="color: #00a65a">
+                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                </h3>
+                <h3 class="title" style="color: #00a65a">
+                    {{ total_loyal }}
+                </h3>
+                <h5>Đến hơn 3 lần</h5>
+                <h5>từ {{ date_from }} đến {{ date_to }}</h5>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">Khách chưa quay lại</h4>
+            </div>
+            <div class="content" style="text-align: center">
+                <h3 class="title"><b></b></h3>
+
+                <h3 class="title" style="color: #00a65a">
+                    <span class="glyphicon glyphicon-thumbs-down"></span>
+                </h3>
+                <h3 class="title" style="color: #00a65a">
+                    {{ total_lost }}
+                </h3>
+                <h5> > <b>30</b> ngày chưa quay lại</h5>
+                <h5>tính đến {{ date_to }}</h5>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">Tổng lượt đến</h4>
+            </div>
+            <div class="content" style="text-align: center">
+                <h3 class="title"><b>{{ total_visit }}</b></h3>
+                <h4 style="color: #00a65a">
+                    {% if total_visit_percent
+                    < 0 %} <span class="glyphicon glyphicon-arrow-down red">
+                        </span>
+                        {% else %}
+                        <span class="glyphicon glyphicon-arrow-up blue"></span>{% endif %}{{ total_visit_percent | abs }}%
+                </h4>
+                <h5>so với</h5>
+                <h5>từ {{ date_prev }} đến {{ date_from }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">Lượt đến mới</h4>
+            </div>
+            <div class="content" style="text-align: center">
+                <h3 class="title"><b>{{ total_new }}</b></h3>
+                <h4 style="color: #00a65a">
+                    {% if new_visit_percent
+                    < 0 %} <span class="glyphicon glyphicon-arrow-down red">
+                        </span>{% else %}
+                        <span class="glyphicon glyphicon-arrow-up blue"></span>{% endif %}{{ new_visit_percent | abs }}%
+                </h4>
+
+                <h5>so với</h5>
+                <h5>từ {{ date_prev }} đến {{ date_from }}</h5>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">Lượt quay lại</h4>
+            </div>
+            <div class="content" style="text-align: center">
+                <h3 class="title"><b>{{ total_return }}</b></h3>
+                <h4 style="color: #00a65a">
+                    {% if return_visit_percent
+                    < 0 %} <span class="glyphicon glyphicon-arrow-down red">
+                        </span>{% else %}
+                        <span class="glyphicon glyphicon-arrow-up blue"></span>{% endif %}{{ return_visit_percent | abs }}
+                        % </h4>
+
+                <h5>so với</h5>
+                <h5>từ {{ date_prev }} đến {{ date_from }}</h5>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">Thống kê theo ngày</h4>
+            </div>
+            <div class="content">
+                {% column_chart visit_dict_by_date with min=0.4 %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">SMS & Coupons</h4>
+            </div>
+
+            <div class="content table-responsive table-full-width">
+                <table class="table">
+                    <thead>
+                        <th>
+                            SMS đã gửi
+                        </th>
+                        <th>
+                            Tổng coupons
+                        </th>
+                        <th>
+                            Coupons đã đổi
+                        </th>
+                        <th>
+                            Tỷ lệ đổi
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>{{ sms_count }}</strong></td>
+                            <td><strong>{{ total_coupons }}</strong></td>
+                            <td><strong>{{ coupons_redeem }}</strong></td>
+                            <td><strong>{{ coupons_percent }} %</strong></td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">SMS</h4>
+            </div>
+            <div class="content">
+                {% line_chart sms_by_date with min=0.4 %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">Thiết bị</h4>
+            </div>
+            <div class="content">
+                {% pie_chart os_stats with library={"title":"OS Statistics"} %}
+            </div>
+        </div>
+    </div>
+    <!-- /.col -->
+
+    <!-- /.col -->
+</div>
+
+<div class="row">
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">Coupons</h4>
+            </div>
+            <div class="content">
+                {% line_chart coupon_by_date with min=0.4 %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="header">
+                <h4 class="title">Coupons đã đổi</h4>
+            </div>
+            <div class="content">
+                {% line_chart coupon_redeem_by_date with min=0.4 %}
+            </div>
+        </div>
+    </div>
+
+
+</div>
+ <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+
+        function today_date(fullDate) {
+            var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1) ? (fullDate.getMonth() + 1) : (fullDate.getMonth() + 1);
+
+            var curr_date = fullDate.getDate() + "-" + twoDigitMonth + "-" + fullDate.getFullYear();
+            return curr_date;
+        }
+
+        function addDays(dateObj, numDays) {
+            dateObj.setDate(dateObj.getDate() - numDays);
+            return dateObj;
+        }
+
+        $('#date_from').datepicker({
+            format: "dd-mm-yyyy"
+        });
+        $('#date_to').datepicker({
+            format: "dd-mm-yyyy"
+        });
+        $("#report_range").click(function () {
+            var date_from = $('#date_from').val();
+            var date_to = $('#date_to').val();
+            var url = "/reports?date_from=" + date_from + '&date_to=' + date_to;
+            $(location).attr('href', url);
+        });
+
+        $("#range_7d").click(function () {
+            var date_to = today_date(new Date());
+            var date_from = today_date(addDays(new Date(), 7));
+            var url = "/reports?date_from=" + date_from + '&date_to=' + date_to;
+            $(location).attr('href', url);
+        });
+        $("#range_30d").click(function () {
+            var date_to = today_date(new Date());
+            var date_from = today_date(addDays(new Date(), 30));
+            var url = "/reports?date_from=" + date_from + '&date_to=' + date_to;
+            $(location).attr('href', url);
+        });
+
+        $("#range_60d").click(function () {
+            var date_to = today_date(new Date());
+            var date_from = today_date(addDays(new Date(), 60));
+            var url = "/reports?date_from=" + date_from + '&date_to=' + date_to;
+            $(location).attr('href', url);
+        });
+
+    });
+
+</script>

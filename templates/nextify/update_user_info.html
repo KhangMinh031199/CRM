@@ -1,0 +1,495 @@
+<div
+  class="row align-items-center justify-content-center update_user_modal_loading"
+>
+  <div class="spinner-border text-danger" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+<input type="hidden" value="{{cus._id}}" id="edit_user_id" />
+
+<form
+  role="form"
+  id="new_customer_fr_{{cus._id}}"
+  method="post"
+  action="/user/edit/{{ cus.user._id }}"
+>
+  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+  <div class="row u-mb-medium">
+    <div class="col-lg-6">
+      <div class="form-group">
+        <label for="firstName"
+          >{{ gettext("Ten") }} (<span>
+            <font color="red">*</font>
+          </span>
+          {{ gettext("bat_buoc") }})</label
+        >
+        <input
+          class="form-control"
+          type="text"
+          id="firstName_{{ cus._id }}"
+          name="name"
+          value="{{ cus.user.name }}"
+          placeholder=""
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="lastName"
+          >{{ gettext("So_dien_thoai") }} (<span>
+            <font color="red">*</font>
+          </span>
+          {{ gettext("bat_buoc") }})</label
+        >
+        <input
+          class="form-control"
+          type="text"
+          placeholder=""
+          name="phone"
+          value="{% if cus.user.phone|string != 'None' %}{{ cus.user.phone }}{% endif %}"
+          id="new_phone_{{ cus._id }}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="email"
+          >E-mail (<span>
+            <font color="red">*</font>
+          </span>
+          {{ gettext("bat_buoc") }})</label
+        >
+        <input
+          class="form-control"
+          type="email"
+          name="email"
+          id="new_email_{{ cus._id }}"
+          value="{% if cus.user.email|string != 'None' %}{{ cus.user.email }}{% endif %}"
+          placeholder=""
+        />
+      </div>
+      <div class="form-group">
+        <label for="email">{{ gettext("Sinh_nhat") }}</label>
+
+        <input
+          type="text"
+          data-toggle="datepicker"
+          class="form-control birthday"
+          name="birthday"
+          id="birthday_{{ cus._id }}"
+          value="{% if cus.user.birthday|string != 'None' %}{{ cus.user.birthday }}{% endif %}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="year_birth_{{ cus._id }}">{{ gettext("Nam_sinh") }}</label>
+        <input
+          type="hidden"
+          value="{{ cus.user.year_birthday }}"
+          id="ex_year_birth_{{ cus._id }}"
+        />
+        <select
+          name="year_birth"
+          id="year_birth_{{ cus._id }}"
+          class="form-control"
+        >
+          <option value="">{{ gettext("Nam_Year") }}</option>
+          <option value="2013">2013</option>
+          <option value="2012">2012</option>
+          <option value="2011">2011</option>
+          <option value="2010">2010</option>
+          <option value="2009">2009</option>
+          <option value="2008">2008</option>
+          <option value="2007">2007</option>
+          <option value="2006">2006</option>
+          <option value="2005">2005</option>
+          <option value="2004">2004</option>
+          <option value="2003">2003</option>
+          <option value="2002">2002</option>
+          <option value="2001">2001</option>
+          <option value="2000">2000</option>
+          <option value="1999">1999</option>
+          <option value="1998">1998</option>
+          <option value="1997">1997</option>
+          <option value="1996">1996</option>
+          <option value="1995">1995</option>
+          <option value="1994">1994</option>
+          <option value="1993">1993</option>
+          <option value="1992">1992</option>
+          <option value="1991">1991</option>
+          <option value="1990">1990</option>
+          <option value="1989">1989</option>
+          <option value="1988">1988</option>
+          <option value="1987">1987</option>
+          <option value="1986">1986</option>
+          <option value="1985">1985</option>
+          <option value="1984">1984</option>
+          <option value="1983">1983</option>
+          <option value="1982">1982</option>
+          <option value="1981">1981</option>
+          <option value="1980">1980</option>
+          <option value="1979">1979</option>
+          <option value="1978">1978</option>
+          <option value="1977">1977</option>
+          <option value="1976">1976</option>
+          <option value="1975">1975</option>
+          <option value="1974">1974</option>
+          <option value="1973">1973</option>
+          <option value="1972">1972</option>
+          <option value="1971">1971</option>
+          <option value="1970">1970</option>
+          <option value="1969">1969</option>
+          <option value="1968">1968</option>
+          <option value="1967">1967</option>
+          <option value="1966">1966</option>
+          <option value="1965">1965</option>
+          <option value="1964">1964</option>
+          <option value="1963">1963</option>
+          <option value="1962">1962</option>
+          <option value="1961">1961</option>
+          <option value="1960">1960</option>
+          <option value="1959">1959</option>
+          <option value="1958">1958</option>
+          <option value="1957">1957</option>
+          <option value="1956">1956</option>
+          <option value="1955">1955</option>
+          <option value="1954">1954</option>
+          <option value="1953">1953</option>
+          <option value="1952">1952</option>
+          <option value="1951">1951</option>
+          <option value="1950">1950</option>
+          <option value="1949">1949</option>
+          <option value="1948">1948</option>
+          <option value="1947">1947</option>
+          <option value="1946">1946</option>
+          <option value="1945">1945</option>
+          <option value="1944">1944</option>
+          <option value="1943">1943</option>
+          <option value="1942">1942</option>
+          <option value="1941">1941</option>
+          <option value="1940">1940</option>
+          <option value="1939">1939</option>
+          <option value="1938">1938</option>
+          <option value="1937">1937</option>
+          <option value="1936">1936</option>
+          <option value="1935">1935</option>
+          <option value="1934">1934</option>
+          <option value="1933">1933</option>
+          <option value="1932">1932</option>
+          <option value="1931">1931</option>
+          <option value="1930">1930</option>
+          <option value="1929">1929</option>
+          <option value="1928">1928</option>
+          <option value="1927">1927</option>
+          <option value="1926">1926</option>
+          <option value="1925">1925</option>
+          <option value="1924">1924</option>
+          <option value="1923">1923</option>
+          <option value="1922">1922</option>
+          <option value="1921">1921</option>
+          <option value="1920">1920</option>
+          <option value="1919">1919</option>
+          <option value="1918">1918</option>
+          <option value="1917">1917</option>
+          <option value="1916">1916</option>
+          <option value="1915">1915</option>
+          <option value="1914">1914</option>
+          <option value="1913">1913</option>
+          <option value="1912">1912</option>
+          <option value="1911">1911</option>
+          <option value="1910">1910</option>
+          <option value="1909">1909</option>
+          <option value="1908">1908</option>
+          <option value="1907">1907</option>
+          <option value="1906">1906</option>
+          <option value="1905">1905</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="email">Tags</label>
+        <select
+          class="form-control"
+          name="tags"
+          style="width: 100%"
+          id="new_tags_selects_{{ cus._id }}"
+        ></select>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-4">
+          <label for="email">{{ gettext("Nhan_vien") }}</label>
+        </div>
+        <div class="col-auto">
+          <div
+            class="custom-control custom-switch {% if cus.user.is_employee=='True' %}is-active{% endif %}"
+            id="is_employee_div_{{ cus._id }}"
+          >
+            <input class="custom-control-input" name="is_employee_{{ cus._id }}"
+            id="is_employee_{{ cus._id }}" type="checkbox" {% if
+            cus.user.is_employee=="True" %}checked="checked" {% endif %}>
+            <label
+              class="custom-control-label"
+              for="is_employee_{{ cus._id }}"
+            ></label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="form-group">
+        <label for="gender">{{ gettext("Gioi_tinh") }}</label>
+        <select
+          class="form-control"
+          style="width: 100%"
+          id="gender_{{ cus._id }}"
+          name="gender"
+        >
+          <option value="0">{{ gettext("Chua_xac_dinh") }}</option>
+          <option value="1">{{ gettext("Nam") }}</option>
+          <option value="2">{{ gettext("Nu") }}</option>
+        </select>
+      </div>
+      <input
+        type="hidden"
+        value="{{ cus.user.gender }}"
+        id="current_gender_{{ cus._id }}"
+      />
+
+      <div class="form-group">
+        <label for="bio">{{ gettext("Note") }}</label>
+        <textarea class="form-control" id="bio_{{ cus._id }}" name="note">
+{{ cus.user.note }}</textarea
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="companyName">{{ gettext("Dia_chi") }}</label>
+        <input
+          class="form-control"
+          id="companyName_{{ cus._id }}"
+          type="text"
+          name="address"
+          placeholder=""
+          value="{% if cus.user.address|string !='None' %}{{ cus.user.address }} {% endif %}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="company">{{ gettext("Cong_ty") }}</label>
+        <input
+          class="form-control"
+          type="text"
+          id="company_{{ cus._id }}"
+          name="company"
+          placeholder=""
+          value="{% if cus.user.company|string !='None' %}{{ cus.user.company }}{% endif %}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="company">{{ gettext("Chuc_vu") }}</label>
+        <input
+          class="form-control"
+          type="text"
+          id="company_role_{{ cus._id }}"
+          name="company_role"
+          placeholder=""
+          value="{% if cus.user.company_role|string !='None' %}{{ cus.user.company_role }}{% endif %}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="socialProfile">{{ gettext("Social_Profiles") }}</label>
+
+        <div
+          class="input-group input-group-merge"
+          style="margin-bottom: 0.9375rem"
+        >
+          <input
+            class="form-control form-control-prepended"
+            id="socialProfile"
+            type="text"
+            name="twitter"
+            value="{{ cus.user.twitter }}"
+          />
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <span class="fe fe-twitter mr-4"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-group input-group-merge">
+          <input
+            class="form-control form-control-prepended"
+            type="text"
+            name="facebook"
+            value="{{ cus.user.facebook }}"
+          />
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <span class="fe fe-facebook mr-4"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <input
+    type="hidden"
+    name="source_tags"
+    id="source_tags_{{ cus._id }}"
+    value="{{ cus._id|source_tags }}"
+  />
+
+  <input
+    type="hidden"
+    id="new_select_tags_filter_{{ cus._id }}"
+    name="real_tags_filter"
+    value="{{ cus._id|source_tags|join(', ') }}"
+  />
+  <input
+    type="hidden"
+    name="merchant_id"
+    id="merchant_id"
+    value="merchant_id"
+  />
+</form>
+<div class="row row-centered">
+  <div class="col-12" style="text-align: center">
+    <div class="form-group">
+      <a class="btn btn-primary" id="update_user_info_modal"
+        >{{ gettext("Cap_nhat") }}</a
+      >
+    </div>
+  </div>
+</div>
+<script>
+  $(document).ready(function () {
+    var cus_id = $("#edit_user_id").val();
+    var merchant_id = $("#merchant_id").val();
+    $(".update_user_modal_loading").hide();
+    var url_search_tags = "/" + merchant_id + "/tags/search";
+    $("#new_tags_selects_{{ cus._id }}").select2({
+      tags: true,
+      multiple: true,
+      tokenSeparators: [",", " "],
+      minimumInputLength: 2,
+      minimumResultsForSearch: 10,
+      ajax: {
+        url: url_search_tags,
+        dataType: "json",
+        type: "GET",
+        quietMillis: 50,
+        data: function (params) {
+          var query = {
+            search: params.term,
+          };
+
+          return query;
+        },
+        processResults: function (data) {
+          return {
+            results: $.map(data, function (item) {
+              return {
+                text: item.name,
+                id: item._id,
+              };
+            }),
+          };
+        },
+      },
+    });
+
+    // $("#new_tags_selects_{{ cus._id }}").on("change", function (e) {
+    //   if ($("#new_tags_selects_{{ cus._id }}").val()) {
+    //     $("#new_select_tags_filter_{{ cus._id }}").val(
+    //       $("#new_tags_selects_{{ cus._id }}").val().toString()
+    //     );
+    //   } else {
+    //     $("#new_select_tags_filter_{{ cus._id }}").val("");
+    //   }
+    // });
+    function update_data() {
+      $(".update_user_modal_loading").show();
+      var name = $("#firstName_" + cus_id).val();
+      var phone = $("#new_phone_" + cus_id).val();
+      var email = $("#new_email_" + cus_id).val();
+      var birthday = $("#birthday_" + cus_id).val();
+      var year = $("#year_birth_" + cus_id).val();
+      var real_tags_filter = $("#new_select_tags_filter_" + cus_id).val();
+      var company_role = $("#company_role_" + cus_id).val();
+      var company = $("#company_" + cus_id).val();
+      var location_id = $("#companyName_" + cus_id).val();
+      var gender = $("#gender_" + cus_id).val();
+      var is_employee = $("#is_employee_" + cus_id).is(":checked");
+      var note = $("#bio_" + cus_id).val();
+      var address = $("#companyName_" + cus_id).val();
+      var facebook = $("#facebook_" + cus_id).val();
+      var twitter = $("#socialProfile_" + cus_id).val();
+
+      if (name.length == 0) {
+        $(".update_user_modal_loading").hide();
+        swal(ngettext("Ten_khach_hang_khong_duoc_de_trong"), " ", "error");
+        return false;
+      }
+      if (phone.length == 0 && email.length == 0) {
+        $(".update_user_modal_loading").hide();
+        swal(
+          ngettext("So_dien_thoai_hoac_Email_khong_duoc_de_trong"),
+          " ",
+          "error"
+        );
+        return false;
+      }
+      var data = {
+        name: name,
+        phone: phone,
+        email: email,
+        birthday: birthday,
+        year_birth: year,
+        real_tags_filter: real_tags_filter,
+        location_id: location_id,
+        gender: gender,
+        is_employee: is_employee,
+        note: note,
+        address: address,
+        facebook: facebook,
+        twitter: twitter,
+        company_role: company_role,
+        company: company,
+      };
+      $.ajax({
+        url: $("#new_customer_fr_" + cus_id).attr("action"),
+        type: $("#new_customer_fr_" + cus_id).attr("method"),
+        data: data,
+
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ("error" in returnedData) {
+            $(".update_user_modal_loading").hide();
+
+            swal(returnedData["error"], " ", "error");
+          } else {
+            $(".update_user_modal_loading").hide();
+            swal(ngettext("Cap_nhat_khach_hang_thanh_cong"), "", "success");
+          }
+        },
+        error: function (xhr, desc, err) {
+          $(".update_user_modal_loading").hide();
+          swal(ngettext("Co_loi_xay_ra,_thu_lai_sau"), " ", "error");
+        },
+      });
+      return false;
+    }
+
+    $(document).on("click", "#update_user_info_modal", function (e) {
+      e.preventDefault();
+      update_data();
+    });
+    // $('[data-toggle="datepicker"]').flatpickr();
+    flatpickr(".birthday", {
+      enableTime: false,
+      dateFormat: "d-m",
+    });
+
+    $(".tags").select2({
+      dropdownAutoWidth: true,
+      // dropdownParent: $("#new_customers_modal")
+    });
+  });
+</script>

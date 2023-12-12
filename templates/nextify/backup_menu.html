@@ -1,0 +1,1126 @@
+
+    {% if merchant|anphat_basic_package == 'Basic' %}
+    <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light" id="sidebar">
+        <div class="container-fluid">
+
+            <!-- Toggler -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebarCollapse" aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Brand -->
+            <a class="navbar-brand" href="/">
+                {{ merchant.name }}
+            </a>
+
+            <!-- User (xs) -->
+            <div class="navbar-user d-md-none">
+
+                <!-- Dropdown -->
+                <div class="dropdown">
+
+                    <!-- Toggle -->
+                    <a href="#" id="sidebarIcon" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="avatar avatar-sm avatar-online">
+                            <img src="{% if merchant.avatar %}//files.nextify.vn/{{ merchant.avatar }}{% else %}/static/nextify/img/no-profile-image.png{% endif %}" class="avatar-img rounded-circle" alt="...">
+                        </div>
+                    </a>
+
+                    <!-- Menu -->
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="sidebarIcon">
+
+                        <a href="/settings" class="dropdown-item">{{ gettext("Cai_dat") }}</a>
+                        <a href="/logout" class="dropdown-item">{{ gettext("Dang_xuat") }}</a>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Collapse -->
+            <div class="collapse navbar-collapse" id="sidebarCollapse">
+
+                <!-- Form -->
+                <form class="mt-4 mb-3 d-md-none">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    <div class="input-group input-group-rounded input-group-merge">
+                        <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search" aria-label="Search">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <span class="fe fe-search"></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Navigation -->
+                <ul class="navbar-nav">
+
+                    {%if g.role and g.role in ['3']%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/merchant_reports">
+                            <i class="fe fe-home"></i> {{ gettext('menuDashboardText') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/customers" class="nav-link ">
+                            <i class="fe fe-users"></i> {{ gettext('menuCustomerText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wifi">
+                            <i class="fe fe-wifi  u-mr-xsmall"></i> {{ gettext('menuWifisettingText') }}
+                        </a>
+                    </li>
+
+                    {%elif g.role == '1'%}
+
+                    <li class="nav-item">
+                        <a href="/customers" class="nav-link ">
+                            <i class="fe fe-users"></i> {{ gettext('menuCustomerText') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wifi">
+                            <i class="fe fe-wifi" style="min-width: 1.75rem;"></i> {{ gettext('menuWifisettingText') }}
+                        </a>
+                        {%elif g.role == '4'%}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/merchant_reports">
+                                <i class="fe fe-home"></i> {{ gettext('menuDashboardText') }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/wifi">
+                                <i class="fe fe-wifi" style="min-width: 1.75rem;"></i> {{ gettext('menuWifisettingText') }}
+                            </a>
+                        </li>
+                        {%endif%}
+
+
+                </ul>
+
+                <!-- Divider -->
+                <hr class="navbar-divider my-3">
+{#
+                <!-- Heading -->
+                <h6 class="navbar-heading">
+                    {{ gettext('menuGuildingText') }}
+                </h6>
+#}
+                <!-- Navigation -->
+                <ul class="navbar-nav mb-md-4">
+{#
+                    <li class="nav-item">
+                        <a class="nav-link " href="http://nextify.gitbook.io/docs">
+                            <i class="fe fe-clipboard"></i> {{ gettext('menuGuildingText') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+
+                        <a class="nav-link " href="{% if 'viettel.vn' in request.url %}
+                                https://nextify.gitbook.io/api/
+                            {% elif 'crmx' in request.url %}
+                                https://vhttelecom.freshdesk.com/support/solutions/folders/44001019933
+                            {% else %}
+                                https://nextify.gitbook.io/api/
+                            {% endif %}">
+                            <i class="fe fe-book-open"></i>API Document
+                        </a>
+                    </li>
+#}
+                    <li class="nav-link nav-item">
+                        <div class="form-group">
+                            <select id="language" name="language" class="form-control">
+                                <option value="vi">VN</option>
+                                <option value="en">EN</option>
+                                <option value="lo">LAO</option>
+                            </select>
+
+                        </div>
+
+                    </li>
+
+                </ul>
+
+                <!-- Push content down -->
+                <div class="mt-auto"></div>
+
+                {%if g.role and g.role in ['3']%}
+                <!-- Customize -->
+                <a href="/settings" class="btn btn-block btn-primary mb-4">
+                    <i class="fe fe-sliders mr-2"></i> {{ gettext("Cai_dat") }}
+                </a>
+                {%endif%}
+
+                <!-- User (md) -->
+                <div class="navbar-user d-none d-md-flex" id="sidebarUser">
+
+                    <!-- Icon -->
+                    <a href="#sidebarModalActivity" class="navbar-user-link" data-toggle="modal">
+                        <span class="icon">
+                            <i class="fe fe-bell"></i>
+                        </span>
+                    </a>
+
+                    <!-- Dropup -->
+                    <div class="dropup">
+
+                        <!-- Toggle -->
+                        <a href="#" id="sidebarIconCopy" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="avatar avatar-sm avatar-online">
+                                <img src="{% if merchant.avatar %}//files.nextify.vn/{{ merchant.avatar }}{% else %}/static/nextify/img/no-profile-image.png{% endif %}" class="avatar-img rounded-circle" alt="...">
+                            </div>
+                        </a>
+
+                        <!-- Menu -->
+                        <div class="dropdown-menu" aria-labelledby="sidebarIconCopy">
+                            {%if g.role and g.role in ['3']%}
+                            <a class="dropdown-item" href="/settings">{{ gettext("Cai_dat") }}</a> {%endif%} {%if g.role and g.role in ['3']%}
+                            <a class="dropdown-item" href="/logout">{{ gettext("Dang_xuat") }}</a> {%else%}
+                            <a class="dropdown-item" href="/{{g.merchant.slug}}/logout">{{ gettext("Dang_xuat") }}</a> {%endif%}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Icon -->
+                    <a href="#sidebarModalSearch" class="navbar-user-link" data-toggle="modal">
+                        <span class="icon">
+                            <i class="fe fe-search"></i>
+                        </span>
+                    </a>
+
+                </div>
+
+
+            </div>
+            <!-- / .navbar-collapse -->
+
+        </div>
+    </nav>
+
+    {% elif merchant._id|package_merchant == "Brand" %}
+
+    <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light" id="sidebar">
+        <div class="container-fluid">
+            <!-- Brand -->
+            <a class="navbar-brand" href="/">
+                {{ merchant.name }}
+            </a>
+            <!-- Collapse -->
+            <div class="collapse navbar-collapse" id="sidebarCollapse">
+                <ul class="navbar-nav">
+                    {% if merchant._id|string == "600f9721f12e8e8e72022a4b" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/merchant_reports">
+                            <i class="fe fe-home"></i> {{ gettext('menuDashboardText') }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a href="/customers" class="nav-link ">
+                            <i class="fe fe-users"></i> {{ gettext('menuCustomerText') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wifi">
+                            <i class="fe fe-wifi  u-mr-xsmall"></i> {{ gettext('menuWifisettingText') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/survey">
+                            <i class="fa fa-poll u-mr-xsmall"></i>{{ gettext("Khao_sat") }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/coupons" class="nav-link ">
+                            <i class="fa fa-tags u-mr-xsmall"></i> {{ gettext('menuCouponsText') }}
+                        </a>
+                    </li>
+                    
+                </ul>
+
+                <!-- Divider -->
+                <hr class="navbar-divider my-3">
+
+                <!-- Navigation -->
+                <ul class="navbar-nav mb-md-4">
+                    <li class="nav-link nav-item">
+                        <div class="form-group">
+                            <select id="language" name="language" class="form-control">
+                                <option value="vi">VN</option>
+                                <option value="en">EN</option>
+                                <option value="lo">LAO</option>
+                            </select>
+
+                        </div>
+
+                    </li>
+
+                </ul>
+
+                <!-- Push content down -->
+                <div class="mt-auto"></div>
+
+                {%if g.role and g.role in ['3']%}
+                <!-- Customize -->
+                <a href="/settings" class="btn btn-block btn-primary mb-4">
+                    <i class="fe fe-sliders mr-2"></i> {{ gettext("Cai_dat") }}
+                </a>
+                {%endif%}
+
+                <!-- User (md) -->
+                <div class="navbar-user d-none d-md-flex" id="sidebarUser">
+
+                    <!-- Icon -->
+                    <a href="#sidebarModalActivity" class="navbar-user-link" data-toggle="modal">
+                        <span class="icon">
+                            <i class="fe fe-bell"></i>
+                        </span>
+                    </a>
+
+                    <!-- Dropup -->
+                    <div class="dropup">
+
+                        <!-- Toggle -->
+                        <a href="#" id="sidebarIconCopy" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="avatar avatar-sm avatar-online">
+                                <img src="{% if merchant.avatar %}//files.nextify.vn/{{ merchant.avatar }}{% else %}/static/nextify/img/no-profile-image.png{% endif %}" class="avatar-img rounded-circle" alt="...">
+                            </div>
+                        </a>
+
+                        <!-- Menu -->
+                        <div class="dropdown-menu" aria-labelledby="sidebarIconCopy">
+                            {%if g.role and g.role in ['3']%}
+                            <a class="dropdown-item" href="/settings">{{ gettext("Cai_dat") }}</a> {%endif%} {%if g.role and g.role in ['3']%}
+                            <a class="dropdown-item" href="/logout">{{ gettext("Dang_xuat") }}</a> {%else%}
+                            <a class="dropdown-item" href="/{{g.merchant.slug}}/logout">{{ gettext("Dang_xuat") }}</a> {%endif%}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Icon -->
+                    <a href="#sidebarModalSearch" class="navbar-user-link" data-toggle="modal">
+                        <span class="icon">
+                            <i class="fe fe-search"></i>
+                        </span>
+                    </a>
+
+                </div>
+
+
+            </div>
+            <!-- / .navbar-collapse -->
+
+        </div>
+    </nav>
+
+    {% elif merchant._id|package_merchant == "Acquire" %}
+    <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light" id="sidebar">
+        <div class="container-fluid">
+            <!-- Brand -->
+            <a class="navbar-brand" href="/">
+                {{ merchant.name }}
+            </a>
+            <!-- Collapse -->
+            <div class="collapse navbar-collapse" id="sidebarCollapse">
+                <!-- Navigation -->
+                <ul class="navbar-nav">
+
+                    {%if g.role and g.role in ['3']%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/merchant_reports">
+                            <i class="fe fe-home"></i> {{ gettext('menuDashboardText') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/customers" class="nav-link ">
+                            <i class="fe fe-users"></i> {{ gettext('menuCustomerText') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wifi">
+                            <i class="fe fe-wifi  u-mr-xsmall"></i> {{ gettext('menuWifisettingText') }}
+                        </a>
+
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/survey">
+                            <i class="fa fa-poll u-mr-xsmall"></i>{{ gettext("Khao_sat") }}
+                        </a>
+                    </li>
+                    
+      
+                    <li class="nav-item">
+                        <a href="/coupons" class="nav-link ">
+                            <i class="fa fa-tags u-mr-xsmall"></i> {{ gettext('menuCouponsText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mini_game">
+                            <i class="fa fa-gamepad u-mr-xsmall"></i> Mini Game
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/apps">
+                            <i class="fa fa-windows u-mr-xsmall"></i> Apps
+                        </a>
+                    </li>
+
+                    {%elif g.role == '1'%}
+
+                    <li class="nav-item">
+                        <a href="/customers" class="nav-link ">
+                            <i class="fe fe-users"></i> {{ gettext('menuCustomerText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wifi">
+                            <i class="fe fe-wifi" style="min-width: 1.75rem;"></i> {{ gettext('menuWifisettingText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/survey">
+                            <i class="fa fa-poll u-mr-xsmall"></i>{{ gettext("Khao_sat") }}
+                        </a>
+                    </li>
+
+                 
+                    <li class="nav-item">
+                        <a href="/coupons" class="nav-link ">
+                            <i class="fa fa-tags u-mr-xsmall"></i> {{ gettext('menuCouponsText') }}
+                        </a>
+                    </li>
+                   
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mini_game">
+                            <i class="fa fa-gamepad u-mr-xsmall"></i> Mini Game
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/apps">
+                            <i class="fa fa-windows u-mr-xsmall"></i> Apps
+                        </a>
+                    </li>
+
+                    {%elif g.role == '2'%}
+                    <li class="nav-item">
+                        <a href="/coupons" class="nav-link ">
+                            <i class="fa fa-tags u-mr-xsmall"></i> {{ gettext('menuCouponsText') }}
+                        </a>
+                    </li>
+
+                    {%elif g.role == '4'%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/merchant_reports">
+                            <i class="fe fe-home"></i> {{ gettext('menuDashboardText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wifi">
+                            <i class="fe fe-wifi" style="min-width: 1.75rem;"></i> {{ gettext('menuWifisettingText') }}
+                        </a>
+                    </li>
+                 
+                    <li class="nav-item">
+                        <a class="nav-link" href="/survey">
+                            <i class="fa fa-poll u-mr-xsmall"></i>{{ gettext("Khao_sat") }}
+                        </a>
+                    </li>
+
+                    {% endif %}
+                </ul>
+
+                <!-- Divider -->
+                <hr class="navbar-divider my-3">
+
+                <!-- Navigation -->
+                <ul class="navbar-nav mb-md-4">
+
+                    <li class="nav-link nav-item">
+                        <div class="form-group">
+                            <select id="language" name="language" class="form-control">
+                                <option value="vi">VN</option>
+                                <option value="en">EN</option>
+                                <option value="lo">LAO</option>
+                            </select>
+
+                        </div>
+
+                    </li>
+
+                </ul>
+
+                <!-- Push content down -->
+                <div class="mt-auto"></div>
+
+                {%if g.role and g.role in ['3']%}
+                <!-- Customize -->
+                <a href="/settings" class="btn btn-block btn-primary mb-4">
+                    <i class="fe fe-sliders mr-2"></i> {{ gettext("Cai_dat") }}
+                </a>
+                {%endif%}
+
+                <!-- User (md) -->
+                <div class="navbar-user d-none d-md-flex" id="sidebarUser">
+
+                    <!-- Icon -->
+                    <a href="#sidebarModalActivity" class="navbar-user-link" data-toggle="modal">
+                        <span class="icon">
+                            <i class="fe fe-bell"></i>
+                        </span>
+                    </a>
+
+                    <!-- Dropup -->
+                    <div class="dropup">
+
+                        <!-- Toggle -->
+                        <a href="#" id="sidebarIconCopy" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="avatar avatar-sm avatar-online">
+                                <img src="{% if merchant.avatar %}//files.nextify.vn/{{ merchant.avatar }}{% else %}/static/nextify/img/no-profile-image.png{% endif %}" class="avatar-img rounded-circle" alt="...">
+                            </div>
+                        </a>
+
+                        <!-- Menu -->
+                        <div class="dropdown-menu" aria-labelledby="sidebarIconCopy">
+                            {%if g.role and g.role in ['3']%}
+                            <a class="dropdown-item" href="/settings">{{ gettext("Cai_dat") }}</a> {%endif%} {%if g.role and g.role in ['3']%}
+                            <a class="dropdown-item" href="/logout">{{ gettext("Dang_xuat") }}</a> {%else%}
+                            <a class="dropdown-item" href="/{{g.merchant.slug}}/logout">{{ gettext("Dang_xuat") }}</a> {%endif%}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Icon -->
+                    <a href="#sidebarModalSearch" class="navbar-user-link" data-toggle="modal">
+                        <span class="icon">
+                            <i class="fe fe-search"></i>
+                        </span>
+                    </a>
+
+                </div>
+
+
+            </div>
+            <!-- / .navbar-collapse -->
+
+        </div>
+    </nav>
+    {% elif merchant._id|package_merchant == "Growth" %}
+    <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light" id="sidebar">
+        <div class="container-fluid">
+            <!-- Brand -->
+            <a class="navbar-brand" href="/">
+                {{ merchant.name }}
+            </a>
+            <!-- Collapse -->
+            <div class="collapse navbar-collapse" id="sidebarCollapse">
+                <!-- Navigation -->
+                <ul class="navbar-nav">
+
+                    {%if g.role and g.role in ['3']%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/merchant_reports">
+                            <i class="fe fe-home"></i> {{ gettext('menuDashboardText') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/customers" class="nav-link ">
+                            <i class="fe fe-users"></i> {{ gettext('menuCustomerText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wifi">
+                            <i class="fe fe-wifi  u-mr-xsmall"></i> {{ gettext('menuWifisettingText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/marketing_automation" class="nav-link ">
+                            <i class="fa fa-magic u-mr-xsmall"></i> {{ gettext('menuAutomationText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="#sidebarAuth" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAuth">
+                            <i class="fa fa-rocket u-mr-xsmall"></i> {{ gettext('Chien_dich') }}
+                        </a>
+                        <div class="collapse" id="sidebarAuth" style="">
+                            <ul class="nav nav-sm flex-column">
+                                <li class="nav-item">
+                                    <a href="/email_marketing" class="nav-link">
+                                    Email Marketing
+                                    </a>
+                                </li>
+                                    <li class="nav-item">
+                                    <a href="/sms_marketing" class="nav-link">
+                                    SMS Marketing
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/zalo_marketing" class="nav-link">
+                                    Zalo Marketing
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/survey">
+                            <i class="fa fa-poll u-mr-xsmall"></i>{{ gettext("Khao_sat") }}
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/rating">
+                            <i class="far fa-star u-mr-xsmall"></i>{{ gettext("Phan_hoi") }}
+                        </a>
+                    </li>
+      
+                    <li class="nav-item">
+                        <a href="/coupons" class="nav-link ">
+                            <i class="fa fa-tags u-mr-xsmall"></i> {{ gettext('menuCouponsText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mini_game">
+                            <i class="fa fa-gamepad u-mr-xsmall"></i> Mini Game
+                        </a>
+                    </li>
+                   
+                    <li class="nav-item">
+                        <a class="nav-link" href="/apps">
+                            <i class="fa fa-windows u-mr-xsmall"></i> Apps
+                        </a>
+                    </li>
+
+                    {%elif g.role == '1'%}
+
+                    <li class="nav-item">
+                        <a href="/customers" class="nav-link ">
+                            <i class="fe fe-users"></i> {{ gettext('menuCustomerText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wifi">
+                            <i class="fe fe-wifi" style="min-width: 1.75rem;"></i> {{ gettext('menuWifisettingText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/marketing_automation" class="nav-link ">
+                            <i class="fa fa-magic u-mr-xsmall"></i> {{ gettext('menuAutomationText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/survey">
+                            <i class="fa fa-poll u-mr-xsmall"></i>{{ gettext("Khao_sat") }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/rating">
+                            <i class="far fa-star u-mr-xsmall"></i>{{ gettext("Phan_hoi") }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/coupons" class="nav-link ">
+                            <i class="fa fa-tags u-mr-xsmall"></i> {{ gettext('menuCouponsText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mini_game">
+                            <i class="fa fa-gamepad u-mr-xsmall"></i> Mini Game
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/apps">
+                            <i class="fa fa-windows u-mr-xsmall"></i> Apps
+                        </a>
+                    </li>
+
+                    {%elif g.role == '2'%}
+                 
+                    <li class="nav-item">
+                        <a href="/coupons" class="nav-link ">
+                            <i class="fa fa-tags u-mr-xsmall"></i> {{ gettext('menuCouponsText') }}
+                        </a>
+                    </li>
+
+                    {%elif g.role == '4'%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/merchant_reports">
+                            <i class="fe fe-home"></i> {{ gettext('menuDashboardText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wifi">
+                            <i class="fe fe-wifi" style="min-width: 1.75rem;"></i> {{ gettext('menuWifisettingText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/marketing_automation" class="nav-link ">
+                            <i class="fa fa-magic u-mr-xsmall"></i> {{ gettext('menuAutomationText') }}
+                        </a>
+                    </li>
+    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/survey">
+                            <i class="fa fa-poll u-mr-xsmall"></i>{{ gettext("Khao_sat") }}
+                        </a>
+                    </li>
+                   
+                    <li class="nav-item">
+                        <a class="nav-link" href="/rating">
+                            <i class="far fa-star u-mr-xsmall"></i>{{ gettext("Phan_hoi") }}
+                        </a>
+                    </li>
+                       
+                    <li class="nav-item">
+                
+                        <a class="nav-link collapsed" href="#sidebarAuth" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAuth">
+                        <i class="fe fe-user"></i> {{ gettext("Chien_dich") }}
+                        </a>
+                        <div class="collapse" id="sidebarAuth">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                            <a href="/email_marketing" class="nav-link">
+                                Email Marketing
+                            </a>
+                            </li>
+                            <li class="nav-item">
+                            <a href="/sms_marketing" class="nav-link">
+                                SMS Marketing
+                            </a>
+                            </li>
+                            <li class="nav-item">
+                            <a href="/zalo_marketing" class="nav-link">
+                                Zalo Marketing
+                            </a>
+                            </li>
+                        </ul>
+                        </div>
+                    </li>
+                    {% endif %}
+                       
+                </ul>
+
+                <!-- Divider -->
+                <hr class="navbar-divider my-3">
+                <!-- Navigation -->
+                <ul class="navbar-nav mb-md-4">
+
+                    <li class="nav-link nav-item">
+                        <div class="form-group">
+                            <select id="language" name="language" class="form-control">
+                                <option value="vi">VN</option>
+                                <option value="en">EN</option>
+                                <option value="lo">LAO</option>
+                            </select>
+
+                        </div>
+
+                    </li>
+
+                </ul>
+
+                <!-- Push content down -->
+                <div class="mt-auto"></div>
+
+                {%if g.role and g.role in ['3']%}
+                <!-- Customize -->
+                <a href="/settings" class="btn btn-block btn-primary mb-4">
+                    <i class="fe fe-sliders mr-2"></i> {{ gettext("Cai_dat") }}
+                </a>
+                {%endif%}
+
+                <!-- User (md) -->
+                <div class="navbar-user d-none d-md-flex" id="sidebarUser">
+
+                    <!-- Icon -->
+                    <a href="#sidebarModalActivity" class="navbar-user-link" data-toggle="modal">
+                        <span class="icon">
+                            <i class="fe fe-bell"></i>
+                        </span>
+                    </a>
+
+                    <!-- Dropup -->
+                    <div class="dropup">
+
+                        <!-- Toggle -->
+                        <a href="#" id="sidebarIconCopy" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="avatar avatar-sm avatar-online">
+                                <img src="{% if merchant.avatar %}//files.nextify.vn/{{ merchant.avatar }}{% else %}/static/nextify/img/no-profile-image.png{% endif %}" class="avatar-img rounded-circle" alt="...">
+                            </div>
+                        </a>
+
+                        <!-- Menu -->
+                        <div class="dropdown-menu" aria-labelledby="sidebarIconCopy">
+                            {%if g.role and g.role in ['3']%}
+                            <a class="dropdown-item" href="/settings">{{ gettext("Cai_dat") }}</a> {%endif%} {%if g.role and g.role in ['3']%}
+                            <a class="dropdown-item" href="/logout">{{ gettext("Dang_xuat") }}</a> {%else%}
+                            <a class="dropdown-item" href="/{{g.merchant.slug}}/logout">{{ gettext("Dang_xuat") }}</a> {%endif%}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Icon -->
+                    <a href="#sidebarModalSearch" class="navbar-user-link" data-toggle="modal">
+                        <span class="icon">
+                            <i class="fe fe-search"></i>
+                        </span>
+                    </a>
+
+                </div>
+
+
+            </div>
+            <!-- / .navbar-collapse -->
+
+        </div>
+    </nav>
+
+    {% else %}
+    <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light" id="sidebar">
+        <div class="container-fluid">
+
+            <!-- Toggler -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebarCollapse" aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Brand -->
+            <a class="navbar-brand" href="/">
+                {{ merchant.name }}
+            </a>
+
+            <!-- User (xs) -->
+            <div class="navbar-user d-md-none">
+
+                <!-- Dropdown -->
+                <div class="dropdown">
+
+                    <!-- Toggle -->
+                    <a href="#" id="sidebarIcon" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="avatar avatar-sm avatar-online">
+                            <img src="{% if merchant.avatar %}//files.nextify.vn/{{ merchant.avatar }}{% else %}/static/nextify/img/no-profile-image.png{% endif %}" class="avatar-img rounded-circle" alt="...">
+                        </div>
+                    </a>
+
+                    <!-- Menu -->
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="sidebarIcon">
+
+                        <a href="/settings" class="dropdown-item">{{ gettext("Cai_dat") }}</a>
+                        <a href="/logout" class="dropdown-item">{{ gettext("Dang_xuat") }}</a>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Collapse -->
+            <div class="collapse navbar-collapse" id="sidebarCollapse">
+
+                <!-- Form -->
+                <form class="mt-4 mb-3 d-md-none">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    <div class="input-group input-group-rounded input-group-merge">
+                        <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search" aria-label="Search">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <span class="fe fe-search"></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Navigation -->
+                <ul class="navbar-nav">
+
+                    {%if g.role and g.role in ['3']%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/merchant_reports">
+                            <i class="fe fe-home"></i> {{ gettext('menuDashboardText') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/customers" class="nav-link ">
+                            <i class="fe fe-users"></i> {{ gettext('menuCustomerText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wifi">
+                            <i class="fe fe-wifi  u-mr-xsmall"></i> {{ gettext('menuWifisettingText') }}
+                        </a>
+
+
+                    </li>
+
+                    {% if merchant._id|get_package_merchant == "5b44517ac5e5f42f1687ed3b" or merchant._id|get_package_merchant == "5b4728b5c5e5f42f16be71d7" %}
+                    <li class="nav-item">
+                        <a href="/marketing_automation" class="nav-link ">
+                            <i class="fa fa-magic u-mr-xsmall"></i> {{ gettext('menuAutomationText') }}
+                        </a>
+                    </li>
+                    {% endif %}
+
+
+                    {% if merchant._id|get_package_merchant == "5b44517ac5e5f42f1687ed3b" or merchant._id|get_package_merchant == "5b4728b5c5e5f42f16be71d7" %}
+                        <li class="nav-item">
+              <a class="nav-link collapsed" href="#sidebarAuth" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAuth">
+                <i class="fa fa-rocket u-mr-xsmall"></i> {{ gettext('Chien_dich') }}
+              </a>
+              <div class="collapse" id="sidebarAuth" style="">
+                <ul class="nav nav-sm flex-column">
+                  <li class="nav-item">
+                    <a href="/email_marketing" class="nav-link">
+                      Email Marketing
+                    </a>
+                  </li>
+                    <li class="nav-item">
+                    <a href="/sms_marketing" class="nav-link">
+                      SMS Marketing
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/zalo_marketing" class="nav-link">
+                      Zalo Marketing
+                    </a>
+                  </li>
+{#                    <li class="nav-item">#}
+{#                    <a href="/zalo_marketing" class="nav-link">#}
+{#                      Zalo OA Marketing#}
+{#                    </a>#}
+{#                  </li>#}
+{#                    <li class="nav-item">#}
+{#                    <a href="/facebook_marketing" class="nav-link">#}
+{#                      Facebook Chatbot Marketing#}
+{#                    </a>#}
+{#                  </li>#}
+
+                </ul>
+              </div>
+            </li>
+            {% endif %}
+         {% if merchant._id|get_dealer_id != "5de0db6306e7eca17bd8e872" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/survey">
+                            <i class="fa fa-poll u-mr-xsmall"></i>{{ gettext("Khao_sat") }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if merchant._id|get_dealer_id != "5de0db6306e7eca17bd8e872" %}
+                        {% if merchant._id|get_package_merchant == "5b44517ac5e5f42f1687ed3b" or merchant._id|get_package_merchant == "5b4728b5c5e5f42f16be71d7" %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/rating">
+                                <i class="far fa-star u-mr-xsmall"></i>{{ gettext("Phan_hoi") }}
+                            </a>
+                        </li>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if merchant._id|get_package_merchant == "5b44517ac5e5f42f1687ed3b" or merchant._id|get_package_merchant == "5b4728b5c5e5f42f16be71d7" %}
+                    <li class="nav-item">
+                        <a href="/coupons" class="nav-link ">
+                            <i class="fa fa-tags u-mr-xsmall"></i> {{ gettext('menuCouponsText') }}
+                        </a>
+                    </li>
+                    {% endif %}
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link" href="/loyalty">#}
+{#                            <i class="fa fa-award u-mr-small"></i>Khách hàng thân thiết#}
+{#                        </a>#}
+{#                    </li>#}
+                         <li class="nav-item">
+                        <a class="nav-link" href="/mini_game">
+                            <i class="fa fa-gamepad u-mr-xsmall"></i> Mini Game
+                        </a>
+                    </li>
+                    {% if merchant._id|get_package_merchant == "5b44517ac5e5f42f1687ed3b" or merchant._id|get_package_merchant == "5b4728b5c5e5f42f16be71d7" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/apps">
+                            <i class="fa fa-windows u-mr-xsmall"></i> Apps
+                        </a>
+                    </li>
+                    {% endif %}
+                    {%elif g.role == '1'%}
+
+                    <li class="nav-item">
+                        <a href="/customers" class="nav-link ">
+                            <i class="fe fe-users"></i> {{ gettext('menuCustomerText') }}
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wifi">
+                            <i class="fe fe-wifi" style="min-width: 1.75rem;"></i> {{ gettext('menuWifisettingText') }}
+                        </a>
+
+
+                    </li>
+
+                    {% if merchant._id|get_package_merchant == "5b44517ac5e5f42f1687ed3b" or merchant._id|get_package_merchant == "5b4728b5c5e5f42f16be71d7" %}
+                    <li class="nav-item">
+                        <a href="/marketing_automation" class="nav-link ">
+                            <i class="fa fa-magic u-mr-xsmall"></i> {{ gettext('menuAutomationText') }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if merchant._id|get_dealer_id != "5de0db6306e7eca17bd8e872" %}
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/survey">
+                            <i class="fa fa-poll u-mr-xsmall"></i>{{ gettext("Khao_sat") }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if merchant._id|get_dealer_id != "5de0db6306e7eca17bd8e872" %}
+                        {% if merchant._id|get_package_merchant == "5b44517ac5e5f42f1687ed3b" or merchant._id|get_package_merchant == "5b4728b5c5e5f42f16be71d7" %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/rating">
+                                <i class="far fa-star u-mr-xsmall"></i>{{ gettext("Phan_hoi") }}
+                            </a>
+                        </li>
+                        {% endif %}
+                    {% endif %}
+                    
+                    {% if merchant._id|get_package_merchant == "5b44517ac5e5f42f1687ed3b" or merchant._id|get_package_merchant == "5b4728b5c5e5f42f16be71d7" %}
+                    <li class="nav-item">
+                        <a href="/coupons" class="nav-link ">
+                            <i class="fa fa-tags u-mr-xsmall"></i> {{ gettext('menuCouponsText') }}
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mini_game">
+                            <i class="fa fa-gamepad u-mr-xsmall"></i> Mini Game
+                        </a>
+                    </li>
+
+                    {% if merchant._id|get_package_merchant == "5b44517ac5e5f42f1687ed3b" or merchant._id|get_package_merchant == "5b4728b5c5e5f42f16be71d7" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/apps">
+                            <i class="fa fa-windows u-mr-xsmall"></i> Apps
+                        </a>
+                    </li>
+                    {% endif %}
+                    {%elif g.role == '2'%}
+                    {% if merchant._id|get_package_merchant == "5b44517ac5e5f42f1687ed3b" or merchant._id|get_package_merchant == "5b4728b5c5e5f42f16be71d7" %}
+                    <li class="nav-item">
+                        <a href="/coupons" class="nav-link ">
+                            <i class="fa fa-tags u-mr-xsmall"></i> {{ gettext('menuCouponsText') }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {%elif g.role == '4'%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/merchant_reports">
+                            <i class="fe fe-home"></i> {{ gettext('menuDashboardText') }}
+                        </a>
+                    </li>
+
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wifi">
+                            <i class="fe fe-wifi" style="min-width: 1.75rem;"></i> {{ gettext('menuWifisettingText') }}
+                        </a>
+
+
+                    </li>
+
+                    {% if merchant._id|get_package_merchant == "5b44517ac5e5f42f1687ed3b" or merchant._id|get_package_merchant == "5b4728b5c5e5f42f16be71d7" %}
+                    <li class="nav-item">
+                        <a href="/marketing_automation" class="nav-link ">
+                            <i class="fa fa-magic u-mr-xsmall"></i> {{ gettext('menuAutomationText') }}
+                        </a>
+                    </li>
+                    {% endif %}
+                        {% if merchant._id|get_dealer_id != "5de0db6306e7eca17bd8e872" %}
+                
+                    <li class="nav-item">
+                        <a class="nav-link" href="/survey">
+                            <i class="fa fa-poll u-mr-xsmall"></i>{{ gettext("Khao_sat") }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if merchant._id|get_dealer_id != "5de0db6306e7eca17bd8e872" %}
+                    {% if merchant._id|get_package_merchant == "5b44517ac5e5f42f1687ed3b" or merchant._id|get_package_merchant == "5b4728b5c5e5f42f16be71d7" %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/rating">
+                                <i class="far fa-star u-mr-xsmall"></i>{{ gettext("Phan_hoi") }}
+                            </a>
+                        </li>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if merchant._id|get_package_merchant == "5b44517ac5e5f42f1687ed3b" or merchant._id|get_package_merchant == "5b4728b5c5e5f42f16be71d7" %}
+                        <li class="nav-item">
+                    
+                              <a class="nav-link collapsed" href="#sidebarAuth" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAuth">
+                                <i class="fe fe-user"></i> {{ gettext("Chien_dich") }}
+                              </a>
+                              <div class="collapse" id="sidebarAuth" style="">
+                                <ul class="nav nav-sm flex-column">
+                                 <li class="nav-item">
+                                    <a href="/email_marketing" class="nav-link">
+                                      Email Marketing
+                                    </a>
+                                  </li>
+                                    <li class="nav-item">
+                                    <a href="/sms_marketing" class="nav-link">
+                                      SMS Marketing
+                                    </a>
+                                  </li>
+                                  <li class="nav-item">
+                                    <a href="/zalo_marketing" class="nav-link">
+                                      Zalo Marketing
+                                    </a>
+                                  </li>
+             
+                                </ul>
+                              </div>
+                            </li>
+                            {% endif %}
+                         {%endif%}
+
+
+
+
+                </ul>
+
+                    <li class="nav-link nav-item">
+                        <div class="form-group">
+                            <select id="language" name="language" class="form-control">
+                                <option value="vi">VN</option>
+                                <option value="en">EN</option>
+                                <option value="lo">LAO</option>
+                            </select>
+
+                        </div>
+
+                    </li>
+
+                </ul>
+
+    {% endif %}

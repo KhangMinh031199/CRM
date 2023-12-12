@@ -1,0 +1,80 @@
+{%if total_customers > 0 %}
+<div>
+    <span class="h2 mb-0">{{total_customers}}</span>
+    {%if range_time == 'all' %}
+    <div><span class="badge text-bg-success-subtle mt-n1"></span><span class="text-body-secondary me-3">toàn thời gian</span></div>
+    {%else%}
+    <div>{%if total_customers_ex_percent<0 %}<span class="badge text-bg-danger-subtle mt-n1">{%else%}<span
+                class="badge text-bg-success-subtle mt-n1">+{%endif%}{{total_customers_ex_percent}}%</span><span class="text-body-secondary me-3"> so
+                với {%if range_time|string == '365'%}12 tháng{%else%}{{range_time}} ngày{%endif%} trước</span></div>
+    {%endif%}
+
+    <div class="divider"></div>
+    <span class="text-body-secondary me-3">Trung bình, <b>{{graph_report.average}}</b> khách hàng mỗi ngày.</span>
+
+</div>
+<div class="chart" style="position: relative; height:153px">
+    <canvas id="salesChart" class="chart-canvas"></canvas>
+  </div>
+
+  <input type="hidden" value="{{graph_report.data|join(", ")}}" id="graph_data_customers" />
+  <input type="hidden" value="{{graph_report.label|join(", ") }}" id="graph_label_customers" />
+<script>
+    new Chart('salesChart', {
+        type: 'line',
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        display:false
+                    },
+                    ticks:{
+                        display:false,
+                    },
+                }],
+                yAxes: [{
+                    gridLines: {
+                        display:false
+                    } ,
+                    ticks: {
+                        callback: function (value) {
+                            return  value ;
+                        }
+                    }
+                }]
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                mode: 'single',
+                callbacks: {
+                    label: function(tooltipItems, data) {
+                        return  tooltipItems.yLabel + ' khách hàng';
+                    }
+                }
+            }
+        },
+        data: {
+            labels: $('#graph_label_customers').val().split(','),
+            datasets: [{
+                borderColor: "rgba(235, 29, 29, 0.7)",
+                fill:false,
+                label: 'All',
+                data: $('#graph_data_customers').val().split(',')
+            }]
+        }
+    });
+</script>
+
+{%else%}
+
+<div class="empty-state">
+    <div class="empty-image"></div>
+    <div class="description">Bạn chưa có khách hàng...</div>
+</div>
+
+{%endif%}

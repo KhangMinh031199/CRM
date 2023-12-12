@@ -1,0 +1,1707 @@
+# Vietnamese translations for PROJECT.
+# Copyright (C) 2019 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2019-08-01 20:51+0700\n"
+"PO-Revision-Date: 2019-08-01 20:51+0700\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: vi\n"
+"Language-Team: vi <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+msgid "enterUserLogin"
+msgstr "ID, số điện thoại hoặc email"
+
+msgid "enterUserPassword"
+msgstr "Nhập mật khẩu"
+
+msgid "forgotPasswordLabel"
+msgstr "Quên mật khẩu"
+
+msgid "enterSigninBtn"
+msgstr "Đăng nhập"
+
+msgid "menuDashboardText"
+msgstr "Tổng quan"
+
+msgid "menuCustomerText"
+msgstr "Khách hàng"
+
+msgid "menuLocationText"
+msgstr "Địa điểm"
+
+msgid "menuWifisettingText"
+msgstr "Wi-Fi"
+
+msgid "menuAutomationText"
+msgstr "Chăm sóc tự động"
+
+msgid "menuCampaignText"
+msgstr "Chiến dịch"
+
+msgid "menuCouponsText"
+msgstr "Mã khuyến mãi"
+
+msgid "menuGuildingText"
+msgstr "Hướng dẫn"
+
+msgid "menuSupportText"
+msgstr "Trợ giúp"
+
+msgid "WifisettingLocationText"
+msgstr "Địa điểm"
+
+msgid "WifisettingSettingText"
+msgstr "Cấu hình trang chào"
+
+msgid "WifisettingProfileText"
+msgstr "Quản lý băng thông"
+
+msgid "WifisettingDeviceText"
+msgstr "Thiết bị"
+
+msgid "HotspotManageText"
+msgstr "Trình quản lý"
+
+msgid "HotspotGeneralsettingText"
+msgstr "Cấu hình chung"
+
+msgid "HotspotChainapplyingText"
+msgstr "Áp dụng chuỗi"
+
+msgid "HotspotCloseText"
+msgstr "Đóng lại"
+
+msgid "HotspotDefaultWelcomeScreenText"
+msgstr "Trang chào mặc định"
+
+msgid "HotspotHappyBirthdayScreenText"
+msgstr "Chúc mừng sinh nhật"
+
+msgid "HotspotNumberofvisitsScreenText"
+msgstr "Trang chào theo lượt đến"
+
+msgid "HotspotEventScreenText"
+msgstr "Trang chào sự kiện"
+
+msgid "HotspotSurveyScreenText"
+msgstr "Trang khảo sát"
+
+msgid "HotspotRegisterScreenText"
+msgstr "Trang đăng ký"
+
+msgid "HotspotAddText"
+msgstr "Thêm ảnh"
+
+msgid "HotspotUpdateText"
+msgstr "Cập nhật"
+
+msgid "HotspotDeleteText"
+msgstr "Xoá"
+
+msgid "HotspotSaveText"
+msgstr "Lưu lại"
+
+msgid "HotspotHappyBirthdayScreenSettingText"
+msgstr "Cấu hình"
+
+msgid "HotspotHappyBirthdayScreenPictureText"
+msgstr "Thêm ảnh"
+
+msgid "HotspotHappyBirthdayScreenRecommendText"
+msgstr "Kích thước gợi ý 750 px × 1330 px"
+
+msgid "HotspotHappyBirthdayScreenTitleText"
+msgstr "Tiêu đề"
+
+msgid "HotspotHappyBirthdayScreenContentText"
+msgstr "Nội dung"
+
+msgid "HotspotHappyBirthdayScreenRedirectText"
+msgstr "Chuyển hướng sau đăng nhập"
+
+msgid "HotspotHappyBirthdayScreenActiveText"
+msgstr "Kích hoạt"
+
+msgid "HotspotHappyBirthdayScreenUpdateText"
+msgstr "Cập nhật"
+
+msgid "HotspotNumberofvisitsScreenAddText"
+msgstr "Thêm trang chào"
+
+msgid "HotspotNumberofvisitsScreenVisitsText"
+msgstr "Lượt đến"
+
+msgid "HotspotNumberofvisitsScreenStatusText"
+msgstr "Trạng thái"
+
+msgid "HotspotNumberofvisitsScreenPendingText"
+msgstr "Tạm ngưng"
+
+msgid "HotspotNumberofvisitsScreenActiveText"
+msgstr "Đang chạy"
+
+msgid "HotspotNumberofvisitsScreenEditText"
+msgstr "Chỉnh sửa"
+
+msgid "HotspotNumberofvisitsScreenReviewText"
+msgstr "Xem trước"
+
+msgid "HotspotNumberofvisitsScreenDeleteText"
+msgstr "Xoá"
+
+msgid "HotspotNumberofvisitsScreenPictureText"
+msgstr "Thêm ảnh"
+
+msgid "HotspotNumberofvisitsScreenRecommendText"
+msgstr "Kích thước gợi ý 750 px × 1330 px"
+
+msgid "HotspotNumberofvisitsScreenTitleText"
+msgstr "Tiêu đề"
+
+msgid "HotspotNumberofvisitsScreenContentText"
+msgstr "Nội dung"
+
+msgid "HotspotNumberofvisitsScreenBaseText"
+msgstr "Số lượt đến tính theo:"
+
+msgid "HotspotNumberofvisitsScreenChainText"
+msgstr "Chuỗi"
+
+msgid "HotspotNumberofvisitsScreenLocationText"
+msgstr "Địa điểm"
+
+msgid "HotspotNumberofvisitsScreenTimesText"
+msgstr "Số lần đến"
+
+msgid "HotspotNumberofvisitsScreenRedirectText"
+msgstr "Chuyển hướng"
+
+msgid "HotspotNumberofvisitsScreenCreateText"
+msgstr "Tạo trang chào"
+
+msgid "HotspotEventScreenAddText"
+msgstr "Thêm trang chào"
+
+msgid "HotspotEventScreenPictureText"
+msgstr "Thêm ảnh"
+
+msgid "HotspotEventScreenRecommendText"
+msgstr "Kích thước gợi ý 750 px × 1330 px"
+
+msgid "HotspotEventScreenTitleText"
+msgstr "Tiêu đề"
+
+msgid "HotspotEventScreenContentText"
+msgstr "Nội dung"
+
+msgid "HotspotEventScreenFromText"
+msgstr "Ngày bắt đầu"
+
+msgid "HotspotEventScreenToText"
+msgstr "Ngày kết thúc"
+
+msgid "HotspotEventScreenRedirectText"
+msgstr "Chuyển hướng sau đăng nhập"
+
+msgid "HotspotSurveyScreenAddText"
+msgstr "Thêm khảo sát"
+
+msgid "HotspotSurveyScreenStatusText"
+msgstr "Trạng thái"
+
+msgid "HotspotSurveyScreenResultText"
+msgstr "Kết quả"
+
+msgid "HotspotSurveyScreenDetailText"
+msgstr "Chi tiết"
+
+msgid "HotspotSurveyScreenReviewText"
+msgstr "Xem trước"
+
+msgid "HotspotSurveyScreenDeleteText"
+msgstr "Xoá"
+
+msgid "HotspotSurveyScreenPictureText"
+msgstr "Thêm ảnh"
+
+msgid "HotspotSurveyScreenRecommendText"
+msgstr "Kích thước gợi ý 750 px × 1330 px"
+
+msgid "HotspotSurveyScreenQuestionText"
+msgstr "Câu hỏi"
+
+msgid "HotspotSurveyScreenPlaceholderText"
+msgstr "Bạn đánh giá thế nào về dịch vụ của chúng tôi?"
+
+msgid "HotspotSurveyScreenMultipleText"
+msgstr "Chọn nhiều đáp án"
+
+msgid "HotspotSurveyScreenSingleText"
+msgstr "Chỉ một đáp án"
+
+msgid "HotspotSurveyScreenRateText"
+msgstr "Chấm điểm"
+
+msgid "HotspotSurveyScreenAnswerText"
+msgstr "Câu trả lời"
+
+msgid "HotspotSurveyScreenContentText"
+msgstr "Nội dung"
+
+msgid "HotspotSurveyScreenTagText"
+msgstr "Tag"
+
+msgid "HotspotSurveyScreenAddAnswerText"
+msgstr "Thêm câu trả lời"
+
+msgid "HotspotSurveyScreenRedirectText"
+msgstr "Chuyển hướng sau đăng nhập"
+
+msgid "HotspotSurveyScreenActiveText"
+msgstr "Kích hoạt"
+
+msgid "HotspotRegisterScreenSettingText"
+msgstr "Cấu hình"
+
+msgid "HotspotRegisterScreenPhoneText"
+msgstr "Số điện thoại"
+
+msgid "HotspotRegisterScreenEmailText"
+msgstr "Email"
+
+msgid "HotspotRegisterScreenNameText"
+msgstr "Họ và Tên"
+
+msgid "HotspotRegisterScreendayofbirthText"
+msgstr "Ngày sinh"
+
+msgid "HotspotRegisterScreenYearofbirthText"
+msgstr "Năm sinh"
+
+msgid "HotspotRegisterScreenGenderText"
+msgstr "Giới tính"
+
+msgid "HotspotRegisterScreenWelcomemessageText"
+msgstr "Cấu hình lời chào"
+
+msgid "HotspotRegisterScreenBirthdaymessageText"
+msgstr "Cấu hình lời mời nhập sinh nhật"
+
+msgid "HotspotRegisterScreenConnectbuttonText"
+msgstr "Cấu hình nút kết nối"
+
+msgid "HotspotRegisterScreenUpdateText"
+msgstr "Cập nhật"
+
+#~ msgid "menuAutomationText"
+#~ msgstr "Chăm sóc KH tự động"
+
+#~ Cao Lai Truong
+
+msgid "CHAM_SOC_TU_DONG"
+msgstr "CHĂM SÓC TỰ ĐỘNG"
+
+msgid "Nextify_Demo"
+msgstr "Nextify Demo"
+
+msgid "Kich_ban"
+msgstr "Kịch bản"
+
+msgid "Hoat_dong"
+msgstr "Hoạt động"
+
+msgid "KHACH_HANG"
+msgstr "KHÁCH HÀNG"
+	
+msgid "Khach_hang_den_lan_dau"
+msgstr "Khách hàng đến lần đầu"
+
+msgid "Khach_hang_quay_lai"
+msgstr "Khách hàng quay lại"
+
+msgid "Khach_hang_than_thiet"
+msgstr "Khách hàng thân thiết"
+
+msgid "Khach_hang_lau_chua_quay_lai"
+msgstr "Khách hàng lâu chưa quay lại"
+
+msgid "Chuc_mung_sinh_nhat"
+msgstr "Chúc mừng sinh nhật"
+
+msgid "Khuyen_mai_chung"
+msgstr "Khuyến mãi chung"
+
+msgid "Cam_on_&_khao_sat"
+msgstr "Cảm ơn & khảo sát"
+
+msgid "LOAI_TIN"
+msgstr "LOẠI TIN"
+
+msgid "THOI_GIAN"
+msgstr "THỜI GIAN"
+
+msgid "Chien_dich_SMS/Email"
+msgstr "Chiến dịch SMS/Email"
+
+msgid "TEN"
+msgstr "TÊN"
+
+msgid "TAO_LUC"
+msgstr "TẠO LÚC"
+
+msgid "TIN_SU_KIEN"
+msgstr "TIN SỰ KIỆN"
+
+msgid "TAO_CHIEN_DICH"
+msgstr "TẠO CHIẾN DỊCH"
+
+msgid "DONG_LAI"
+msgstr "ĐÓNG LẠI"
+
+msgid "Nhap_ten_chien_dich_ban_muon_tao"
+msgstr "Nhập tên chiến dịch bạn muốn tạo"
+
+msgid "TIEP_TUC"
+msgstr "TIẾP TỤC"
+
+msgid "Thiet_lap_noi_dung"
+msgstr "Thiết lập nội dung"
+
+msgid "SMS"
+msgstr "SMS"
+
+msgid "Noi_dung_tin_nhan_SMS"
+msgstr "Nội dung tin nhắn SMS"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Tieu_de_Email_cua_chien_dich"
+msgstr "Tiêu đề Email của chiến dịch"
+
+msgid "Tin_cham_soc"
+msgstr "Tin chăm sóc"
+
+msgid "Danh_sach_cac_tu_cam_cua_nha_mang"
+msgstr "Danh sách các từ cấm của nhà mạng"
+
+msgid "chon_mau_Email"
+msgstr "chọn mẫu Email"
+
+msgid "BAO_CAO_KHAO_SAT"
+msgstr "BÁO CÁO KHẢO SÁT"
+
+msgid "Nextify_Demo"
+msgstr "Nextify Demo"
+
+msgid "tao_tag_nhanh"
+msgstr "tạo tag nhanh"
+
+msgid "tao_khao_sat"
+msgstr "tạo khảo sát"
+
+msgid "them_moi_tag"
+msgstr "thêm mới tag"
+
+msgid "Ten:_(_*_bat_buoc)"
+msgstr "Tên: ( * bắt buộc)"
+
+msgid "loai_tag"	
+msgstr "loại tag"
+
+msgid "Mo_ta:_(_*_bat_buoc)"
+msgstr "Mô tả: ( * bắt buộc)"
+
+msgid "mo_ta"
+msgstr "mô tả"
+
+msgid "them_moi"
+msgstr "thêm mới"
+
+msgid "Them_khao_sat"
+msgstr "Thêm khảo sát"
+
+msgid "them_anh:"
+msgstr "thêm ảnh:"
+
+msgid "choose_file"
+msgstr "choose file"
+
+msgid "No_file_chosen"
+msgstr "No file chosen"
+
+msgid "Loai_khao_sat"
+msgstr "Loại khảo sát"
+
+msgid "Cau_hoi"
+msgstr "Câu hỏi"
+
+msgid "Ban_danh_gia_the_nao_ve_dich_vu_cua_chung_toi?"
+msgstr "Bạn đánh giá thế nào về dịch vụ của chúng tôi?"
+
+msgid "Ket_qua"
+msgstr "Kết quả"
+
+msgid "Noi_dung"
+msgstr "Nội dung"
+
+msgid "Chon_tag"
+msgstr "Chọn tag"
+
+msgid "Nut_xac_nhan_khao_satThem_dap_an"
+msgstr "Nút xác nhận khảo sátThêm đáp án"
+
+msgid "Cap_nhat"
+msgstr "Cập nhật"
+
+msgid "Ban_cam_thay_nhan_vien_phuc_vu_hom_nay_the_nao?"
+msgstr "Bạn cảm thấy nhân viên phục vụ hôm nay thế nào?"
+
+msgid "Tao_mot_thang_truoc"
+msgstr "Tạo một tháng trước"
+
+msgid "Ban_thich_nhat_do_uong_nao_cua_chung_toi_?"
+msgstr "Bạn thích nhất đồ uống nào của chúng tôi ?"
+
+msgid "Ban_co_hai_long_ve_chat_luong_phuc_vu_va_san_pham_cua_Lofita!"
+msgstr "Bạn có hài lòng về chất lượng phục vụ và sản phẩm của Lofita!"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "chia_se"
+msgstr "chia sẻ"
+
+msgid "Xoa"
+msgstr "Xóa"
+
+msgid "Chi_tiet"
+msgstr "Chi tiết"
+
+msgid "DANH_GIA_CUA_KHACH_HANG"
+msgstr "ĐÁNH GIÁ CỦA KHÁCH HÀNG"
+
+msgid "Nextify_Demo"
+msgstr "Nextify Demo"
+
+msgid "CAU_HINH"
+msgstr "CẤU HÌNH"
+
+msgid "TONG_SO_DANH_GIA"
+msgstr "TỔNG SỐ ĐÁNH GIÁ"
+
+msgid "DANH_GIA_TRUNG_BINH"
+msgstr "ĐÁNH GIÁ TRUNG BÌNH"
+
+msgid "Khach_hang_danh_gia"
+msgstr "Khách hàng đánh giá"
+
+msgid "Tat_ca_cac_kenh"
+msgstr "Tất cả các kênh"
+
+msgid "Tat_ca_so_sao"
+msgstr "Tất cả số sao"
+
+msgid "Cau_hinh_kenh_danh_gia"
+msgstr "Cấu hình kênh đánh giá"
+
+msgid "Moi_khach_hang_danh_gia_qua_mang_xa_hoi._Cac_kenh_se_hien_thi_trong_email_ban_gui_khach_hang"
+msgstr "Mời khách hàng đánh giá qua mạng xã hội. Các kênh sẽ hiển thị trong email bạn gửi khách hàng"
+
+msgid "Facebook"
+msgstr "Facebook"
+
+msgid "Google"
+msgstr "Google"
+
+msgid "TripAdvisor"
+msgstr "TripAdvisor"
+
+msgid "XAC_NHAN"
+msgstr "XÁC NHẬN"
+
+msgid "COUPONS"
+msgstr "COUPONS"
+
+msgid "3001_coupons"
+msgstr "3001 coupons"
+
+msgid "Trang_thai:"
+msgstr "Trạng thái:"
+
+msgid "Loai_coupon:"
+msgstr "Loại coupon:"
+
+msgid "So_dien_thoai:"
+msgstr "Số điện thoại:"
+
+msgid "MA"
+msgstr "MÃ"
+
+msgid "KHACH_HANG"
+msgstr "KHÁCH HÀNG"
+
+msgid "LOAI"
+msgstr "LOẠI"
+
+msgid "TRANG_THAI"
+msgstr "TRẠNG THÁI"
+
+msgid "Loai_Coupons"
+msgstr "Loại Coupons"
+
+msgid "MINI_GAME"
+msgstr "MINI GAME"
+
+msgid "Nextify_Demo"
+msgstr "Nextify Demo"
+
+msgid "TAO_GAME"
+msgstr "TẠO GAME"
+
+msgid "Tao_Game_moi"
+msgstr "Tạo Game mới"
+
+msgid "Dong_lai"
+msgstr "Đóng lại"
+
+msgid "Ten_chien_dich"
+msgstr "Tên chiến dịch"
+
+msgid "Hinh_anh"
+msgstr "Hình ảnh"
+
+msgid "Hinh_nen"
+msgstr "Hình nền"
+
+msgid "Anh_trung_tam_vong_quay"
+msgstr "Ảnh trung tâm vòng quay"
+
+msgid "Tuy_chinh"
+msgstr "Tùy chỉnh"
+
+msgid "Noi_dung_chao_mung"
+msgstr "Nội dung chào mừng"
+
+msgid "Chao_mung_ban_da_den_voi_vong_quay_may_man"
+msgstr "Chào mừng bạn đã đến với vòng quay may mắn"
+
+msgid "Mau_chu_chao_mung"
+msgstr "Màu chữ chào mừng"
+
+msgid "So_luot_quay"
+msgstr "Số lượt quay"
+
+msgid "Ten_nut_quay_thuong"
+msgstr "Tên nút quay thưởng"
+
+msgid "Quay_ngay"
+msgstr "Quay ngay"
+
+msgid "Thong_bao_trung_thuong"
+msgstr "Thông báo trúng thưởng"
+
+msgid "Xin_chuc_mung,_phan_thuong_cua_ban_la"
+msgstr "Xin chúc mừng, phần thưởng của bạn là"
+
+msgid "Thong_bao_khong_trung_thuong"
+msgstr "Thông báo không trúng thưởng"
+
+msgid "Rat_tiec_ban_da_khong_trung_thuong,_hay_thu_lai_va_may_cua_minh"
+msgstr "Rất tiếc bạn đã không trúng thưởng, hãy thử lại vậ may của mình"
+
+msgid "Ty_le_trung_thuong_(%)"
+msgstr "Tỷ lệ trúng thưởng (%)"
+
+msgid "Thoi_gian_hien_lai_vong_quay_theo_gio"
+msgstr "Thời gian hiện lại vòng quay theo giờ"
+
+msgid "So_phan_thuong"
+msgstr "Số phần thưởng"
+
+msgid "Loai"
+msgstr "Loại"
+
+msgid "Ten"
+msgstr "Tên"
+
+msgid "So_luong"
+msgstr "Số lượng"
+
+msgid "Mau"
+msgstr "Màu"
+
+msgid "Mo_ta"
+msgstr "Mô tả"
+
+msgid "Con"
+msgstr "Còn"
+
+msgid "Ty_le"
+msgstr "Tỷ lệ"
+
+msgid "Cap_nhat"
+msgstr "Cập nhật"
+
+msgid "Ket_qua"
+msgstr "Kết quả"
+
+msgid "Xoa"
+msgstr "Xóa"
+
+msgid "Chi_tiet"
+msgstr "Chi tiết"
+
+msgid "UNG_DUNG"
+msgstr "ỨNG DỤNG"
+
+msgid "Quan_ly_ung_dung"
+msgstr "Quản lý ứng dụng"
+
+msgid "LOOP"
+msgstr "LOOP"
+
+msgid "Access_Token"
+msgstr "Access Token"
+
+msgid "Merchant_App_ID"
+msgstr "Merchant App ID"
+
+msgid "Kich_hoat"
+msgstr "Kích hoạt"
+
+msgid "Thiet_lap_ID_dia_diem"
+msgstr "Thiết lập ID địa điểm"
+
+msgid "Chon_dia_diem"
+msgstr "Chọn địa điểm"
+
+msgid "ID_dia_diem"
+msgstr "ID địa điểm"
+
+msgid "Luu_thong_tin"
+msgstr "Lưu thông tin"
+
+msgid "Thao_tac_thanh_cong"
+msgstr "Thao tác thành công"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "GetFly_CRM"
+msgstr "GetFly CRM"
+
+msgid "Cau_hinh"
+msgstr "Cấu hình"
+
+msgid "Link_dang_nhap:"
+msgstr "Link đăng nhập:"
+
+msgid "API_Key:"
+msgstr "API Key:"
+
+msgid "ID_merchant_app_:"
+msgstr "ID merchant app :"
+
+msgid "KiotViet"
+msgstr "KiotViet"
+
+msgid "Cau_hinh"
+msgstr "Cấu hình"
+
+msgid "Huong_dan_thiet_lap_ket_noi"
+msgstr "Hướng dẫn thiết lập kết nối"
+
+msgid "Ten_Cua_Hang"
+msgstr "Tên Cửa Hàng"
+
+msgid "Kiotviet_Client-ID"
+msgstr "Kiotviet Client-ID"
+
+msgid "Kiotviet_Secret-ID"
+msgstr "Kiotviet Secret-ID"
+
+msgid "Merchant_App_ID"
+msgstr "Merchant App ID"
+
+msgid "Thiet_lap_ket_noi"
+msgstr "Thiết lập kết nối"
+
+msgid "Quan_ly_ung_dung"
+msgstr "Quản lý ứng dụng"
+
+msgid "CHATFUEL"
+msgstr "CHATFUEL"
+
+msgid "ID_chatbot_CHATFUEL"
+msgstr "ID chatbot CHATFUEL"
+
+msgid "Broadcasting_API_Token"
+msgstr "Broadcasting API Token"
+
+msgid "AHACHAT"
+msgstr "AHACHAT"
+
+msgid "ID_chatbot_AHACHAT"
+msgstr "ID chatbot AHACHAT"
+
+msgid "Broadcasting_API_Token"
+msgstr "Broadcasting API Token"
+
+msgid "Kich_hoat"
+msgstr "Kích hoạt"
+
+msgid "Cau_hinh_chung"
+msgstr "Cấu hình chung"
+
+msgid "Lich_su_cuoc_goi"
+msgstr "Lịch sử cuộc gọi"
+
+msgid "VCALL"
+msgstr "VCALL"
+
+msgid "API_KEY"
+msgstr "API KEY"
+
+msgid "API_SECRET"
+msgstr "API SECRET"
+
+msgid "Username"
+msgstr "Username"
+
+msgid "Password"
+msgstr "Password"
+
+msgid "App_Name"
+msgstr "App Name"
+
+msgid "HUONG_CUOC_GOI"
+msgstr "HƯỚNG CUỘC GỌI"
+
+msgid "GOI_TU_SO"
+msgstr "GỌI TỪ SỐ"
+
+msgid "GOI_DEN_SO"
+msgstr "GỌI ĐẾN SỐ"
+
+msgid "Tu_ngay"
+msgstr "Từ ngày"
+
+msgid "Toi_ngay"
+msgstr "Tới ngày"
+
+msgid "Xem"
+msgstr "Xem"
+
+msgid "HUONG"
+msgstr "HƯỚNG"
+
+msgid "TU_MAY_NHANH"
+msgstr "TỪ MÁY NHÁNH"
+
+msgid "GOI_TU_SO"
+msgstr "GỌI TỪ SỐ"
+
+msgid "DEN_MAY_NHANH"
+msgstr "ĐẾN MÁY NHÁNH"
+
+msgid "GOI_DEN_SO"
+msgstr "GỌI ĐẾN SỐ"
+
+msgid "THOI_GIAN_BAT_DAU"
+msgstr "THỜI GIAN BẮT ĐẦU"
+
+msgid "THOI_GIAN_KET_THUC"
+msgstr "THỜI GIAN KẾT THÚC"
+
+msgid "THOI_LUONG"
+msgstr "THỜI LƯỢNG"
+
+msgid "GHI_AM"
+msgstr "GHI ÂM"
+
+msgid "OMICRM"
+msgstr "OMICRM"
+
+msgid "API_KEY"
+msgstr "API KEY"
+
+msgid "Merchant_App_ID"
+msgstr "Merchant App ID"
+
+msgid "Domain"
+msgstr "Domain"
+
+msgid "So_noi_bo"
+msgstr "Số nội bộ"
+
+msgid "Mat_khau"
+msgstr "Mật khẩu"
+
+msgid "API_Key"
+msgstr "API Key"
+
+msgid "ZALO"
+msgstr "ZALO"
+
+msgid "Zalo_OA_ID"
+msgstr "Zalo OA ID"
+
+msgid "Zalo_App_ID"
+msgstr "Zalo App ID"
+
+msgid "Zalo_Accesstoken"
+msgstr "Zalo Accesstoken"
+
+msgid "Botup"
+msgstr "Botup"
+
+msgid "Link_Botup_cho_tat_ca_cac_dia_diem"
+msgstr "Link Botup cho tất cả các địa điểm"
+
+msgid "AP_DUNG"
+msgstr "ÁP DỤNG"
+
+msgid "DIA_DIEM"
+msgstr "ĐỊA ĐIỂM"
+
+msgid "LINK_BOTUP"
+msgstr "LINK BOTUP"
+
+msgid "Nextify_Demo"
+msgstr "Nextify Demo"
+
+msgid "Sheraton_Hotel"
+msgstr "Sheraton Hotel"
+
+msgid "Lofita"
+msgstr "Lofita"
+
+msgid "Phong_Vu_TH"
+msgstr "Phong Vũ TH"
+
+msgid "Merchant_SGN"
+msgstr "Merchant SGN"
+
+msgid "Fin_Coffe"
+msgstr "Fin Coffe"
+
+msgid "AMA"
+msgstr "AMA"
+
+msgid "LUU"
+msgstr "LƯU"
+
+msgid "Phan_men_quan_ly_nha_hang-cafe_thong_minh_tu_Singapore"
+msgstr "Phần mền quản lý nhà hàng-cafe thông minh từ Singapore"
+
+msgid "Giai_phap_CRM_quan_tri_doanh_nghiep"
+msgstr "Giải pháp CRM quản trị doanh nghiệp"
+
+msgid "Giai_phap_quan_ly_diem_ban_le,_nha_hang,_cafe"
+msgstr "Giải pháp quản lý điểm bán lẻ, nhà hàng, cafe"
+
+msgid "Ung_dung_tao_vao_quan_ly_Chatbot_tren_Facebook_Messenger"
+msgstr "Ứng dụng tạo vào quản lý Chatbot trên Facebook Messenger"
+
+msgid "Giai_phap_tong_dai,_goi_dien_cho_khach_hang"
+msgstr "Giải pháp tổng đài, gọi điện cho khách hàng"
+
+msgid "Giai_phap_CRM_hieu_qua_cho_cham_soc_khach_hang"
+msgstr "Giải pháp CRM hiệu quả cho chăm sóc khách hàng"
+
+msgid "Giai_phap_tong_dai,_goi_dien_cho_khach_hang"
+msgstr "Giải pháp tổng đài, gọi điện cho khách hàng"
+
+msgid "Ung_dung_chat_OTT"
+msgstr "Ứng dụng chat OTT"
+
+msgid "Nen_tang_tao_cac_gamification_cho_nguoi_dung"
+msgstr "Nền tảng tạo các gamification cho người dùng"
+
+msgid "Nextify_Support"
+msgstr "Nextify Support"
+
+msgid "Trang_chu"
+msgstr "Trang chủ"
+
+msgid "Blog"
+msgstr "Blog"
+
+msgid "API"
+msgstr "API"
+
+msgid "CRM"
+msgstr "CRM"
+
+msgid "Here_are_the_articles_in_this_section:"
+msgstr "Here are the articles in this section:"
+
+msgid "Bat_dau"
+msgstr "Bắt đầu"
+
+msgid "Thiet_bi_phan_cung"
+msgstr "Thiết bị phần cứng"
+
+msgid "Quan_ly_thiet_bi"
+msgstr "Quản lý thiết bị"
+
+msgid "Dia_diem"
+msgstr "Địa điểm"
+
+msgid "Trang_dang_ky_thanh_vien"
+msgstr "Trang đăng ký thành viên"
+
+msgid "Trang_chao_WIFI"
+msgstr "Trang chào WIFI"
+
+msgid "Wifi_Profiles"
+msgstr "Wifi Profiles"
+
+msgid "Quan_ly_khach_hang"
+msgstr "Quản lý khách hàng"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Cham_soc_tu_dong"
+msgstr "Chăm sóc tự động"
+
+msgid "Chien_dich"
+msgstr "Chiến dịch"
+
+msgid "Coupons"
+msgstr "Coupons"
+
+msgid "Phan_hoi_va_gop_y"
+msgstr "Phản hồi và góp ý"
+
+msgid "Bao_cao_va_phan_tich"
+msgstr "Báo cáo và phân tích"
+
+msgid "Trang_bao_cao_tong_quan_cua_san_pham_ve_khach_hang"
+msgstr "Trang báo cáo tổng quan của sản phẩm về khách hàng"
+
+msgid "Mini_Game"
+msgstr "Mini Game"
+
+msgid "Tao_Mini_game"
+msgstr "Tạo Mini game"
+
+msgid "Tich_hop_Zalo"
+msgstr "Tích hợp Zalo"
+
+msgid "Tich_hop_Chatbot"
+msgstr "Tích hợp Chatbot"
+
+msgid "Tich_hop_POS"
+msgstr "Tích hợp POS"
+
+msgid "Cau_hoi_thuong_gap"
+msgstr "Câu hỏi thường gặp"
+
+msgid "Tong_hop_nhung_cau_hoi_,_thac_mac_cua_khach_hang_khi_su_dung_ve_dich_vu_wifi_marketing_CRM"
+msgstr "Tổng hợp những câu hỏi , thắc mắc của khách hàng khi sử dụng về dịch vụ wifi marketing CRM"
+
+msgid "Cac_van_de_thuong_gap"
+msgstr "Các vấn đề thường gặp"
+
+msgid "Thong_tin_khac"
+msgstr "Thông tin khác"
+
+msgid "Next"
+msgstr "Next"
+
+msgid "Thiet_bi_phan_cung"
+msgstr "Thiết bị phần cứng"
+
+msgid "TONG_QUAN"
+msgstr "TỔNG QUAN"
+
+msgid "Nextify_CRM"
+msgstr "Nextify CRM"
+
+msgid "Tat_ca_dia_diem"
+msgstr "Tất cả địa điểm"
+
+msgid "THONG_KE_KHACH_HANG"
+msgstr "THỐNG KÊ KHÁCH HÀNG"
+
+msgid "DIA_DIEM"
+msgstr "ĐỊA ĐIỂM"
+
+msgid "_khach_hang"
+msgstr " khách hàng"
+
+msgid "So_voi_7_ngay_truoc"
+msgstr "So với 7 ngày trước"
+
+msgid "Trung_binh_0_khach_/_ngay"
+msgstr "Trung bình 0 khách / ngày"
+
+msgid "_luot_den"
+msgstr " lượt đến"
+
+msgid "DIA_DIEM"
+msgstr "ĐỊA ĐIỂM"
+
+msgid "NEXTIFY"
+msgstr "NEXTIFY"
+
+msgid "SHERATON"
+msgstr "SHERATON"
+
+msgid "COUPON_DA_TAO_/_DA_DOI"
+msgstr "COUPON ĐÃ TẠO / ĐÃ ĐỔI"
+
+msgid "Trung_binh_0_/_0_coupon_/_ngay"
+msgstr "Trung bình 0 / 0 coupon / ngày"
+
+msgid "Khach_hang_moi"
+msgstr "Khách hàng mới"
+
+msgid "Khach_hang_quay_lai"
+msgstr "Khách hàng quay lại"
+
+msgid "SO_LIEN_HE_THU_THAP_DUOC"
+msgstr "SỐ LIÊN HỆ THU THẬP ĐƯỢC"
+
+msgid "CROSS_SHOPERS"
+msgstr "CROSS SHOPERS"
+
+msgid "DOANH_THU"
+msgstr "DOANH THU"
+
+msgid "Khach_hang_co_lien_He"
+msgstr "Khách hàng có liên Hệ"
+
+msgid "Khach_hang_khong_co_lien_He"
+msgstr "Khách hàng không có liên Hệ"
+
+msgid "Cross_Shopers"
+msgstr "Cross Shopers"
+
+msgid "Trung_binh_VND_/_ngay"
+msgstr "Trung bình VNĐ / ngày"
+
+msgid "SO_LUONG_KHACH_HANG"
+msgstr "SỐ LƯỢNG KHÁCH HÀNG"
+
+msgid "KHACH_QUAY_LAI_SAU_KHI_NHAN_THONG_DIEP"
+msgstr "KHÁCH QUAY LẠI SAU KHI NHẬN THÔNG ĐIỆP"
+
+msgid "LUOT_TRUY_CAP_THEO_THIET_BI"
+msgstr "LƯỢT TRUY CẬP THEO THIẾT BỊ"
+
+msgid "NGUON_KHACH_HANG"
+msgstr "NGUỒN KHÁCH HÀNG"
+
+msgid "KHACH_THEO_LUOT_DEN_(%)"
+msgstr "KHÁCH THEO LƯỢT ĐẾN (%)"
+
+msgid "KHACH_THEO_KHUNG_GIO_(%)"
+msgstr "KHÁCH THEO KHUNG GIỜ (%)"
+
+msgid "KHACH_HANG_THEO_NGAY_(%)"
+msgstr "KHÁCH HÀNG THEO NGÀY (%)"
+
+msgid "SO_TIN_NHAN_DA_GUI"
+msgstr "SỐ TIN NHẮN ĐÃ GỬI"
+
+msgid "SO_DIEN_THOAI"
+msgstr "SỐ ĐIỆN THOẠI"
+
+msgid "EMAIL"
+msgstr "EMAIL"
+
+msgid "ZALO"
+msgstr "ZALO"
+
+msgid "FACEBOOK_MESSENGER"
+msgstr "FACEBOOK MESSENGER"
+
+msgid "Them_moi"
+msgstr "Thêm mới"
+
+msgid "Import"
+msgstr "Import"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Tai_files"
+msgstr "Tải files"
+
+msgid "Tim_theo_ten,_dien_thoai_hoac_Email"
+msgstr "Tìm theo tên, điện thoại hoặc Email"
+
+msgid "Tat_ca_dia_diem"
+msgstr "Tất cả địa điểm"
+
+msgid "Xuat_file"
+msgstr "Xuất file"
+
+msgid "KHACH_HANG"
+msgstr "KHÁCH HÀNG"
+
+msgid "LUOT_DEN"
+msgstr "LƯỢT ĐẾN"
+
+msgid "LAN_CUOI"
+msgstr "LẦN CUỐI"
+
+msgid "Bo_loc"
+msgstr "Bộ lọc"
+
+msgid "Sap_xep"
+msgstr "Sắp xếp"
+
+msgid "Thoi_gian"
+msgstr "Thời gian"
+
+msgid "Luot_den"
+msgstr "Lượt đến"
+
+msgid "Gioi_tinh"
+msgstr "Giới tính"
+
+msgid "Nam"
+msgstr "Nam"
+
+msgid "Nu"
+msgstr "Nữ"
+
+msgid "Chua_xac_dinh"
+msgstr "Chưa xác định"
+
+msgid "Nhan_vien"
+msgstr "Nhân viên"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Thoi_gian_den"
+msgstr "Thời gian đến"
+
+msgid "Sinh_nhat"
+msgstr "Sinh nhật"
+
+msgid "Luot_den"
+msgstr "Lượt đến"
+
+msgid "So_ngay_chua_quay_lai"
+msgstr "Số ngày chưa quay lại"
+
+msgid "Xuat_file_cho_quang_cao"
+msgstr "Xuất file cho quảng cáo"
+
+msgid "Facebook"
+msgstr "Facebook"
+
+msgid "Zalo"
+msgstr "Zalo"
+
+msgid "Xem"
+msgstr "Xem"
+
+msgid "Tu_ngay"
+msgstr "Từ ngày"
+
+msgid "Den_ngay"
+msgstr "Đến ngày"
+
+msgid "Lon_hon"
+msgstr "Lớn hơn"
+
+msgid "Nho_hon"
+msgstr "Nhỏ hơn"
+
+msgid "DIA_DIEM"
+msgstr "ĐỊA ĐIỂM"
+
+msgid "Cau_hinh_trang_chao"
+msgstr "Cấu hình trang chào"
+
+msgid "Profiles"
+msgstr "Profiles"
+
+msgid "Thiet_bi"
+msgstr "Thiết bị"
+
+msgid "Gan_tags_tu_dong"
+msgstr "Gắn tags tự động"
+
+msgid "Tao_chien_dich"
+msgstr "Tạo chiến dịch"
+
+msgid "Chien_dich_khach_hang_moi"
+msgstr "Chiến dịch khách hàng mới"
+
+msgid "2_ngay_truoc"
+msgstr "2 ngày trước"
+
+msgid "Quay_lai"
+msgstr "Quay lại"
+
+msgid "10_ngay_truoc"
+msgstr "10 ngày trước"
+
+msgid "Chien_dich_khach_hang_quay_lai"
+msgstr "Chiến dịch khách hàng quay lại"
+
+msgid "10_ngay_truoc"
+msgstr "10 ngày trước"
+
+msgid "CHIEN_DICH_KHACH_HANG_MOI"
+msgstr "CHIẾN DỊCH KHÁCH HÀNG MỚI"
+
+msgid "Buoc_1"
+msgstr "Bước 1"
+
+msgid "Chon_loai_trang_chao"
+msgstr "Chọn loại trang chào"
+
+msgid "bo_qua"
+msgstr "bỏ qua"
+
+msgid "Trang_mac_dinh"
+msgstr "Trang mặc định"
+
+msgid "Trang_khao_sat"
+msgstr "Trang khảo sát"
+
+msgid "Chuc_mung_sinh_nhat"
+msgstr "Chúc mừng sinh nhật"
+
+msgid "Trang_chao_theo_khung_gio"
+msgstr "Trang chào theo khung giờ"
+
+msgid "Trang_chao_theo_khoang_ngay"
+msgstr "Trang chào theo khoảng ngày"
+
+msgid "Trang_chao_theo_tags"
+msgstr "Trang chào theo tags"
+
+msgid "trang_chao_theo_luot_den"
+msgstr "trang chào theo lượt đến"
+
+msgid "Trang_chao_theo_ngay_trong_tuan"
+msgstr "Trang chào theo ngày trong tuần"
+
+msgid "Trang_dang_ki"
+msgstr "Trang đăng kí"
+
+msgid "Trang_cap_nhat_thong_tin"
+msgstr "Trang cập nhật thông tin"
+
+msgid "Vong_quay_may_man"
+msgstr "Vòng quay may mắn"
+
+msgid "So_dien_thoai"
+msgstr "Số điện thoại"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Ho_va_ten"
+msgstr "Họ và tên"
+
+msgid "Ngay_sinh"
+msgstr "Ngày sinh"
+
+msgid "Nam_sinh"
+msgstr "Năm sinh"
+
+msgid "Gioi_tinh"
+msgstr "Giới tính"
+
+msgid "Cong_ty"
+msgstr "Công ty"
+
+msgid "Nghe_nghiep"
+msgstr "Nghề nghiệp"
+
+msgid "Chuc_vu"
+msgstr "Chức vụ"
+
+msgid "Cau_hinh_loi_chao"
+msgstr "Cấu hình lời chào"
+
+msgid "Dang_ky_khach_hang_than_thiet"
+msgstr "Đăng ký khách hàng thân thiết"
+
+msgid "Cau_hinh_loi_moi_nhap_sinh_nhat"
+msgstr "Cấu hình lời mời nhập sinh nhật"
+
+msgid "Dung_quen_nhap"
+msgstr "Đừng quên nhập"
+
+msgid "Cau_hinh_nut_ket_noi"
+msgstr "Cấu hình nút kết nối"
+
+msgid "Ket_noi_Wi-Fi/Go_Online"
+msgstr "Kết nối Wi-Fi/Go Online"
+
+msgid "Su_dung_OTP"
+msgstr "Sử dụng OTP"
+
+msgid "Cap_nhat"
+msgstr "Cập nhật"
+
+msgid "OOPS!_BAN_CHUA_CHON_TRANG_CHAO_NAO"
+msgstr "OOPS! BẠN CHƯA CHỌN TRANG CHÀO NÀO"
+
+msgid "TRANG_CHAO_MAC_DINH"
+msgstr "TRANG CHÀO MẶC ĐỊNH"
+
+msgid "Them_anh"
+msgstr "Thêm ảnh"
+
+msgid "Cau_hinh"
+msgstr "Cấu hình"
+
+msgid "TRANG_KHAO_SAT"
+msgstr "TRANG KHẢO SÁT"
+
+msgid "CAU_HOI"
+msgstr "CÂU HỎI"
+
+msgid "Xem_truoc"
+msgstr "Xem trước"
+
+msgid "Xoa"
+msgstr "Xóa"
+
+msgid "Chon"
+msgstr "Chọn"
+
+msgid "CHUC_MUNG_SINH_NHAT"
+msgstr "CHÚC MỪNG SINH NHẬT"
+
+msgid "Them_anh:"
+msgstr "Thêm ảnh:"
+
+msgid "Tieu_de:"
+msgstr "Tiêu đề:"
+
+msgid "Noi_dung:"
+msgstr "Nội dung:"
+
+msgid "(Khong_bat_buoc)"
+msgstr "(Không bắt buộc)"
+
+msgid "Nut_ket_noi_WIFI"
+msgstr "Nút kết nối WIFI"
+
+msgid "TRANG_CHAO_THEO_KHUNG_GIO"
+msgstr "TRANG CHÀO THEO KHUNG GIỜ"
+
+msgid "Chinh_sua"
+msgstr "Chỉnh sửa"
+
+msgid "Xem_truoc"
+msgstr "Xem trước"
+
+msgid "Them_trang_chao_theo_khung_gio"
+msgstr "Thêm trang chào theo khung giờ"
+
+msgid "Them_anh:"
+msgstr "Thêm ảnh:"
+
+msgid "Tieu_de:"
+msgstr "Tiêu đề:"
+
+msgid "Gio_bat_dau:"
+msgstr "Giờ bắt đầu:"
+
+msgid "Gio_ket_thuc:"
+msgstr "Giờ kết thúc:"
+
+msgid "Kich_hoat"
+msgstr "Kích hoạt"
+
+msgid "Them_trang_chao"
+msgstr "Thêm trang chào"
+
+msgid "Tieu_de"
+msgstr "Tiêu đề"
+
+msgid "Noi_dung"
+msgstr "Nội dung"
+
+msgid "Ngay_bat_dau"
+msgstr "Ngày bắt đầu"
+
+msgid "Ngay_ket_thuc"
+msgstr "Ngày kết thúc"
+
+msgid "Chon_tag_khach_hang:"
+msgstr "Chọn tag khách hàng:"
+
+msgid "TRANG_THAI"
+msgstr "TRẠNG THÁI"
+
+msgid "TAG"
+msgstr "TAG"
+
+msgid "TRANG_CHAO_THEO_LUOT_DEN"
+msgstr "TRANG CHÀO THEO LƯỢT ĐẾN"
+
+msgid "So_luot_den_tinh_theo:"
+msgstr "Số lượt đến tính theo:"
+
+msgid "Chuoi"
+msgstr "Chuỗi"
+
+msgid "Dia_diem"
+msgstr "Địa điểm"
+
+msgid "So_lan_den:"
+msgstr "Số lần đến:"
+
+msgid "Tu"
+msgstr "Từ"
+
+msgid "Den"
+msgstr "Đến"
+
+msgid "TRANG_CHAO_THEO_THU_TRONG_TUAN"
+msgstr "TRANG CHÀO THEO THỨ TRONG TUẦN"
+
+msgid "Xem_truoc"
+msgstr "Xem trước"
+
+msgid "Thu_2"
+msgstr "Thứ 2"
+
+msgid "Thu_3"
+msgstr "Thứ 3"
+
+msgid "Thu_4"
+msgstr "Thứ 4"
+
+msgid "Thu_5"
+msgstr "Thứ 5"
+
+msgid "Thu_6"
+msgstr "Thứ 6"
+
+msgid "Thu_7"
+msgstr "Thứ 7"
+
+msgid "Chu_nhat"
+msgstr "Chủ nhật"
+
+msgid "Loi_moi_bo_sung_thong_tin"
+msgstr "Lời mời bổ sung thông tin"
+
+msgid "Dang_ky_them_thong_tin_de_nhan_duoc_nhung_mon_qua_dac_biet_tu__chung_toi!"
+msgstr "Đăng ký thêm thông tin để nhận được những món quà đặc biệt từ  chúng tôi!"
+
+msgid "Loi_moi_nhap_sinh_nhat"
+msgstr "Lời mời nhập sinh nhật"
+
+msgid "Ten_nut_bo_sung_thong_tin"
+msgstr "Tên nút bổ sung thông tin"
+
+msgid "Tiep_tuc"
+msgstr "Tiếp tục"
+
+msgid "Buoc_2"
+msgstr "Bước 2"
+
+msgid "Buoc_3"
+msgstr "Bước 3"
+
+msgid "Buoc_4"
+msgstr "Bước 4"
+
+msgid "Chon_loai_trang_chao"
+msgstr "Chọn loại trang chào"
+
+msgid "Hinh_thuc_hotspot"
+msgstr "Hình thức hotspot"
+
+msgid "Trang_ket_noi_thanh_cong"
+msgstr "Trang kết nối thành công"
+
+msgid "Ma_mac_dinh"
+msgstr "Mã mặc định"
+
+msgid "Noi_dung_chao_mung:"
+msgstr "Nội dung chào mừng:"
+
+msgid "Ket_noi_thanh_cong_roi"
+msgstr "Kết nối thành công rồi"
+
+msgid "Chuyen_huong_sau_dang_nhap:"
+msgstr "Chuyển hướng sau đăng nhập:"
+
+msgid "Hien_coupon_moi_nhat_cua_khach_hang"
+msgstr "Hiện coupon mới nhất của khách hàng"
+
+msgid "Thong_bao_ma_khuyen_mai:"
+msgstr "Thông báo mã khuyến mãi:"
+
+msgid "Dung_quen_dung_ma_coupon_cua_ban_nhe"
+msgstr "Đừng quên dùng mã coupon của bạn nhé"
+
+msgid "Kich_hoat"
+msgstr "Kích hoạt"
+
+msgid "Khong_kich_hoat"
+msgstr "Không kích hoạt"
+
+msgid "Luu_lai"
+msgstr "Lưu lại"
+
+msgid "CHIEN_DICH_KHACH_HANG_MOI"
+msgstr "CHIẾN DỊCH KHÁCH HÀNG MỚI"
+
+msgid "Dong_lai"
+msgstr "Đóng lại"
+
+msgid "Tiep_tuc"
+msgstr "Tiêp tục"
+
+msgid "Buoc_1"
+msgstr "Bước 1"
+
+msgid "Soan_noi_dung_gui"
+msgstr "Soạn nội dung gửi"
+
+msgid "Buoc_2"
+msgstr "Bước 2"
+
+msgid "Cau_hinh_va_xac_nhan"
+msgstr "Cấu hình và xác nhận"
+
+msgid "Tin_nhan_SMS"
+msgstr "Tin nhắn SMS"
+
+msgid "Danh_sach_cac_tu_cam_cua_cac_nha_mang"
+msgstr "Danh sách các từ cấm của các nhà mạng"
+
+msgid "Cam_on_{{_name_}}_da_ghe_tham,_chuc_ban_co_nhung_trai_nghiem_tuyet_voi."
+msgstr "Cảm ơn {{ name }} đã ghé thăm, chúc bạn có những trải nghiệm tuyệt vời."
+
+msgid "Tin_nhan_Zalo"
+msgstr "Tin nhắn Zalo"
+
+msgid "Cam_on_{{_name_}}_da_ghe_tham,_chuc_ban_co_nhung_trai_nghiem_tuyet_voi."
+msgstr "Cảm ơn {{ name }} đã ghé thăm, chúc bạn có những trải nghiệm tuyệt vời."
+
+msgid "Ten_chatbot_block_tu_Chatbot"
+msgstr "Tên chatbot block từ Chatbot"
+
+msgid "Ten_chatbot_block_tu_Chatbot"
+msgstr "Tên chatbot block từ Chatbot"
+
+msgid "Ten_block_can_nhap_dung_ten_ma_Chatbot_ban_tich_hop,_can_tich_hop_Chatbot_truoc_o_muc_Apps."
+msgstr "Tên block cần nhập đúng tên mà Chatbot bạn tích hợp, cần tích hợp Chatbot trước ở mục Apps."
+
+msgid "Noi_dung_Email"
+msgstr "Nội dung Email"
+
+msgid "Chon_mau_Email"
+msgstr "Chọn mẫu Email"
+
+msgid "Lay_code_danh_gia"
+msgstr "Lấy code đánh giá"
+
+msgid "Cam_on_{{_name_}}_da_ghe_tham"
+msgstr "Cảm ơn {{ name }} đã ghé thăm"
+
+msgid "Luot_den_tinh_theo:"
+msgstr "Lượt đến tính theo:"
+
+msgid "_Theo_chuoi"
+msgstr " Theo chuỗi"
+
+msgid "_Theo_dia_diem"
+msgstr " Theo địa điểm"
+
+msgid "Loai_Coupon:"
+msgstr "Loại Coupon:"
+
+msgid "Loai_Coupon:"
+msgstr "Loại Coupon:"
+
+msgid "Han_coupon(ngay):Ngay"
+msgstr "Hạn coupon(ngày):Ngày"
+
+msgid "_Tu_dong_tao_code_rieng_cho_moi_khach_hang_Vi_du:_OFF10-123xyz."
+msgstr " Tự động tạo code riêng cho mỗi khách hàng Ví dụ: OFF10-123xyz."
+
+msgid "Gioi_tinh:"
+msgstr "Giới tính:"
+
+msgid "Tat_ca"
+msgstr "Tất cả"
+
+msgid "Nam"
+msgstr "Nam"
+
+msgid "Nu"
+msgstr "Nữ"
+
+msgid "Chua_xac_dinh"
+msgstr "Chưa xác định"
+
+msgid "Kenh_gui:"
+msgstr "Kênh gửi:"
+
+msgid "SMS_Can_tich_hop_SMS_Brandname."
+msgstr "SMS Cần tích hợp SMS Brandname."
+
+msgid "Email_Can_tich_hop_Email_Server."
+msgstr "Email Cần tích hợp Email Server."
+
+msgid "Zalo_Chi_gui_cho_khach_hang_da_theo_doi_Zalo_OA."
+msgstr "Zalo Chỉ gửi cho khách hàng đã theo dõi Zalo OA."
+
+msgid "Facebook_Messenger_Chi_gui_cho_khach_hang_co_Facebook_Messenger_ID."
+msgstr "Facebook Messenger Chỉ gửi cho khách hàng có Facebook Messenger ID."
+
+msgid "Quay_lai"
+msgstr "Quay lại"
+
+msgid "Dong_lai"
+msgstr "Đóng lại"
+
+msgid "Luu_lai"
+msgstr "Lưu lại"
+
+msgid "Luot_den_tu:"
+msgstr "Lượt đến từ:"
+
+msgid "den:"
+msgstr "đến:"
+
+msgid "Luot_den_tinh_theo:"
+msgstr "Lượt đến tính theo:"
+
+msgid "So_ngay_:"
+msgstr "Số ngày :"
+
+msgid "Loai_coupon:"
+msgstr "Loại coupon:"
+
+msgid "Han_coupon(ngay):"
+msgstr "Hạn coupon(ngày):"
+
+msgid "Chao_{{_name_}},_Cam_on_ban_da_cung_Lofita_day_lui_dai_dich_Corora.Lofita_van_ap_dung_chuong_trinh_dong_gia_23.000_D_toan_bo_san_pham_den_1/4_ban_nhe.Cam_on_ban_da_su_dung_dich_vu_cua_chung_toi,_dung_quen_gop_y_va_danh_gia_chung_toi_qua_hotline_nhe."
+msgstr "Chào {{ name }}, Cảm ơn bạn đã cùng Lofita đẩy lùi đại dịch Corora.Lofita vẫn áp dụng chương trình đồng giá 23.000 Đ toàn bộ sản phẩm đến 1/4 bạn nhé.Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi, đừng quên góp ý và đánh giá chúng tôi qua hotline nhé."
+
+
+

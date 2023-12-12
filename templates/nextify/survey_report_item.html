@@ -1,0 +1,75 @@
+ {% if  page.ans_dig|length > 0 %}
+  <canvas id="locations_pie"></canvas>
+<input type="hidden" id="ans_dig" value="{{ page.ans_dig }}"/>
+{#                                  {% bar_chart page.ans_dig with id=page._id library={"width":"600px"}%}#}
+                                    {% else %}
+                                        <div class="col-12">
+                                           <h2 class="card-title text-center mb-3">
+                                    {{ page.comment_count }} {{ gettext("Y_kien") }}
+                                    </h2>
+
+                                        </div>
+
+                                {% endif %}
+
+<script  nonce="{{ csp_nonce() }}">
+
+     {% if  page.ans_dig|length > 0 %}
+         $(document).ready(function () {
+            var ans_dig = eval($('#ans_dig').val());
+           var ans_dig_labels = [];
+           var ans_dig_value = [];
+
+           for (i = 0; i < ans_dig.length; i++) {
+               var range_item = ans_dig[i];
+               ans_dig_labels.push(range_item[0]);
+               ans_dig_value.push(range_item[1]);
+           }
+
+            var ans_chart = {
+               labels: ans_dig_labels,
+               datasets: [{
+                   data: ans_dig_value,
+                   backgroundColor: [
+                       '#FF6384',
+                       '#36A2EB',
+                       '#FFCE56'
+                   ]
+               }]
+           };
+
+           var ctx3 = document.getElementById('locations_pie').getContext('2d');
+           new Chart(ctx3, {
+               type: 'horizontalBar',
+               data: ans_chart,
+               options: {
+                   legend: {
+                       display: false,
+                   },
+                   title: {
+                       display: false,
+                       text: 'Chart.js Bar Chart - Stacked'
+                   },
+                   tooltips: {
+                       mode: 'index',
+                       intersect: false
+                   },
+                   responsive: true,
+                   scales: {
+                       xAxes: [{
+                           stacked: true,
+                       }],
+                       yAxes: [{
+                           stacked: true
+                       }]
+                   }
+               }
+           });
+
+
+
+            });
+
+         {% endif %}
+
+</script>

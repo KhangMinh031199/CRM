@@ -1,0 +1,142 @@
+{% extends 'nextify/base.html' %} {% block main_content %}
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">{{ gettext("Ung_dung") }}</h6>
+
+          <!-- Title -->
+          <h1 class="header-title">Tracking Realtime</h1>
+        </div>
+      </div>
+      <!-- / .row -->
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <h1 class="header-title">{{ gettext("Cau_hinh") }}</h1>
+        </div>
+        <div class="card-body">
+          <form
+            method="POST"
+            id="save_client_key_fr"
+            action="/apps/tracking"
+            enctype="multipart/form-data"
+          >
+            <input
+              type="hidden"
+              name="_csrf_token"
+              value="{{ csrf_token() }}"
+            />
+            {%if shop_select_id %}
+                <input type="hidden" value="{{shop_select_id}}" name="shop_select_id"/>
+                {%endif%}
+            <div class="form-group">
+              <select
+                id="redirect_shop_select"
+                class="custom-select"
+               
+              >
+                {% if shop_select and shop_select._id %}
+                <option disabled selected>{{ shop_select.name }}</option>
+                {% else %}
+                <option disabled selected>
+                  {{ gettext("Chon_dia_diem") }}
+                </option>
+                {% endif %} {% for shop in shop_in_mer %}
+                <option value="{{ shop._id }}">{{ shop.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="pixel_code"
+                >Tracking Code: (<span>
+                  <font color="red">*</font>
+                </span>
+                {{ gettext("bat_buoc") }})</label
+              >
+              <textarea
+                class="form-control"
+                id="pixel_code"
+                name="nextify_tracking_code"
+                rows="6"
+              >
+{% if shop_select and shop_select.nextify_tracking_code|string != 'None' %}{{ shop_select.nextify_tracking_code }}{% endif %}</textarea
+              >
+            </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <div class="row">
+            <div class="col"></div>
+            <div class="col">
+              <button
+                id="save_client_key"
+                class="btn btn-lg btn-block btn-primary"
+              >
+                {{ gettext("Luu_cau_hinh") }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- / .row -->
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block js %}
+
+<script nonce="{{ csp_nonce() }}">
+  $(document).ready(function () {
+    $("textarea").each(function () {
+      $(this).val($(this).val().trim());
+    });
+    $("input").each(function () {
+      $(this).val($(this).val().trim());
+    });
+
+    $("#redirect_shop_select").select2();
+    $("#redirect_shop_select").on("change", function (e) {
+      var shop_id = $(this).val();
+      var url = "/apps/tracking/" + shop_id;
+      location.replace(url);
+    });
+
+    $("#save_client_key").click(function () {
+  
+
+
+      $.ajax({
+        url: $("#save_client_key_fr").attr("action"),
+        type: $("#save_client_key_fr").attr("method"),
+        data: $("#save_client_key_fr").serialize(),
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ("error" in returnedData) {
+            swal(returnedData["error"], " ", "error");
+            return false;
+          } else {
+            swal('{{ gettext("Thao_tac_thanh_cong") }}', "", "success");
+            location.reload();
+          }
+        },
+        error: function (xhr, desc, err) {
+          swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', "", "error");
+        },
+      });
+
+      return false;
+    });
+  });
+</script>
+{% endblock %}

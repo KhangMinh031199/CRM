@@ -1,0 +1,161 @@
+{% extends 'nextify/base.html' %}
+
+{% block main_content %}
+
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            {{ gettext('Cham_soc_tu_dong') }}
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                            {{ shop_select.name }}
+                        </h1>
+
+                    </div>
+                    <div class="col-lg-3">
+                        <select class="custom-select control-container" id="shop_in_mer">
+                            {% for shop_mer in shop_in_mer %}
+                                <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div> <!-- / .row -->
+                <div class="row align-items-center">
+                    <div class="col">
+
+                        <!-- Nav -->
+                        <ul class="nav nav-tabs nav-overflow header-tabs">
+                            <li class="nav-item">
+                                <a href="/marketing_automation/{{ shop_id_select }}" class="nav-link">
+                                   {{ gettext('Kich_ban') }}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/marketing_automation/{{ shop_id_select }}/activity" class="nav-link active">
+                                    {{ gettext('Hoat_dong') }}
+                                </a>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid">
+
+        <div class="row u-mb-large">
+            <div class="col-lg-12">
+            <div class="card">
+
+                <div class="table-responsive">
+
+                {% if total_activity > 0 %}
+                   <table class="table table-sm card-table">
+
+                        <thead>
+                        <tr>
+                            <th>
+                                {{ gettext('Loai_tin') }}
+                            </th>
+                            <th>
+                                {{ gettext('Khach_hang') }}
+                            </th>
+                            <th>
+                                {{ gettext('Thoi_gian') }}
+                            </th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for activity in list_activity%}
+
+                        <tr>
+                        <td>
+                            {{ activity.send_type }}
+                        </td>
+                        <td>
+                           {% if activity.customer %}{% if  activity.send_type == 'email' %}{{ activity.customer.user.email }}{% else %}{% if activity.customer.user.phone  %}{{ activity.customer.user.phone }}{% else %}{{ activity.customer.user.client_mac[0] }}{% endif %}{% endif %}{% else %}Guest{% endif %}
+                        </td>
+                       <td>
+                             {{ activity.when|human_time }}
+                        </td>
+                        </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                 
+                {% else %}
+                    <div class="row-centered" style="padding: 20px">
+                      <div class="col-12justify-content-center"
+                     style="text-align: center;margin-bottom: 30px; margin-top: 30px">
+                    <!-- Image -->
+                    <img src="/static/nextify/img/happiness.png" alt="..." class="img-fluid mt-n5 mb-4"
+                         style="max-width: 272px;">
+                    <!-- Title -->
+                    <h2>
+                        {{ gettext('Ban_cua_co_hoat_dong_gui_tin_nao.') }}
+                    </h2>
+
+                </div>
+</div>
+                {% endif %}
+                </div>
+                <div class="card-footer">
+                    <ul class="pagination justify-content-center">
+                        {% if pagination %}
+                        {{ pagination.links }}
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+
+
+            </div>
+            </div>
+
+
+        </div>
+
+
+
+    <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+{% endblock %}
+{% block js %}
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+                $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+            }
+        );
+        $('input').each(function () {
+                $(this).val($(this).val().trim());
+            }
+        );
+        $('#shop_in_mer').select2();
+        var shop_id_select = $('#shop_id_select').val();
+           $('#shop_in_mer').val(shop_id_select).trigger('change');
+            $('#shop_in_mer').on("change", function(e) {
+                     var shop_id = $('#shop_in_mer').val();
+                       var url = "/marketing_automation/"+shop_id;
+                          $(location).attr('href', url);
+                    });
+
+
+        });
+    </script>
+{% endblock %}

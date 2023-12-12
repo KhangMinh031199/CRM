@@ -1,0 +1,102 @@
+{% if error %}
+    <div class="alert alert-danger">
+        {{ error | safe }}
+    </div>
+{% endif %} {% if message %}
+    <div class="alert alert-success">
+        {{ message | safe }}
+    </div>
+{% endif %}
+
+<form method="POST" action="/get_sms_announcement" enctype="multipart/form-data" id="sms_announ_fr">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+    {% if shop.sms.manual_announcement %}
+        <input type="hidden" id="current_target" value="{{ shop.sms.manual_announcement.target }}"/> {% endif %}
+<!--    <div class="form-group">-->
+<!--        <label>Lưu ý:</label>-->
+<!--        <p style="margin-top:10px"><b>{{ gettext("De_dam_bao_noi_dung_khong_vi_pham_cac_quy_dinh_cua_phap_luat_va_gui_SMS_Marketing_hieu_qua,_dung_luat,_tinh_nang_nay_se_khong_thuc_hien_TU_DONG._Vui_long_goi_ho_tro_qua_hotro@nextify.co_de_yeu_cau_kich_hoat_chuong_trinh_gui_khi_co_chien_dich.") }}</b></p>-->
+<!--    </div>-->
+    <div class="form-group">
+        <label for="announcement">{{ gettext("Gui_den") }}:</label>
+        <select name="target" class="form-control" id="target">
+            <option value="all">{{ gettext("Tat_ca_khach_da_tung_den_quan") }} ({{ total_customer }} {{ gettext("khach") }})</option>
+            <option value="30d">{{ gettext("Khach_den_trong_vong_30_ngay_vua_roi") }} ({{ total_customer_30d }} {{ gettext("khach") }})</option>
+            <option value="7d">{{ gettext("Khach_den_quan_tuan_vua_roi") }} ({{ total_customer_7d }} {{ gettext("khach") }})</option>
+            <option value="new">{{ gettext("Khach_den_lan_dau") }} ({{ total_customer_new }} {{ gettext("khach") }})</option>
+            <option value="loyal">{{ gettext("Khach_hang_than_thiet") }} ({{ total_customer_loyal }} {{ gettext("khach") }})</option>
+            <option value="lost">{{ gettext("Khach_mot_thang_chua_quay_lai") }} ({{ total_customer_lost }} {{ gettext("khach") }})</option>
+            <option value="birthday">{{ gettext("Khach_sinh_nhat_trong_thang") }} ({{ total_customer_birthday }})</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="announcement">{{ gettext("Thong_diep") }}:</label>
+        <textarea class="form-control form-input" id="announcement" name="announcement"
+                  rows="4">{% if shop.sms.manual_announcement %}{{ shop.sms.manual_announcement.message| default('') }}{% endif %}</textarea>
+    </div>
+    <div class="form-inline">
+        <div class="form-group">
+            <label for="date_send">{{ gettext("Ngay_gui") }}:</label>
+            <input type="text" class="form-control form-input datepicker" id="date_send" name="date"
+                   value="{% if shop.sms.manual_announcement %}{{ shop.sms.manual_announcement.date }}{% endif %}"/>
+        </div>
+        <div class="form-group">
+            <label for="time">{{ gettext("Gio_gui") }}:</label>
+            <input type="time" class="form-control form-input" id="time" name="time"
+                   placeholder="09:00" value="{% if shop.sms.manual_announcement %}{{ shop.sms.manual_announcement.time }}{% endif %}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <p style="margin-top:10px"><b>{{ gettext("Han_dung_Coupon_(neu_co)") }}: </b></p>
+        {% if shop.sms.manual_announcement %}
+            <input type="hidden" id="current_expire" value="{{ shop.sms.manual_announcement.expire }}"/>
+        {% endif %}
+        <select id="ex_manual" name="ex_manual">
+            <option value="1">24 {{ gettext("gio") }}</option>
+            <option value="3">3 {{ gettext("ngay") }}</option>
+            <option value="15">15 {{ gettext("ngay") }}</option>
+            <option value="31">1 {{ gettext("thang") }}</option>
+            <option value="0">{{ gettext("Khong_gioi_han") }}</option>
+        </select>
+    </div>
+    <hr>
+    <div class="btn-toolbar pull-right">
+        <div class="btn-group">
+            <button type="submit" class="btn btn-info btn-fill pull-right">{{ gettext("Luu_thong_tin") }}</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var d = new Date();
+        var strDate = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+        $('#date_send').datepicker({
+            format: "dd/mm/yyyy",
+            startDate: strDate
+        });
+
+
+        if ($("#current_target").length > 0) {
+            $("#target").val($("#current_target").val());
+        }
+         if ($("#current_expire").length > 0) {
+            $("#ex_manual").val($("#current_expire").val());
+        }
+        $('#sms_announ_fr').on('submit', function(e) {
+        e.preventDefault();
+        $.ajax({
+            url : $(this).attr('action'),
+            type: "POST",
+            data: $(this).serialize(),
+            success: function (data) {
+                $("#sms_mar").html(data);
+            },
+            error: function (jXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    });
+    });
+
+
+</script>

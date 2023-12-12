@@ -1,0 +1,57 @@
+
+{% if customers|length > 0 %}
+<ul class="list-group list-group-flush list my-n3">
+{% for cus in customers %}
+    <li class="list-group-item px-0">
+
+        <div class="row align-items-center">
+            <div class="col-auto">
+
+                <div class="avatar avatar-lg">
+                                             {% if cus.avatar and cus.avatar|length > 0 %}
+                                                 <img class="avatar-img rounded-circle" src="{{ cus.avatar }}"/>
+                                             {% else %}
+                                                 <img class="avatar-img rounded-circle" src="/static/v2/assets/img/medium-default-avatar.png">
+                                             {% endif %}
+                                        </div>
+
+            </div>
+            <div class="col ml-n2">
+
+               <div class="contact">
+                                          {{ cus.name }}
+                                        </div>
+                                        <div class="name">
+                                          {{ cus.phone }}
+                                        </div>
+                                        <div class="name">
+                                             {% if cus.email | string != 'None' %}{{ cus.email }}{% endif %}
+                                        </div>
+
+            </div>
+            <div class="col-auto">
+
+                <!-- Button -->
+                <a href="#!" class="btn btn-sm btn-dark">
+                    <i class="fa fa-eye"></i>
+                </a>
+
+            </div>
+        </div> <!-- / .row -->
+
+    </li>
+{% endfor %}
+
+</ul>
+{% else %}
+<div class="row justify-content-center">
+    <div class="col-12 col-xl-10">
+<h2 class="mb-2">
+                          Rất tiếc, từ khóa bạn tìm kiếm không tồn tại, vui lòng thử từ khóa khác.
+                          </h2>
+
+    </div>
+
+</div>
+
+{% endif %}

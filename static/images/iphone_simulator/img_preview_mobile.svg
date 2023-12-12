@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 425 882" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>img_preview_mobile</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="a" width="75.5" height="6.5" rx="3.25"/>
+        <filter id="f" x="-4.6%" y="-38.5%" width="109.3%" height="207.7%">
+            <feMorphology in="SourceAlpha" operator="dilate" radius="0.5" result="shadowSpreadOuter1"/>
+            <feOffset dx="0" dy="1" in="shadowSpreadOuter1" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="0.5"/>
+            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 1 0"/>
+        </filter>
+        <circle id="c" cx="209" cy="22.5" r="5"/>
+        <filter id="e" x="-5%" y="-5%" width="110%">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feColorMatrix in="shadowOffsetOuter1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 1 0"/>
+        </filter>
+        <circle id="b" cx="7.25" cy="7.25" r="7.25"/>
+        <filter id="d" x="-3.4%" y="-3.4%" width="106.9%" height="113.8%">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feColorMatrix in="shadowOffsetOuter1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 1 0"/>
+        </filter>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g transform="translate(-2 -2)">
+            <g transform="translate(2 2)">
+                <g transform="translate(4 4)">
+                    <path d="m-1.999 809c0-2.582-3.4948e-4 -98.773-5.0096e-4 -148.87-3.1457e-4 -104.03-4.9894e-4 -203.26-5.0093e-4 -296.68-2.6e-6 -121.5 3.0956e-4 -223.06 0.0010019-298.96 1.6088e-4 -17.637 4.3888-33.318 13.741-44.991 11.153-13.92 28.797-21.508 53.259-21.508h116.5 22.931 95.559 53.009c40.11 0 66 22.775 66 66.5-9e-6 75.912-1.2e-5 178.35-1.2e-5 301.18 0 93.983 2e-6 194.06 6e-6 297.64 2e-6 59.018 2e-6 59.018 4e-6 101.99 1e-6 17.875 1e-6 17.875 1e-6 30.529 1e-6 9.8423 1e-6 9.8423 1e-6 13.657 0 14.084-2.8912 28.047-10.391 39.939-10.653 16.892-29.083 26.561-56.609 26.561h-286.5c-26.367 0-44.574-8.7064-55.543-24.263-8.3634-11.862-11.957-26.857-11.957-42.737z" fill="#fff" stroke="#DCDCDC" stroke-width="4"/>
+                    <path d="m208.5 856c16.569 0 30-13.431 30-30s-13.431-30-30-30-30 13.431-30 30 13.431 30 30 30zm0 4c-18.778 0-34-15.222-34-34s15.222-34 34-34 34 15.222 34 34-15.222 34-34 34z" fill="#ddd" fill-rule="nonzero"/>
+                    <g transform="translate(171 48)">
+                        <mask fill="white">
+                            <use xlink:href="#a"/>
+                        </mask>
+                        <use fill="black" filter="url(#f)" xlink:href="#a"/>
+                        <use fill="#DDDDDD" fill-rule="evenodd" xlink:href="#a"/>
+                    </g>
+                    <use fill="black" filter="url(#e)" xlink:href="#c"/>
+                    <use fill="#DDDDDD" fill-rule="evenodd" xlink:href="#c"/>
+                    <g transform="translate(133 44)">
+                        <use fill="black" filter="url(#d)" xlink:href="#b"/>
+                        <use fill="#DDDDDD" fill-rule="evenodd" xlink:href="#b"/>
+                    </g>
+                </g>
+                <rect x="21" y="107" width="383" height="675" rx="3" fill="#363535"/>
+                <rect x="25" y="111" width="375" height="667" fill="#fff"/>
+            </g>
+        </g>
+    </g>
+</svg>

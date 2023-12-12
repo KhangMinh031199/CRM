@@ -1,0 +1,550 @@
+{% extends 'nextify/base.html' %}
+
+{% block main_content %}
+<div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                        WIFI
+                    </h6>
+
+                    <!-- Title -->
+                    <h1 class="header-title">
+                        {{ gettext('Quan_ly_Profiles') }}
+                    </h1>
+
+                </div>
+                <div class="col-auto">
+                    <a href="#" data-target="#new_profile" aria-haspopup="true" aria-expanded="false"
+                        data-toggle="modal">
+                        <button type="button" class="btn btn-primary">
+                            {{ gettext('Them_moi') }}
+                        </button>
+                    </a>
+                </div>
+
+            </div> <!-- / .row -->
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-header-title">
+                {{ gettext('Danh_sach') }} Profile
+            </h4>
+            <div class="col-auto" style="text-align: right">
+                <a href="/wifi_profiles_code">Wifi Code</a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm card-table">
+                <thead>
+                    <tr>
+                        <th>
+                            {{ gettext('Ten') }}
+                        </th>
+                        <th>
+                            {{ gettext('Loai') }}
+                        </th>
+                        <th>
+                            {{ gettext('Gia_cuoc') }}
+                        </th>
+                        <th>
+                            {{ gettext('Thoi_gian') }}
+                        </th>
+                        <th>
+                            Download
+                        </th>
+                        <th>
+                            Upload
+                        </th>
+                        <th>
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for profile in profiles %}
+                    <tr>
+                        <td>
+                            <code> <a href="#" data-target="#update_profile_{{ profile._id }}" aria-haspopup="true"
+                                          aria-expanded="false"
+                                          data-toggle="modal">{{ profile.name }}</a></code>
+                        </td>
+                        <td>
+                            <span class="badge badge-soft-{{ ['info', 'success']|random }}">{{ profile.profile_type
+                                }}</span>
+                        </td>
+                        <td>
+                            {{ profile.pricing }}
+                        </td>
+                        <td>
+                            {{ profile.session_timeout }} {{ gettext('phut') }}
+                        </td>
+                        <td>
+                            {{ profile.down_bw }} MBps
+                        </td>
+                        <td>
+                            {{ profile.up_bw }} MBps
+                        </td>
+                        <td>
+                            <a id="remove_{{ profile._id }}" href="#">{{ gettext('Xoa') }}</a>
+                        </td>
+
+                    </tr>
+                    <div class="modal fade" id="update_profile_{{ profile._id }}" tabindex="-1" role="dialog"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+
+                                                <!-- Title -->
+                                                <h4 class="card-header-title" id="exampleModalCenterTitle">
+                                                    {{ profile.name }}
+                                                </h4>
+
+                                            </div>
+                                            <div class="col-auto">
+
+                                                <!-- Close -->
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+
+                                            </div>
+                                        </div> <!-- / .row -->
+                                    </div>
+
+                                    <div class="card-body">
+
+                                        <div class="form-row">
+                                            <div class="col-12 col-md-6 mb-3">
+                                                <label for="name_{{ profile._id }}">{{ gettext('Ten') }} Profile (<font
+                                                        color="red">*</font> {{ gettext('bat_buoc') }})</label>
+                                                <input type="text" class="form-control" id="name_{{ profile._id }}"
+                                                    name="name" placeholder="VIP" value="{{ profile.name }}"
+                                                    required="">
+                                            </div>
+                                            <div class="col-12 col-md-6 mb-3">
+                                                <label for="session_timeout_{{ profile._id }}">{{
+                                                    gettext('Thoi_gian_truy_cap_(phut)') }} (<font color="red">*</font>
+                                                    {{ gettext('bat_buoc') }})</label>
+                                                <input type="number" min="0" class="form-control"
+                                                    id="session_timeout_{{ profile._id }}" name="session_timeout"
+                                                    placeholder="30" value="{{ profile.session_timeout }}" required="">
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="col-12 col-md-6 mb-3">
+                                                <label for="down_bw_{{ profile._id }}">Download (MBps) (<font
+                                                        color="red">*</font> {{ gettext('bat_buoc') }})</label>
+                                                <input type="number" min="0" class="form-control"
+                                                    id="down_bw_{{ profile._id }}" name="down_bw" placeholder="5"
+                                                    value="{{ profile.down_bw }}" required="">
+                                            </div>
+                                            <div class="col-12 col-md-6 mb-3">
+                                                <label for="up_bw_{{ profile._id }}">Upload (MBps) (<font color="red">*
+                                                    </font> {{ gettext('bat_buoc') }})</label>
+                                                <input type="number" min="0" class="form-control"
+                                                    id="up_bw_{{ profile._id }}" name="up_bw" placeholder="1"
+                                                    value="{{ profile.up_bw }}" required="">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+
+                                            <div class="col-12 col-md-6 mb-3">
+                                                <label for="profile_type_{{ profile._id }}">{{ gettext('Hinh_thuc')
+                                                    }}</label>
+                                                <select class="form-control" data-toggle="select" name="profile_type"
+                                                    id="profile_type_{{ profile._id }}" required="">
+                                                    <option value="Default">{{ gettext('Mac_dinh') }}</option>
+                                                    <option value="AddOn">{{ gettext('Goi_tra_phi') }}</option>
+                                                </select>
+
+                                            </div>
+                                            <div class="col-12 col-md-6 mb-3">
+                                                <label for="pricing_{{ profile._id }}">{{ gettext('Gia_cuoc') }}</label>
+                                                <input type="number" min="0" class="form-control"
+                                                    id="pricing_{{ profile._id }}" name="pricing" placeholder="100000"
+                                                    value="{{ profile.pricing }}" />&nbsp;
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-12 mb-3">
+                                                <label for="expire_{{ profile._id }}">{{
+                                                    gettext('Han_truy_cap_WiFi_(theo_tieng)') }}</label>
+                                                <input type="text" class="form-control" id="expire_{{ profile._id }}"
+                                                    name="expire" placeholder="4" value="{{ profile.expire }}">
+                                            </div>
+
+
+                                        </div>
+                                        <div class="form-row">
+
+                                            <div class="col-12 mb-3">
+                                                <label for="tags_selects_{{ profile._id }}">{{ gettext('Nhom_khach')
+                                                    }}</label>
+                                                <select class="c-select c-select--multiple" name="tags"
+                                                    style="width: 100%;" id="tags_selects_{{ profile._id }}"
+                                                    multiple="multiple">
+                                                    {% for tag in tags %}
+                                                    <option value="{{ tag._id }}">{{ tag.name }}</option>
+                                                    {% endfor %}
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-12 col-md-6 mb-3">
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input"
+                                                        id="active_{{ profile._id }}" name="active" {% if
+                                                        profile.active%}checked{% endif %}>
+                                                    <label class="custom-control-label"
+                                                        for="active_{{ profile._id }}">{{ gettext('Kich_hoat')
+                                                        }}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="col-4" style="float: right">
+                                                <button class="btn btn-lg btn-block btn-primary"
+                                                    id="update_profile_{{ profile._id }}_btn">{{ gettext('Cap_nhat') }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="source_tags_{{ profile._id }}"
+                                            value="
+
+                                                    {% if profile.tags %}{{ profile.tags|handle_jinja_list }}{% endif %}" />
+                                        <input type="hidden" id="ex_profile_type_{{ profile._id }}"
+                                            value="{{ profile.profile_type }}" />
+                                        <input type="hidden" id="select_tags_filter_{{ profile._id }}"
+                                            name="real_tags_filter" />
+
+                                        <script nonce="{{ csp_nonce() }}">
+
+                                            $(document).ready(function () {
+                                                $("#remove_{{ profile._id }}").click(function (e) {
+                                                    Swal.fire({
+                                                        title: '{{ gettext("Ban_co_chac_chan_muon_xoa_profile_khong?") }}',
+
+                                                        type: 'warning',
+                                                        focusCancel: true,
+                                                        showCancelButton: true,
+                                                        confirmButtonColor: '#3085d6',
+focusCancel: true,
+                                                        cancelButtonColor: '#d33',
+                                                        confirmButtonText: '{{ gettext("Co") }}!',
+                                                        cancelButtonText: '{{ gettext("Khong!")}}'
+                                                    }).then((result) => {
+                                                        if (result.value) {
+                                                            var url_submit = '/wifi_profiles/{{  profile._id }}/remove';
+                                                            $.ajax({
+                                                                url: url_submit,
+                                                                type: 'GET',
+
+                                                                success: function (data) {
+                                                                    swal('{{ gettext("Xoa_profile_thanh_cong") }}', '', 'success');
+                                                                    location.reload();
+                                                                }
+                                                            });
+                                                        };
+                                                        return false;
+                                                    });
+                                                });
+
+
+
+                                                $("#pricing_{{ profile._id }}").keypress(function (e) {
+                                                    if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                                                        $("#errmsg0").html("{{ gettext('Chi_nhap_so') }}").show().fadeOut("slow");
+                                                        return false;
+                                                    }
+                                                });
+
+                                                {%if profile.profile_type %}
+
+                                                $("#profile_type_{{ profile._id }}").val($("#ex_profile_type_{{ profile._id }}").val());
+                                                $('#profile_type_{{ profile._id }}').trigger('change');
+
+
+                                                {% endif %}
+
+                                                {%if profile.tags %}
+                                                var source_tags = $("#source_tags_{{ profile._id }}").val();
+                                                var data_soure_tags = JSON.parse(source_tags.replace(/\'/g, '"'));
+
+                                                $("#tags_selects_{{ profile._id }}").val(data_soure_tags);
+                                                $('#tags_selects_{{ profile._id }}').trigger('change');
+                                                {% endif %}
+
+                                                $('#tags_selects_{{ profile._id }}').select2({
+                                                    dropdownAutoWidth: true
+                                                });
+
+                                                $('#tags_selects_{{ profile._id }}').on("change", function (e) {
+                                                    if ($('#tags_selects_{{ profile._id }}').val()) {
+                                                        $('#select_tags_filter_{{ profile._id }}').val($('#tags_selects_{{ profile._id }}').val().toString());
+                                                    } else {
+                                                        $('#select_tags_filter_{{ profile._id }}').val("");
+                                                    }
+                                                });
+
+                                                $("#update_profile_{{ profile._id }}_btn").click(function () {
+                                                    var data = {
+                                                        'name': $("#name_{{ profile._id }}").val(),
+                                                        'session_timeout': $("#session_timeout_{{ profile._id }}").val(),
+                                                        'down_bw': $("#down_bw_{{ profile._id }}").val(),
+                                                        'up_bw': $("#up_bw_{{ profile._id }}").val(),
+                                                        'profile_type': $("#profile_type_{{ profile._id }}").val(),
+                                                        'pricing': $("#pricing_{{ profile._id }}").val(),
+                                                        'real_tags_filter': $("#select_tags_filter_{{ profile._id }}").val(),
+                                                        'active': $("#active_{{ profile._id }}").is(":checked"),
+                                                        'expire': $("#expire_{{ profile._id }}").val()
+                                                    };
+                                                    var active = $("#active_{{ profile._id }}").is(":checked")
+                                                    console.log(active)
+                                                    $.ajax({
+                                                        type: 'post',
+                                                        url: '/wifi_profiles/{{ profile._id }}',
+                                                        data: data,
+                                                        success: function (response) {
+                                                            var returnedData = JSON.parse(response);
+                                                            if ('error' in returnedData) {
+
+                                                                swal(returnedData['error'], " ", "error");
+                                                            } else {
+                                                                var wifi_profiles = '/wifi_profiles';
+                                                                swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+                                                                $(location).attr('href', wifi_profiles)
+                                                                // location.reload();
+                                                            }
+
+                                                        },
+                                                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                                            swal("{{ gettext('Co_loi_xay_ra,_thu_lai_sau') }}", " ", "error");
+                                                        }
+                                                    });
+
+
+                                                });
+
+                                            });
+
+                                        </script>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+            <nav class="c-pagination u-justify-center">
+                {% if pagination %}
+                {{ pagination.links }}
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="modal fade" id="new_profile" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Title -->
+                            <h4 class="card-header-title" id="exampleModalCenterTitle">
+                                {{ gettext('Them_moi') }} Profile
+                            </h4>
+
+                        </div>
+                        <div class="col-auto">
+
+                            <!-- Close -->
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-target="#new_profile">
+                                <span aria-hidden="true">×</span>
+                            </button>
+
+                        </div>
+                    </div> <!-- / .row -->
+                </div>
+
+                <div class="card-body">
+                    <form method="POST" action="/wifi_profiles/add" enctype="multipart/form-data"
+                        id="create_profile_form">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-row">
+                            <div class="col-12 col-md-6 mb-3">
+                                <label for="name">{{ gettext('Ten') }} Profile </label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="VIP">
+                            </div>
+                            <div class="col-12 col-md-6 mb-3">
+                                <label for="session_timeout">{{ gettext('Thoi_gian_truy_cap_(phut)') }} </label>
+                                <input type="number" min="0" class="form-control" id="session_timeout"
+                                    name="session_timeout" placeholder="30">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col-12 col-md-6 mb-3">
+                                <label for="down_bw">Download (MBps)</label>
+                                <input type="number" min="0" class="form-control" id="down_bw" name="down_bw"
+                                    placeholder="5" value="">
+                            </div>
+                            <div class="col-12 col-md-6 mb-3">
+                                <label for="up_bw">Upload (MBps)</label>
+                                <input type="number" min="0" class="form-control" id="up_bw" name="up_bw"
+                                    placeholder="2" value="">
+                            </div>
+                        </div>
+                        <div class="form-row">
+
+                            <div class="col-12 col-md-6 mb-3">
+                                <label for="profile_type">{{ gettext('Hinh_thuc') }}</label>
+                                <select class="form-control" data-toggle="select" name="profile_type" id="profile_type">
+                                    <option value="Default">{{ gettext('Mac_dinh') }}</option>
+                                    <option value="AddOn">{{ gettext('Goi_tra_phi') }}</option>
+                                </select>
+
+                            </div>
+                            <div class="col-12 col-md-6 mb-3">
+                                <label for="pricing">{{ gettext('Gia_cuoc') }}</label>
+                                <input type="number" min="0" class="form-control" id="pricing" name="pricing"
+                                    placeholder="100000" />&nbsp;
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-12 mb-3">
+                                <label for="expire">{{ gettext('Han_truy_cap_WiFi_(theo_tieng)') }}</label>
+                                <input type="text" class="form-control" id="expire" name="expire" placeholder="4">
+                            </div>
+
+
+                        </div>
+                        <div class="form-row">
+
+                            <div class="col-12 mb-3">
+                                <label for="tags_selects">{{ gettext('Nhom_khach') }}</label>
+                                <select class="c-select c-select--multiple" name="tags" style="width: 100%;"
+                                    id="tags_selects" multiple="multiple">
+                                    {% for tag in tags %}
+                                    <option value="{{ tag._id }}">{{ tag.name }}</option>
+                                    {% endfor %}
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-12 col-md-6 mb-3">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="active" name="active">
+                                    <label class="custom-control-label" for="active">{{ gettext('Kich_hoat') }}</label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </form>
+                    <div class="card-footer">
+                        <div class="col-4" style="float:right">
+                            <button class="btn btn-lg btn-block btn-primary" type="button" id="new_profile_submit">{{
+                                gettext('Cap_nhat') }}</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<input type="hidden" id="select_tags_filter" name="real_tags_filter" />
+
+{% endblock %}
+
+{% block js %}
+<script nonce="{{ csp_nonce() }}" type="text/javascript">
+    $(document).ready(function () {
+        $('#new_profile').on('shown.bs.modal', function () {
+          $('#name').trigger('focus');
+        });
+        
+        $('#tags_selects').select2({
+            dropdownAutoWidth: true
+        });
+
+        $('#tags_selects').on("change", function (e) {
+            if ($('#tags_selects').val()) {
+                $('#select_tags_filter').val($('#tags_selects').val().toString());
+            } else {
+                $('#select_tags_filter').val("");
+            }
+        });
+        $("#new_profile_submit").click(function () {
+            var name = $("#name").val();
+            var session_timeout = $("#session_timeout").val();
+
+            if (name.length == 0) {
+                swal('{{ gettext("Ten_profile_khong_duoc_bo_trong") }}', '', 'error');
+                return false;
+            }
+
+            $.ajax({
+                url: $("#create_profile_form").attr("action"),
+                type: $("#create_profile_form").attr("method"),
+                data: $("#create_profile_form").serialize(),
+
+                success: function (response) {
+
+                    var returnedData = JSON.parse(response);
+                    if ('error' in returnedData) {
+
+                        swal(returnedData['error'], " ", "error");
+
+                    }
+                    else {
+
+                        swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+                        location.reload();
+                    }
+
+                },
+                error: function (xhr, desc, err) {
+
+                    swal("{{ gettext('Co_loi_xay_ra,_thu_lai_sau') }}", " ", "error");
+                    return false;
+                }
+            });
+
+
+        });
+
+
+    });
+
+</script>
+
+{% endblock %}

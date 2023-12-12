@@ -1,0 +1,151 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                        {{ gettext("Ung_dung") }}
+                    </h6>
+
+                    <!-- Title -->
+                    <h1 class="header-title">
+                        Facebook
+                    </h1>
+
+                </div>
+            </div> <!-- / .row -->
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="header-title">
+                        {{ gettext("Cau_hinh") }}
+                    </h1>
+                </div>
+                <div class="card-body">
+                    <form method="POST" id="save_client_key_fr" action="/update_client_key"
+                        enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+                        <div class="form-group">
+                            <label>Facebook Page: (<span>
+                                <font color="red">*</font>
+                              </span> {{ gettext("bat_buoc") }}){% if shop_select%}<a
+                                    href="https://www.facebook.com/v6.0/dialog/oauth?client_id=611214335939430&redirect_uri={{ request.host_url.replace('http', 'https') }}/fb_auth&state={{ request.host_url }},{{ shop_select._id }}&scope=public_profile,email,manage_pages,pages_messaging,ads_read,ads_management">
+                                    <span class="badge badge-soft-primary ml-1 mt-n1"><i class="fa fa-facebook-f"></i>
+                                        {{ gettext("Chon_Page") }}</span>
+                                </a>{% endif %}</label>
+                            <input type="text" class="form-control" id="facebook_page" name="facebook_page"
+                                value="{% if shop_select and shop_select.facebook_page|string != 'None' %}{{ shop_select.facebook_page|default('', true) }}{% endif %}"
+                                placeholder="https://facebook.com/your_page">
+                        </div>
+
+                        <div class="form-group">
+
+                            <select id="redirect_shop_select" class="custom-select">
+                                {% if shop_select and shop_select._id %}
+                                <option disabled selected>{{ shop_select.name }}</option>
+                                {% else %}
+                                <option disabled selected>{{ gettext("Chon_dia_diem") }}</option>
+                                {% endif %}
+                                {% for shop in shop_in_mer %}
+                                <option value="{{ shop._id }}">{{ shop.name }}</option>
+                                {% endfor %}
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="page_id">Facebook Page ID: (<span>
+                                <font color="red">*</font>
+                              </span> {{ gettext("bat_buoc") }})</label>
+                            <input type="text" class="form-control" id="id_page" name="id_page"
+                                value="{% if shop_select and shop_select.id_page|string != 'None' %}{{ shop_select.id_page }}{% endif %}">
+                        </div>
+                        <div class="form-group">
+                            <label for="page_id">Facebook Page Accesstoken: (<span>
+                                <font color="red">*</font>
+                              </span> {{ gettext("bat_buoc") }})</label>
+                            <input type="text" class="form-control" id="access_token_page" name="access_token_page"
+                                value="{% if shop_select and shop_select.access_token_page|string != 'None' %}{{ shop_select.access_token_page }}{% endif %}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="page_id">Facebook Pixel ID: (<span>
+                                <font color="red">*</font>
+                              </span> {{ gettext("bat_buoc") }})</label>
+                            <input type="text" class="form-control" id="facebook_pixel_id" name="facebook_pixel_id"
+                                value="{% if shop_select and shop_select.facebook_pixel_id|string != 'None' %}{{ shop_select.facebook_pixel_id }}{% endif %}">
+                        </div>
+                        <div class="form-group">
+                            <label for="pixel_code">Facebook Pixel Code: (<span>
+                                <font color="red">*</font>
+                              </span> {{ gettext("bat_buoc") }})</label>
+                            <textarea class="form-control" id="pixel_code" name="facebook_pixel_code"
+                                rows="6">{% if shop_select and shop_select.facebook_pixel_code|string != 'None' %}{{ shop_select.facebook_pixel_code }}{% endif %}</textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col">
+
+                        </div>
+                        <div class="col">
+                            <button id="save_client_key" class="btn btn-lg btn-block btn-primary">
+                                {{ gettext("Luu_cau_hinh") }}
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div> <!-- / .row -->
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        window.onload = function () {
+            var input = document.getElementById("facebook_page").focus();
+        }
+
+        $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+        $('input').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+
+        $('#redirect_shop_select').select2();
+        $('#redirect_shop_select').on('change', function (e) {
+
+            var shop_id = $(this).val();
+            var url = "/apps/facebook/" + shop_id;
+            location.replace(url);
+
+        })
+
+
+    });
+</script>
+{% endblock %}

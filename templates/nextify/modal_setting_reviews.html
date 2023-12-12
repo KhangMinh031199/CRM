@@ -1,0 +1,75 @@
+<input type="hidden" value="{{ url_facebook }}">
+<input type="hidden" value="{{ url_google }}">
+<input type="hidden" value="{{ url_tripadvisor }}">
+<input type="hidden" value="{{ content_rating }}">
+<input type="hidden" value="{{ check_facebook }}">
+<input type="hidden" value="{{ check_google }}">
+<input type="hidden" value="{{ check_tripadvisor }}">
+
+<label>Facebook</label>
+  <div class="row">
+    <div class="col-sm-12 col-md-8 u-mb-medium">
+      <input class="form-control" id="url_facebook" name="url_facebook" type="text" value="{{ url_facebook }}">
+    </div>
+    <div class="col-sm-12 col-md-4 u-mb-medium">
+      <div class="u-block">
+        <div class="c-switch {% if check_facebook == 'true' %}is-active{% endif %}">
+          <label class="c-choice__label" for="switch2" style="padding-left: 10px; margin-bottom: 0;">{{ gettext("Ap_dung") }}
+          </label>
+          <input class="c-switch__input" id="check_facebook" type="checkbox"
+          {% if check_facebook == 'true' %}checked{% endif %}>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <label>Google</label>
+  <div class="row">
+    <div class="col-sm-12 col-md-8 u-mb-medium">
+      <input class="form-control" id="url_google" name="url_facebook" type="text" value="{{ url_google }}">
+    </div>
+    <div class="col-sm-12 col-md-4 u-mb-medium">
+      <div class="u-block">
+        <div class="c-switch {% if check_google == 'true' %}is-active{% endif %}">
+          <label class="c-choice__label" for="switch2" style="padding-left: 10px; margin-bottom: 0;">{{ gettext("Ap_dung") }}
+          </label>
+          <input class="c-switch__input" id="check_google" type="checkbox"
+          {% if check_google == 'true' %}checked{% endif %}>
+        </div>
+      </div>
+    </div>
+  </div>
+  <label>TripAdvisor</label>
+  <div class="row">
+    <div class="col-sm-12 col-md-8 u-mb-medium">
+      <input class="form-control" id="url_tripadvisor" name="url_facebook" type="text" value="{{ url_tripadvisor }}">
+    </div>
+    <div class="col-sm-12 col-md-4 u-mb-medium">
+      <div class="u-block">
+        <div class="c-switch {% if check_tripadvisor == 'true' %}is-active{% endif %}">
+          <label class="c-choice__label" for="switch2" style="padding-left: 10px; margin-bottom: 0;">{{ gettext("Ap_dung") }}
+          </label>
+          <input class="c-switch__input" id="check_tripadvisor" type="checkbox"
+          {% if check_tripadvisor == 'true' %}checked{% endif %}>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 col-md-8 u-mb-medium">
+      <label> {{ gettext("Loi_moi_khach_hang_danh_gia") }}</label>
+      <textarea class="form-control" id="content_rating" name="content_rating" type="text">{{ content_rating }}</textarea>
+    </div>
+  </div>
+
+  <script>
+    function reviews (t) {
+      $(".c-switch").on("click", function (t) {
+      var e = $(this).find(".c-switch__input");
+      return $(this).hasClass("is-disabled") || ($(this).hasClass("is-active") && e.attr("checked") ? (e.removeAttr("checked"), $(this).removeClass("is-active")) : (e.attr("checked", "checked"), $(this).addClass("is-active"))), !1
+    })
+    };
+    reviews();
+  </script>

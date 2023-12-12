@@ -1,0 +1,249 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">
+            {{ gettext("Ung_dung") }}
+          </h6>
+
+          <!-- Title -->
+          <h1 class="header-title">
+            {{ gettext("Quan_ly_ung_dung") }}
+          </h1>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row align-items-center">
+    <div class="col-12 col-md-4 offset-xl-1 offset-md-1 order-md-2 mb-5 mb-md-0">
+
+      <!-- Image -->
+      <div class="text-center">
+        <img src="/static/nextify/img/happiness.svg" alt="..." class="img-fluid">
+      </div>
+
+    </div>
+
+    <div class="col-12 col-md-5 col-xl-6 order-md-1 my-5">
+      <div class="card u-p-medium">
+          <div class="row u-justify-center" style="margin-bottom: 20px;">
+              <h1 class="header-title">
+                  IPOS
+                </h1>
+              </div>
+        <div class="row u-justify-center">
+          <div class="col-12">
+            <!-- Heading -->
+
+            <!-- Form -->
+            <form id="ipos_connect" method="post" action="/check_access_token_ipos">
+
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+              <!-- Email address -->
+              <div class="form-group">
+
+                <!-- Label -->
+                <label>Pos Parent</label>
+
+                <!-- Input -->
+                <input type="text" id="pos_parent" name="pos_parent" class="form-control"
+                  placeholder="pos parent..." {% if pos_parent %} value="{{ pos_parent }}" {% endif %}>
+
+              </div>
+              <div class="form-group">
+
+                <!-- Label -->
+                <label>Access Token</label>
+
+                <!-- Input -->
+                <input type="text" id="access_token" name="access_token" class="form-control" placeholder="access token..."
+                  {% if access_token %} value="{{ access_token }}" {% endif %}>
+
+              </div>
+
+              <!-- Password -->
+              <div class="form-group">
+                <div class="form-group">
+
+                  <!-- Label -->
+                  <label>Merchant App ID</label>
+
+                  <!-- Input -->
+                  <input type="text" id="merchant_id_app" name="merchant_id_app" class="form-control"
+                    placeholder="merchant app id..." {% if merchant_id_app %} value="{{ merchant_id_app }}"
+                    {% endif %}>
+
+                </div>
+                <div class="form-group">
+                  <div class="c-switch {% if status=='True' %}is-active{% endif %}">
+                    <input class="c-switch__input" name="status" id="status" type="checkbox"
+                      {% if status=="True" %}checked="checked" {% endif %}>
+                    {{ gettext("Dong_bo_du_lieu") }}
+                  </div>
+
+                </div>
+            </form>
+
+            <div class="col-6" style="float:right">
+              <button class="btn btn-lg btn-block btn-primary" id="save_info_API">
+                {{ gettext("Luu_thong_tin") }}
+
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+</div>
+<div class="row align-items-center">
+  <div class="col-12 col-md-5 col-xl-6 order-md-1 my-5">
+    <div class="card u-p-medium">
+        <div class="row u-justify-center" style="margin-bottom: 20px;">
+            <h1 class="header-title">
+                {{ gettext("Thiet_lap_ID_dia_diem") }} 
+              </h1>
+            </div>
+      <div class="row u-justify-center">
+        <div class="col-12">
+          <!-- Heading -->
+
+          <!-- Form -->
+          <form id="save_id_location" method="post" action="/apps/ipos?shop_id={{ shop_select._id }}">
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+            <div class="form-group">
+              <select id="redirect_shop_select" class="browser-default custom-select">
+                {% if shop_select._id %}
+                <option disabled selected>{{ shop_select.name }}</option>
+                {% else %}
+                <option disabled selected>{{ gettext("Chon_dia_diem") }}</option>
+                {% endif %}
+                {% for shop in shop_in_mer %}
+                <option value="{{ shop._id }}">{{ shop.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <input type="text" id="id_loc" name="id_loc" class="form-control" placeholder="ID địa điểm" value="{{ shop_select.pos_id }}">
+                              
+            </div>
+
+          </form>
+
+          <div class="col-9" style="float:right">
+            <button class="btn btn-lg btn-block btn-primary" id="save_id_loc">
+              {{ gettext("Luu_thong_tin") }}
+
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script nonce="{{ csp_nonce() }}">
+
+  $(document).ready(function () {
+    $("#redirect_shop_select").select2();
+    $('#redirect_shop_select').on('change.select2', function (e) {
+      var shop_id = $(this).val();      
+      var url = "/apps/ipos" + "?shop_id=" + shop_id;                                       
+        location.replace(url);  
+    })
+    $("#save_id_loc").click(function () {
+      $.ajax({
+        url: $("#save_id_location").attr("action"),
+        type: $("#save_id_location").attr("method"),
+        data: $("#save_id_location").serialize(),
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ('error' in returnedData) {
+            swal(returnedData['error'], " ", "error");
+            return false;
+          }
+          else {
+            swal('{{ gettext("Thao_tac_thanh_cong") }}', " ", "success");
+            location.reload();
+          }
+
+        },
+        error: function (xhr, desc, err) {
+          swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+
+
+
+        }
+
+      })
+    })
+    $("#save_info_API").click(function () {
+      var access_token = $("#access_token").val();
+      var pos_parent = $("#pos_parent").val();
+      var merchant_id_app = $("#merchant_id_app").val();
+      var status = $("#status").val();
+
+      if (status != "on") {
+        if (access_token.length == 0) {
+          swal('{{ gettext("access_token_khong_duoc_de_trong") }}', " ", "error");
+          return false;
+        }
+        if (pos_parent.length == 0) {
+          swal('{{ gettext("pos_parent_khong_duoc_de_trong") }}', " ", "error");
+          return false;
+        }
+        if (merchant_id_app.length == 0) {
+          swal('{{ gettext("merchant_id_app_khong_duoc_de_trong") }}', " ", "error");
+          return false;
+        }
+      }
+      $.ajax({
+        url: $("#ipos_connect").attr("action"),
+        type: $("#ipos_connect").attr("method"),
+        data: $("#ipos_connect").serialize(),
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ('error' in returnedData) {
+            swal(returnedData['error'], " ", "error");
+            return false;
+          }
+          else {
+            swal('{{ gettext("Thao_tac_thanh_cong") }}', " ", "success");
+            location.reload();
+          }
+
+        },
+        error: function (xhr, desc, err) {
+          swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+
+
+
+        }
+      });
+
+      return false;
+    })
+
+  });
+</script>
+
+{% endblock %}
+{% block js %}
+{% endblock %}

@@ -1,0 +1,298 @@
+{% extends "v2/base.html" %} {% block right_content %}
+
+    <div class="row">
+
+        <div class="col-md-6">
+       <div class="panel panel-white">
+        <div class="panel-heading clearfix">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <h3 class="title">Cài đặt chung</h3>
+
+                        </div>
+                    </div>
+                </div>
+                <form method="POST" action="/settings" enctype="multipart/form-data">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    <div class="panel-body">
+                        {% if error %}
+                            <div class="alert alert-danger">
+                                {{ error | safe }}
+                            </div>
+                        {% endif %} {% if message %}
+                        <div class="alert alert-success">
+                            {{ message | safe }}
+                        </div>
+                    {% endif %}
+
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="name">Tên cửa hàng:</label>
+                                <input type="text" class="form-control form-input" id="name" name="name"
+                                       value="{{ shop.name }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control form-input" id="email" name="email"
+                                       value="{{ shop.email }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="facebook-page">Hotline:</label>
+                                <input type="tel" class="form-control form-input" id="hotline" name="hotline"
+                                       value="{{ shop.hotline }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="facebook-page">Địa chỉ:</label>
+                                <input type="text" class="form-control form-input" id="address" name="address"
+                                       value="{{ shop.address }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="facebook-page">Toạ độ:</label>
+                                <input type="text" class="form-control form-input" id="lat" name="lat"
+                                       value="{{ shop.address_lat }}" placeholder="Latitude"><br/>
+                                <input type="text" class="form-control form-input" id="long" name="long"
+                                       value="{{ shop.address_long }}" placeholder="Longitude">
+                            </div>
+                            <div class="form-group">
+                                <label for="facebook-page">Website:</label>
+                                <input type="text" class="form-control form-input" id="website" name="website"
+                                       value="{{ shop.website }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="facebook-page">Số tin nhắn SMS:</label> {% if shop.is_sms %}
+                                <input type="text" class="form-control form-input"
+                                       value="{{ shop.sms_count|default(0) }}" readonly/>
+                            {% else %}
+                                <div class="alert alert-info">
+                                    Bạn chưa đăng ký gói SMS, liên hệ hotline <strong>0946 850 912</strong> để dùng dịch
+                                    vụ
+                                </div>
+                            {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {% if session.is_superuser %}
+                                    <label>SMS:</label>
+                                    <input type="checkbox" name="is_sms" {% if shop.is_sms %}checked{% endif %}>
+                                    <label>SMS Count:</label>
+                                    <input type="text" name="sms_count"
+                                           value="{% if shop.sms_count %}{{ shop.sms_count }}{% endif %}"/>
+                                    <input type="hidden" id="curr_pkg" value="{{ shop.pricing_pkg }}"/>
+                                    <select name="pricing_pkg" id="pricing_pkg">
+                                        <option value="0">basic</option>
+                                        <option value="1">premium</option>
+                                    </select> {% endif %}
+                            </div>
+                            <div class="form-group">
+                                <label for="name">ZALO OA ID:</label>
+                                <input type="text" class="form-control form-input" id="zalo_oa_id" name="zalo_oa_id"
+                                       value="{{ shop.zalo_oa_id }}"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">ZALO OA KEY:</label>
+                                <input type="text" class="form-control form-input" id="zalo_oa_key" name="zalo_oa_key"
+                                       value="{{ shop.zalo_oa_key }}"/>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                    </div>
+                     <div class="panel-heading clearfix">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                <h3 class="title">Thiết lập Orders</h3>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="email_order">Email đơn hàng:</label>
+                            <input type="email" class="form-control form-input" id="email_order" name="email_order"
+                                   value="{{ shop.email_order }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="count_order">Số lượng đơn hàng/Nhân viên:</label>
+                            <input type="text" class="form-control form-input" id="count_order" name="order_per_emp"
+                                   value="{{ shop.order_per_emp }}">
+                        </div>
+
+                        <div class="clearfix"></div>
+
+
+                    </div>
+                    {#                <div class="header">#}
+                    {#                    <div class="row">#}
+                    {#                        <div class="col-md-3 col-sm-3 col-xs-12">#}
+                    {#                            <h3 class="title">Thiết lập Loyalty</h3>#}
+                    {#                        </div>#}
+                    {#                    </div>#}
+                    {#                </div>#}
+                    {#                <div class="content">#}
+                    {##}
+                    {#                    <div class="form-group form-inline">#}
+                    {#                        <input type="text" class="form-control" value="1 điểm" readonly/> =#}
+                    {#                        <input type="text" name="loyaly_exchange_value" id="loyaly_exchange_value" class="form-control" value="{% if shop.loyal_settings %}{{ shop.loyal_settings.loyal_value }}{% endif %}"#}
+                    {#                            placeholder="1000" />#}
+                    {#                        <label for="active" style="padding-left: 10px">Triển khai:</label>#}
+                    {#                        <input type="checkbox" name="loyalty_start" id="active" {% if shop.loyal_settings %}{% if shop.loyal_settings.start %}checked{%#}
+                    {#                            endif %}{% endif %}>#}
+                    {#                    </div>#}
+                    {#                    <br/>#}
+                                        <div class="btn-toolbar pull-right">
+                                            <div class="btn-group">
+                                                <button type="submit" id="save_info" class="btn btn-info btn-fill pull-right">Lưu lại</button>
+                                            </div>
+                                        </div>
+                    {#                </div>#}
+                    <br/>
+                </form>
+                <hr/>
+
+                 <div class="panel-heading clearfix">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            <h3 class="title">Sync</h3>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-4 col-sm-4 col-xs-12">
+                        <div class="form-group">
+
+                            <button id="manual_sync_zalo" class="form-control btn btn-info btn-fill"
+                                    {% if is_zalo_sync %}{% if is_zalo_sync.status == 'process' %}disabled
+                                    {% endif %}{% endif %}>Đồng bộ với Zalo OA
+                            </button>
+                            <form id="form_sync_zalo">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                <input type="hidden" value="{{ shop._id }}" name="shop_id">
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+
+                <hr/>
+                {#            <div class="header">#}
+                {#                <div class="row">#}
+                {#                    <div class="col-md-3 col-sm-3 col-xs-12">#}
+                {#                        <div class="btn-toolbar pull-right">#}
+                {#                            <div class="btn-group">#}
+                {#                                <a href="#" id="add_reward" class="btn btn-info btn-fill pull-right">Thêm</a>#}
+                {#                            </div>#}
+                {#                        </div>#}
+                {#                        <h3 class="title">Mức tín dụng</h3>#}
+                {##}
+                {#                    </div>#}
+                {#                </div>#}
+                {#            </div>#}
+                {#            <div class="content">#}
+                {#                    <div id="reward_content">#}
+                {##}
+                {##}
+                {#                        {%if rewards and rewards|length >0 %} {% for reward in rewards %}#}
+                {#                        <div class="form-group form-inline">#}
+                {#                            <label>Tiền chi tiêu: </label>#}
+                {#                            <input type="text" class="form-control" value="{{reward.reward.amount}}"  placeholder="Số tiền chi tiêu" />#}
+                {#                            <label>% Tích: </label>#}
+                {#                            <input type="text" class="form-control" value="{{reward.reward.credit}}" placeholder="" /> %#}
+                {#                        </div>#}
+                {#                        {%endfor%} {%else%}#}
+                {#                        <div class="form-group form-inline">#}
+                {#                            <label>Tiền chi tiêu: </label>#}
+                {#                            <input type="text" class="form-control" value="" placeholder="Số tiền chi tiêu" />#}
+                {#                            <label>% Tích: </label>#}
+                {#                            <input type="text" class="form-control" value=""  style="width: 50px" placeholder="" /> %#}
+                {#                        </div>#}
+                {#                        <div class="form-group form-inline">#}
+                {#                            <label>Tiền chi tiêu: </label>#}
+                {#                            <input type="text" class="form-control" value="" placeholder="Số tiền chi tiêu" />#}
+                {#                            <label>% Tích: </label>#}
+                {#                            <input type="text" class="form-control" value=""  style="width: 50px" placeholder="" /> %#}
+                {#                        </div>#}
+                {#                        <div class="form-group form-inline">#}
+                {#                            <label>Tiền chi tiêu: </label>#}
+                {#                            <input type="text" class="form-control" value="" placeholder="Số tiền chi tiêu" />#}
+                {#                            <label>% Tích: </label>#}
+                {#                            <input type="text" class="form-control" value="" style="width: 50px" placeholder="" /> %#}
+                {#                        </div>#}
+                {#                        {%endif%}#}
+                {#                    </div>#}
+                {##}
+                {#                    <div class="btn-toolbar pull-right">#}
+                {#                        <div class="btn-group">#}
+                {#                            <button type="submit" id="save_credit" class="btn btn-info btn-fill pull-right">Lưu lại</button>#}
+                {#                        </div>#}
+                {#                    </div>#}
+                {##}
+                {#                <div class="clearfix"></div>#}
+                {#            </div>#}
+            </div>
+        </div>
+    </div>
+
+    {% if session.is_superuser %}
+        <div class="superuser">You are using the superuser account</div>
+    {% endif %} {% endblock %} {% block js %} {{ super() }}
+     <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+             $('#settings').click();
+            if ($("#curr_pkg").length > 0) {
+                $("#pricing_pkg").val($("#curr_pkg").val());
+            }
+
+            {#        $("#add_reward").click(function () {#}
+            {#            var child_con = '<div class="form-group form-inline">';#}
+            {#            child_con += '<label>Tiến chi tiêu: </label> <input type="text" class="form-control" value="" placeholder="Số tiền chi tiêu" />';#}
+            {#            child_con += ' <label>% Tích: </label> <input type="text" class="form-control" value="" placeholder="" /> %<div/>';#}
+            {#            $("#reward_content").append(child_con);#}
+            {##}
+            {#        });#}
+            {##}
+            {#        $("#save_credit").click(function () {#}
+            {#            var rewards = [];#}
+            {#            $("#reward_content").children('div.form-group').each(function (i) {#}
+            {#                var inputs = $(this).children("input");#}
+            {#                var amount = $(inputs[0]).val();#}
+            {#                var credit = $(inputs[1]).val();#}
+            {##}
+            {#                if (amount.length > 0 && credit.length > 0) {#}
+            {#                    var item = { 'amount': amount, 'credit': credit };#}
+            {#                    rewards.push(item);#}
+            {#                }#}
+            {#            });#}
+            {#            var data = {#}
+            {#                'rewards': JSON.stringify(rewards)#}
+            {#            };#}
+            {##}
+            {#            $.ajax({ type: 'post', url: '/settings/credit', data: data, success: function () { location.reload(); } });#}
+            {##}
+            {#        });#}
+            $("#manual_sync_zalo").click(function () {
+                var url_export = "/sync_zalo";
+                $.ajax({
+                    url: url_export,
+                    data: $("#form_sync_zalo").serialize(),
+                    success: function (data) {
+                        var json = JSON.parse(data);
+                        if (json['result'] === true) {
+                            alert('Hệ thống đang xử lý. Kết quả sẽ được hiển thị ở trang khách hàng.');
+                        } else {
+                            alert("Vui lòng kiểm tra lại cấu hình kết nối Zalo hoặc liên hệ bộ phận Support của Nextify.")
+                        }
+
+                    }
+                });
+            });
+
+
+        })
+
+    </script>
+{% endblock %}

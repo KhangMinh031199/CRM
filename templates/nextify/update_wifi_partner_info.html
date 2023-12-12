@@ -1,0 +1,319 @@
+
+<input type="hidden" value="{{wifi_partner_id}}" id="edit_wifi_partner_id" />
+
+<div class="row u-mb-medium">
+    <div class="col-12">
+        <form
+        id="form_update_wifi_partner_{{ wifi_partner._id }}"
+        data-toggle="validator"
+        role="form"
+      >
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+        <div class="form-group">
+          <label for="name" class="c-field__label"
+            >{{ gettext("Ten") }}: (<span>
+              <font color="red">*</font>
+            </span>
+            {{ gettext("bat_buoc") }})</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="name_{{ wifi_partner._id }}"
+            name="name"
+            placeholder='{{ gettext("Ten") }}'
+            value="{% if wifi_partner %}{{ wifi_partner.name }}{% endif %}"
+          />
+        </div>
+        <div class="form-group">
+          <label class="c-field__label" for="textarea2"
+            >{{ gettext("Dia_chi") }}: (<span>
+              <font color="red">*</font>
+            </span>
+            {{ gettext("bat_buoc") }})</label
+          >
+          <textarea
+            class="form-control"
+            id="address_{{ wifi_partner._id }}"
+            name="address"
+            value="{% if wifi_partner %}{{ wifi_partner.address }}{% endif %}"
+            placeholder='{{ gettext("Dia_chi") }}'
+          >
+    {% if wifi_partner %} {{ wifi_partner.address }}{% endif %}</textarea
+          >
+        </div>
+        <div class="form-group">
+          <label class="c-field__label" for="textarea2"
+            >{{ gettext("So_dien_thoai") }}: (<span>
+              <font color="red">*</font>
+            </span>
+            {{ gettext("bat_buoc") }})</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            id="phone_{{ wifi_partner._id }}"
+            name="phone"
+            value="{% if wifi_partner %}{{ wifi_partner.phone }}{% endif %}"
+          />
+        </div>
+        <div class="form-group">
+          <label class="c-field__label" for="textarea2"
+            >Mã số thuế: (<span>
+              <font color="red">*</font>
+            </span>
+            {{ gettext("bat_buoc") }})</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            id="number_tax_{{ wifi_partner._id }}"
+            name="number_tax"
+            value="{% if wifi_partner %}{{ wifi_partner.number_tax }}{% endif %}"
+          />
+        </div>
+        <div class="form-group">
+          <label class="c-field__label" for="textarea2"
+            >Người liên hệ: (<span>
+              <font color="red">*</font>
+            </span>
+            {{ gettext("bat_buoc") }})</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="person_contact_{{ wifi_partner._id }}"
+            name="person_contact"
+            value="{% if wifi_partner %}{{ wifi_partner.person_contact }}{% endif %}"
+            placeholder='{{ gettext("Nguoi_lien_he") }}'
+          />
+        </div>
+        <div class="form-group">
+          <label class="c-field__label" for="textarea2"
+            >Số điện thoại cá nhân: (<span>
+              <font color="red">*</font>
+            </span>
+            {{ gettext("bat_buoc") }})</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            id="contact_phone_{{ wifi_partner._id }}"
+            name="contact_phone"
+            value="{% if wifi_partner %}{{ wifi_partner.contact_phone }}{% endif %}"
+          />
+        </div>
+        <div class="form-group">
+          <label class="c-field__label" for="textarea2"
+            >Chức vụ: (<span>
+              <font color="red">*</font>
+            </span>
+            {{ gettext("bat_buoc") }})</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="contact_department_{{ wifi_partner._id }}"
+            name="contact_department"
+            value="{% if wifi_partner %}{{ wifi_partner.contact_department }}{% endif %}"
+          />
+        </div>
+        <div class="form-group row mt-5">
+          <span class="col-4"> Trạng thái: </span>
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="status_{{
+            wifi_partner._id }}" name="status" {% if wifi_partner.status==true %}
+            checked {% endif %}>
+            <label
+              class="custom-control-label"
+              for="status_{{ wifi_partner._id }}"
+            ></label>
+          </div>
+        </div>
+      </form>
+      
+
+    </div>
+    <div class="col-12 text-center">
+     
+         
+              <a href="#"
+                id="update_wifi_partner_{{ wifi_partner._id }}"
+                class="btn btn-primary"
+              >
+                {{ gettext("Cap_nhat") }}
+    </a>
+        
+          
+    </div>
+</div>
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        }
+    );
+    $('input').each(function () {
+            $(this).val($(this).val().trim());
+        }
+    );
+      function isVietnamesePhoneNumberValid(phone, contact_phone) {
+        return /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/.test(
+          phone,
+          contact_phone
+        );
+      }
+      document
+        .querySelector("#phone_{{ wifi_partner._id }}")
+        .addEventListener("keypress", function (evt) {
+          if (
+            (evt.which != 8 && evt.which != 0 && evt.which < 48) ||
+            evt.which > 57
+          ) {
+            evt.preventDefault();
+          }
+        });
+      document
+        .querySelector("#number_tax_{{ wifi_partner._id }}")
+        .addEventListener("keypress", function (evt) {
+          if (
+            (evt.which != 8 && evt.which != 0 && evt.which < 48) ||
+            evt.which > 57
+          ) {
+            evt.preventDefault();
+          }
+        });
+      document
+        .querySelector("#contact_phone_{{ wifi_partner._id }}")
+        .addEventListener("keypress", function (evt) {
+          if (
+            (evt.which != 8 && evt.which != 0 && evt.which < 48) ||
+            evt.which > 57
+          ) {
+            evt.preventDefault();
+          }
+        });
+     
+
+      $("#update_wifi_partner_{{ wifi_partner._id }}").click(
+        function () {
+          var name = $("#name_{{ wifi_partner._id }}").val();
+          var address = $("#address_{{ wifi_partner._id }}").val();
+          var phone = $("#phone_{{ wifi_partner._id }}").val();
+          var number_tax = $(
+            "#number_tax_{{ wifi_partner._id }}"
+          ).val();
+          var person_contact = $(
+            "#person_contact_{{ wifi_partner._id }}"
+          ).val();
+          var contact_phone = $(
+            "#contact_phone_{{ wifi_partner._id }}"
+          ).val();
+          var contact_department = $(
+            "#contact_department_{{ wifi_partner._id }}"
+          ).val();
+
+          if (name.length == 0) {
+            swal(
+              '{{ gettext("Ten_khong_duoc_de_trong") }}',
+              " ",
+              "error"
+            );
+            return false;
+          }
+          if (address.length == 0) {
+            swal(
+              '{{ gettext("Dia_chi_khong_duoc_de_trong") }}',
+              " ",
+              "error"
+            );
+            return false;
+          }
+          if (phone.length == 0) {
+            swal(
+              '{{ gettext("So_dien_thoai_khong_duoc_de_trong") }}',
+              " ",
+              "error"
+            );
+            return false;
+          }
+          if (!isVietnamesePhoneNumberValid(phone)) {
+            swal(
+              '{{ gettext("So_dien_thoai_khong_dung_dinh_dang") }}',
+              " ",
+              "error"
+            );
+            return false;
+          }
+          if (number_tax.length == 0) {
+            swal(
+              '{{ gettext("Ma_so_thue_khong_duoc_de_trong") }}',
+              " ",
+              "error"
+            );
+            return false;
+          }
+          if (number_tax.length != 10 && number_tax.length != 13) {
+            swal(
+              '{{ gettext("Ma_so_thue_khong_dung_dinh_dang") }}',
+              " ",
+              "error"
+            );
+            return false;
+          }
+          if (person_contact.length == 0) {
+            swal(
+              '{{ gettext("Nguoi_lien_he_khong_duoc_de_trong") }}',
+              " ",
+              "error"
+            );
+            return false;
+          }
+          if (contact_phone.length == 0) {
+            swal(
+              '{{ gettext("So_dien_thoai_ca_nhan_khong_duoc_de_trong") }}',
+              " ",
+              "error"
+            );
+            return false;
+          }
+          if (!isVietnamesePhoneNumberValid(contact_phone)) {
+            swal(
+              '{{ gettext("So_dien_thoai_ca_nhan_khong_dung_dinh_dang") }}',
+              " ",
+              "error"
+            );
+            return false;
+          }
+          if (contact_department.length == 0) {
+            swal(
+              '{{ gettext("Chuc_vu_khong_duoc_de_trong") }}',
+              " ",
+              "error"
+            );
+            return false;
+          }
+          $.ajax({
+            url: "/wifi_partners/{{ wifi_partner._id }}/update",
+            type: "POST",
+            data: $(
+              "#form_update_wifi_partner_{{ wifi_partner._id }}"
+            ).serialize(),
+            success: function (_data) {
+              var r_data = JSON.parse(_data);
+              if (r_data.result == true) {
+                Swal.fire("Thành công", "", "success").then(
+                  (result) => {
+                    location.reload();
+                  }
+                );
+              } else {
+                var error = r_data.error;
+                Swal.fire("Thất bại", error, "error");
+              }
+            },
+          });
+        }
+      );
+    });
+  </script>

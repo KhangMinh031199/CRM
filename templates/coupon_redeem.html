@@ -1,0 +1,72 @@
+{% extends "v2/base.html" %}
+{% block right_content %}
+    <div class="row">
+            <div class="card">
+                <div class="header">
+                    <ul class="nav nav-pills">
+                        <li>
+                            <a href="/coupons">{{ gettext("Chua_doi") }}</a>
+                        </li>
+                        <li class="active">
+                            <a href="/coupons/redeem" class="active">{{ gettext("Da_doi") }}</a>
+                        </li>
+
+                    </ul>
+                </div>
+
+                {% if message %}
+                    <div class="alert alert-success">
+                        {{ message | safe }}
+                    </div>
+                {% endif %}
+                {% if coupons %}
+                     <div class="content table-responsive table-full-width">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                        <th>
+                            Phone
+                        </th>
+                        <th>
+                            {{ gettext("Ma") }}
+                        </th>
+                        <th>
+                            {{ gettext("Doi_luc") }}
+                        </th>
+                        <th>
+                            {{ gettext("Doi_boi") }}
+                        </th>
+                        </thead>
+                        <tbody>
+                        {% for coupon in coupons %}
+                            <tr>
+                                <td>
+                                    <a href="/user/{{ coupon.user.phone }}">{{ coupon.user.phone }}</a>
+                                </td>
+
+                                <td>
+                                    <strong>{{ coupon.coupon }}</strong>
+                                </td>
+                                <td>
+                                    {{ coupon.redeemed_str }}
+                                </td>
+                                <td>
+                                    {{ coupon.redeem_by }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <center>
+                        {{ pagination.links }}
+                    </center>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

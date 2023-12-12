@@ -1,0 +1,110 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                        {{ gettext("Ung_dung") }}
+                    </h6>
+
+                    <!-- Title -->
+                    <h1 class="header-title">
+                        Google
+                    </h1>
+
+                </div>
+            </div> <!-- / .row -->
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="header-title">
+                        {{ gettext("Cau_hinh") }}
+                    </h1>
+                </div>
+                <div class="card-body">
+                    <form method="POST" id="save_client_key_fr" action="/update_client_key"
+                        enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-group">
+                            <label for="ga_id">Google Analytics ID:</label>
+                            <input class="form-control" id="ga_id" placeholder="UA-XXXXXXXXX-X" autofocus
+                                name="ga_id" value="{% if shop_select and shop_select.ga_id|string != 'None' %}{{ shop_select.ga_id }}{% endif %}"/>
+                        </div>
+                        <div class="form-group">
+                            <select id="redirect_shop_select" class="custom-select">
+                                {% if shop_select and shop_select._id %}
+                                <option disabled selected>{{ shop_select.name }}</option>
+                                {% else %}
+                                <option disabled selected>{{ gettext("Chon_dia_diem") }}</option>
+                                {% endif %}
+                                {% for shop in shop_in_mer %}
+                                <option value="{{ shop._id }}">{{ shop.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pixel_code">Google Remarketing Code:</label>
+                            <textarea class="form-control" id="google_pixel_code"
+                                name="google_pixel_code" rows="6">
+                                {% if shop_select and shop_select.google_pixel_code|string != 'None' %}{{ shop_select.google_pixel_code }}{% endif %}</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Google Place ID:</label>
+                            <input type="text" class="form-control" id="place_id" name="place_id"
+                                placeholder="ChIJXVAthGirNTERqd-bvyS-Nps" {% if shop_select and shop_select.place_id|string != "None" %} value="{{ shop_select.place_id }}"
+                                {% else %} value="" {% endif %}>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col">
+
+                        </div>
+                        <div class="col">
+                            <button id="save_client_key" class="btn btn-lg btn-block btn-primary">
+                                {{ gettext("Luu_cau_hinh") }}
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div> <!-- / .row -->
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+        $('input').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+
+
+    });
+</script>
+{% endblock %}

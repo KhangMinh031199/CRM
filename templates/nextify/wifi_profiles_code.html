@@ -1,0 +1,91 @@
+{% extends 'nextify/base.html' %}
+
+{% block main_content %}
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            WIFI
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                            {{ gettext('Danh_sach_Wifi_Code') }}
+                        </h1>
+
+                    </div>
+
+                </div> <!-- / .row -->
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+
+        <div class="card">
+            <div class="card-header">
+                 <div class="col">
+                    <h4 class="card-header-title">
+                        {{ gettext('Danh_sach_Code') }}
+                    </h4>
+                 </div>
+                <div class="col-auto" style="float:right">
+                    <a href="/{{ merchant_id }}/wificode" target="_blank">
+                      <button type="button" class="btn btn-primary">
+                            {{ gettext('Tao_code') }}
+                        </button>
+                    </a>
+                </div>
+
+            </div>
+            <div class="table-responsive">
+                <table class="table table-sm card-table">
+                    <thead>
+                    <tr>
+                        <th>
+                            Code
+                        </th>
+                        <th>
+                            {{ gettext('Profile') }}
+                        </th>
+                        <th>
+                            {{ gettext('Dia_diem') }}
+                        </th>
+                        <th>
+                            {{ gettext('Han_su_dung') }}
+                        </th>
+
+                        <th>
+                            {{ gettext('Tao_luc') }}
+                        </th>
+                          <th>
+                            {{ gettext('Doi_luc') }}
+                        </th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for code in profiles %}
+                        <tr>
+                            <td>
+                                <code>{{ code.code }}</code>
+                            </td>
+                            <td>{{ code.profile.name }}</td>
+                            <td> {% if code.shop %}{{ code.shop.name }}{% endif %}</td>
+                            <td>{{ code.expire_at|human_time_string }}</td>
+                            <td>{{ code.when|human_time_string }}</td>
+                            <td>{{ code.active_at|human_time_string }}</td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

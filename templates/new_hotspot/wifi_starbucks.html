@@ -1,0 +1,392 @@
+{% extends 'nextify/base.html' %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/wifi_wizard.css" />
+<link rel="stylesheet" href="/static/summernote-0.8.18-dist/summernote.min.css" />
+{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row justify-content-center mt-3">
+        <div class="col-12 col-lg-8 col-xl-8">
+            <div class="header-body center">
+                <div class="row">
+
+                    <div class="col-12 col-xl-12">
+                        <div class="row">
+                            <div class="col">
+
+                            <button type="button" class="btn btn-dark mb-2" id="close">Thoát</button>
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-danger" id="save_starbucks">
+                                    Lưu lại
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="kanban-container mt-5 center">
+                <div class="row" style="margin: auto">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header card-header-flush">
+
+                                <!-- Title -->
+                                <h4 class="card-header-title text-center">
+                                    Bước 1
+                                </h4>
+
+
+
+                            </div>
+                            <div class="card-body">
+
+                                <div id="new_step_1_preview"></div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header card-header-flush">
+
+                                <!-- Title -->
+                                <h4 class="card-header-title text-center">
+                                    Bước 2
+                                </h4>
+
+
+
+                            </div>
+                            <div class="card-body">
+                                <div id="new_step_2_preview"></div>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header card-header-flush">
+
+                                <!-- Title -->
+                                <h4 class="card-header-title text-center">
+                                    Bước 3
+                                </h4>
+
+
+
+                            </div>
+                            <div class="card-body">
+                                <div id="new_step_3_preview"></div>
+
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+<!-- cáu hình -->
+            <div class="col-12 col-xl-12">
+                <div class="header">
+                    <div class="header-body">
+                        <div class="row align-items-end">
+                            <div class="col">
+                                
+                                <!-- Title -->
+                                <h1 class="header-title">
+                                    Cấu hình
+                                </h1>
+                            </div>
+        
+            
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <form id="setting_starbucks" method="POST" action='/setting_starbucks' >
+            
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+
+                            <div class="form-group">
+                                <label>Nội dung chào mừng- Tiếng Việt</label>
+                                <textarea class="form-control" id="welcome_text_vn" name="welcome_text_vn">{{ detail.welcome_text_vn|safe }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Nội dung chào mừng- Tiếng Anh</label>
+                                <textarea class="form-control" id="welcome_text_eng" name="welcome_text_eng" >{{ detail.welcome_text_eng|safe }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Điều khoản sử dụng - Tiếng Việt</label>
+                                <textarea class="form-control" id="tcs_vn" name="tcs_vn">{{ detail.tcs_vn|safe }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Điều khoản sử dụng - Tiếng Anh</label>
+                                <textarea class="form-control" id="tcs_eng" name="tcs_eng" >{{ detail.tcs_eng|safe }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Nút kết nối - Tiếng Việt</label>
+                                <input class="form-control" id="welcome_button_vn" name="welcome_button_vn" value="{{ detail.welcome_button_vn }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Nút kết nối - Tiếng Anh</label>
+                                <input class="form-control" id="welcome_button_eng" name="welcome_button_eng" value="{{ detail.welcome_button_eng }}">
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label>Subject Email</label>
+                                <textarea class="form-control" id="subject_email" name="subject_email" rows="2">{{ settings_starbucks.subject_email }}</textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Nội dung Email</label>
+                                <textarea class="form-control" id="content_email" name="content_email" rows="6">{{ settings_starbucks.content_email }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Thời gian link xác thực</label>
+                                <input class="form-control" id="expire_authen" name="expire_authen" placeholder="Số phút" value="{{ settings_starbucks.expire_authen }}">
+                            </div>
+                            <input type="hidden" value="{{ shop_id_select }}" id="shop_id" name='shop_id'/>
+                            <input type="hidden" value="{{ campaign_id }}" id="campaign_id" name='campaign_id'/>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+{% block js %}
+<script src="/static/summernote-0.8.18-dist/summernote.min.js"></script>
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        var shop_id = $('#shop_id').val()
+        var camp_id = $('#campaign_id').val()
+        $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        });
+        $('input').each(function () {
+            $(this).val($(this).val().trim());
+        });
+        var shop_id = $('#shop_id').val();
+        var url_preview_1 = '/preview_tc_starbucks/' + shop_id + '/' + camp_id;
+         $("#new_step_1_preview").empty();
+        bioMp(document.getElementById('new_step_1_preview'), {
+            url: url_preview_1,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+        var url_preview_2 = '/preview_collect_starbucks/' + shop_id + '/' + camp_id;
+        $("#new_step_2_preview").empty();
+        bioMp(document.getElementById('new_step_2_preview'), {
+            url: url_preview_2,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+        var url_preview_3 = '/preview_success_starbucks/' + shop_id + '/' + camp_id;
+        $("#new_step_3_preview").empty();
+        bioMp(document.getElementById('new_step_3_preview'), {
+            url: url_preview_3,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+
+
+
+        $('#welcome_text_vn').summernote({
+            placeholder: 'Aa',
+            tabsize: 1,
+            height: 170,
+            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana', 'SoDo'],
+            fontNamesIgnoreCheck: ['SoDo'],
+
+            fontSizes: ['8', '9', '10', '11', '12', '14', '15', '24', '36', '48' , '64', '82', '150'],
+            toolbar: [
+    // [groupName, [list of button]]
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']]
+            ]
+        });
+    
+        $('#welcome_text_eng').summernote({
+            placeholder: 'Aa',
+            tabsize: 1,
+            height: 170,
+            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana', 'SoDo'],
+            fontNamesIgnoreCheck: ['SoDo'],
+            fontSizes: ['8', '9', '10', '11', '12', '14', '15', '24', '36', '48' , '64', '82', '150'],
+            toolbar: [
+    // [groupName, [list of button]]
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']]
+            ]
+        });
+        $('#tcs_vn').summernote({
+            placeholder: 'Aa',
+            tabsize: 1,
+            height: 250,
+            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana', 'SoDo'],
+            fontNamesIgnoreCheck: ['SoDo'],
+            fontSizes: ['8', '9', '10', '11', '12', '14', '15', '24', '36', '48' , '64', '82', '150'],
+            toolbar: [
+    // [groupName, [list of button]]
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']]
+            ]
+        });
+        $('#tcs_eng').summernote({
+            placeholder: 'Aa',
+            tabsize: 1,
+            height: 250,
+            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana', 'SoDo'],
+            fontNamesIgnoreCheck: ['SoDo'],
+            fontSizes: ['8', '9', '10', '11', '12', '14', '15', '24', '36', '48' , '64', '82', '150'],
+            toolbar: [
+    // [groupName, [list of button]]
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']]
+            ]
+        });
+
+        $('#content_email').summernote({
+            placeholder: 'Aa',
+            tabsize: 1,
+            height: 250,
+            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana', 'SoDo'],
+            fontNamesIgnoreCheck: ['SoDo'],
+            fontSizes: ['8', '9', '10', '11', '12', '14', '15', '24', '36', '48' , '64', '82', '150'],
+            toolbar: [
+    // [groupName, [list of button]]
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']]
+            ]
+        });
+        $('.dropdown-toggle').dropdown();
+
+        
+        $("#save_starbucks").click(function () {
+                $.ajax({
+                    type: 'post',
+                    url: $("#setting_starbucks").attr('action'),
+                    data: $("#setting_starbucks").serialize(),
+                    success: function (response) {
+                        var returnedData = JSON.parse(response);
+                        if ('error' in returnedData) {
+
+                            swal(returnedData['error'], " ", "error");
+                        } else {
+                            swal("Thành công", " ", "success");
+                            var url_preview_1 = '/preview_tc_starbucks/' + shop_id + '/' + camp_id;
+                            var url_preview_2 = '/preview_collect_starbucks/' + shop_id + '/' + camp_id;
+                            var url_preview_3 = '/preview_success_starbucks/' + shop_id + '/' + camp_id;
+                            $("#new_step_1_preview").empty();
+                            bioMp(document.getElementById('new_step_1_preview'), {
+                                url: url_preview_1,
+                                view: 'front',
+                                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                height: 618,
+                                width: 308
+                            });
+                            $("#new_step_2_preview").empty();
+                            bioMp(document.getElementById('new_step_2_preview'), {
+                                url: url_preview_2,
+                                view: 'front',
+                                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                height: 618,
+                                width: 308
+                            });
+                            $("#new_step_3_preview").empty();
+                            bioMp(document.getElementById('new_step_3_preview'), {
+                                url: url_preview_3,
+                                view: 'front',
+                                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                                height: 618,
+                                width: 308
+                            });
+
+                        }
+
+                    }});
+
+            });
+
+            $("#close").click(function () {
+            Swal.fire({
+                title: ngettext("Ban_co_chac_chan_muon_dong_khong?"),
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+focusCancel: true,
+                cancelButtonColor: '#d33',
+                confirmButtonText: ngettext("Co!"),
+                cancelButtonText: ngettext("Khong!")
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: "/close_campaign",
+                        type: 'POST',
+                        data: {
+                            'shop_id': shop_id,
+                            'camp_id': camp_id
+                        },
+                        success: function (data) {
+                            location.href = '/hotspot?shop_id_select=' + shop_id;
+                        }
+                    });
+
+                }
+            })
+        });
+    });
+</script>
+{% endblock %}

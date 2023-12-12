@@ -1,0 +1,2414 @@
+{% extends 'nextify/base.html' %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/anchor.css">
+
+{% endblock %}
+{% block body %}
+
+<div class="container-fluid">
+    <input type="hidden" id="sign_zns" value="{{ sign_zns }}" />
+    <div class="row u-mb-large justify-content-center">
+        <div class="col-12 col-md-12 col-xl-12 justify-content-center">
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-end">
+                        <div class="col-auto">
+                            <a href="/marketing_automation/{{ shop_id_select }}" class="btn btn-light">
+                                <i class="fa fa-close"></i> {{ gettext("Dong_lai") }}
+                            </a>
+
+
+                        </div>
+
+                        <div class="col text-center">
+
+                            <h2 class="card-title text-center">{{ gettext("Chuc_mung_sinh_nhat") }}</h2>
+
+
+                        </div>
+                        <div class="col-auto">
+                            <a href="#!" id="target" class="btn btn-block btn-danger">
+                                {{ gettext("Tiep_tuc") }}
+                            </a>
+                            <a href="#" class="btn btn-light" id="back">
+                                <i class="fa fa-close"></i> {{ gettext("Quay_lai") }}
+                            </a>
+                            <a href="#!" id="save_birthday" class="btn btn-danger">
+                                <i class="fe fe-save"></i> {{ gettext("Luu_lai") }}
+                            </a>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div class="card">
+                <form class="form-horizontal m-t-xs" action="/auto_marketing/{{ shop_select._id }}/birthday"
+                    enctype="multipart/form-data" id="birthday_form" method="post">
+                    <div class="card-body">
+                        <input type="hidden" name="is_save" id="is_save">
+
+                        <div class="row justify-content-center">
+                            <div class="col-12 sw-main sw-theme-arrows">
+
+                                <ul class="nav nav-tabs step-anchor">
+                                    <li class="active" id="li_step_1"><a href="#">{{ gettext("Buoc_1") }}<br>
+                                            <small>{{ gettext("Soan_noi_dung_gui") }}</small>
+                                        </a></li>
+                                    <li id="li_step_2"><a href="#">{{ gettext("Buoc_2") }} <br>
+                                            <small>{{ gettext("Cau_hinh_va_xac_nhan") }}</small>
+                                        </a></li>
+
+                                </ul>
+                            </div>
+                            {% if error %}
+
+                            <div class="col-12 col-lg-10 col-xl-8 mt-5 sw-main sw-theme-arrows">
+
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    {{ error }}
+
+                                </div>
+                            </div>
+
+                            {% endif %}
+
+
+                            <div id="step_1" class="col-12">
+
+
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                <input type="hidden" name="status" id="status"
+                                    value="{%if mar_type_info_sms and mar_type_info_sms.status%}True{%endif%}" />
+                                <input type="hidden" id="design" name="design" />
+                                <input type="hidden" id="birthday_content_mail" name="birthday_content_mail" />
+                                <div class="form-group">
+                                    {% if merchant.sms_provider and merchant.sms_provider == 'VINAPHONE'%}
+                                    <div class="form-group">
+                                        <label style="margin-bottom: 12px;">Vinaphone Template Id:</label>
+                                        <input class="form-control" id="happy-birthday-sms" name="happy_birthday"
+                                            rows="2" placeholder='{{ gettext("Nhap_template_id") }}' {% if
+                                            mar_type_info_sms.mess %}value='{{ mar_type_info_sms.mess }}' {% endif %}>
+                                    </div>
+                                    {% elif merchant.sms_provider and merchant.sms_provider == 'GHD'%}
+                                    <div class="form-group">
+                                        <label style="margin-bottom: 12px;">Template Id gửi trước sinh nhật:</label>
+                                        <input class="form-control" id="happy-birthday-sms" name="happy_birthday"
+                                            rows="2" placeholder='{{ gettext("Nhap_template_id") }}' {% if
+                                            mar_type_info_sms.message %}value='{{ mar_type_info_sms.message }}' {% endif %}>
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="margin-bottom: 12px;">CP Id gửi trước sinh nhật:</label>
+                                        <input class="form-control" id="happy-birthday-sms-cp" name="happy_birthday_cp"
+                                            rows="2" placeholder='' {% if
+                                            mar_type_info_sms.mess_cp %}value='{{ mar_type_info_sms.mess_cp }}' {% endif %}>
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="margin-bottom: 12px;">Template Id gửi ngày sinh nhật:</label>
+                                        <input class="form-control" id="happy-birthday-sms" name="reminder_birthday"
+                                            rows="2" placeholder='{{ gettext("Nhap_template_id") }}' {% if
+                                            mar_type_info_sms.mess_reminder %}value='{{ mar_type_info_sms.mess_reminder }}' {% endif %}>
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="margin-bottom: 12px;">CP Id gửi ngày sinh nhật:</label>
+                                        <input class="form-control" id="happy-birthday-sms-cp" name="happy_birthday_reminder_cp"
+                                            rows="2" placeholder='' {% if
+                                            mar_type_info_sms.mess_reminder_cp %}value='{{ mar_type_info_sms.mess_reminder_cp }}' {% endif %}>
+                                    </div>
+
+                                    {% else %}
+                                    <label>
+                                        <legend style="font-size: 14px; margin-bottom: 0rem;">{{ gettext("Tin_nhan_SMS")
+                                            }} <span class="fe fe-help-circle" data-toggle="tooltip"
+                                                title="Để tự động gắn thêm tên khách hàng, mã khuyến mại thêm code &lbrace;&lbrace; name &rbrace;&rbrace;, &lbrace;&lbrace; coupon &rbrace;&rbrace;"></span>
+                                        </legend> <span class="badge badge-soft-primary ml-1 mt-n1"> <a
+                                                href="/black_list_keywords" target="_black">
+                                                {{ gettext("Danh_sach_cac_tu_cam_cua_nha_mang") }}
+                                            </a></span>
+                                    </label>
+
+                                    <textarea class="form-control" style="margin-top:10px;
+                      font-size: 16px;" id="happy-birthday-sms" name="happy_birthday" autofocus
+                                        placeholder='{{ gettext("Chao_{{ name }}.Chuc_ban_sinh_nhat_tran_hanh_phuc.") }}'
+                                        rows="2">{% if shop_select.sms.happy_birthday %}
+                                            {{ shop_select.sms.happy_birthday.message | default('') }}{% endif %}</textarea>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ gettext("Tin_nhan_Zalo") }}:
+                                    </label>
+                                    <textarea class="form-control" style="margin-top:10px;
+                      font-size: 16px;" id="happy-birthday-zalo" name="zalo_mess"
+                                        placeholder='{{ gettext("Chao_{{ name }}.Chuc_ban_sinh_nhat_tran_hanh_phuc.") }}'
+                                        title=' {{ gettext("Tin_nhan_Zalo_chi_duoc_gui_cho_khach_hang_da_quan_tam") }} Zalo_OA'
+                                        rows="2">{% if shop_select.sms.happy_birthday %}
+                                            {{ shop_select.sms.happy_birthday.zalo_mess | default('') }}{% endif %}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ gettext("Ten_chatbot_block_tu_Chatbot") }}</label>
+                                    <small class="form-text text-muted">
+                                        {{
+                                        gettext("Ten_block_can_nhap_dung_ten_ma_Chatbot_ban_tich_hop,_can_tich_hop_Chatbot_truoc_o_muc_Apps.")
+                                        }}
+                                    </small>
+                                    <textarea class="form-control" style="margin-top:10px;
+                      font-size: 16px;" id="happy-birthday-facebook" name="facebook_mess"
+                                        title='{{ gettext("Tin_nhan_Facebook_chi_duoc_gui_cho_khach_hang_da_chat_voi_Page") }}'
+                                        rows="2">{% if shop_select.sms.happy_birthday %}
+                                            {{ shop_select.sms.happy_birthday.facebook_mess | default('') }}{% endif %}</textarea>
+                                </div>
+                                <!-- Gui tin nhan ZNS -->
+                                <div class="form-group">
+                                    <label>{{ gettext("Tempid_da_dang_ky_voi_ZNS") }}</label>
+                                    <small class="form-text text-muted">
+                                        {{ gettext("Can_dang_ky_dich_vu_voi_nha_cung_cap_ZNS") }}
+                                    </small>
+                                    <input class="form-control" id="zns_mess" name="zns_mess" rows="2" {% if
+                                        mar_type_info_sms %} value="{{ mar_type_info_sms.zalo_zns_mess | default('') }}"
+                                        {% endif %}>
+
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ gettext("Noi_dung") }}Email <span
+                                            class="badge badge-soft-primary ml-1 mt-n1"><a href="#"
+                                                data-target="#select_email_template" data-toggle="modal">{{
+                                                gettext("Chon_mau") }} Email
+                                            </a> </span><span class="badge badge-soft-info ml-1 mt-n1"> <a
+                                                id="get_html_reviews">{{ gettext("Lay_code_danh_gia") }}
+                                            </a></span></label>
+                                    </span></label>
+                                    <input type="text" class="form-control form-control-appended"
+                                        id="birthday_title_mail" name="birthday_title_mail"
+                                        placeholder='{{ gettext("Tieu_de") }} Email'
+                                        value="
+                                                       {% if mar_type_info_email %}{% if mar_type_info_email.email_content %}{{ mar_type_info_email.email_content.title }}{% endif %}{% endif %}" />
+
+
+                                </div>
+                                <div class="form-group">
+                                    <div id="editor-container" style="width: 100%; height: 900px"></div>
+                                </div>
+                            </div>
+                            <div id="step_2" class="col-12 col-lg-6 col-xl-6">
+                                <hr>
+                                <div class="form-group mt-5">
+                                    <label for="welcome_type_coupon">{{ gettext("Loai_Coupon") }}:</label>
+                                    {% if shop_select.sms.happy_birthday %}
+                                    {% if shop_select.sms.happy_birthday
+                                    .type_coupon and shop_select.sms
+                                    .happy_birthday.type_coupon in
+                                    coupons_type_select_ids %}
+                                    <input type="hidden" id="ex_happy_birthday_type_coupon"
+                                        value="{{ shop_select.sms.happy_birthday.type_coupon }}" />
+                                    {% endif %}{% endif %}
+                                    <select name="happy_birthday_type_coupon" class="form-control"
+                                        id="happy_birthday_type_coupon">
+                                        <option value="no">{{ gettext("Khong") }}</option>
+                                        {% for coup in coupons_type_select %}
+                                        <option value="{{ coup._id }}">{{ coup.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <input type="hidden" id="birthday_coupon" name="birthday_coupon" />
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ gettext("Han_coupon(ngay)") }}:</label>
+                                    <input type="text" class="form-control" style="width: 100px"
+                                        value="
+                                                       {% if shop_select.sms.happy_birthday %}{% if shop_select.sms.happy_birthday.expire %}{{ shop_select.sms.happy_birthday.expire }}{% endif %}{% endif %}"
+                                        name="ex_happy_birthday" placeholder='{{ gettext("ngay") }}' />
+
+                                </div>
+                                <div class="form-group">
+
+                                    <div class="custom-control custom-checkbox checklist-control">
+                                        <input class="custom-control-input" id="auto_coupon" type="checkbox" {% if
+                                            shop_select.sms.happy_birthday %}{% if
+                                            shop_select.sms.happy_birthday.auto_coupon %}checked {% endif %}{% endif
+                                            %} />
+                                        <label class="custom-control-label" for="auto_coupon">
+                                            <span class="custom-control-caption">
+                                                {{ gettext("Tu_dong_tao_code_rieng_cho_moi_khach_hang") }}
+                                            </span> <small class="text-muted">
+                                                {{ gettext("Vi_du") }}: OFF10-123xyz.
+                                            </small>
+                                        </label>
+
+                                        <input type="hidden" value="" name="auto_coupon"
+                                            id="active_welcome_auto_coupon" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ gettext("Gioi_tinh") }}:</label>
+                                    {% if shop_select.sms.happy_birthday %}
+                                    {% if shop_select.sms.happy_birthday.gender %}
+                                    <input type="hidden" value="{{ shop_select.sms.happy_birthday.gender }}"
+                                        id="ex_happy_birthday_gender" />
+                                    {% endif %}
+                                    {% endif %}
+                                    <select class="form-control" id="happy_birthday_gender" name="happy_birthday_gender"
+                                        style="width: 100%">
+                                        <option value="all">{{ gettext("Tat_ca") }}</option>
+                                        <option value="0">{{ gettext("Chua_xac_dinh") }}</option>
+                                        <option value="1">{{ gettext("Nam") }}</option>
+                                        <option value="2">{{ gettext("Nu") }}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ gettext("Gui_tin_nhan_truoc_(ngay)") }}:</label>
+
+                                    <input type="text" class="form-control" style="width: 100px"
+                                        value="{% if shop_select.sms.happy_birthday %}{% if shop_select.sms.happy_birthday.date_send %}{{ shop_select.sms.happy_birthday.date_send }}{% endif %}{% endif %}"
+                                        name="bday_date_send" id="bday_date_send" />
+
+
+                                </div>
+                                <div class="form-group">
+                                    <label>Tags</label>
+                                    <select class="form-control form-control-lg custom-select" name="tags" id="tags"
+                                        multiple="multiple">
+
+                                        {% for tag in tags %}
+                                        <option value="{{ tag._id }}" {% if mar_type_info_sms and mar_type_info_sms.tags
+                                            and tag._id in mar_type_info_sms.tags %}selected {% endif %}>{{ tag.name }}
+                                        </option>
+                                        {% endfor %}
+
+                                    </select>
+                                    <input type="hidden" id="tags_selects" name="tags_selects" />
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ gettext("Kenh_gui") }}:
+                                    </label>
+
+                                    <div class="custom-control custom-checkbox checklist-control">
+                                        <input class="custom-control-input" type="checkbox" id="active_birthday" {% if
+                                            shop_select.sms.happy_birthday %}{% if shop_select.sms.happy_birthday.active
+                                            %}checked {% endif %}{% endif %}>
+                                        <label class="custom-control-label" for="active_birthday">
+                                            <span class="custom-control-caption">
+                                                SMS
+                                            </span>
+                                            <small class="text-muted">
+                                                {{ gettext("Can_tich_hop") }} SMS Brandname.
+                                            </small>
+                                        </label>
+
+                                    </div>
+                                    <input type="hidden" value="" name="active_birthday" id="active_birthday_val" />
+
+                                    <div class="custom-control custom-checkbox checklist-control">
+                                        <input class="custom-control-input" type="checkbox"
+                                            id="mail_happy_birthday_choice" {% if shop_select.sms.happy_birthday %}{% if
+                                            shop_select.sms.happy_birthday.mail %}checked {% endif %}{% endif %}>
+                                        <label class="custom-control-label" for="mail_happy_birthday_choice">
+                                            <span class="custom-control-caption">
+                                                Email</span> <small class="text-muted">
+                                                {{ gettext("Can_tich_hop") }} Email Server.
+                                            </small>
+                                        </label>
+
+
+                                    </div>
+                                    <input type="hidden" value="" name="mail_happy_birthday"
+                                        id="mail_happy_birthday_val" />
+
+
+
+                                    <div class="custom-control custom-checkbox checklist-control">
+                                        <input class="custom-control-input" type="checkbox" id="zalo_happy_birthday" {%
+                                            if shop_select.sms.happy_birthday %}{% if
+                                            shop_select.sms.happy_birthday.zalo %}checked {% endif %}{% endif %}>
+                                        <label class="custom-control-label" for="zalo_happy_birthday">
+                                            <span class="custom-control-caption">
+                                                Zalo
+                                            </span>
+                                            <small class="text-muted">
+                                                {{ gettext("Chi_gui_cho_khach_hang_da_theo_doi") }} Zalo OA.
+                                            </small>
+                                        </label>
+
+                                    </div>
+                                    <input type="hidden" value="" name="zalo_happy_birthday"
+                                        id="zalo_happy_birthday_val" />
+
+                                    <div class="custom-control custom-checkbox checklist-control">
+                                        <input class="custom-control-input" type="checkbox" id="facebook_happy_birthday"
+                                            {% if shop_select.sms.happy_birthday %}{% if
+                                            shop_select.sms.happy_birthday.facebook %}checked {% endif %}{% endif %}>
+                                        <label class="custom-control-label" for="facebook_happy_birthday">
+                                            <span class="custom-control-caption">
+                                                Facebook Messenger </span> <small class="text-muted">
+                                                {{ gettext("Chi_gui_cho_khach_hang_co") }} Facebook Messenger ID.
+                                            </small>
+                                        </label>
+
+
+                                    </div>
+                                    <input type="hidden" value="" name="facebook_happy_birthday"
+                                        id="facebook_happy_birthday_val" />
+
+                                    <div class="custom-control custom-checkbox checklist-control">
+                                        <input class="custom-control-input" id="zns_happy_birthday" type="checkbox" {%
+                                            if mar_type_info_sms %}{% if mar_type_info_sms.zalo_zns %}checked {% endif
+                                            %}{% endif %} />
+                                        <label class="custom-control-label" for="zns_happy_birthday">
+                                            <span class="custom-control-caption">
+                                                Zalo ZNS </span> <small class="text-muted">
+                                                {{ gettext("Can_dang_ky_dich_vu_cua_ZNS") }}
+                                            </small>
+                                        </label>
+
+
+                                        <input type="hidden" value="" name="zns_happy_birthday"
+                                            id="zns_happy_birthday_val" />
+                                    </div>
+
+                                    <div class="custom-control custom-checkbox checklist-control">
+                                        <input class="custom-control-input" type="checkbox" id="reminder_birthday" {% if
+                                            shop_select.sms.happy_birthday %}{% if
+                                            shop_select.sms.happy_birthday.reminder %}checked {% endif %}{% endif %}>
+                                        <label class="custom-control-label" for="reminder_birthday">{{
+                                            gettext("Nhac_lai_vao_sinh_nhat") }}</label>
+                                    </div>
+
+                                    <input type="hidden" value="" name="reminder_bday" id="reminder_birthday_val" />
+                                </div>
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id_select" />
+
+<div class="c-modal c-modal--xlarge modal fade" id="select_email_template" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="c-modal__dialog modal-dialog" style="max-width: 80%; height: auto">
+        <div class="c-modal__content modal-content">
+            <div class="modal-card card" data-toggle="lists" data-lists-values="[&quot;name&quot;]">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Title -->
+                            <h4 class="card-header-title" id="exampleModalCenterTitle">
+                                {{ gettext("Chon_mau") }} Email
+                            </h4>
+
+                        </div>
+                        <div class="col-12 col-md-6 col-xl-3">
+                            <select class="form-control" style="width: 100%;" id="select_branch">
+                                <option value="all">{{ gettext("Chon_nganh_kinh_doanh") }}</option>
+                                <option value="restaurant_coffee">{{ gettext("Nha_hang_-_Cofee") }}</option>
+                                <option value="fitness_spa">Fitness- Spa</option>
+                                <option value="retail">{{ gettext("Ban_le") }}</option>
+                                <option value="hospital">{{ gettext("Benh_vien_-_Phong_kham") }}</option>
+                                <option value="hotel_resort">{{ gettext("Khach_san_-_Resort") }}</option>
+                                <option value="bar_club">Bar- Club</option>
+
+
+                            </select>
+
+                        </div>
+                        <div class="col-auto">
+
+                            <!-- Close -->
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+
+                        </div>
+                    </div> <!-- / .row -->
+                </div>
+
+                <div class="card-body" id="email_templates" style="max-height: none; overflow-y: auto;">
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal hide fade" id="text_html" tabindex="-1" role="dialog" aria-labelledby="text_html"
+    data-backdrop="static" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Text HTML</h3>
+
+                <a class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </a>
+            </div>
+
+            <div class="modal-body">
+                <form method="POST" id="login_form_settings" enctype="multipart/form-data">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 u-mb-medium">
+                            <textarea class="form-control" id="content_html" name="content_html" type="text"
+                                style="min-height: 500px;"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden"
+    value="
+            {% if mar_type_info_email %}{% if mar_type_info_email.email_content %}{{ mar_type_info_email.email_content.design }} {% endif %}{% endif %}"
+    id="email_ex_design" />
+
+{% endblock %}
+
+{% block js %}
+<script src="/static/nextify/js/jquery.bootpag.min.js"></script>
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $('#tags').select2({
+            dropdownAutoWidth: true
+        });
+        $.ajax({
+            url: "/marketing_automation/select_email_template", success: function (result) {
+                //alert("success"+result);
+                $("#email_templates").empty();
+                $("#email_templates").append(result);
+
+            }
+        });
+        $('#step_1').show();
+        $('#step_2').hide();
+        $('#back').hide();
+        $('#save_birthday').hide();
+
+        $('#target').click(function () {
+            $('#li_step_1').removeClass("active");
+            $('#li_step_2').addClass("active");
+            $('#back').show();
+            $('#save_birthday').show();
+            $('#target').hide();
+            $('#step_1').hide();
+            $('#step_2').show();
+
+        });
+
+        $('#back').click(function () {
+
+            $('#li_step_1').addClass("active");
+            $('#li_step_2').removeClass("active");
+            $('#back').hide();
+            $('#save_birthday').hide();
+            $('#target').show();
+            $('#step_1').show();
+            $('#step_2').hide();
+        });
+        $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+        $('input').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+        $('#shop_in_mer').val($('#shop_id_select').val()).trigger('change');
+        $('#shop_in_mer').on("select2:select", function (e) {
+            var shop_id = $('#shop_in_mer').val();
+            var url = "/marketing_automation/" + shop_id;
+            $(location).attr('href', url);
+        });
+        $('textarea').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+        $('input').each(function () {
+            $(this).val($(this).val().trim());
+        }
+        );
+
+        $("#save_happy_birthday_mail").click(function () {
+            $("#happy_birthday_form_content_mail").submit();
+        });
+
+
+
+
+        if ($("#ex_happy_birthday_type_coupon").length > 0) {
+            $('#happy_birthday_type_coupon').val($("#ex_happy_birthday_type_coupon").val())
+                .trigger("change");
+            $('#happy_birthday_coupon').val($('#happy_birthday_type_coupon').val().toString());
+        }
+        if ($("#ex_happy_birthday_gender").length > 0) {
+            $("#happy_birthday_gender").val($("#ex_happy_birthday_gender").val());
+        }
+
+
+        if ($("#ex_happy_birthday_ranks").length > 0) {
+            $("#happy_birthday_ranks").val($("#ex_happy_birthday_ranks").val());
+        }
+        $("#facebook_happy_birthday").change(function () {
+            if (this.checked) {
+                var block_name = $('#happy-birthday-facebook').val();
+                if (block_name.length == 0) {
+                    swal('{{ gettext("Ten_chatbot_block_khong_duoc_de_trong") }}', " ", "error");
+                    $('#facebook_happy_birthday').prop('checked', false);
+                    return false;
+                }
+            }
+        });
+
+        $("#zns_happy_birthday").change(function () {
+            if (this.checked) {
+                var block_name = $('#zns_mess').val();
+                var sign_zns = $('#sign_zns').val();
+                if (sign_zns == "True") {
+                    if (block_name.length == 0) {
+                        swal('{{ gettext("TempID_khong_duoc_de_trong") }}', '', 'error');
+                        $('#zns_happy_birthday').prop('checked', false);
+                        return false;
+                    }
+                }
+                else {
+                    swal('{{ gettext("Ban_phai_dang_ky_dich_vu_zns,_xin_thu_lai_sau") }}', '', 'error');
+                    $('#zns_happy_birthday').prop('checked', false);
+                    return false;
+                }
+
+            }
+        });
+
+        $("#get_html_reviews").click(function () {
+            var shop_id = $('#shop_id_select').val()
+            $.ajax({
+                type: "POST",
+                url: "/get_code_html_reviews",
+                data: {
+                    'result': "OK",
+                    'shop_id': shop_id
+
+                },
+                success: function (data) {
+
+                    $("#content_html").val(data);
+                    $("#text_html").modal("show");
+                }
+            });
+        });
+
+        $("#save_birthday").click(function () {
+            var keywords = ['CTKM', 'Communist', 'Dang VN', 'Dang cong san', 'SUCK', 'Tinh duc', 'alcohol', 'bieu tinh',
+                'call boy', 'call girl', 'chan dai', 'chong My', 'chong Trung Quoc', 'cigarette', 'demonstrate',
+                'demonstration', 'dit cha', 'dit con me', 'dit me', 'fuck', 'gai goi', 'game online', 'hotgirl',
+                'khuyen mai', 'lo de', 'long leg', 'postitude', 'quang cao', 'ruou', 'sex', 'soi cau', 'soicau',
+                'suck', 'thuoc la', 'tobbaco', 'trai bao', 'ty le ca cuoc', 'giam gia', 'uu dai', 'chiet khau',
+                'trung thuong', 'rut tham', 'sale', 'free', 'co hoi nhan', 'mien phi', 'Qua tang', 'C/K x %',
+                'chiet khau x %', 'dit', 'lon'];
+            for (i = 0; i < keywords.length; i++) {
+                var happy_birthday_sms = $("#happy-birthday-sms").val();
+                if (happy_birthday_sms.includes(keywords[i])) {
+                    swal('SMS {{ gettext("Su_dung_tu_cam") }}', '', 'error');
+                    return false;
+                }
+                var zalo_mess = $("#happy-birthday-zalo").val();
+                if (zalo_mess.includes(keywords[i])) {
+                    swal('ZALO {{ gettext("Su_dung_tu_cam") }}', '', 'error');
+                    return false;
+                }
+            }
+            if ($("#bday_date_send").val().length == 0 || $("#bday_date_send").val() == '0') {
+                swal('{{ gettext("Vui_long_nhap_so_ngay_nhac_truoc_sinh_nhat") }}', '', 'error');
+                return false;
+            }
+            var tags = $("#tags").val();
+            unlayer.exportHtml(function (data) {
+                var json = data.design; // design json
+                var html = data.html; // final html
+                $("#design").val(JSON.stringify(json));
+                $("#birthday_content_mail").val(html);
+                $("#active_birthday_val").val($("#active_birthday").is(":checked"));
+                $("#mail_happy_birthday_val").val($("#mail_happy_birthday_choice").is(":checked"));
+                $("#zalo_happy_birthday_val").val($("#zalo_happy_birthday").is(":checked"));
+                $("#facebook_happy_birthday_val").val($("#facebook_happy_birthday").is(":checked"));
+                $("#reminder_birthday_val").val($("#reminder_birthday").is(":checked"));
+                $("#zns_happy_birthday_val").val($("#zns_happy_birthday").is(":checked"));
+                $("#active_welcome_auto_coupon").val($("#auto_coupon").is(":checked"));
+                $("#tags_selects").val(tags);
+                var status = $("#status").val();
+                if (!status) {
+                    Swal.fire({
+                        title: ngettext("Ban_chua_kich_hoat_chien_dich,_ban_co_muon_kich_hoat_chien_dich_khong?"),
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        focusCancel: true,
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Có!',
+                        cancelButtonText: ngettext("Khong!")
+                    }).then((result) => {
+                        if (result.value) {
+                            $("#status").val('True');
+                            $("#birthday_form").submit();
+                            // swal(ngettext("Thanh_cong"), '', 'success');
+                            // var url = '/marketing_automation/{{ shop_select._id }}';
+                            // location.href = url;
+                        }
+                        else {
+                            $("#birthday_form").submit();
+                            // swal(ngettext("Thanh_cong"), '', 'success');
+                            // var url = '/marketing_automation/{{ shop_select._id }}';
+                            // location.href = url;
+                        }
+                    })
+                }
+                else {
+                    Swal.fire({
+                        title: ngettext("Ban_co_chac_chan_muon_luu_khong?"),
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        focusCancel: true,
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Có!',
+                        cancelButtonText: ngettext("Khong!")
+                    }).then((result) => {
+                        if (result.value) {
+                            $("#is_save").val('True');
+                            $("#birthday_form").submit();
+                            // swal(ngettext("Thanh_cong"), '', 'success');
+                            // var url = '/marketing_automation/{{ shop_select._id }}';
+                            // location.href = url;
+
+                        }
+
+                    })
+                }
+
+            });
+        });
+
+        unlayer.init({
+            id: 'editor-container',
+            locale: 'vi-VN',
+            translations: {
+                'vi-VN': {
+                    "buttons.add_column": "Thêm cột",
+                    "buttons.add_content": "Thêm nội dung",
+                    "buttons.add_display_condition": "Thêm điều kiện hiển thị",
+                    "buttons.add_field": "Thêm trường",
+                    "buttons.add_new_field": "Thêm trường mới",
+                    "buttons.add_new_item": "Thêm ",
+                    "buttons.add_row": "Thêm dòng",
+                    "buttons.add_text": "Thêm văn bản",
+                    "buttons.apply": "Áp dụng",
+                    "buttons.apply_effects": "Áp dụng hiệu ứng",
+                    "buttons.back": "Quay lại",
+                    "buttons.background": "Màu nền",
+                    "buttons.cancel": "Hủy",
+                    "buttons.change": "Thay đổi",
+                    "buttons.change_image": "Thay hình ảnh",
+                    "buttons.close": "Đóng",
+                    "buttons.comment": "Bình luận",
+                    "buttons.corners": "Bo viền",
+                    "buttons.crop": "Cắt",
+                    "buttons.delete": "Xóa",
+                    "buttons.deselect": "Hủy lựa chọn",
+                    "buttons.desktop": "Máy tính",
+                    "buttons.done": "Hoàn thành",
+                    "buttons.draw": "Vẽ",
+                    "buttons.drawing": "Đang vẽ",
+                    "buttons.duplicate": "Nhân bản",
+                    "buttons.duplication_disabled_usage_limit": "Bạn không thể tạo bản sao do có giới hạn sử dụng",
+                    "buttons.edit": "Chỉnh sửa",
+                    "buttons.filter": "Bộ lọc",
+                    "buttons.frame": "Khung",
+                    "buttons.history": "Lịch sử",
+                    "buttons.merge": "Gộp",
+                    "buttons.mobile": "Điện thoại",
+                    "buttons.more_options": "Thêm tùy chọn",
+                    "buttons.open": "Mở",
+                    "buttons.remove_column": "Xóa cột",
+                    "buttons.reset": "Đặt lại",
+                    "buttons.reset_value": "Đặt lại Giá trị",
+                    "buttons.resize": "Đổi kích thước",
+                    "buttons.save": "Lưu",
+                    "buttons.select": "Chọn",
+                    "buttons.shape": "Hình",
+                    "buttons.shapes": "Hình",
+                    "buttons.show_fewer_options": "Ẩn các tùy chọn thêm",
+                    "buttons.show_more_options": "Tùy chọn thêm",
+                    "buttons.sticker": "Nhãn dán",
+                    "buttons.stickers": "Nhãn dán",
+                    "buttons.tablet": "Máy tính bảng",
+                    "buttons.transform": "Xoay",
+                    "buttons.update_field": "Cập nhật",
+                    "buttons.upload": "Tải lên",
+                    "buttons.upload_image": "Tải lên hình ảnh",
+                    "buttons.zoom": "Zoom",
+                    "collaboration.add_comment": "Thêm bình luận",
+                    "collaboration.empty.subtitle": "Chủ đề của bạn ở đây",
+                    "collaboration.empty.title": "Cộng tác nhóm trở nên dễ dàng!",
+                    "collaboration.empty_filtered.subtitle": "phù hợp với bộ lọc của bạn",
+                    "collaboration.empty_filtered.title": "Không tìm thấy chủ đề",
+                    "collaboration.exit_mode": "Đóng bình luận",
+                    "collaboration.filters.all": "Tất cả",
+                    "collaboration.filters.only_yours": "Chỉ của bạn",
+                    "collaboration.filters.resolved": "Đã giải quyết",
+                    "collaboration.follow_docs_to_setup": "Làm theo tài liệu để thiết lập cộng tác nhóm",
+                    "collaboration.leave_repply": "Để lại câu trả lời",
+                    "collaboration.login_to_collaborate": "Bạn cần đăng nhập để có thể cộng tác",
+                    "collaboration.panel.threads": "Chủ đề",
+                    "collaboration.replies.n": "{n} câu trả lời",
+                    "collaboration.replies.none": "Không có câu trả lời",
+                    "collaboration.resolve": "Giải quyết",
+                    "collaboration.resolved": "Đã giải quyết",
+                    "collaboration.types.feedback": "Phản hồi",
+                    "collaboration.types.idea": "Ý kiến",
+                    "collaboration.types.question": "Câu hỏi",
+                    "collaboration.types.urgent": "Khẩn cấp",
+                    "colors.black": "Đen",
+                    "colors.ruby": "Ruby",
+                    "colors.white": "Trắng",
+                    "content_tools.button": "Nút",
+                    "content_tools.columns": "Cột",
+                    "content_tools.divider": "Vạch ngăn",
+                    "content_tools.form": "Form",
+                    "content_tools.heading": "Tiêu đề",
+                    "content_tools.html": "HTML",
+                    "content_tools.image": "Hình ảnh",
+                    "content_tools.menu": "Danh mục",
+                    "content_tools.social": "Social",
+                    "content_tools.text": "Văn bản",
+                    "content_tools.timer": "Timer",
+                    "content_tools.video": "Video",
+                    "editor.action_type.label": "Loại hành động",
+                    "editor.align.label": "Căn lề",
+                    "editor.alignment.label": "Căn lề",
+                    "editor.all_sides.label": "Áp dụng cho tất cả",
+                    "editor.alternate_text.label": "Văn bản thay thế",
+                    "editor.anchor.section_already_exists": "Đã tồn tại một mục khác trên trang trùng tên này",
+                    "editor.background_color.label": "Màu nền",
+                    "editor.background_image.center": "Giữa",
+                    "editor.background_image.cover_mode": "Chế độ hiển thị",
+                    "editor.background_image.full_width": "Chiều rộng tối đa",
+                    "editor.background_image.label": "Ảnh nền",
+                    "editor.background_image.repeat": "Lặp lại",
+                    "editor.border.dashed": "Gạch ngang",
+                    "editor.border.dotted": "Chấm",
+                    "editor.border.label": "Khung viền",
+                    "editor.border.solid": "Nét liền",
+                    "editor.bottom.label": "Dưới",
+                    "editor.bottom_left.label": "Góc trái bên dưới",
+                    "editor.bottom_right.label": "Góc phải bên dưới",
+                    "editor.button_link.label": "Nút liên kết",
+                    "editor.color.label": "Màu chữ",
+                    "editor.colors.label": "Màu",
+                    "editor.columns_background.label": "Màu cột",
+                    "editor.container_padding.label": "Phần bao nội dung",
+                    "editor.content_alignment.label": "Căn lề",
+                    "editor.content_background_color.label": "Màu nền nội dung",
+                    "editor.content_width.label": "Chiều rộng",
+                    "editor.digits_color.label": "Màu số",
+                    "editor.digits_font.label": "Font số",
+                    "editor.digits_font_size.label": "Kích thước số",
+                    "editor.do_not_stack_on_mobile.label": "Không đè lên trên điện thoại",
+                    "editor.end_time.label": "Thời gian kết thúc",
+                    "editor.fields.label": "Các trường",
+                    "editor.font_family.label": "Font chữ",
+                    "editor.font_size.label": "Cỡ chữ",
+                    "editor.form.custom": "Tùy chỉnh",
+                    "editor.form.method": "Method",
+                    "editor.form_alignment.label": "Căn lề",
+                    "editor.form_width.label": "Chiều rộng",
+                    "editor.full_width.label": "Chiều rộng tối đa",
+                    "editor.heading_type.label": "Kiểu tiêu đề",
+                    "editor.height.label": "Chiều cao",
+                    "editor.hide_on_desktop.label": "Ẩn trên máy tính",
+                    "editor.hide_on_mobile.label": "Ẩn trên điện thoại",
+                    "editor.hover_background.label": "Màu nền khi di chuột",
+                    "editor.hover_color.label": "Mà khi di chuột",
+                    "editor.hover_text.label": "Màu văn bản khi di chuột",
+                    "editor.hover_underline.label": "Gạch chân khi di chuột",
+                    "editor.icon_spacing.label": "Khoảng cách Icon",
+                    "editor.icon_type.label": "Loại Icon",
+                    "editor.image.added_drawing": "Đã thêm: bản vẽ",
+                    "editor.image.added_frame": "Đã thêm: khung",
+                    "editor.image.added_overlay_image": "Đã thêm: lớp phủ",
+                    "editor.image.added_shape": "Đã thêm: hình",
+                    "editor.image.added_sticker": "Đã thêm: nhãn dán",
+                    "editor.image.added_text": "Đã thêm: văn bản",
+                    "editor.image.applied_crop": "Đã áp dụng: Cắt ảnh",
+                    "editor.image.applied_filter": "Đã áp dụng: bộ lọc",
+                    "editor.image.applied_resize": "Đã áp dụng: thay đổi kích thước",
+                    "editor.image.applied_rounded_corners": "Đã áp dụng: bo tròn góc",
+                    "editor.image.applied_transform": "Đã áp dụng: xoay ảnh",
+                    "editor.image.auto": "Tự động",
+                    "editor.image.auto_width": "Chiều rộng tự động",
+                    "editor.image.auto_width_switch_off": "Tắt chiều rộng tự động để thay đổi kích thước hình ảnh theo cách thủ công",
+                    "editor.image.brush_color": "Màu bút",
+                    "editor.image.brush_size": "Kích thước bút",
+                    "editor.image.brush_type": "Kiểu bút",
+                    "editor.image.canvas_background": "Nền Canvas",
+                    "editor.image.changed_background": "Đã đổi: nền",
+                    "editor.image.changed_background_image": "Đã đổi: Hình nền",
+                    "editor.image.changed_style": "Đã đổi: giao diện",
+                    "editor.image.drop_upload": "Kéo thả hình ảnh hoặc chọn một tệp tin",
+                    "editor.image.full_width_mobile": "Chiều rộng đầy đủ trên điện thoại",
+                    "editor.image.image_options": "Cài đặt hình ảnh",
+                    "editor.image.image_url": "URL Hình ảnh",
+                    "editor.image.initial": "Khởi tạo",
+                    "editor.image.label": "Hình ảnh",
+                    "editor.image.loaded_state": "Đã tải: trạng thái",
+                    "editor.image.maintain_aspect_ratio": "Duy trì tỷ lệ khung hình",
+                    "editor.image.main_image": "Hình ảnh chính",
+                    "editor.image.objects_merged": "Đối tượng: đã gộp",
+                    "editor.image.offset_x": "Offset X",
+                    "editor.image.offset_y": "Offset Y",
+                    "editor.image.outline_width": "Chiều rộng viền",
+                    "editor.image.uploading": "Đang tải lên",
+                    "editor.image.upload_error": "Đã xảy ra lỗi khi tải lên hình ảnh. Hãy chắc chắn rằng ảnh của bạn có dung lượng nhỏ hơn 10 MB.",
+                    "editor.image.use_percentages": "Sử dụng phần trăm",
+                    "editor.image_link.label": "Đường dẫn ảnh",
+                    "editor.inherit_body_styles.label": "Giao diện mặc định",
+                    "editor.labels.web": "Web",
+                    "editor.labels_color.label": "Màu nhãn",
+                    "editor.labels_font.label": "Font nhãn",
+                    "editor.labels_font_size.label": "Kích thước nhãn",
+                    "editor.layout.label": "Bố cục",
+                    "editor.left.label": "Trái",
+                    "editor.line.label": "Dòng",
+                    "editor.line_height.label": "Chiều cao giữa các dòng",
+                    "editor.link.body": "Thân",
+                    "editor.link.call_phone": "Gọi điện",
+                    "editor.link.mailto": "Gửi mail đến",
+                    "editor.link.new_tab": "Mở tab mới",
+                    "editor.link.no_page_sections_found": "Không tìm thấy mục trên trang nào",
+                    "editor.link.onclick_unsupported": "Không hỗ trợ nhấp vào",
+                    "editor.link.open_website": "Mở trang Web",
+                    "editor.link.page_section": "Đi tới Mục trên trang",
+                    "editor.link.phone": "Điện thoại",
+                    "editor.link.same_tab": "Tab hiện tại",
+                    "editor.link.send_email": "Gửi Email",
+                    "editor.link.send_sms": "Gửi SMS",
+                    "editor.link.subject": "Chủ đề",
+                    "editor.link.target": "Đích đến",
+                    "editor.link.url": "URL",
+                    "editor.link_color.label": "Màu đường dẫn",
+                    "editor.margin.label": "Khoảng cách lề",
+                    "editor.mobile.description": "Bạn hiện đang chỉnh sửa cho thiết bị Di động. Chuyển sang Máy tính để các tùy chỉnh hiển thị chính xác.",
+                    "editor.offline_mode_is_enabled": "Chế độ ngoại tuyến được bật",
+                    "editor.padding.label": "Khoảng trống giữa nội dung",
+                    "editor.placeholder.text": "Chưa có nội dung, hãy kéo các khối tại tab bên phải",
+                    "editor.placeholder.text.left": "Không có nội dung ở đây. Hãy kéo nội dung từ bên trái.",
+                    "editor.play_icon_color.label": "Màu Icon Phát",
+                    "editor.play_icon_size.label": "Kích thước Icon Phát",
+                    "editor.play_icon_type.label": "Kiểu Icon Phát",
+                    "editor.preheader_text.description": "Tiêu đề trước là văn bản tóm tắt ngắn sau dòng chủ đề khi xem email từ hộp thư đến.",
+                    "editor.preheader_text.label": "Văn bản đầu trang",
+                    "editor.right.label": "Phải",
+                    "editor.rounded_border.label": "Bo góc",
+                    "editor.section_name.description": "Tên mục được sử dụng để liên kết trong một trang. Nó giống như một điểm tựa cho các nút hoặc liên kết.",
+                    "editor.section_name.label": "Tên mục",
+                    "editor.separator.label": "Dấu phân cách",
+                    "editor.social_links.label": "Mạng xã hội",
+                    "editor.space_between_fields.label": "Khoảng cách giữa các trường",
+                    "editor.submit_action.label": "Hành động submit",
+                    "editor.text.label": "Văn bản",
+                    "editor.text_align.label": "Căn chỉnh văn bản",
+                    "editor.text_color.label": "Màu chữ",
+                    "editor.top.label": "Trên",
+                    "editor.top_left.label": "Góc trái bên trên",
+                    "editor.top_right.label": "Góc phải bên trên",
+                    "editor.underline.label": "Gạch chân",
+                    "editor.video.arrow_only": "Chỉ gồm mũi tên",
+                    "editor.video.video_camera": "Video Camera",
+                    "editor.video_url.description": "Thêm URL YouTube hoặc Vimeo để tự động tạo hình ảnh xem trước. Hình ảnh sẽ liên kết đến URL được cung cấp.",
+                    "editor.video_url.label": "URL Video",
+                    "editor.width.label": "Chiều rộng",
+                    "editors_panel.title.content": "Nội dung",
+                    "editors_panel.title.contents": "Nội dung",
+                    "editors_panel.title.rows": "Dòng",
+                    "fields.birthday": "Sinh nhật",
+                    "fields.company": "Công ty",
+                    "fields.name": "Tên",
+                    "fields.phone_number": "Số điện thoại",
+                    "fields.website": "Website",
+                    "fields.zip_code": "Zip Code",
+                    "inbox_preview.design_updated": "Thiết kế đã được cập nhật sau lần tạo bản xem trước cuối cùng của bạn",
+                    "labels.align_text": "Căn chỉnh văn bản",
+                    "labels.blur": "Làm mờ",
+                    "labels.category": "Danh mục",
+                    "labels.color_picker": "Chọn màu",
+                    "labels.comments": "Bình luận",
+                    "labels.desktop_preview": "Xem trước trên máy tính",
+                    "labels.device_override": "Thiết bị này đang ghi đè các giá trị",
+                    "labels.display_conditions": "Điều kiện hiển thị",
+                    "labels.editor": "Trình chỉnh sửa",
+                    "labels.font": "Font",
+                    "labels.format_text": "Định dạng văn bản",
+                    "labels.google_fonts": "Google Fonts",
+                    "labels.gradient": "Gradient",
+                    "labels.hide": "Ẩn",
+                    "labels.horizontal": "Ngang",
+                    "labels.language": "Ngôn ngữ",
+                    "labels.loading": "Đang tải",
+                    "labels.loading_images": "Đang tải hình ảnh",
+                    "labels.load_more": "Xem thêm",
+                    "labels.menu.links": "Liên kết bảng chọn",
+                    "labels.merge_tags": "Gộp nhãn",
+                    "labels.mobile_preview": "Xem trước trên điện thoại",
+                    "labels.new": "Mới",
+                    "labels.no_images": "Không có hình ảnh",
+                    "labels.no_results": "Không có kết quả",
+                    "labels.objects": "Đối tượng",
+                    "labels.outline": "Viền ngoài",
+                    "labels.page": "Trang",
+                    "labels.radius": "Bo viền",
+                    "labels.redo": "Khôi phục",
+                    "labels.safe_search": "Tìm kiếm an toàn",
+                    "labels.search": "Tìm kiếm",
+                    "labels.search_images": "Tìm kiếm hàng triệu hình ảnh",
+                    "labels.section": "Mục",
+                    "labels.shadow": "Đổ bóng",
+                    "labels.size": "Kích thước",
+                    "labels.something_went_wrong": "Đã xảy ra sự cố",
+                    "labels.special_links": "Liên kết đặc biệt",
+                    "labels.stock_photos_by": "Bản quyền thuộc về Unsplash, Pexels, Pixabay.",
+                    "labels.stock_photos_license": "All images licensed under Creative Commons Zero.",
+                    "labels.stop": "Dừng lại",
+                    "labels.tags": "Nhãn",
+                    "labels.texture": "Texture",
+                    "labels.text_style": "Kiểu chữ",
+                    "labels.timezone": "Timezone",
+                    "labels.undo": "Hoàn tác",
+                    "labels.vertical": "Dọc",
+                    "modals.category.invalid": "Tên danh mục không hợp lệ",
+                    "modals.category.placeholder": "Tên danh mục",
+                    "modals.delete.columns": "Bạn sẽ mất một số cột. Bạn có chắc chắn?",
+                    "modals.delete.confirmation": "Bạn có chắc chắn muốn xóa, hành động này không thể hoàn tác?",
+                    "modals.delete.title": "Xóa",
+                    "modals.display_conditions.title": "Chọn điều kiện hiển thị",
+                    "modals.preview.inbox_preview.button.generate_previews": "Tạo bản xem trước",
+                    "modals.preview.inbox_preview.label": "Xem trước Hộp thư đến",
+                    "modals.preview.inbox_preview.label.generating_again": "Tạo lại",
+                    "modals.preview.inbox_preview.label.generating_previews": "Đang tạo bản xem trước",
+                    "modals.preview.inbox_preview.text.generate_previews": "Hãy kiểm tra mẫu của bạn trông như thế nào trong hộp thư đến của các thiết bị và dịch vụ email khác nhau.",
+                    "modals.preview.title": "Xem trước",
+                    "modals.save_block.title": "Save Block",
+                    "modals.tags.description": "Thẻ được sử dụng để tìm kiếm. Các thẻ sẽ được phân cách bởi dấu phẩy.",
+                    "modals.tags.placeholder": "tag1, tag2",
+                    "option_groups.action.title": "Hành động",
+                    "option_groups.all.title": "Tất cả",
+                    "option_groups.blank.title": "Trống",
+                    "option_groups.button.title": "Nút",
+                    "option_groups.button_options.title": "Tùy chọn về Nút",
+                    "option_groups.colors.title": "Màu sắc",
+                    "option_groups.columns.title": "Cột",
+                    "option_groups.column_number.title": "Cột {number}",
+                    "option_groups.column_properties.title": "Thuộc tính cột",
+                    "option_groups.countdown.title": "Đếm ngược",
+                    "option_groups.default.title": "Cài đặt chung",
+                    "option_groups.display_condition.title": "Điều kiện hiển thị",
+                    "option_groups.email_settings.title": "Cài đặt Email",
+                    "option_groups.fields.title": "Trường",
+                    "option_groups.form.title": "Form",
+                    "option_groups.html.title": "HTML",
+                    "option_groups.icons.title": "Icons",
+                    "option_groups.image.title": "Hình ảnh",
+                    "option_groups.labels.title": "Nhãn",
+                    "option_groups.last_saved.title": "Đã lưu lại",
+                    "option_groups.layout.title": "Bố cục",
+                    "option_groups.line.title": "Hàng",
+                    "option_groups.link.title": "Đường dẫn",
+                    "option_groups.links.title": "Đường dẫn",
+                    "option_groups.menu_items.title": "Mục lục",
+                    "option_groups.mobile.title": "Điện thoại",
+                    "option_groups.responsive_design.title": "Tùy chỉnh trên thiết bị",
+                    "option_groups.row_properties.title": "Thuộc tính dòng",
+                    "option_groups.size.title": "Kích thước",
+                    "option_groups.spacing.title": "Khoảng cách",
+                    "option_groups.styles.title": "Giao diện",
+                    "option_groups.text.title": "Văn bản",
+                    "shapes.circle": "Hình tròn",
+                    "shapes.rectangle": "Hình tam giác",
+                    "shapes.round": "Hình vuông bo góc",
+                    "shapes.square": "Hình vuông",
+                    "sizes.large": "Lớn",
+                    "sizes.largest": "Rất lớn",
+                    "sizes.medium": "Vừa",
+                    "sizes.small": "Nhỏ",
+                    "sizes.smallest": "Rất nhỏ",
+                    "tabs.audit.empty.description": "Kiểm kê là nơi bạn có thể thấy mọi vấn đề trong thiết kế và nội dung của mình.",
+                    "tabs.audit.empty.subtitle": "Ổn cả rồi!",
+                    "tabs.audit.empty.title": "HIện không có vấn đề gì",
+                    "tabs.audit.missing_image_src": "Còn thiếu URL ảnh",
+                    "tabs.audit.missing_title": "Còn thiếu tiêu đề kiểm kê",
+                    "tabs.audit.missing_tool_name": "Không tìm thấy tên công cụ",
+                    "tabs.audit.rules.button.empty_links.description": "Nếu thiếu liên kết, các nút sẽ không hoạt động khi người dùng bấm vào nó. Hãy thêm liên kết cho các nút sau.",
+                    "tabs.audit.rules.button.empty_links.title": "Liên kết cho nút đang trống",
+                    "tabs.audit.rules.image.alt_text.description": "Nếu thiếu văn bản thay thế, những người dùng phần mềm đọc màn hình không thể tiếp cận thông tin của hình ảnh. Hãy viết một văn bản thay thế cho những ảnh sau.",
+                    "tabs.audit.rules.image.alt_text.title": "Còn thiếu văn bản thay thế",
+                    "tabs.audit.rules.image.url.description": "Nếu thiếu URL ảnh, những hình ảnh sau sẽ không hiện lên được. Hãy đăng một ảnh cho những ảnh sau.",
+                    "tabs.audit.rules.image.url.title": "Còn thiếu hình ảnh",
+                    "tabs.audit.rules.menu.empty_links.description": "Nếu thiếu liên kết, bảng chọn sẽ không hoạt động khi người dùng bấm vào nó. Hãy thêm liên kết cho bảng chọn sau.",
+                    "tabs.audit.rules.menu.empty_links.title": "Liên kết cho bảng chọn đang trống",
+                    "tabs.audit.take_me_to_fix": "Đưa tôi tới sửa",
+                    "tools.form.field_label": "Nhãn",
+                    "tools.form.field_name": "Tên trường",
+                    "tools.form.field_type": "Loại trường",
+                    "tools.form.field_value": "Giá trị",
+                    "tools.form.new_field": "Thêm trường",
+                    "tools.form.options_one_per_line": "Options (One Per Line)",
+                    "tools.form.placeholder_text": "Placeholder",
+                    "tools.form.required_field": "Bắt buộc",
+                    "tools.form.show_label": "Hiển thị nhãn",
+                    "tools.form.update_field": "Cập nhật trường",
+                    "tools.social.click_icons_to_add": "Click vào icon muốn thêm",
+                    "tools.tabs.audit": "Kiểm kê",
+                    "tools.tabs.blocks": "Khối",
+                    "tools.tabs.body": "Thân trang",
+                    "tools.tabs.content": "Nội dung",
+                    "tools.tabs.images": "Hình ảnh",
+                    "tools.tabs.row": "Dòng",
+                    "tools.tabs.uploads": "Tải lên",
+                    "tools.text.personalize": "Cá nhân hóa",
+                    "tools.tooltip.drag_on_canvas": "Kéo trên nền vẽ canvas",
+                    "tools.tooltip.got_it": "Đã hiểu"
+                }
+            }
+        });
+        var email_ex_design = $("#email_ex_design").val();
+        if (email_ex_design.length > 0) {
+
+            try {
+                var design = JSON.parse(email_ex_design);
+                unlayer.loadDesign(design);
+            } catch (e) {
+
+
+                var design = {
+                    "body": {
+                        "rows": [{
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "image",
+                                    "values": {
+                                        "maxWidth": "100%",
+                                        "src": {
+                                            "url": "https://a.mailmunch.co/user_data/landing_pages/1500310730675-logosample_03.png",
+                                            "width": 266,
+                                            "height": 62
+                                        },
+                                        "draggable": true,
+                                        "containerPadding": "10px 10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "action": {
+                                            "url": "",
+                                            "target": ""
+                                        },
+                                        "altText": "Image",
+                                        "fullWidth": false,
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 10px 5px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "center",
+                                        "lineHeight": "120%",
+                                        "text": "<div><span style=\"color: #f10693; font-family: Pacifico, cursive; font-size: 14px; line-height: 16.8px;\"><strong><span style=\"font-size: 80px; line-height: 96px;\">Relax &amp; Plan</span></strong></span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "center",
+                                        "lineHeight": "120%",
+                                        "text": "<div><span style=\"color: #6fbb7b; font-family: Pacifico, cursive; font-size: 58px; text-align: center; line-height: 69.6px;\">&nbsp;Your Summer Break</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "20px 10px 9px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "center",
+                                        "lineHeight": "140%",
+                                        "text": "<div><span style=\"font-size: 24px; color: #505050; line-height: 33.6px;\">Time to plan a vacation for your kids?</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "5px 10px 10px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "center",
+                                        "lineHeight": "160%",
+                                        "text": "<div><span style=\"font-size: 18px; line-height: 28.8px;\"><span style=\"color: #505050; font-size: 18px; line-height: 28.8px;\">Check-out our summer break offers for&nbsp;</span><span style=\"color: #505050; font-size: 18px; line-height: 28.8px;\">children who are creative, full of energy,&nbsp;</span><span style=\"color: #505050; font-size: 18px; line-height: 28.8px;\">and can&rsquo;t sit still for a minute.</span></span></div>"
+                                    }
+                                }, {
+                                    "type": "divider",
+                                    "values": {
+                                        "containerPadding": "20px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "width": "100%",
+                                        "border": {
+                                            "borderTopWidth": "1px",
+                                            "borderTopStyle": "solid",
+                                            "borderTopColor": "#CCC"
+                                        },
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "20px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "text": "<div><strong><span style=\"font-size: 30px; font-family: Montserrat, sans-serif; color: #2790d2; line-height: 36px;\">Upcoming Events:</span></strong></div>"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "0px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1, 2],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "image",
+                                    "values": {
+                                        "maxWidth": "100%",
+                                        "src": {
+                                            "url": "https://a.mailmunch.co/user_data/landing_pages/1500313461528-1.png",
+                                            "width": 500,
+                                            "height": 500
+                                        },
+                                        "draggable": true,
+                                        "containerPadding": "0px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "action": {
+                                            "url": "",
+                                            "target": ""
+                                        },
+                                        "altText": "Image",
+                                        "fullWidth": true,
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }, {
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px 8px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#6eba79",
+                                        "textAlign": "left",
+                                        "lineHeight": "160%",
+                                        "text": "<div><span style=\"font-size: 20px; line-height: 32px;\">JET SKI RIDE</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#4f4f4f",
+                                        "textAlign": "left",
+                                        "lineHeight": "150%",
+                                        "text": "<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</div>"
+                                    }
+                                }, {
+                                    "type": "button",
+                                    "values": {
+                                        "buttonColors": {
+                                            "color": "#FFF",
+                                            "backgroundColor": "#fa9302",
+                                            "hoverColor": "#cf7a04"
+                                        },
+                                        "calculatedHeight": 36,
+                                        "calculatedWidth": 132,
+                                        "href": "",
+                                        "border": {},
+                                        "text": "ORDER NOW<br />",
+                                        "draggable": true,
+                                        "containerPadding": "5px 15px",
+                                        "padding": "10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "borderRadius": "20px"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "divider",
+                                    "values": {
+                                        "containerPadding": "1px 20px 5px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "width": "100%",
+                                        "border": {
+                                            "borderTopWidth": "1px",
+                                            "borderTopStyle": "solid",
+                                            "borderTopColor": "#CCC"
+                                        },
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "0px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [2, 1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px 8px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#6eba79",
+                                        "textAlign": "left",
+                                        "lineHeight": "160%",
+                                        "text": "<div><span style=\"font-size: 20px; line-height: 32px;\">BOAT RIDE</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#4f4f4f",
+                                        "textAlign": "left",
+                                        "lineHeight": "150%",
+                                        "text": "<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</div>"
+                                    }
+                                }, {
+                                    "type": "button",
+                                    "values": {
+                                        "buttonColors": {
+                                            "color": "#FFF",
+                                            "backgroundColor": "#fa9302",
+                                            "hoverColor": "#cf7a04"
+                                        },
+                                        "calculatedHeight": 36,
+                                        "calculatedWidth": 132,
+                                        "href": "",
+                                        "border": {},
+                                        "text": "ORDER NOW<br />",
+                                        "draggable": true,
+                                        "containerPadding": "5px 15px",
+                                        "padding": "10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "borderRadius": "20px"
+                                    }
+                                }]
+                            }, {
+                                "contents": [{
+                                    "type": "image",
+                                    "values": {
+                                        "maxWidth": "100%",
+                                        "src": {
+                                            "url": "https://a.mailmunch.co/user_data/landing_pages/1500313783372-2.png",
+                                            "width": 500,
+                                            "height": 500
+                                        },
+                                        "draggable": true,
+                                        "containerPadding": "0px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "action": {
+                                            "url": "",
+                                            "target": ""
+                                        },
+                                        "altText": "Image",
+                                        "fullWidth": true,
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "divider",
+                                    "values": {
+                                        "containerPadding": "1px 20px 5px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "width": "100%",
+                                        "border": {
+                                            "borderTopWidth": "1px",
+                                            "borderTopStyle": "solid",
+                                            "borderTopColor": "#CCC"
+                                        },
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "0px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1, 2],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "image",
+                                    "values": {
+                                        "maxWidth": "100%",
+                                        "src": {
+                                            "url": "https://a.mailmunch.co/user_data/landing_pages/1500314095876-3.png",
+                                            "width": 500,
+                                            "height": 500
+                                        },
+                                        "draggable": true,
+                                        "containerPadding": "0px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "action": {
+                                            "url": "",
+                                            "target": ""
+                                        },
+                                        "altText": "Image",
+                                        "fullWidth": true,
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }, {
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px 8px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#6eba79",
+                                        "textAlign": "left",
+                                        "lineHeight": "160%",
+                                        "text": "<div><span style=\"font-size: 20px; line-height: 32px;\">BEACH DAY</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#4f4f4f",
+                                        "textAlign": "left",
+                                        "lineHeight": "150%",
+                                        "text": "<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</div>"
+                                    }
+                                }, {
+                                    "type": "button",
+                                    "values": {
+                                        "buttonColors": {
+                                            "color": "#FFF",
+                                            "backgroundColor": "#fa9302",
+                                            "hoverColor": "#cf7a04"
+                                        },
+                                        "calculatedHeight": 36,
+                                        "calculatedWidth": 132,
+                                        "href": "",
+                                        "border": {},
+                                        "text": "ORDER NOW<br />",
+                                        "draggable": true,
+                                        "containerPadding": "5px 15px",
+                                        "padding": "10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "borderRadius": "20px"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "divider",
+                                    "values": {
+                                        "containerPadding": "1px 20px 5px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "width": "100%",
+                                        "border": {
+                                            "borderTopWidth": "1px",
+                                            "borderTopStyle": "solid",
+                                            "borderTopColor": "#CCC"
+                                        },
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "0px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "15px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#fa9302",
+                                        "textAlign": "center",
+                                        "lineHeight": "130%",
+                                        "text": "<div><span style=\"font-size: 36px; line-height: 46.8px;\">NEED MORE INFORMATION?</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#4f4f4f",
+                                        "textAlign": "center",
+                                        "lineHeight": "120%",
+                                        "text": "<div><span style=\"font-size: 20px; line-height: 24px;\">Subscribe to get updates.</span></div>"
+                                    }
+                                }, {
+                                    "type": "button",
+                                    "values": {
+                                        "buttonColors": {
+                                            "color": "#FFF",
+                                            "backgroundColor": "#6eba79",
+                                            "hoverColor": "#58a864"
+                                        },
+                                        "calculatedHeight": 52,
+                                        "calculatedWidth": 214,
+                                        "href": "",
+                                        "border": {},
+                                        "text": "<span style=\"font-size: 20px; line-height: 32px;\">SUBSCRIBE NOW</span>",
+                                        "draggable": true,
+                                        "containerPadding": "20px",
+                                        "padding": "10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "textAlign": "center",
+                                        "lineHeight": "160%",
+                                        "borderRadius": "37px"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "20px",
+                                        "selectable": false,
+                                        "draggable": false,
+                                        "deletable": false,
+                                        "color": "#000",
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "text": "<div style=\"font-family: arial, helvetica, sans-serif;\"><span style=\"font-size: 12px; color: #999999; line-height: 14.4px;\">You received this email because you signed up for [[business_name]].</span></div>\n<div style=\"font-family: arial, helvetica, sans-serif;\">&nbsp;</div>\n<div style=\"font-family: arial, helvetica, sans-serif;\"><span style=\"font-size: 12px; color: #999999; line-height: 14.4px;\">[[{unsubscribe}]]</span></div>"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "#f0f0f0",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "30px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": false,
+                                "draggable": false,
+                                "deletable": false
+                            }
+                        }],
+                        "values": {
+                            "backgroundColor": "#ffffff",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": true,
+                                "cover": false
+                            },
+                            "contentWidth": "600px",
+                            "fontFamily": {
+                                "label": "Montserrat",
+                                "value": "'Montserrat',sans-serif",
+                                "type": "google",
+                                "weights": "400,700"
+                            }
+                        }
+                    }
+                };
+
+                unlayer.loadDesign(design);
+            }
+
+        } else {
+
+            var design = {
+                "body": {
+                    "rows": [{
+                        "cells": [1],
+                        "columns": [{
+                            "contents": [{
+                                "type": "image",
+                                "values": {
+                                    "maxWidth": "100%",
+                                    "src": {
+                                        "url": "https://a.mailmunch.co/user_data/landing_pages/1500310730675-logosample_03.png",
+                                        "width": 266,
+                                        "height": 62
+                                    },
+                                    "draggable": true,
+                                    "containerPadding": "10px 10px 20px",
+                                    "deletable": true,
+                                    "selectable": true,
+                                    "action": {
+                                        "url": "",
+                                        "target": ""
+                                    },
+                                    "altText": "Image",
+                                    "fullWidth": false,
+                                    "textAlign": "center"
+                                }
+                            }]
+                        }],
+                        "values": {
+                            "backgroundColor": "rgba(255,255,255,0)",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": false,
+                                "cover": false
+                            },
+                            "padding": "10px",
+                            "columnsBackgroundColor": "rgba(255,255,255,0)",
+                            "selectable": true,
+                            "draggable": true,
+                            "deletable": true
+                        }
+                    }, {
+                        "cells": [1],
+                        "columns": [{
+                            "contents": [{
+                                "type": "text",
+                                "values": {
+                                    "containerPadding": "10px 10px 5px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "color": "#000",
+                                    "textAlign": "center",
+                                    "lineHeight": "120%",
+                                    "text": "<div><span style=\"color: #f10693; font-family: Pacifico, cursive; font-size: 14px; line-height: 16.8px;\"><strong><span style=\"font-size: 80px; line-height: 96px;\">Relax &amp; Plan</span></strong></span></div>"
+                                }
+                            }, {
+                                "type": "text",
+                                "values": {
+                                    "containerPadding": "10px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "color": "#000",
+                                    "textAlign": "center",
+                                    "lineHeight": "120%",
+                                    "text": "<div><span style=\"color: #6fbb7b; font-family: Pacifico, cursive; font-size: 58px; text-align: center; line-height: 69.6px;\">&nbsp;Your Summer Break</span></div>"
+                                }
+                            }, {
+                                "type": "text",
+                                "values": {
+                                    "containerPadding": "20px 10px 9px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "color": "#000",
+                                    "textAlign": "center",
+                                    "lineHeight": "140%",
+                                    "text": "<div><span style=\"font-size: 24px; color: #505050; line-height: 33.6px;\">Time to plan a vacation for your kids?</span></div>"
+                                }
+                            }, {
+                                "type": "text",
+                                "values": {
+                                    "containerPadding": "5px 10px 10px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "color": "#000",
+                                    "textAlign": "center",
+                                    "lineHeight": "160%",
+                                    "text": "<div><span style=\"font-size: 18px; line-height: 28.8px;\"><span style=\"color: #505050; font-size: 18px; line-height: 28.8px;\">Check-out our summer break offers for&nbsp;</span><span style=\"color: #505050; font-size: 18px; line-height: 28.8px;\">children who are creative, full of energy,&nbsp;</span><span style=\"color: #505050; font-size: 18px; line-height: 28.8px;\">and can&rsquo;t sit still for a minute.</span></span></div>"
+                                }
+                            }, {
+                                "type": "divider",
+                                "values": {
+                                    "containerPadding": "20px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "width": "100%",
+                                    "border": {
+                                        "borderTopWidth": "1px",
+                                        "borderTopStyle": "solid",
+                                        "borderTopColor": "#CCC"
+                                    },
+                                    "textAlign": "center"
+                                }
+                            }]
+                        }],
+                        "values": {
+                            "backgroundColor": "rgba(255,255,255,0)",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": false,
+                                "cover": false
+                            },
+                            "padding": "10px",
+                            "columnsBackgroundColor": "rgba(255,255,255,0)",
+                            "selectable": true,
+                            "draggable": true,
+                            "deletable": true
+                        }
+                    }, {
+                        "cells": [1],
+                        "columns": [{
+                            "contents": [{
+                                "type": "text",
+                                "values": {
+                                    "containerPadding": "20px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "color": "#000",
+                                    "textAlign": "left",
+                                    "lineHeight": "120%",
+                                    "text": "<div><strong><span style=\"font-size: 30px; font-family: Montserrat, sans-serif; color: #2790d2; line-height: 36px;\">Upcoming Events:</span></strong></div>"
+                                }
+                            }]
+                        }],
+                        "values": {
+                            "backgroundColor": "rgba(255,255,255,0)",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": false,
+                                "cover": false
+                            },
+                            "padding": "0px",
+                            "columnsBackgroundColor": "rgba(255,255,255,0)",
+                            "selectable": true,
+                            "draggable": true,
+                            "deletable": true
+                        }
+                    }, {
+                        "cells": [1, 2],
+                        "columns": [{
+                            "contents": [{
+                                "type": "image",
+                                "values": {
+                                    "maxWidth": "100%",
+                                    "src": {
+                                        "url": "https://a.mailmunch.co/user_data/landing_pages/1500313461528-1.png",
+                                        "width": 500,
+                                        "height": 500
+                                    },
+                                    "draggable": true,
+                                    "containerPadding": "0px",
+                                    "deletable": true,
+                                    "selectable": true,
+                                    "action": {
+                                        "url": "",
+                                        "target": ""
+                                    },
+                                    "altText": "Image",
+                                    "fullWidth": true,
+                                    "textAlign": "center"
+                                }
+                            }]
+                        }, {
+                            "contents": [{
+                                "type": "text",
+                                "values": {
+                                    "containerPadding": "10px 15px 8px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "color": "#6eba79",
+                                    "textAlign": "left",
+                                    "lineHeight": "160%",
+                                    "text": "<div><span style=\"font-size: 20px; line-height: 32px;\">JET SKI RIDE</span></div>"
+                                }
+                            }, {
+                                "type": "text",
+                                "values": {
+                                    "containerPadding": "10px 15px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "color": "#4f4f4f",
+                                    "textAlign": "left",
+                                    "lineHeight": "150%",
+                                    "text": "<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</div>"
+                                }
+                            }, {
+                                "type": "button",
+                                "values": {
+                                    "buttonColors": {
+                                        "color": "#FFF",
+                                        "backgroundColor": "#fa9302",
+                                        "hoverColor": "#cf7a04"
+                                    },
+                                    "calculatedHeight": 36,
+                                    "calculatedWidth": 132,
+                                    "href": "",
+                                    "border": {},
+                                    "text": "ORDER NOW<br />",
+                                    "draggable": true,
+                                    "containerPadding": "5px 15px",
+                                    "padding": "10px 20px",
+                                    "deletable": true,
+                                    "selectable": true,
+                                    "textAlign": "left",
+                                    "lineHeight": "120%",
+                                    "borderRadius": "20px"
+                                }
+                            }]
+                        }],
+                        "values": {
+                            "backgroundColor": "rgba(255,255,255,0)",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": false,
+                                "cover": false
+                            },
+                            "padding": "10px",
+                            "columnsBackgroundColor": "rgba(255,255,255,0)",
+                            "selectable": true,
+                            "draggable": true,
+                            "deletable": true
+                        }
+                    }, {
+                        "cells": [1],
+                        "columns": [{
+                            "contents": [{
+                                "type": "divider",
+                                "values": {
+                                    "containerPadding": "1px 20px 5px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "width": "100%",
+                                    "border": {
+                                        "borderTopWidth": "1px",
+                                        "borderTopStyle": "solid",
+                                        "borderTopColor": "#CCC"
+                                    },
+                                    "textAlign": "center"
+                                }
+                            }]
+                        }],
+                        "values": {
+                            "backgroundColor": "rgba(255,255,255,0)",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": false,
+                                "cover": false
+                            },
+                            "padding": "0px",
+                            "columnsBackgroundColor": "rgba(255,255,255,0)",
+                            "selectable": true,
+                            "draggable": true,
+                            "deletable": true
+                        }
+                    }, {
+                        "cells": [2, 1],
+                        "columns": [{
+                            "contents": [{
+                                "type": "text",
+                                "values": {
+                                    "containerPadding": "10px 15px 8px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "color": "#6eba79",
+                                    "textAlign": "left",
+                                    "lineHeight": "160%",
+                                    "text": "<div><span style=\"font-size: 20px; line-height: 32px;\">BOAT RIDE</span></div>"
+                                }
+                            }, {
+                                "type": "text",
+                                "values": {
+                                    "containerPadding": "10px 15px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "color": "#4f4f4f",
+                                    "textAlign": "left",
+                                    "lineHeight": "150%",
+                                    "text": "<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</div>"
+                                }
+                            }, {
+                                "type": "button",
+                                "values": {
+                                    "buttonColors": {
+                                        "color": "#FFF",
+                                        "backgroundColor": "#fa9302",
+                                        "hoverColor": "#cf7a04"
+                                    },
+                                    "calculatedHeight": 36,
+                                    "calculatedWidth": 132,
+                                    "href": "",
+                                    "border": {},
+                                    "text": "ORDER NOW<br />",
+                                    "draggable": true,
+                                    "containerPadding": "5px 15px",
+                                    "padding": "10px 20px",
+                                    "deletable": true,
+                                    "selectable": true,
+                                    "textAlign": "left",
+                                    "lineHeight": "120%",
+                                    "borderRadius": "20px"
+                                }
+                            }]
+                        }, {
+                            "contents": [{
+                                "type": "image",
+                                "values": {
+                                    "maxWidth": "100%",
+                                    "src": {
+                                        "url": "https://a.mailmunch.co/user_data/landing_pages/1500313783372-2.png",
+                                        "width": 500,
+                                        "height": 500
+                                    },
+                                    "draggable": true,
+                                    "containerPadding": "0px",
+                                    "deletable": true,
+                                    "selectable": true,
+                                    "action": {
+                                        "url": "",
+                                        "target": ""
+                                    },
+                                    "altText": "Image",
+                                    "fullWidth": true,
+                                    "textAlign": "center"
+                                }
+                            }]
+                        }],
+                        "values": {
+                            "backgroundColor": "rgba(255,255,255,0)",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": false,
+                                "cover": false
+                            },
+                            "padding": "10px",
+                            "columnsBackgroundColor": "rgba(255,255,255,0)",
+                            "selectable": true,
+                            "draggable": true,
+                            "deletable": true
+                        }
+                    }, {
+                        "cells": [1],
+                        "columns": [{
+                            "contents": [{
+                                "type": "divider",
+                                "values": {
+                                    "containerPadding": "1px 20px 5px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "width": "100%",
+                                    "border": {
+                                        "borderTopWidth": "1px",
+                                        "borderTopStyle": "solid",
+                                        "borderTopColor": "#CCC"
+                                    },
+                                    "textAlign": "center"
+                                }
+                            }]
+                        }],
+                        "values": {
+                            "backgroundColor": "rgba(255,255,255,0)",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": false,
+                                "cover": false
+                            },
+                            "padding": "0px",
+                            "columnsBackgroundColor": "rgba(255,255,255,0)",
+                            "selectable": true,
+                            "draggable": true,
+                            "deletable": true
+                        }
+                    }, {
+                        "cells": [1, 2],
+                        "columns": [{
+                            "contents": [{
+                                "type": "image",
+                                "values": {
+                                    "maxWidth": "100%",
+                                    "src": {
+                                        "url": "https://a.mailmunch.co/user_data/landing_pages/1500314095876-3.png",
+                                        "width": 500,
+                                        "height": 500
+                                    },
+                                    "draggable": true,
+                                    "containerPadding": "0px",
+                                    "deletable": true,
+                                    "selectable": true,
+                                    "action": {
+                                        "url": "",
+                                        "target": ""
+                                    },
+                                    "altText": "Image",
+                                    "fullWidth": true,
+                                    "textAlign": "center"
+                                }
+                            }]
+                        }, {
+                            "contents": [{
+                                "type": "text",
+                                "values": {
+                                    "containerPadding": "10px 15px 8px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "color": "#6eba79",
+                                    "textAlign": "left",
+                                    "lineHeight": "160%",
+                                    "text": "<div><span style=\"font-size: 20px; line-height: 32px;\">BEACH DAY</span></div>"
+                                }
+                            }, {
+                                "type": "text",
+                                "values": {
+                                    "containerPadding": "10px 15px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "color": "#4f4f4f",
+                                    "textAlign": "left",
+                                    "lineHeight": "150%",
+                                    "text": "<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</div>"
+                                }
+                            }, {
+                                "type": "button",
+                                "values": {
+                                    "buttonColors": {
+                                        "color": "#FFF",
+                                        "backgroundColor": "#fa9302",
+                                        "hoverColor": "#cf7a04"
+                                    },
+                                    "calculatedHeight": 36,
+                                    "calculatedWidth": 132,
+                                    "href": "",
+                                    "border": {},
+                                    "text": "ORDER NOW<br />",
+                                    "draggable": true,
+                                    "containerPadding": "5px 15px",
+                                    "padding": "10px 20px",
+                                    "deletable": true,
+                                    "selectable": true,
+                                    "textAlign": "left",
+                                    "lineHeight": "120%",
+                                    "borderRadius": "20px"
+                                }
+                            }]
+                        }],
+                        "values": {
+                            "backgroundColor": "rgba(255,255,255,0)",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": false,
+                                "cover": false
+                            },
+                            "padding": "10px",
+                            "columnsBackgroundColor": "rgba(255,255,255,0)",
+                            "selectable": true,
+                            "draggable": true,
+                            "deletable": true
+                        }
+                    }, {
+                        "cells": [1],
+                        "columns": [{
+                            "contents": [{
+                                "type": "divider",
+                                "values": {
+                                    "containerPadding": "1px 20px 5px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "width": "100%",
+                                    "border": {
+                                        "borderTopWidth": "1px",
+                                        "borderTopStyle": "solid",
+                                        "borderTopColor": "#CCC"
+                                    },
+                                    "textAlign": "center"
+                                }
+                            }]
+                        }],
+                        "values": {
+                            "backgroundColor": "rgba(255,255,255,0)",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": false,
+                                "cover": false
+                            },
+                            "padding": "0px",
+                            "columnsBackgroundColor": "rgba(255,255,255,0)",
+                            "selectable": true,
+                            "draggable": true,
+                            "deletable": true
+                        }
+                    }, {
+                        "cells": [1],
+                        "columns": [{
+                            "contents": [{
+                                "type": "text",
+                                "values": {
+                                    "containerPadding": "15px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "color": "#fa9302",
+                                    "textAlign": "center",
+                                    "lineHeight": "130%",
+                                    "text": "<div><span style=\"font-size: 36px; line-height: 46.8px;\">NEED MORE INFORMATION?</span></div>"
+                                }
+                            }, {
+                                "type": "text",
+                                "values": {
+                                    "containerPadding": "10px",
+                                    "selectable": true,
+                                    "draggable": true,
+                                    "deletable": true,
+                                    "color": "#4f4f4f",
+                                    "textAlign": "center",
+                                    "lineHeight": "120%",
+                                    "text": "<div><span style=\"font-size: 20px; line-height: 24px;\">Subscribe to get updates.</span></div>"
+                                }
+                            }, {
+                                "type": "button",
+                                "values": {
+                                    "buttonColors": {
+                                        "color": "#FFF",
+                                        "backgroundColor": "#6eba79",
+                                        "hoverColor": "#58a864"
+                                    },
+                                    "calculatedHeight": 52,
+                                    "calculatedWidth": 214,
+                                    "href": "",
+                                    "border": {},
+                                    "text": "<span style=\"font-size: 20px; line-height: 32px;\">SUBSCRIBE NOW</span>",
+                                    "draggable": true,
+                                    "containerPadding": "20px",
+                                    "padding": "10px 20px",
+                                    "deletable": true,
+                                    "selectable": true,
+                                    "textAlign": "center",
+                                    "lineHeight": "160%",
+                                    "borderRadius": "37px"
+                                }
+                            }]
+                        }],
+                        "values": {
+                            "backgroundColor": "rgba(255,255,255,0)",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": false,
+                                "cover": false
+                            },
+                            "padding": "10px",
+                            "columnsBackgroundColor": "rgba(255,255,255,0)",
+                            "selectable": true,
+                            "draggable": true,
+                            "deletable": true
+                        }
+                    }, {
+                        "cells": [1],
+                        "columns": [{
+                            "contents": [{
+                                "type": "text",
+                                "values": {
+                                    "containerPadding": "20px",
+                                    "selectable": false,
+                                    "draggable": false,
+                                    "deletable": false,
+                                    "color": "#000",
+                                    "textAlign": "left",
+                                    "lineHeight": "120%",
+                                    "text": "<div style=\"font-family: arial, helvetica, sans-serif;\"><span style=\"font-size: 12px; color: #999999; line-height: 14.4px;\">You received this email because you signed up for [[business_name]].</span></div>\n<div style=\"font-family: arial, helvetica, sans-serif;\">&nbsp;</div>\n<div style=\"font-family: arial, helvetica, sans-serif;\"><span style=\"font-size: 12px; color: #999999; line-height: 14.4px;\">[[{unsubscribe}]]</span></div>"
+                                }
+                            }]
+                        }],
+                        "values": {
+                            "backgroundColor": "#f0f0f0",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": false,
+                                "cover": false
+                            },
+                            "padding": "30px",
+                            "columnsBackgroundColor": "rgba(255,255,255,0)",
+                            "selectable": false,
+                            "draggable": false,
+                            "deletable": false
+                        }
+                    }],
+                    "values": {
+                        "backgroundColor": "#ffffff",
+                        "backgroundImage": {
+                            "url": "",
+                            "fullWidth": true,
+                            "repeat": false,
+                            "center": true,
+                            "cover": false
+                        },
+                        "contentWidth": "600px",
+                        "fontFamily": {
+                            "label": "Montserrat",
+                            "value": "'Montserrat',sans-serif",
+                            "type": "google",
+                            "weights": "400,700"
+                        }
+                    }
+                }
+            };
+
+            unlayer.loadDesign(design);
+        }
+
+    })
+</script>
+
+{% endblock %}

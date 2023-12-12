@@ -1,0 +1,957 @@
+{% extends 'nextify/base.html' %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/wifi_wizard.css" />
+{% endblock %}
+{% block body %}
+
+<div class="header">
+    <div class="container-fluid">
+
+        <!-- Body -->
+        <div class="header-body">
+            <div class="row align-items-center">
+                <div class="col">
+
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                        Chiến dịch WIFI
+                    </h6>
+
+                    <!-- Title -->
+                    <h1 class="header-title">
+                        <input id="name_camp" type="text" class="form-control form-control-flush form-control-auto" autofocus
+                            placeholder='{{ gettext("Nhap_ten_chien_dich_...") }}' {% if campaign_details %} {% if
+                            campaign_details.name %} value="{{ campaign_details.name }}" {% endif %} {% endif %} {% if
+                            campaign_details.init %} disabled {% endif %} {% if camp_init and camp_init|string == "True" %} readonly {% endif %}/>
+                    </h1>
+
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-outline-primary d-block d-md-inline-block" id="view" data-target="#view_modal"
+                    data-toggle="modal" href="#" >Xem trước</button>
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-dark mb-2" id="close">Thoát</button>
+                    <button type="button" class="btn btn-danger mb-2" id='save_campaign'>Lưu</button>
+
+                </div>
+            </div>
+
+            <div class="row align-items-center">
+                <div class="col">
+
+                    <!-- Nav -->
+                    <ul class="nav nav-tabs nav-overflow header-tabs">
+                        <li class="nav-item">
+                            <a href="#" id="build_page" class="nav-link active">
+                                Trang chào
+                            </a>
+                        </li>
+                         {% if camp_init and camp_init|string == "False" %}
+                        <li class="nav-item">
+                            <a href="#" id="config_camp" class="nav-link" >
+                                Nhóm khách hàng
+                            </a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a href="#" id="location_distribution" class="nav-link" >
+                            
+                                Phân phối địa điểm
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" id="setting_campaign" class="nav-link" >
+                            
+                                Cấu hình
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+
+            <div aria-hidden="true" class="modal fade" id="view_modal" role="dialog" role="document"
+             tabindex="-1" style="display: none;">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Xem trước</h3>
+
+                            <a aria-label="Close" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">×</span>
+                            </a>
+                        </div>
+
+                        <div class="modal-body" id="modal_body">
+                            <div class="row justify-content-center">
+                                <div class="col-auto" style="display: flex; align-items: center;">
+                                    <div class="spinner-border text-danger" role="status" id="prev_step_loading"
+                                        style="display: none;">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+        
+                                    <a class="round-nav arrow-left" id="prev_step_view">
+                                        <div class="nav left"></div>
+                                    </a>
+        
+                                </div>
+                                <div class="col"
+                                    style="justify-content: center; display: flex; align-items: center; height: 100%">
+                                    <div id="view_modal_body"></div>
+                                </div>
+                                <div class="col-auto" style="display: flex; align-items: center;">
+                                    <div class="spinner-border text-danger" role="status" id="next_step_loading"
+                                        style="display: none;">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+        
+                                    <a class="round-nav arrow-right" id="next_step_view">
+                                        <div class="nav right"></div>
+                                    </a>
+        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row mt-4 mt-md-5">
+        <div class="col-12 col-lg-4" id="card_build_page">
+            <div class="card">
+                <div class="card-header">
+
+                    <!-- Title -->
+                    <h4 class="card-header-title">
+                        Bước truy cập
+                    </h4>
+
+
+                </div>
+                <div class="card-body">
+
+                    <!-- List group -->
+                    <div class="pages-selector">
+                        <ul id="page_selector">
+                            <li data-value="1" class="bullet active">Bước 1</li>
+                            <li data-value="2" class="bullet">Bước 2</li>
+                            <li data-value="3" class="bullet">Bước 3</li>
+                            <li data-value="4" class="bullet">Kết nối</li>
+                        </ul>
+
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <span class="text-muted mr-3">
+                            Sinh nhật
+                        </span>
+                        <div class="custom-control custom-switch" style="margin-left:auto; margin-right:0;">
+                            <input type="checkbox" class="custom-control-input" id="birthday" name="birthday" {% if
+                                campaign_details.is_birthday and campaign_details.is_birthday|lower=="true" %}checked {%
+                                endif %}>
+                            <label class="custom-control-label" for="birthday"></label>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <span class="text-muted mr-3">
+                            Kích hoạt
+                        </span>
+                        <div class="custom-control custom-switch" style="margin-left:auto; margin-right:0;">
+                            <input type="checkbox" class="custom-control-input" id="active" name="active" {% if
+                                campaign_details.status and campaign_details.status|lower=="true" %}checked{% endif %}>
+                            <label class="custom-control-label" for="active"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+
+                    <!-- Title -->
+                    <h4 class="card-header-title" id="step_header">
+
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="form" id="select_type_page">
+                    </div>
+                    <div class="form">
+                        <button type="button" id="setting_page" class="btn btn-outline-danger mb-2">Cấu hình
+                        </button>
+                        <input type="hidden" id="setting_page_type" />
+
+                    </div>
+                    <div id="connect_success">
+                        <form id="connect_page">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                            <div class="form-group">
+                                <label for="hotspot_method">{{ gettext('Hinh_thuc_hotspot') }}</label>
+                                <select class="custom-select control-container" id="hotspot_method"
+                                    name="hotspot_method">
+                                    <option value="default" {% if detail_step_connect.hotspot_method=='default' %}selected{%
+                                        endif %}>{{ gettext('Mac_dinh') }}</option>
+                                    <option value="profile_code" {% if detail_step_connect.hotspot_method=='profile_code'
+                                        %}selected{% endif %}>Profile code</option>
+                                </select>
+                            </div>
+                            <div id="default_code_div" class="form-group">
+                                <label>{{ gettext('Ma_mac_dinh') }}</label>
+                                <span class="d-inline-block" tabindex="0" data-toggle="tooltip"
+                                    title="{{ gettext('Ma_truy_cap_wifi_mac_dinh') }}">
+                                    <button class="btn btn-primary btn-sm" style="pointer-events: none;" type="button"
+                                        disabled><i class="fa fa-question"></i></button>
+
+                                </span>
+
+                                <input type="text" class="form-control method-form-control" id="default_code"
+                                    name="default_code" {% if detail_step_connect.default_code %}
+                                    value="{{ detail_step_connect.default_code }}" {% endif %}>
+                            </div>
+                            <div class="form-group">
+                                <label for="content_connect">{{ gettext('Noi_dung_chao_mung:') }}</label>
+                                <textarea class="form-control" id="content_connect" name="content_connect" rows="2">
+                                        {% if detail_step_connect.content_connect and detail_step_connect.content_connect|length > 1 %}
+                                        {{ detail_step_connect.content_connect }}
+                                    {% else %}
+                                       {{ gettext("Ket_noi_thanh_cong") }}
+                                    {% endif %}
+                                </textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="connect_button">{{ gettext('Nut_ket_noi_WIFI:') }}</label>
+                                <textarea class="form-control" id="connect_button" name="connect_button" rows="2">
+                                            {% if detail_step_connect.connect_button and detail_step_connect.connect_button|length > 1 %}
+                                            {{ detail_step_connect.connect_button }}
+                                        {% else %}
+                                           {{ gettext('Ket_noi_Wi-Fi/Go_Online') }}
+                                        {% endif %}
+                                    </textarea>
+                            </div>
+                            <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="display_coupon"
+                                        name="display_coupon" {% if detail_step_connect.display_coupon %}checked{% endif %}>
+                                    <label class="custom-control-label" for="display_coupon">{{
+                                        gettext('Hien_coupon_moi_nhat_cua_khach_hang:') }}</label>
+                                </div>
+                            </div>
+                            <div class="form-group" id="default_coupon">
+                                <label for="display_coupon">{{ gettext('Thong_bao_ma_khuyen_mai:') }}</label>
+                                <textarea class="form-control" name="display_coupon_txt">
+                                        {% if detail_step_connect.display_coupon_txt and  detail_step_connect.display_coupon_txt|length > 0 %}{{ detail_step_connect.display_coupon_txt }}{% endif %}
+                                    </textarea>
+                            </div>
+                            <div class="form-group">
+                                <img class="preview" id="view_bg_connect" style="width: auto;height: 80px"  {% if detail_step_connect.background_connect %} src="//files.nextify.vn/{{ detail_step_connect.background_connect }}" {% endif %}>
+                                <label for="view_bg_connect">Ảnh Cover
+                                    (<span>{{ gettext("Kich_thuoc_goi_y_1280_px_×_720_px")
+                                        }}</span>)</label>
+                                <input type="file" class="imgInp img-connect mt-2" id="background_connect" name="background_connect">
+                            </div>
+                            <div class="form-group">
+
+                                <input type="hidden"
+                                    value="{% if detail_step_connect.redirect_type %}{{detail_step_connect.redirect_type}}{%endif%}"
+                                    id="ex_redirect_type" />
+
+                                <label for="auto_popup">{{ gettext('Chuyen_huong_sau_khi_dang_nhap:') }}</label>
+                                <select class="custom-select control-container" id="redirect_type" name="redirect_type">
+                                    <option value="website">Website</option>
+                                    <option value="mobile_app">Mobile App</option>
+                                    <option value="facebook_page">Facebook Page</option>
+                                    <option value="zalo_oa">Zalo OA</option>
+                                    <option value="instagram">Instagram</option>
+                                    <option value="facebook_mess">Facebook Mess</option>
+                                    
+                                </select>
+
+                            </div>
+                            <div class="form-group" id="auto_website">
+                                <input type="text" class="form-control" id="auto_website" name="auto_website"
+                                    placeholder="https://yourwebsite.com"
+                                    value="{% if detail_step_connect.auto_website|string != '' %}{{ detail_step_connect.auto_website }}{% endif %}">
+                            </div>
+                            <div class="form-group" id="auto_mobile_app">
+                                <label for="display_coupon" class="mt-2" >IOS:</label>
+                                <input type="text" class="form-control" id="auto_popup_ios" name="auto_popup_ios"
+                                placeholder="https://itunes.apple.com/lb/app/yourapp"
+                                value="{% if detail_step_connect.auto_popup_ios|string != '' %}{{ detail_step_connect.auto_popup_ios }}{% endif %}">
+                                
+                                <label for="display_coupon"  class="mt-2">Android</label>
+                                <input type="text" class="form-control" id="auto_popup_android" name="auto_popup_android"
+                                    placeholder="https://play.google.com/store/apps/details?id=yourapp"
+                                    value="{% if detail_step_connect.auto_popup_android|string != '' %}{{ detail_step_connect.auto_popup_android }}{% endif %}">
+                            </div>
+                            <div class="form-group" id="auto_facebook_page">
+                                <input type="text" class="form-control" id="auto_facebook_page" name="auto_facebook_page"
+                                placeholder="http://facebook.com/yourpage"
+                                    value="{% if detail_step_connect.auto_facebook_page|string != '' %}{{ detail_step_connect.auto_facebook_page }}{% endif %}">
+                            </div>
+                            <div class="form-group" id="auto_zalo_oa">
+                                <input type="text" class="form-control" id="auto_popup_zalo" name="auto_popup_zalo"
+                                placeholder="https://zalo.me/yourzalo"
+                                    value="{% if detail_step_connect.auto_popup_zalo|string != '' %}{{ detail_step_connect.auto_popup_zalo }}{% endif %}">
+                            </div>
+                            <div class="form-group" id="auto_instagram">
+                                <input type="text" class="form-control" id="auto_popup_insta" name="auto_popup_insta"
+                                placeholder="https://www.instagram.com/yourinstagrampage"
+                                    value="{% if detail_step_connect.auto_popup_insta|string != '' %}{{ detail_step_connect.auto_popup_insta }}{% endif %}">
+                            </div>
+                            <div class="form-group" id="auto_facebook_mess">
+                                <input type="text" class="form-control" id="auto_facebook_mess" name="auto_facebook_mess"
+                                placeholder="https://m.me/yourpage"
+                                    value="{% if detail_step_connect.auto_facebook_mess|string != '' %}{{ detail_step_connect.auto_facebook_mess }}{% endif %}">
+                            </div>
+                        </form>
+                        <div>
+                            <button type="button" class="btn btn-danger" style="float: right;" id="save_connect_success"
+                                data-dismiss="modal">
+                                Lưu
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4" id="card_config_camp">
+            <div class="card card-fill">
+                <div class="card-header">
+                    <h4 class="card-header-title">
+                        Nhóm khách hàng
+                    </h4>
+
+                </div>
+                <div class="card-body" style="margin-top: 0px">
+                    <form class="form" id="group_customer">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-group">
+                            <label>Tags</label>
+                            <select class="custom-select control-container" id="camp_tags_selects" data-toggle="select"
+                                name="camp_tags_selects" multiple>
+                                {% for tag in tags %}
+                                <option value="{{ tag._id }}" {% if tag._id in group_customer.tags_group_customer
+                                    %}selected {% endif %}>{{ tag.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Lượt đến</label>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <input type="text" id="min_visit" name="min_visit"
+                                        value="{% if group_customer.min_visit and group_customer.min_visit != '1' %}{{ group_customer.min_visit }}{% endif %}"
+                                        placeholder="từ" class="form-control">
+                                </div>
+                                <div class="col-lg-6">
+                                    <input type="text" id="max_visit" name="max_visit"
+                                        value="{% if group_customer.max_visit and group_customer.max_visit != '1000'%}{{ group_customer.max_visit }}{% endif %}"
+                                        placeholder="đến" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Khoảng ngày</label>
+                    
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <input type="text" class="form-control" data-toggle="flatpickr"
+                                        id="event_start_picker" name="event_start_picker" placeholder="Từ ngày..."
+                                        value="{% if group_customer.event_start_picker %}{{ group_customer.event_start_picker }}{% endif %}">
+
+                                </div>
+                                <div class="col-lg-6">
+                                    <input type="text" class="form-control" placeholder="Đến ngày..." data-toggle="flatpickr"
+                                        id="event_end_picker" data-options='{"mode": "range"}' name="event_end_picker"
+                                        value="{% if group_customer.event_end_picker %}{{ group_customer.event_end_picker }}{% endif %}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Khoảng giờ</label>
+                            <div class="row">
+
+                                <div class="col-lg-6">
+                                    <select name="min_hour" class="custom-select control-container">
+                                        <option value="00:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="00:00" %}selected{% endif %}>00:00 AM
+                                        </option>
+                                        <option value="00:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="00:30" %}selected{% endif %}>00:30 AM
+                                        </option>
+                                        <option value="01:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="01:00" %}selected{% endif %}>01:00 AM
+                                        </option>
+                                        <option value="01:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="01:30" %}selected{% endif %}>01:30 AM
+                                        </option>
+                                        <option value="02:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="02:00" %}selected{% endif %}>02:00 AM
+                                        </option>
+                                        <option value="02:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="02:30" %}selected{% endif %}>02:30 AM
+                                        </option>
+                                        <option value="03:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="03:00" %}selected{% endif %}>03:00 AM
+                                        </option>
+                                        <option value="03:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="03:30" %}selected{% endif %}>03:30 AM
+                                        </option>
+                                        <option value="04:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="04:00" %}selected{% endif %}>04:00 AM
+                                        </option>
+                                        <option value="04:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="04:30" %}selected{% endif %}>04:30 AM
+                                        </option>
+                                        <option value="05:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="05:00" %}selected{% endif %}>05:00 AM
+                                        </option>
+                                        <option value="05:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="05:30" %}selected{% endif %}>05:30 AM
+                                        </option>
+                                        <option value="06:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="06:00" %}selected{% endif %}>06:00 AM
+                                        </option>
+                                        <option value="06:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="06:30" %}selected{% endif %}>06:30 AM
+                                        </option>
+                                        <option value="07:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="07:00" %}selected{% endif %}>07:00 AM
+                                        </option>
+                                        <option value="07:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="07:30" %}selected{% endif %}>07:30 AM
+                                        </option>
+                                        <option value="08:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="08:00" %}selected{% endif %}>08:00 AM
+                                        </option>
+                                        <option value="08:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="08:30" %}selected{% endif %}>08:30 AM
+                                        </option>
+                                        <option value="09:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="09:00" %}selected{% endif %}>09:00 AM
+                                        </option>
+                                        <option value="09:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="09:30" %}selected{% endif %}>09:30 AM
+                                        </option>
+                                        <option value="10:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="10:00" %}selected{% endif %}>10:00 AM
+                                        </option>
+                                        <option value="10:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="10:30" %}selected{% endif %}>10:30 AM
+                                        </option>
+                                        <option value="11:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="11:00" %}selected{% endif %}>11:00 AM
+                                        </option>
+                                        <option value="11:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="11:30" %}selected{% endif %}>11:30 AM
+                                        </option>
+                                        <option value="12:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="12:00" %}selected{% endif %}>12:00 PM
+                                        </option>
+                                        <option value="12:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="12:30" %}selected{% endif %}>12:30 PM
+                                        </option>
+                                        <option value="13:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="13:00" %}selected{% endif %}>01:00 PM
+                                        </option>
+                                        <option value="13:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="13:30" %}selected{% endif %}>01:30 PM
+                                        </option>
+                                        <option value="14:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="14:00" %}selected{% endif %}>02:00 PM
+                                        </option>
+                                        <option value="14:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="14:30" %}selected{% endif %}>02:30 PM
+                                        </option>
+                                        <option value="15:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="15:00" %}selected{% endif %}>03:00 PM
+                                        </option>
+                                        <option value="15:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="15:30" %}selected{% endif %}>03:30 PM
+                                        </option>
+                                        <option value="16:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="16:00" %}selected{% endif %}>04:00 PM
+                                        </option>
+                                        <option value="16:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="16:30" %}selected{% endif %}>04:30 PM
+                                        </option>
+                                        <option value="17:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="17:00" %}selected{% endif %}>05:00 PM
+                                        </option>
+                                        <option value="17:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="17:30" %}selected{% endif %}>05:30 PM
+                                        </option>
+                                        <option value="18:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="18:00" %}selected{% endif %}>06:00 PM
+                                        </option>
+                                        <option value="18:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="18:30" %}selected{% endif %}>06:30 PM
+                                        </option>
+                                        <option value="19:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="19:00" %}selected{% endif %}>07:00 PM
+                                        </option>
+                                        <option value="19:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="19:30" %}selected{% endif %}>07:30 PM
+                                        </option>
+                                        <option value="20:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="20:00" %}selected{% endif %}>08:00 PM
+                                        </option>
+                                        <option value="20:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="20:30" %}selected{% endif %}>08:30 PM
+                                        </option>
+                                        <option value="21:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="21:00" %}selected{% endif %}>09:00 PM
+                                        </option>
+                                        <option value="21:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="21:30" %}selected{% endif %}>09:30 PM
+                                        </option>
+                                        <option value="22:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="22:00" %}selected{% endif %}>10:00 PM
+                                        </option>
+                                        <option value="22:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="22:30" %}selected{% endif %}>10:30 PM
+                                        </option>
+                                        <option value="23:00" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="23:00" %}selected{% endif %}>11:00 PM
+                                        </option>
+                                        <option value="23:30" {% if group_customer.min_hour and
+                                            group_customer.min_hour|string=="23:30" %}selected{% endif %}>11:30 PM
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-6">
+                                    <select name="max_hour" class="custom-select control-container">
+                                        <option value="23:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="23:30" %}selected{% endif %}>11:30 PM
+                                        </option>
+                                        <option value="00:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="00:00" %}selected{% endif %}>00:00 AM
+                                        </option>
+                                        <option value="00:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="00:30" %}selected{% endif %}>00:30 AM
+                                        </option>
+                                        <option value="01:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="01:00" %}selected{% endif %}>01:00 AM
+                                        </option>
+                                        <option value="01:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="01:30" %}selected{% endif %}>01:30 AM
+                                        </option>
+                                        <option value="02:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="02:00" %}selected{% endif %}>02:00 AM
+                                        </option>
+                                        <option value="02:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="02:30" %}selected{% endif %}>02:30 AM
+                                        </option>
+                                        <option value="03:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="03:00" %}selected{% endif %}>03:00 AM
+                                        </option>
+                                        <option value="03:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="03:30" %}selected{% endif %}>03:30 AM
+                                        </option>
+                                        <option value="04:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="04:00" %}selected{% endif %}>04:00 AM
+                                        </option>
+                                        <option value="04:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="04:30" %}selected{% endif %}>04:30 AM
+                                        </option>
+                                        <option value="05:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="05:00" %}selected{% endif %}>05:00 AM
+                                        </option>
+                                        <option value="05:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="05:30" %}selected{% endif %}>05:30 AM
+                                        </option>
+                                        <option value="06:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="06:00" %}selected{% endif %}>06:00 AM
+                                        </option>
+                                        <option value="06:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="06:30" %}selected{% endif %}>06:30 AM
+                                        </option>
+                                        <option value="07:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="07:00" %}selected{% endif %}>07:00 AM
+                                        </option>
+                                        <option value="07:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="07:30" %}selected{% endif %}>07:30 AM
+                                        </option>
+                                        <option value="08:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="08:00" %}selected{% endif %}>08:00 AM
+                                        </option>
+                                        <option value="08:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="08:30" %}selected{% endif %}>08:30 AM
+                                        </option>
+                                        <option value="09:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="09:00" %}selected{% endif %}>09:00 AM
+                                        </option>
+                                        <option value="09:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="09:30" %}selected{% endif %}>09:30 AM
+                                        </option>
+                                        <option value="10:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="10:00" %}selected{% endif %}>10:00 AM
+                                        </option>
+                                        <option value="10:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="10:30" %}selected{% endif %}>10:30 AM
+                                        </option>
+                                        <option value="11:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="11:00" %}selected{% endif %}>11:00 AM
+                                        </option>
+                                        <option value="11:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="11:30" %}selected{% endif %}>11:30 AM
+                                        </option>
+                                        <option value="12:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="12:00" %}selected{% endif %}>12:00 PM
+                                        </option>
+                                        <option value="12:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="12:30" %}selected{% endif %}>12:30 PM
+                                        </option>
+                                        <option value="13:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="13:00" %}selected{% endif %}>01:00 PM
+                                        </option>
+                                        <option value="13:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="13:30" %}selected{% endif %}>01:30 PM
+                                        </option>
+                                        <option value="14:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="14:00" %}selected{% endif %}>02:00 PM
+                                        </option>
+                                        <option value="14:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="14:30" %}selected{% endif %}>02:30 PM
+                                        </option>
+                                        <option value="15:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="15:00" %}selected{% endif %}>03:00 PM
+                                        </option>
+                                        <option value="15:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="15:30" %}selected{% endif %}>03:30 PM
+                                        </option>
+                                        <option value="16:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="16:00" %}selected{% endif %}>04:00 PM
+                                        </option>
+                                        <option value="16:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="16:30" %}selected{% endif %}>04:30 PM
+                                        </option>
+                                        <option value="17:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="17:00" %}selected{% endif %}>05:00 PM
+                                        </option>
+                                        <option value="17:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="17:30" %}selected{% endif %}>05:30 PM
+                                        </option>
+                                        <option value="18:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="18:00" %}selected{% endif %}>06:00 PM
+                                        </option>
+                                        <option value="18:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="18:30" %}selected{% endif %}>06:30 PM
+                                        </option>
+                                        <option value="19:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="19:00" %}selected{% endif %}>07:00 PM
+                                        </option>
+                                        <option value="19:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="19:30" %}selected{% endif %}>07:30 PM
+                                        </option>
+                                        <option value="20:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="20:00" %}selected{% endif %}>08:00 PM
+                                        </option>
+                                        <option value="20:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="20:30" %}selected{% endif %}>08:30 PM
+                                        </option>
+                                        <option value="21:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="21:00" %}selected{% endif %}>09:00 PM
+                                        </option>
+                                        <option value="21:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="21:30" %}selected{% endif %}>09:30 PM
+                                        </option>
+                                        <option value="22:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="22:00" %}selected{% endif %}>10:00 PM
+                                        </option>
+                                        <option value="22:30" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="22:30" %}selected{% endif %}>10:30 PM
+                                        </option>
+                                        <option value="23:00" {% if group_customer.max_hour and
+                                            group_customer.max_hour|string=="23:00" %}selected{% endif %}>11:00 PM
+                                        </option>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+
+                        <div class="form-group">
+                            <label>Thiết bị</label>
+                            <select class="custom-select control-container" id="device" data-toggle="select"
+                                name="device" multiple>
+                                
+                                <option value="mobile" {% if "mobile" in group_customer.device
+                                    %}selected {% endif %}>Điện thoại</option>
+                                <option value="laptop" {% if "laptop" in group_customer.device
+                                %}selected {% endif %}>Laptop</option>
+                                <option value="tablet" {% if "tablet" in group_customer.device
+                                %}selected {% endif %}>Máy tính bảng</option>
+                                
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Hệ điều hành</label>
+                            <select class="custom-select control-container" id="system" data-toggle="select"
+                                name="system" multiple>
+                                <option value="ios" {% if 'ios' in group_customer.system
+                                    %}selected {% endif %}>IOS</option>
+                                <option value="androi" {% if 'androi' in group_customer.system
+                                %}selected {% endif %}>Androi</option>
+                                <option value="windows" {% if 'windows' in group_customer.system
+                                %}selected {% endif %}>Windows</option>
+                                <option value="linux" {% if 'linux' in group_customer.system
+                                %}selected {% endif %}>Linux</option>
+                               
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Độ tuổi</label>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <input type="text" id="min_age" name="min_age"
+                                        value="{% if group_customer.min_age  %}{{ group_customer.min_age }}{% endif %}"
+                                        placeholder="từ" class="form-control">
+                                </div>
+                                <div class="col-lg-6">
+                                    <input type="text" id="max_age" name="max_age"
+                                        value="{% if group_customer.max_age %}{{ group_customer.max_age }}{% endif %}"
+                                        placeholder="đến" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Giới tính</label>
+                            <select class="custom-select control-container" id="gender" data-toggle="select"
+                                name="gender" >
+                                <option value="0" {% if group_customer.gender and '0' in group_customer.gender
+                                    %}selected {% endif %}>Tất cả</option>
+                                <option value="1" {% if group_customer.gender and '1' in group_customer.gender
+                                %}selected {% endif %}>Nam</option>
+                                <option value="2" {% if group_customer.gender and '2' in group_customer.gender
+                                %}selected {% endif %}>Nữ</option>
+                                
+                               
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nội dung quảng cáo đã xem</label>
+                            <select class="custom-select control-container" id="ads_seen" data-toggle="select"
+                                name="ads_seen" multiple>
+                                {% for camp in campaigns %}
+                                <option value="{{ camp._id }}" {% if camp._id in group_customer.ads_seen
+                                    %}selected {% endif %}>{{ camp.name }}</option>
+                               {% endfor %}
+                            </select>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4" id="card_location_distribution">
+            <div class="card card-fill">
+                <div class="card-header">
+                    <h4 class="card-header-title">
+                        Phân phối địa điểm
+                    </h4>
+
+                </div>
+                <div class="card-body" style="margin-top: 0px">
+                    <form class="form" id="group_distribution">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-group">
+                            <label>Phân phối theo</label>
+                            <select class="custom-select control-container" id="distribution" 
+                                name="distribution">
+                                
+                                <option value="distribution_all" {% if group_distribution.distribution and group_distribution.distribution|string == "distribution_all"
+                                    %}selected {% endif %}>Tất cả</option>
+   
+                                <option value="distribution_loc" {% if group_distribution.distribution and group_distribution.distribution|string == "distribution_loc"
+                                %}selected {% endif %}>Từng địa điểm</option>
+                                
+                            </select>
+                        </div>
+         
+                        <div class="form-group" id='div_loc'>
+                            <label>Chọn địa điểm</label>
+                            <select class="custom-select control-container" id="distribution_loc_choose" 
+                                name="distribution_loc_choose" multiple>
+                                {% for shop_mer in shop_in_mer %}
+                                <option value="{{ shop_mer._id }}" {% if group_distribution.distribution_loc and shop_mer._id in group_distribution.distribution_loc %}selected{% endif %}>{{ shop_mer.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <script nonce="{{ csp_nonce() }}">
+                            $(document).ready(function () {
+                                $('#distribution_tags_choose').select2();
+                                $('#distribution_loc_choose').select2();
+                                var distribution = $('#distribution').val();
+                                if( distribution == "distribution_loc"){
+                               
+                                    $('#div_loc').show();
+                                }
+                                else if (distribution == "distribution_tags"){
+                              
+                                    $('#div_loc').hide();
+                                }
+                                else{
+                                    $('#div_loc').hide();
+                                }
+                                $("#distribution").on('change', function () {
+                                    var distribution = $('#distribution').val();
+                                    if( distribution == "distribution_loc"){
+                            
+                                        $('#div_loc').show();
+                                    }
+                                    else if (distribution == "distribution_tags"){
+                     
+                                        $('#div_loc').hide();
+                                    }
+                                    else{
+                                       
+                                        $('#div_loc').hide();
+                                    }
+                                })
+                            });
+                        </script>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4" id="card_setting_campaign">
+            <div class="card card-fill">
+                <div class="card-header">
+                    <h4 class="card-header-title">
+                        Cấu hình
+                    </h4>
+
+                </div>
+                <div class="card-body" style="margin-top: 0px">
+                    <form class="form" id="group_setting_campaign">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="form-group">
+                            <label>Loại chiến dịch</label>
+                            <select class="custom-select control-container" id="type_campaign"
+                                name="type_campaign">
+                                <option value="monopoly" {% if campaign_details.type_campaign and
+                                    campaign_details.type_campaign|string=="monopoly" %}selected {% endif %}>Độc quyền</option>
+                                <option value="share" {% if campaign_details.type_campaign and
+                                    campaign_details.type_campaign|string=="share" %}selected {% endif %}>Chia sẻ</option>
+                                    <option value="partner" {% if campaign_details.type_campaign and
+                                        campaign_details.type_campaign|string=="partner" %}selected {% endif %}>Đối tác</option>
+                                <option value="default" {% if campaign_details.type_campaign and
+                                    campaign_details.type_campaign|string=="default" %}selected {% endif %}>Mặc định</option>
+                                
+                            </select>
+
+
+                        </div>
+                        <div class="form-group">
+                            <label>Giới hạn hiển thị</label>
+                            <input type="text" class="form-control" 
+                                        id="target_campaign"  name= "limit_campaign"
+                                        value="{% if campaign_details.limit_campaign %}{{ campaign_details.limit_campaign }}{% endif %}">
+                        </div>
+                      
+                        <div class="form-group">
+                            <label>Mục tiêu hiển thị</label>
+                            <input type="text" class="form-control" 
+                                        id="target_campaign"  name= "target_campaign"
+                                        value="{% if campaign_details.target_campaign %}{{ campaign_details.target_campaign }}{% endif %}">
+                        </div>
+                        <div class="form-group">
+                            <label>Mục tiêu kết nối</label>
+                            <input type="text" class="form-control" 
+                                        id="target_campaign_connect"  name= "target_campaign_connect"
+                                        value="{% if campaign_details.target_campaign_connect %}{{ campaign_details.target_campaign_connect }}{% endif %}">
+                        </div>
+                        <div class="form-group">
+                            <label>Chọn đối tác</label>
+                            <select class="custom-select control-container" id="partner_camp" data-toggle="select"
+                                name="partner_camp">
+                                {% for tag in tags %}
+                                <option value="{{ tag._id }}" {% if tag._id in campaign_details.tags
+                                    %}selected {% endif %}>{{ tag.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tags</label>
+                            <select class="custom-select control-container" id="tags_camp" data-toggle="select"
+                                name="tags_camp" multiple>
+                                {% for tag in tags %}
+                                <option value="{{ tag._id }}" {% if tag._id in campaign_details.tags
+                                    %}selected {% endif %}>{{ tag.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-8">
+            <div class="card card-inactive">
+
+                <div class="card-body text-center">
+                    <div class="row justify-content-center">
+                        <div class="col-auto" style="display: flex; align-items: center;">
+                            <div class="spinner-border text-danger" role="status" id="prev_step_loading"
+                                style="display: none;">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+
+                            <a class="round-nav arrow-left" disabled="" id="prev_step">
+                                <div class="nav left"></div>
+                            </a>
+
+                        </div>
+                        <div class="col"
+                            style="justify-content: center; display: flex; align-items: center; height: 100%">
+                            <div id="preview"></div>
+                        </div>
+                        <div class="col-auto" style="display: flex; align-items: center;">
+                            <div class="spinner-border text-danger" role="status" id="next_step_loading"
+                                style="display: none;">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+
+                            <a class="round-nav arrow-right" id="next_step">
+                                <div class="nav right"></div>
+                            </a>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" value="" id="current_step" />
+<input type="hidden" value="1" id="current_step_view" />
+<input type="hidden" value="{{ list_step[0] }}" id="input_type_step_1" />
+<input type="hidden" value="{{ list_step[1] }}" id="input_type_step_2" />
+<input type="hidden" value="{{ list_step[2] }}" id="input_type_step_3" />
+<input type="hidden" value="connect_success" id="input_type_step_4" />
+<input type="hidden" value="" id="input_value_step_1" />
+<input type="hidden" value="" id="input_value_step_2" />
+<input type="hidden" value="" id="input_value_step_3" />
+<input type="hidden" value="" id="input_value_step_4" />
+<input type="hidden" value="{{ campaign_id }}" id="camp_id" />
+<input type="hidden" value="{{ merchant_id }}" id="merchant_id" />
+<input type="hidden" value="{{ campaign_details.type }}" id="type_camp" />
+{% endblock %}
+{% block js %}
+<script src="{{ url_for('static', filename='js/wifi_ads_wizard.js') }}"></script>
+{% endblock %}

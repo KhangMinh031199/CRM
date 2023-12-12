@@ -1,0 +1,277 @@
+{% extends 'nextify/base.html' %} {% block main_content %}
+
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <!-- Header -->
+      <div class="header">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <!-- Pretitle -->
+              <h6 class="header-pretitle">Liên hệ</h6>
+
+              <!-- Title -->
+              <h1 class="header-title text-truncate">{{contact.user.name}}</h1>
+            </div>
+
+            <div class="col-auto">
+             
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Thao tác
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="">
+                  <a class="dropdown-item" href="#!">Ngừng nhận tin</a>
+                  <a class="dropdown-item" href="#!">Thêm vào nhóm</a>
+                  <a class="dropdown-item" href="#!">Xóa</a>
+                </div>
+            
+              <!-- Buttons -->
+              <a data-bs-toggle="offcanvas" href="#offcanvasAddContact" role="button" aria-controls="offcanvasAddContact" class="btn btn-primary ms-2">Gửi tin</a>
+            </div>
+          </div>
+          <!-- / .row -->
+          <div class="row align-items-center">
+            <div class="col">
+              <!-- Nav -->
+              {%block nav_contact_page%}
+              <ul class="nav nav-tabs nav-overflow header-tabs">
+                <li class="nav-item">
+                  <a href="/contacts/index/{{contact_id}}" class="nav-link text-nowrap active">
+                    Tổng quan
+                 
+                  </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/contacts/index/{{contact_id}}/notes" class="nav-link text-nowrap">
+                        Ghi chú
+                    </a>
+                  </li>
+                  
+            
+              </ul>
+              {%endblock%}
+            </div>
+          </div>
+        </div>
+      </div>
+
+     
+    </div>
+  </div>
+  <!-- / .row -->
+</div>
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-12 col-xl-4">
+        <div class="card">
+          <div class="card-header">
+            Thông tin cơ bản
+          </div>
+          <div class="card-body">
+            <div class="list-group list-group-flush my-n3">
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+
+                    <!-- Title -->
+                    <h5 class="mb-0">
+                      Tên 
+                    </h5>
+
+                  </div>
+                  <div class="col-auto">
+                    <small class="text-muted">
+                      {% if contact.user.name and contact.user.name|length > 0 and contact.user.name!= 'None' %}
+                      {{contact.user.name}}
+                      {%endif%}
+                    </small>
+                   
+
+                  </div>
+                </div> <!-- / .row -->
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+
+                    <!-- Title -->
+                    <h5 class="mb-0">
+                      Số điện thoại
+                    </h5>
+
+                  </div>
+                  <div class="col-auto">
+                    <small class="text-muted">
+                      {% if contact.user.phone and contact.user.phone|length > 0 and contact.user.phone!= 'None' %}
+                      {{contact.user.phone}}
+                      {%endif%}
+                    </small>
+                   
+
+                  </div>
+                </div> <!-- / .row -->
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+
+                    <!-- Title -->
+                    <h5 class="mb-0">
+                     Email
+                    </h5>
+
+                  </div>
+                  <div class="col-auto">
+                    <small class="text-muted">
+                      {% if contact.user.email and contact.user.email|length > 0 and contact.user.email!= 'None' %}
+                      {{contact.user.email}}
+                      {%endif%}
+                    </small>
+               
+
+                  </div>
+                </div> <!-- / .row -->
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+
+                    <!-- Title -->
+                    <h5 class="mb-0">
+                     Giới tính
+                    </h5>
+
+                  </div>
+                  <div class="col-auto">
+
+                    <small class="text-muted">
+                      {% if contact.user.gender and contact.user.gender|length > 0 and contact.user.gender!= 'None' %}
+                      {{contact.user.gender}}
+                      {%endif%}
+                    </small>
+               
+
+                  </div>
+                </div> <!-- / .row -->
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+
+                    <!-- Title -->
+                    <h5 class="mb-0">
+                      Sinh nhật
+                    </h5>
+
+                  </div>
+                  <div class="col-auto">
+
+                    <small class="text-muted">
+                      {% if contact.user.birthday and contact.user.birthday|length > 0 and contact.user.birthday!= 'None' %}
+                      {{contact.user.birthday}}
+                      {%endif%}
+                    </small>
+               
+                    
+                  </div>
+                </div> <!-- / .row -->
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+
+                    <!-- Title -->
+                    <h5 class="mb-0">
+                    Tạo lúc
+                    </h5>
+
+                  </div>
+                  <div class="col-auto">
+                    <small class="text-muted">
+                      {{contact.update_at|human_time }}
+                    </small>
+               
+               
+
+                  </div>
+                </div> <!-- / .row -->
+              </div>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+
+                    <!-- Title -->
+                    <h5 class="mb-0">
+                     Cập nhật
+                    </h5>
+
+                  </div>
+                  <div class="col-auto">
+                    <small class="text-muted">
+                      {{contact.update_at|human_time }}
+                    </small>
+               
+               
+
+                  </div>
+                </div> <!-- / .row -->
+              </div>
+            </div>
+          
+          </div>
+
+        </div>
+        <div class="card">
+          <div class="card-header">
+           Tags
+          </div>
+          <div class="card-body">
+            {% if contact.user.user_tags_details|length> 0 %}
+           {% for tag in contact.user.user_tags_details %}
+            {% if tag.name|length > 0 %}
+            <span class="badge bg-primary-soft ms-1 mt-n1">{{ tag.name }}</span>
+            {% endif %}
+            {% endfor %}
+            {% else %}
+            N/A
+            {% endif %}
+          </div>
+          </div>
+
+
+      </div>
+      <div class="col-12 col-xl-8">
+        {%block main_contact_page%}
+        <h2 class="mb-4 mt-2">
+          Hoạt động
+         </h2>
+       
+        <div class="card">
+    
+          <div class="card-body">
+            <ul class="nav nav-tabs mb-4">
+              <li class="nav-item">
+                <a class="nav-link active" href="#!">Liên hệ</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#!">Marketing</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#!">WIFI</a>
+              </li>
+            </ul>
+           
+          </div>
+
+        </div>
+        {%endblock%}
+      </div>
+        </div>
+
+        </div>
+        </div>
+      </div>
+
+
+{%endblock%}

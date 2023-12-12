@@ -1,0 +1,133 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8">
+
+                <!-- Header -->
+                <div class="header mt-md-5">
+                    <div class="header-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Pretitle -->
+                                <h6 class="header-pretitle">
+                                    {{ gettext("Tai_khoan") }}
+                                </h6>
+
+                                <!-- Title -->
+                                <h1 class="header-title">
+                                    {{ gettext("Cau_hinh_tai_khoan") }}
+                                </h1>
+
+                            </div>
+                        </div> <!-- / .row -->
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Nav -->
+                                <ul class="nav nav-tabs nav-overflow header-tabs">
+                                    <li class="nav-item">
+                                        <a href="/settings" class="nav-link">
+                                            {{ gettext("Cau_hinh_chung") }}
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/accounts" class="nav-link">
+                                            {{ gettext("Tai_khoan_truy_cap") }}
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#!" class="nav-link active">
+                                            {{ gettext("Thanh_toan") }}
+                                        </a>
+                                    </li>
+                                    <!-- <li class="nav-item">
+                                        <a href="/setting_integration" class="nav-link">
+                                            {{ gettext("Tich_hop") }}
+                                        </a>
+                                    </li> -->
+                                    <li class="nav-item">
+                                            <a href="/setting_detection_employee" class="nav-link">
+                                                {{ gettext("Nhan_dien_nhan_vien") }}
+                                            </a>
+                                        </li>
+                                    <li class="nav-item">
+                                            <a href="/create_QR_code" class="nav-link">
+                                                {{ gettext("Tao_ma_QR") }}
+                                            </a>
+                                        </li>
+                                
+                                        <li class="nav-item">
+                                            <a href="/logout" class="nav-link" style="color:#3232c8">
+                                                {{ gettext("Dang_xuat") }}
+                                            </a>
+                                        </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+              <!-- Card -->
+                  <div class="card">
+                    <div class="card-body">
+
+                        <div class="col-12 col-md-6">
+
+                  <!-- Password -->
+                  <div class="form-group">
+
+                    <!-- Label -->
+                    <label>
+                      {{ gettext("Goi_dich_vu") }}
+                    </label>
+
+                    <!-- Input -->
+                    <input type="text" class="form-control"  value="{% if package %}{{ package.name }}{% endif %}" readonly>
+
+                  </div>
+
+                  <!-- New password -->
+                  <div class="form-group">
+
+                    <!-- Label -->
+                    <label>
+                      {{ gettext("Ngay_bat_dau") }}
+                    </label>
+
+                    <!-- Input -->
+                    <input type="text" class="form-control" value="{{ merchant.date_start_contract or '' }}" readonly>
+
+                  </div>
+
+                  <!-- Confirm new password -->
+                  <div class="form-group">
+
+                    <!-- Label -->
+                    <label>
+                      {{ gettext("Ngay_het_han") }}
+                    </label>
+
+                    <!-- Input -->
+                    <input type="text" class="form-control" value="{{ merchant.date_end_contract or '' }}" readonly>
+
+                  </div>
+
+                  <!-- Submit -->
+
+
+                </div>
+
+
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

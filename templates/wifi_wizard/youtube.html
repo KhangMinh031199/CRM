@@ -1,0 +1,104 @@
+<input type="hidden" value="{{ page_id }}" id="page_id" />
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id_select" />
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-12 col-xl-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-end">
+                    <div class="col">
+                        <h6 class="header-pretitle">
+                            {{ gettext("Trang_chao_youtube") }}
+                        </h6>
+                    </div>
+
+                </div>
+            </div>
+
+         <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" id="form_new_image">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    <div class="form-group">
+                        <label  for="content">Link Youtube:</label>
+                        <input class="form-control" id="link_youtube" name="link_youtube"  {% if page and page.link_youtube %}
+                                     value="{{ page.link_youtube }}"{% endif %}>
+                    </div>
+                    <div class="form-group">
+                        <label >{{ gettext("Nut_ket_noi_WIFI") }}</label>
+                        <input type="text" class="form-control method-form-control" id="connect_button" name="connect_button"
+                        {% if  page and page.connect_button|string != 'None' %}value="{{ page.connect_button }}"{% else %}value='{{ gettext("Ket_noi_WIFI/Go_Online") }}'{% endif %}
+                        >
+                    </div>
+                    <input type="hidden" value="youtube" name="auto_mar" />
+                    <input  type="hidden" name="active" id="active" value="on">
+
+                   
+               
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+$(document).ready(function() {
+    // ex_hotspot_method = $('#ex_hotspot_method').val();
+    // if (ex_hotspot_method === 'profile_code') {
+    //     $("#default_code_div").hide();
+    // } else {
+    //     $("#default_code_div").show();
+    // };
+    // $('#hotspot_method').select2();
+    // $('#hotspot_method').on('change.select2', function(e) {
+    //     method = $(this).val();
+    //     if (method === 'profile_code') {
+    //         $("#default_code_div").hide();
+    //     } else {
+    //         $("#default_code_div").show();
+    //     }
+    // });
+    $('textarea').each(function() {
+        $(this).val($(this).val().trim());
+    });
+    $('input').each(function() {
+        $(this).val($(this).val().trim());
+    });
+
+    function readURL(input, input_view) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            var view_id = '#' + input_view;
+            reader.onload = function(e) {
+                $(view_id).attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    var page_id = $("#page_id").val();
+    var shop_id_select = $("#shop_id_select").val();
+    if (page_id && page_id != 'add') {
+        var url_preview = '/splash_page/' + shop_id_select + '/preview/' + page_id;
+        $("#preview").empty();
+        bioMp(document.getElementById('preview'), {
+            url: url_preview,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+    } else {
+        var url_preview = '/hotspot_type/0?shop_id_select={{ shop_id_select }}';
+        $("#preview").empty();
+        bioMp(document.getElementById('preview'), {
+            url: url_preview,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+    }
+});
+</script>
+{% endblock %}

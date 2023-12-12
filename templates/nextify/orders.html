@@ -1,0 +1,106 @@
+{% extends 'nextify/base.html' %} {% block main_content %}
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">Đơn hàng Haravan</h6>
+
+          <!-- Title -->
+          <h1 class="header-title">{{ merchant.name }}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-12 mt-5">
+        <div
+          class="card"
+          data-list='{"valueNames": ["orders-order", "orders-product", "orders-date", "orders-total", "orders-status", "orders-method"]}'
+        >
+          
+          <div class="table-responsive">
+            <table class="table table-sm table-nowrap card-table">
+              <thead>
+                <tr>
+                
+                  <th>
+                    <a
+                      href="#"
+                      class="text-muted list-sort"
+                      data-sort="orders-order"
+                    >
+                      Order
+                    </a>
+                  </th>
+                  <th>
+                    <a
+                      href="#"
+                      class="text-muted list-sort"
+                      data-sort="orders-product"
+                    >
+                      Phone
+                    </a>
+                  </th>
+                  <th>
+                    <a
+                      href="#"
+                      class="text-muted list-sort"
+                      data-sort="orders-date"
+                    >
+                      Date
+                    </a>
+                  </th>
+                  <th>
+                    <a
+                      href="#"
+                      class="text-muted list-sort"
+                      data-sort="orders-total"
+                    >
+                      Total
+                    </a>
+                  </th>
+                  <th>
+                    <a
+                      href="#"
+                      class="text-muted list-sort"
+                      data-sort="orders-status"
+                    >
+                      Status
+                    </a>
+                  </th>
+                
+                </tr>
+              </thead>
+              <tbody class="list">
+                {%for order in orders%}
+                <tr>
+                 
+                  <td class="orders-order">{{order.name}}</td>
+                  <td class="orders-product">{{order.phone}}</td>
+                  <td class="orders-date">
+                    <!-- Time -->
+                    <time datetime="{{order.time_order}}">{{order.time_order}}</time>
+                  </td>
+                  <td class="orders-total">{{order.total_price}}</td>
+                  <td class="orders-status">
+                    <!-- Badge -->
+                    <div class="badge bg-danger-soft">{{order.confirmed_status}}</div>
+                  </td>
+                  
+                  
+                </tr>
+                {%endfor%}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%endblock%}
+</div>

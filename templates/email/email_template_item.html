@@ -1,0 +1,689 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="c-toolbar u-mb-medium">
+        <h3 class="c-toolbar__title has-divider">{% if email_id == 'add' %}{{ gettext("Them_moi") }} {% else %}
+            {{ email.name }}{% endif %}</h3>
+    </div>
+    <div class="container">
+        <div class="row u-mb-large">
+            <div class="col-lg-12">
+
+                <form data-toggle="validator" id="save_template_fr" role="form" method="post" enctype="multipart/form-data"
+                      action="/manage_emails/{% if email_id and email_id|length >0 and
+                          email_id!='None' and email_id != 'add' %}{{ email_id }}{% else %}add{% endif %}">
+                          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                    <div class="row u-mb-medium">
+
+                        <div class="c-field u-mb-small">
+                            <label
+                                    class="c-field__label"
+                                    for="firstName">{{ gettext("Ten") }}</label>
+                            <input class="c-input"
+                                   type="text"
+                                   id="firstName"
+                                   name="name"
+                                   placeholder=""
+                                   value="{% if email %}{{ email.name }}{% endif %}">
+                        </div>
+
+                        <div class="c-field u-mb-small">
+                            {% if email.thumb %}
+                                <img alt="" class="c-avatar--small"
+                                     id="view_background"
+                                     src="//files.nextify.vn/{{ email.thumb }}"
+                                     style="width: 150px;height: 150px"/>
+
+                            {% endif %}
+                            <label class="c-field__label"
+                                   for="thumb">{{ gettext("Hinh_minh_hoa:") }}</label>
+
+                            <input type="file" class="c-input" id="thumb"
+                                   name="thumb">
+                        </div>
+                        <div class="c-field u-mb-small">
+                            <label
+                                    class="c-field__label"
+                                    for="code">Note</label>
+                            <div id="editor-container" style="width: 100%; height: 900px"></div>
+
+                        </div>
+                        {% if email_id and email_id|length >0 and
+                          email_id!='None' and email_id != 'add' %}
+                            <input type="hidden" value="{{ email.design }}" id="ex_email_design"/>
+
+                        {% endif %}
+                        <input type="hidden" id="css_template" name="design"/>
+                        <input type="hidden" id="code" name="code"/>
+
+
+
+                    </div>
+                </form>
+              <div class="c-field" style="padding:20px">
+                  <a class="c-btn c-btn--info u-float-right"
+                     href="#" id="save_email_html">{{ gettext("Cap_nhat") }}
+                  </a>
+              </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block js %}
+
+    <script src="/static/js/jquery.hotkeys.js"></script>
+    <script src="/static/js/popper.min.js"></script>
+    <script src="/static/js/embed.js"></script>
+     <script nonce="{{ csp_nonce() }}">
+
+        $(document).ready(function () {
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            unlayer.init({id: 'editor-container'});
+
+            {% if email_id and email_id|length >0 and email_id!='None' and email_id != 'add' and email.design %}
+                var ex_email_design = $("#ex_email_design").val();
+                var design = JSON.parse(ex_email_design);
+                unlayer.loadDesign(design);
+            {% else %}
+                var design = {
+                    "body": {
+                        "rows": [{
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 10px 5px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "center",
+                                        "lineHeight": "120%",
+                                        "text": "<div><span style=\"color: #f10693; font-family: Pacifico, cursive; font-size: 14px; line-height: 16.8px;\"><strong><span style=\"font-size: 80px; line-height: 96px;\">Relax &amp; Plan</span></strong></span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "center",
+                                        "lineHeight": "120%",
+                                        "text": "<div><span style=\"color: #6fbb7b; font-family: Pacifico, cursive; font-size: 58px; text-align: center; line-height: 69.6px;\">&nbsp;Your Summer Break</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "20px 10px 9px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "center",
+                                        "lineHeight": "140%",
+                                        "text": "<div><span style=\"font-size: 24px; color: #505050; line-height: 33.6px;\">Time to plan a vacation for your kids?</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "5px 10px 10px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "center",
+                                        "lineHeight": "160%",
+                                        "text": "<div><span style=\"font-size: 18px; line-height: 28.8px;\"><span style=\"color: #505050; font-size: 18px; line-height: 28.8px;\">Check-out our summer break offers for&nbsp;</span><span style=\"color: #505050; font-size: 18px; line-height: 28.8px;\">children who are creative, full of energy,&nbsp;</span><span style=\"color: #505050; font-size: 18px; line-height: 28.8px;\">and can&rsquo;t sit still for a minute.</span></span></div>"
+                                    }
+                                }, {
+                                    "type": "divider",
+                                    "values": {
+                                        "containerPadding": "20px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "width": "100%",
+                                        "border": {
+                                            "borderTopWidth": "1px",
+                                            "borderTopStyle": "solid",
+                                            "borderTopColor": "#CCC"
+                                        },
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "20px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#000",
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "text": "<div><strong><span style=\"font-size: 30px; font-family: Montserrat, sans-serif; color: #2790d2; line-height: 36px;\">Upcoming Events:</span></strong></div>"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "0px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1, 2],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "image",
+                                    "values": {
+                                        "maxWidth": "100%",
+                                        "src": {
+                                            "url": "/static/images/1500313461528-1.png",
+                                            "width": 500,
+                                            "height": 500
+                                        },
+                                        "draggable": true,
+                                        "containerPadding": "0px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "action": {
+                                            "url": "",
+                                            "target": ""
+                                        },
+                                        "altText": "Image",
+                                        "fullWidth": true,
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }, {
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px 8px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#6eba79",
+                                        "textAlign": "left",
+                                        "lineHeight": "160%",
+                                        "text": "<div><span style=\"font-size: 20px; line-height: 32px;\">JET SKI RIDE</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#4f4f4f",
+                                        "textAlign": "left",
+                                        "lineHeight": "150%",
+                                        "text": "<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</div>"
+                                    }
+                                }, {
+                                    "type": "button",
+                                    "values": {
+                                        "buttonColors": {
+                                            "color": "#FFF",
+                                            "backgroundColor": "#fa9302",
+                                            "hoverColor": "#cf7a04"
+                                        },
+                                        "calculatedHeight": 36,
+                                        "calculatedWidth": 132,
+                                        "href": "",
+                                        "border": {},
+                                        "text": "ORDER NOW<br />",
+                                        "draggable": true,
+                                        "containerPadding": "5px 15px",
+                                        "padding": "10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "borderRadius": "20px"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "divider",
+                                    "values": {
+                                        "containerPadding": "1px 20px 5px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "width": "100%",
+                                        "border": {
+                                            "borderTopWidth": "1px",
+                                            "borderTopStyle": "solid",
+                                            "borderTopColor": "#CCC"
+                                        },
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "0px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [2, 1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px 8px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#6eba79",
+                                        "textAlign": "left",
+                                        "lineHeight": "160%",
+                                        "text": "<div><span style=\"font-size: 20px; line-height: 32px;\">BOAT RIDE</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#4f4f4f",
+                                        "textAlign": "left",
+                                        "lineHeight": "150%",
+                                        "text": "<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</div>"
+                                    }
+                                }, {
+                                    "type": "button",
+                                    "values": {
+                                        "buttonColors": {
+                                            "color": "#FFF",
+                                            "backgroundColor": "#fa9302",
+                                            "hoverColor": "#cf7a04"
+                                        },
+                                        "calculatedHeight": 36,
+                                        "calculatedWidth": 132,
+                                        "href": "",
+                                        "border": {},
+                                        "text": "ORDER NOW<br />",
+                                        "draggable": true,
+                                        "containerPadding": "5px 15px",
+                                        "padding": "10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "borderRadius": "20px"
+                                    }
+                                }]
+                            }, {
+                                "contents": [{
+                                    "type": "image",
+                                    "values": {
+                                        "maxWidth": "100%",
+                                        "src": {
+                                            "url": "/static/images/1500313783372-2.png",
+                                            "width": 500,
+                                            "height": 500
+                                        },
+                                        "draggable": true,
+                                        "containerPadding": "0px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "action": {
+                                            "url": "",
+                                            "target": ""
+                                        },
+                                        "altText": "Image",
+                                        "fullWidth": true,
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "divider",
+                                    "values": {
+                                        "containerPadding": "1px 20px 5px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "width": "100%",
+                                        "border": {
+                                            "borderTopWidth": "1px",
+                                            "borderTopStyle": "solid",
+                                            "borderTopColor": "#CCC"
+                                        },
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "0px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1, 2],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "image",
+                                    "values": {
+                                        "maxWidth": "100%",
+                                        "src": {
+                                            "url": "/static/images/1500314095876-3.png",
+                                            "width": 500,
+                                            "height": 500
+                                        },
+                                        "draggable": true,
+                                        "containerPadding": "0px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "action": {
+                                            "url": "",
+                                            "target": ""
+                                        },
+                                        "altText": "Image",
+                                        "fullWidth": true,
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }, {
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px 8px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#6eba79",
+                                        "textAlign": "left",
+                                        "lineHeight": "160%",
+                                        "text": "<div><span style=\"font-size: 20px; line-height: 32px;\">BEACH DAY</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px 15px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#4f4f4f",
+                                        "textAlign": "left",
+                                        "lineHeight": "150%",
+                                        "text": "<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</div>"
+                                    }
+                                }, {
+                                    "type": "button",
+                                    "values": {
+                                        "buttonColors": {
+                                            "color": "#FFF",
+                                            "backgroundColor": "#fa9302",
+                                            "hoverColor": "#cf7a04"
+                                        },
+                                        "calculatedHeight": 36,
+                                        "calculatedWidth": 132,
+                                        "href": "",
+                                        "border": {},
+                                        "text": "ORDER NOW<br />",
+                                        "draggable": true,
+                                        "containerPadding": "5px 15px",
+                                        "padding": "10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "textAlign": "left",
+                                        "lineHeight": "120%",
+                                        "borderRadius": "20px"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "divider",
+                                    "values": {
+                                        "containerPadding": "1px 20px 5px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "width": "100%",
+                                        "border": {
+                                            "borderTopWidth": "1px",
+                                            "borderTopStyle": "solid",
+                                            "borderTopColor": "#CCC"
+                                        },
+                                        "textAlign": "center"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "0px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }, {
+                            "cells": [1],
+                            "columns": [{
+                                "contents": [{
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "15px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#fa9302",
+                                        "textAlign": "center",
+                                        "lineHeight": "130%",
+                                        "text": "<div><span style=\"font-size: 36px; line-height: 46.8px;\">NEED MORE INFORMATION?</span></div>"
+                                    }
+                                }, {
+                                    "type": "text",
+                                    "values": {
+                                        "containerPadding": "10px",
+                                        "selectable": true,
+                                        "draggable": true,
+                                        "deletable": true,
+                                        "color": "#4f4f4f",
+                                        "textAlign": "center",
+                                        "lineHeight": "120%",
+                                        "text": "<div><span style=\"font-size: 20px; line-height: 24px;\">Subscribe to get updates.</span></div>"
+                                    }
+                                }, {
+                                    "type": "button",
+                                    "values": {
+                                        "buttonColors": {
+                                            "color": "#FFF",
+                                            "backgroundColor": "#6eba79",
+                                            "hoverColor": "#58a864"
+                                        },
+                                        "calculatedHeight": 52,
+                                        "calculatedWidth": 214,
+                                        "href": "",
+                                        "border": {},
+                                        "text": "<span style=\"font-size: 20px; line-height: 32px;\">SUBSCRIBE NOW</span>",
+                                        "draggable": true,
+                                        "containerPadding": "20px",
+                                        "padding": "10px 20px",
+                                        "deletable": true,
+                                        "selectable": true,
+                                        "textAlign": "center",
+                                        "lineHeight": "160%",
+                                        "borderRadius": "37px"
+                                    }
+                                }]
+                            }],
+                            "values": {
+                                "backgroundColor": "rgba(255,255,255,0)",
+                                "backgroundImage": {
+                                    "url": "",
+                                    "fullWidth": true,
+                                    "repeat": false,
+                                    "center": false,
+                                    "cover": false
+                                },
+                                "padding": "10px",
+                                "columnsBackgroundColor": "rgba(255,255,255,0)",
+                                "selectable": true,
+                                "draggable": true,
+                                "deletable": true
+                            }
+                        }],
+                        "values": {
+                            "backgroundColor": "#ffffff",
+                            "backgroundImage": {
+                                "url": "",
+                                "fullWidth": true,
+                                "repeat": false,
+                                "center": true,
+                                "cover": false
+                            },
+                            "contentWidth": "600px",
+                            "fontFamily": {
+                                "label": "Montserrat",
+                                "value": "'Montserrat',sans-serif",
+                                "type": "google",
+                                "weights": "400,700"
+                            }
+                        }
+                    }
+                };
+
+                unlayer.loadDesign(design);
+            {% endif %}
+            $("#save_email_html").click(function () {
+                unlayer.exportHtml(function (data) {
+                    var json = data.design;
+                    var html = data.html;
+                    $("#css_template").val(JSON.stringify(json));
+                    $("#code").val(html);
+                    $("#save_template_fr").submit();
+                });
+            })
+
+        });
+    </script>
+
+
+{% endblock %}
+
+

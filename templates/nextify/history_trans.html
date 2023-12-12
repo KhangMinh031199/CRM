@@ -1,0 +1,79 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <div class="c-toolbar u-mb-medium">
+        <h3 class="c-toolbar__title has-divider">{{ gettext("Vi_tich_tien") }}</h3>
+        <h5 class="c-toolbar__meta u-mr-auto">{{ gettext("Lich_su_thanh_toan") }}</h5>
+
+    </div>
+    <div class="container">
+     <div class="row u-mb-large">
+            <div class="col-lg-12">
+                <div class="card u-p-medium" style="float:right">
+
+                       <span style="padding: 10px"><a href="/loyalty/wallet">{{ gettext("Tich_Vi") }}</a></span>
+                        <span style="padding: 10px"><a href="/history_credit_pay">{{ gettext("Thanh_toan") }}</a></span>
+                       <span style="padding: 10px"> <a href="/bills">{{ gettext("Hoa_don") }}</a></span>
+                       <span style="padding: 10px"> <a href="/loyalty/wallet/config">{{ gettext("Cau_hinh") }}</a></span>
+
+                </div>
+            </div>
+    </div>
+        <div class="row u-mb-large">
+            <div class="col-lg-12">
+                <div class="card u-p-medium">
+
+                    <div class="c-table-responsive@desktop">
+                        <table class="c-table">
+                            <thead class="c-table__head c-table__head--slim">
+                            <tr class="c-table__row">
+                                <th class="c-table__cell
+                                    c-table__cell--head">{{ gettext("Ten") }}
+                                </th>
+                                <th class="c-table__cell c-table__cell--head">
+                                    Phone
+                                </th>
+                                <th class="c-table__cell
+                                c-table__cell--head">{{ gettext("So_tien") }}
+                                </th>
+                                <th class="c-table__cell
+                                c-table__cell--head">{{ gettext("Dia_diem") }}
+                                </th>
+                                <th class="c-table__cell
+                                c-table__cell--head">{{ gettext("Thoi_gian") }}
+                                </th>
+                            </tr>
+
+                            </thead>
+
+                            <tbody>
+                            {% for his in history %}
+                                <tr class="c-table__row">
+                                    <td class="c-table__cell">{{ his.user.name }}</td>
+                                    <td class="c-table__cell"><a
+                                            href="/user/{{ his.user._id }}">{{ his.user.phone }}</a>
+                                    </td>
+                                    <td class="c-table__cell">{{ his.credit|format_price }}</td>
+                                    <td class="c-table__cell">
+                                        {% if his.shop and his.shop|length>0 %}
+                                            {{ his.shop.name }}{% endif %}</td>
+                                    <td class="c-table__cell">{% if his.sale %}
+                                        {% if his.sale.UpdateDate %}{{ his
+                  .sale.UpdateDate|human_time_string }}{% else %}{{ his
+                  .when|human_time_string }}{% endif %}{% else %}{{ his
+                  .when|human_time_string }}{% endif %}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <nav class="c-pagination u-justify-center">
+                    {% if pagination %}
+                        {{ pagination.links }}
+                    {% endif %}
+                </nav>
+            </div>
+        </div>
+    </div>
+{% endblock %}

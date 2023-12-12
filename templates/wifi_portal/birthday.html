@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<!-- include css file -->
+<link rel="stylesheet" href="/static/wifi_portal/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/wifi_portal/css/fonts.css">
+  <link rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/static/wifi_portal/css/styles.css">
+	<!-- end include css file -->
+</head>
+
+<body>
+
+	<div class="container">
+		<!-- header -->
+		<div class="row">
+			<div class="col-md-8 col-lg-6 mg-auto">
+				<div class="box_circle">
+
+					<div class="box_circle_image">
+							<img src="images/cake-birth-day.png" alt="">
+					</div>
+					<div class="box_text">
+						<h3 class="title">Chúc mừng sinh nhật!</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- end header -->
+
+		<!-- middle -->
+		<div class="row">
+			<div class="col-md-8 mg-auto">
+				<div class="box_desc">
+				 {% if content %}
+             <h3 class="title">
+                {{ content|safe }}
+            </h3>
+            {% else %}
+              <h3 class="title">
+                Chào <strong>{{ user.name }}</strong>,<br> chúc bạn một ngày
+           sinh nhật vui vẻ.
+            </h4>
+            {% endif %}
+				</div>
+			</div>
+		</div>
+		<!-- end middle -->
+
+		<!-- footer -->
+		<div class="row">
+			<div class="col-md-6 col-lg-4 mg-auto">
+				<div class="btn_action">
+					{% if auth_target %}
+
+              <a id="auth_target" href="{{ auth_target }}"
+                 class="btn btn btn_bg_green mg-bt-10 white_text">
+                <i class="fe fe-wifi font_size_24" aria-hidden="true"></i>
+                {% if redirect_uri %}
+                  <span>Tiếp tục đến {{ redirect_uri | truncate(50) }}</span>
+                {% else %}
+                  <span>Kết nối Wi-Fi/Go Online</span>
+                {% endif %}
+              </a>
+            {% else %}
+            <center>
+                         <h3><i
+                class="fe fe-wifi font_size_24" aria-hidden="true"></i>Kết nối thành công</h3>
+            
+            </center>
+           {% endif %}
+				</div>
+			</div>
+		</div>
+		<!-- end footer -->
+	</div>
+
+<script src="/static/wifi_portal/js/jquery-3.3.1.min.js"></script>
+<script src="/static/wifi_portal/js/bootstrap.min.js"></script>
+<script src="/static/wifi_portal/js/jquery.bcSwipe.js"></script>
+<script src="/static/wifi_portal/js/styles.js"></script>
+<script type="text/javascript"
+        src="/static/wifi_portal/js/welcome.js"></script>
+<!-- end include js file -->
+<script async
+        src="https://www.googletagmanager.com/gtag/js?id=UA-108917593-1"></script>
+ <script nonce="{{ csp_nonce() }}">
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
+  gtag('js', new Date());
+
+  gtag('config', 'UA-108917593-1');
+</script>
+</body>
+</html>

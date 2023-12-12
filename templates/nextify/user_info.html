@@ -1,0 +1,345 @@
+<a href="#" class="avatar avatar-xl card-avatar">
+
+  {% if user.user.avatar and user.user.avatar|length > 0 %}
+  <img class="avatar-img rounded-circle border border-4 border-card"
+    src="{{ user.user.avatar.replace('http:', 'https:') }}" />
+  {% else %}
+  {% set avatar = user.user|human_avatar %}
+  <img class="avatar-img rounded-circle border border-4 border-card" src="{{ avatar }}" />
+  {% endif %}
+</a>
+
+
+
+<!-- Heading -->
+<h2 class="card-title text-center">
+  <a href="#"> {% if user.user.name and user.user.name|string != 'None' and user.user.name|length != 0 %}
+
+    {{ user.user.name }}
+
+    {% else %}
+    {% if user.user.phone and user.user.phone|string != 'None' and user.user.phone|length != 0 %}
+
+    {{ user.user.phone }}
+
+    {% elif user.user.email | string != 'None' %}
+    {{ user.user.email }}{% endif %}
+    {% endif %}
+    {% if (not user.user.name and not user.user.phone and not user.user.email) or (user.user.phone | string ==
+    'None' and user.user.name|string == 'None' and user.user.phone|length == 0 and user.user.email | string ==
+    'None' and user.user.client_mac|string != 'None') and user.user.client_mac | length > 0 %}
+
+    {{ user.user.client_mac[0] if user.user.client_mac[0] |string != 'None' else '' }}
+
+
+    {% endif %}
+  </a> <a href="#" class="edit_user" user_id={{cus_id}}><i class="fe fe-edit-3"></i></a>
+</h2>
+
+<!-- Text -->
+<p class="small text-muted mb-3 text-center">
+  Đến lần cuối <b>{{ user.last_visit|human_time }}</b>
+</p>
+
+<!-- Badges -->
+<p class="card-text text-center">
+  {% if user.user.user_tags_details|length> 0 %}
+  {% for tag in user.user.user_tags_details %}
+  {% if tag.name|length > 0 %}
+  <span class="badge badge-soft-{{ ['success','warning','info']|random }}">
+    {{ tag.name }}
+  </span>
+  {% endif %}
+  {% endfor %}
+  {% else %}
+  N/A
+  {% endif %}
+
+</p>
+<div class="row">
+  <div class="col-6">
+    <div class="list-group list-group-flush mb-4">
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col">
+
+            <!-- Title -->
+            <small>Lượt đến</small>
+
+          </div>
+          <div class="col-auto">
+
+            <!-- Time -->
+            <small class="text-muted">
+              {{ user.total_visit }}
+            </small>
+
+          </div>
+        </div> <!-- / .row -->
+      </div>
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col">
+
+            <!-- Title -->
+            <small>Số điện thoại</small>
+
+          </div>
+          <div class="col-auto">
+
+            <!-- Text -->
+            <small class="text-muted">
+              {% if user.user.phone or user.user.phone|string !='NONE' or user.user.phone|string !='None' %}
+              {{ user.user.phone }}
+              {% else %}
+              N/A
+              {% endif %}
+            </small>
+
+          </div>
+        </div> <!-- / .row -->
+      </div>
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col">
+
+            <!-- Title -->
+            <small>Email</small>
+
+          </div>
+          <div class="col-auto">
+
+            <!-- Link -->
+            <a class="small text-muted">
+              {% if user.user.email or user.user.email|string !='NONE' or user.user.email|string !='None' %}
+              {{ user.user.email }}
+              {% else %}
+              N/A
+              {% endif %}
+            </a>
+
+          </div>
+        </div> <!-- / .row -->
+      </div>
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col">
+
+            <!-- Title -->
+            <small>Thiết bị</small>
+
+          </div>
+          <div class="col-auto">
+
+            <!-- Link -->
+            <a class="small text-muted">
+              {{ user.user.client_mac|length }}
+            </a>
+
+          </div>
+        </div> <!-- / .row -->
+      </div>
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col">
+
+            <!-- Title -->
+            <small>Sinh nhật</small>
+
+          </div>
+          <div class="col-auto">
+
+            <!-- Link -->
+            <a class="small text-muted">
+
+              {% if user.user.birthday %}
+              {{ user.user.birthday }}
+
+              {% else %}
+              N/A
+              {% endif %}
+            </a>
+
+          </div>
+        </div> <!-- / .row -->
+      </div>
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col">
+
+            <!-- Title -->
+            <small>CMND</small>
+
+          </div>
+          <div class="col-auto">
+
+            <!-- Link -->
+            <a class="small text-muted">
+              {% if user.user.identity or user.user.identity|string !='NONE' or user.user.identity|string !='None' %}
+              {{ user.user.identity }}
+              {% else %}
+              N/A
+              {% endif %}
+            </a>
+
+          </div>
+        </div> <!-- / .row -->
+      </div>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="list-group list-group-flush mb-4">
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col">
+
+            <!-- Title -->
+            <small>Giới tính</small>
+
+          </div>
+          <div class="col-auto">
+
+            <!-- Link -->
+            <a class="small text-muted">
+              {% if user.user.gender %}
+              {% if user.user.gender == '2' %}
+              {{ gettext("Nu") }}
+
+              {% elif user.user.gender == '1' %}
+              {{ gettext("Nam") }}
+              {% else %}
+              {{ gettext("Chua_xac_dinh") }}
+              {% endif %}
+              {% else %}
+              {{ gettext("Chua_xac_dinh") }}
+              {% endif %}
+          </div>
+          </a>
+
+        </div>
+      </div> <!-- / .row -->
+
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col">
+
+            <!-- Title -->
+            <small>Chi tiêu</small>
+
+          </div>
+          <div class="col-auto">
+
+            <!-- Link -->
+            <a class="small text-muted">
+              {% if total_amount_spent %}
+              {{ total_amount_spent|jinja_currency_format }}
+
+              {% else %}
+              N/A
+              {% endif %}
+            </a>
+
+          </div>
+        </div> <!-- / .row -->
+      </div>
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col">
+
+            <!-- Title -->
+            <small>Số lần chi tiêu</small>
+
+          </div>
+          <div class="col-auto">
+
+            <!-- Link -->
+            <a class="small text-muted">
+              {% if total_order %}
+              {{ total_order }}
+
+              {% else %}
+              N/A
+              {% endif %}
+            </a>
+
+          </div>
+        </div> <!-- / .row -->
+      </div>
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col">
+
+            <!-- Title -->
+            <small>Chi tiêu gần nhất</small>
+
+          </div>
+          <div class="col-auto">
+
+            <!-- Link -->
+            <a class="small text-muted">
+              {% if last_purchase %}
+              {{ last_purchase }}
+
+
+              {% else %}
+              N/A
+              {% endif %}
+            </a>
+
+          </div>
+        </div> <!-- / .row -->
+      </div>
+      <div class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col">
+
+            <!-- Title -->
+            <small>Nhân viên</small>
+
+          </div>
+          <div class="col-auto">
+
+            <!-- Link -->
+            <a class="small text-muted">
+              {% if user.user.is_employee =='True' %}
+              <i class="fe fe-check-circle text-success"></i>
+              {% else %}
+              N/A
+              {% endif %}
+            </a>
+
+          </div>
+        </div> <!-- / .row -->
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<input type="hidden" value="{{cus_id}}" id="visit_cus_id" />
+<input type="hidden" value="{{merchant_id}}" id="merchant_id" />
+<script>
+
+
+  $(document).ready(function () {
+    $(document).on("click", ".edit_user", function (e) {
+      e.preventDefault();
+      var cus_id = $("#visit_cus_id").val();
+      var merchant_id = $("#merchant_id").val();
+      $('.modal_loading').show();
+      $('#customer_details').modal('toggle');
+      $('#edit_user_modal').modal('toggle');
+      $('#edit_user_modal_content').empty();
+      $.ajax({
+        type: 'GET',
+        url: '/' + merchant_id + '/customers/' + cus_id +"/edit",
+        success: function (response) {
+          $('.modal_loading').hide();
+          $('#edit_user_modal_content').html(response);
+        }
+      })
+    });
+
+
+  });
+</script>

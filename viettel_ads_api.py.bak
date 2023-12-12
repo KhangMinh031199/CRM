@@ -1,0 +1,940 @@
+#! coding: utf-8
+import requests
+import json
+
+url = 'https://ads.viettel.vn/deptestapi/'
+
+
+# headers = {'content-type': 'application/json'}
+# headers =
+def validate_token():
+    data = {
+        'service': 'nextify',
+        'username': 'nextify',
+        'password': 'NextifY@2018',
+        'hash': 'ea55094b9484c3a57b16d751dcb6fb6430a7d31bc25eaac085daeea697116dd0'
+    }
+    r = requests.post(url + 'app/validate-token', data=data)
+    if 'error_code' in r.json() and 'accesstoken' not in r.json():
+        return False
+    else:
+        return r.json()['accesstoken']
+
+
+# print accesstoken
+def advertiser_list():
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        headers = {
+            'accesstoken': accesstoken,
+            'Content-type': 'application/json'
+        }
+        r = requests.get(url + 'advertiser/list', headers=headers)
+        return r.json()
+    else:
+        return False
+
+
+def login():
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'username': 'nextify',
+            'password': 'NextifY@2018'
+        }
+        headers = {
+            'accesstoken': accesstoken,
+            'Content-type': 'application/json'
+        }
+        r = requests.post(url + 'app/login', data=data, headers=headers)
+        return r.json()
+    else:
+        return False
+
+
+def advertiser_create(paid_type, name, code, tax_code, phone, address, company=None, email=None, province_id=None,
+                      district_id=None, rep_person=None, agreement_code=None, agreement_startDate=None,
+                      agreement_endDate=None, customer_info=None, alert_surplus=None, filex=None):
+    # Tạo nhà quảng cáo (NQC) mới
+    accesstoken = validate_token()
+    files = {}
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'paid_type': paid_type,
+            'name': name,
+            'code': code,
+            'tax_code': tax_code,
+            'phone': phone,
+            'address': address
+        }
+        # print data
+        if company:
+            data['company'] = company
+        if email:
+            data['email'] = email
+        if province_id:
+            data['province_id'] = province_id  # lấy từ api common/list-province
+        if district_id:
+            data['district_id'] = district_id  # lấy từ api common/list-district
+        if rep_person:
+            data['rep_person'] = rep_person
+        if agreement_code:
+            data['agreement_code'] = agreement_code
+        if agreement_startDate:
+            data['agreement_startDate'] = agreement_startDate
+        if agreement_endDate:
+            data['agreement_endDate'] = agreement_endDate
+        if customer_info:
+            data['customer_info'] = customer_info
+        if alert_surplus:
+            data['alert_surplus'] = alert_surplus
+        if filex:
+            files = {'file': filex}
+        headers = {
+            'accesstoken': accesstoken
+            # 'Content-type': 'application/form-data'
+        }
+        r = requests.post(url + 'advertiser/create', data=data, headers=headers, files=files)
+        return r.json()
+    else:
+        return False
+
+
+# print advertiser_create('Prepaid','NQC3','3','2220','0969194949','HN')
+
+def advertiser_update(advertiser_id, paid_type, name, code, tax_code, phone, address, company=None, email=None,
+                      province_id=None,
+                      district_id=None, rep_person=None, agreement_code=None, agreement_startDate=None,
+                      agreement_endDate=None, customer_info=None, alert_surplus=None, filex=None):
+    accesstoken = validate_token()
+    # Cập nhật NQC
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'advertiser_id': advertiser_id,
+            'paid_type': paid_type,
+            'name': name,
+            'code': code,
+            'tax_code': tax_code,
+            'phone': phone,
+            'address': address
+        }
+        if company:
+            data['company'] = company
+        if email:
+            data['email'] = email
+        if province_id:
+            data['province_id'] = province_id
+        if district_id:
+            data['district_id'] = district_id
+        if rep_person:
+            data['rep_person'] = rep_person
+        if agreement_code:
+            data['agreement_code'] = agreement_code
+        if agreement_startDate:
+            data['agreement_startDate'] = agreement_startDate
+        if agreement_endDate:
+            data['agreement_endDate'] = agreement_endDate
+        if customer_info:
+            data['customer_info'] = customer_info
+        if alert_surplus:
+            data['alert_surplus'] = alert_surplus
+        if filex:
+            files = {'file': filex}
+
+        headers = {
+            'accesstoken': accesstoken,
+            'Content-type': 'application/form-data'
+        }
+
+        r = requests.post(url + 'advertiser/update', data=data, headers=headers)
+        return r.json()
+    else:
+        return False
+
+
+# print advertiser_update('183','Prepaid','NQC1','1','2222','0969194907','HN2')
+def advertiser_delete(advertiser_id):
+    accesstoken = validate_token()
+    # Xóa NQC
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'advertiser_id': advertiser_id,
+        }
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+        r = requests.post(url + 'advertiser/delete', data=data, headers=headers)
+        return r.json()
+    else:
+        return False
+
+# print advertiser_delete(431)
+
+def advertiser_request_approved(advertiser_id):
+    accesstoken = validate_token()
+    # gửi yêu cầu admin phê duyệt NQC
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'advertiser_id': advertiser_id,
+        }
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+        r = requests.post(url + 'advertiser/request-approved', data=data, headers=headers)
+        return r.json()
+    else:
+        return False
+
+# print advertiser_request_approved(432)
+
+def advertiser_detail(advertiser_id):
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        advertiser_id = str(advertiser_id)
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+        r = requests.get(url + 'advertiser/detail?advertiser_id=' + advertiser_id, headers=headers)
+        return r.json()
+    else:
+        return False
+
+# print advertiser_detail(432)
+
+def advertiser_list():
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+        r = requests.get(url + 'advertiser/list', headers=headers)
+        return r.json()
+    else:
+        return False
+
+# print advertiser_list()
+
+def alias_list():
+    accesstoken = validate_token()
+    # Danh sách các thương hiệu
+    if accesstoken and len(accesstoken) > 0:
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+        r = requests.get(url + 'alias/list', headers=headers)
+        return r.json()
+    else:
+        return False
+
+# print alias_list()
+
+def alias_create(alias_name, categories, telco):
+    # Tạo thương hiệu
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'alias_name': alias_name,
+            'categories': categories,  # lấy từ api common/list-category
+            'telco': telco  # lấy từ api common/list-telco
+        }
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+        r = requests.post(url + 'alias/create', data=data, headers=headers)
+        return r.json()
+    else:
+        return False
+
+
+# print alias_create('nextify2214', '[9]', 'vietnammobile')
+# print l['data']['alias_id']
+def alias_update(alias_id, alias_name, categories, telco):
+    # Cập nhật thương hiệu
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'alias_id': alias_id,
+            'alias_name': alias_name,
+            'categories': categories,  # lấy từ api common/list-category
+            'telco': telco  # lấy từ api common/list-telco
+        }
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+        r = requests.post(url + 'alias/update', data=data, headers=headers)
+        return r.json()
+    else:
+        return False
+
+# print alias_update('539','nextify0101', '[2]', 'mobifone')
+
+def alias_request_approved(alias_id):
+    # Gửi yêu cầu phê duyệt thương hiệu
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'alias_id': alias_id
+        }
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+        r = requests.post(url + 'alias/request-approved', data=data, headers=headers)
+        return r.json()
+    else:
+        return False
+
+
+# print alias_request_approved('539')
+
+def alias_detail(alias_id):
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'alias_id': alias_id
+        }
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+        r = requests.get(url + 'alias/detail?alias_id=' + alias_id, headers=headers)
+        return r.json()
+    else:
+        return False
+
+
+# print alias_detail('539')
+def campaign_create(name, alias_id, category_id, start_date, end_date, budget_money_campaign=None,
+                    budget_money_day=None, budget_sms_campaign=None, budget_sms_day=None, slot_time=None,
+                    exclude_date=None, campaign_id=None, price_unit=None):
+    # Tạo chương trình quảng cáo (CTQC) - thiết lập cấu hình chung (Tạo + update)
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        budget = 0
+        data = {
+            'name': name,
+            'alias_id': alias_id,
+            'category_id': category_id,
+            'start_date': start_date,  # YYYY-mm-dd
+            'end_date': end_date  # YYYY-mm-dd
+        }
+        if budget_money_campaign:
+            data['budget_money_campaign'] = budget_money_campaign
+        elif budget_money_day:
+            data['budget_money_day'] = budget_money_day
+        elif budget_sms_campaign:
+            data['budget_sms_campaign'] = budget_sms_campaign
+        elif budget_sms_day:
+            data['budget_sms_day'] = budget_sms_day
+        else:
+            return 'Thiếu budget rồi!!'
+        if slot_time:
+            data['slot_time'] = slot_time
+        if exclude_date:
+            data['exclude_date'] = exclude_date
+        if campaign_id:
+            data['campaign_id'] = campaign_id  # yêu cầu trong TH cập nhật
+        if price_unit:
+            data['price_unit'] = price_unit  # Mặc định:sms. Lấy từ api common/get-price-unit
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+        r = requests.post(url + 'campaign/create', data=data, headers=headers)
+        return r.json()
+    else:
+        return False
+
+
+# print campaign_create('nextifytest', '539', '3', '2019-1-20', '2019-1-25',budget_money_campaign=100000)
+
+def campaign_save_sms_content(channel_type, content, campaign_id, promotion_program_id=None, long_link=None,
+                              smms_id=None, short_link=None):
+    accesstoken = validate_token()
+    # Cấu hình nội dung kênh SMS(tạo mới + sửa)
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'channel_type': channel_type,  # sms hoặc sms_flash
+            'content': content,
+            'campaign_id': campaign_id
+        }
+        if promotion_program_id:
+            data['promotion_program_id'] = promotion_program_id
+        if long_link:
+            data['long_link'] = long_link
+        if smms_id:
+            data['smms_id'] = smms_id
+        if short_link:
+            data['short_link'] = short_link
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+        r = requests.post(url + 'campaign/save-sms-content', data=data, headers=headers)
+        return r.json()
+    else:
+        return False
+
+# print campaign_save_sms_content('sms','nextify sms', '1216')
+
+def campaign_remove_sms_content(smms_id):
+    accesstoken = validate_token()
+    # Xóa cấu hình nội dung
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'smms_id': smms_id
+        }
+
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+        r = requests.post(url + 'campaign/remove-sms-content', data=data, headers=headers)
+        return r.json()
+    else:
+        return False
+
+# print campaign_remove_sms_content('629')
+
+def campaign_save_sms_reward(campaign_id, smms_id, sms_mo, short_code, sms_mt=None, reward_topup=None, reward_data=None,
+                             reward_id=None, reward_sms=None):
+    # Cấu hình nội dung phản hồi
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'campaign_id': campaign_id,
+            'smms_id': smms_id,
+            'sms_mo': sms_mo,
+            'short_code': short_code
+        }
+        if reward_sms:
+            data['reward_sms'] = reward_sms
+        elif sms_mt:
+            data['sms_mt'] = sms_mt
+        elif reward_topup:
+            data['reward_topup'] = reward_topup
+        elif reward_data:
+            data['reward_data'] = reward_data
+        else:
+            return 'Thiếu reward rồi!!'
+        if short_code:
+            data['short_code'] = short_code  # lấy từ api common/list-shortcode
+        if reward_id:
+            data['reward_id'] = reward_id  # yêu cầu trong TH cập nhật
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+        r = requests.post(url + 'campaign/save-sms-reward', data=data, headers=headers)
+        return r.json()
+    else:
+        return False
+
+
+# print campaign_save_sms_reward('1216', '991', 'dongy',1699, reward_topup=10000)
+
+def campaign_remove_sms_reward(reward_id):
+    accesstoken = validate_token()
+    # Xóa cấu hình nội dung phản hồi sms, sms_flash
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'reward_id': reward_id
+        }
+
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+        r = requests.post(url + 'campaign/remove-sms-reward', data=data, headers=headers)
+        return r.json()
+    else:
+        return False
+
+# print campaign_remove_sms_reward('395')
+
+def campaign_ussd_config(question_title, question_content, campaign_id, ads_ussd_qa_id=None):
+    # Cấu hình nội dung kênh ussd
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'question_title': question_title,
+            'question_content': question_content,
+            'campaign_id': campaign_id
+        }
+        if ads_ussd_qa_id:
+            data['ads_ussd_qa_id'] = ads_ussd_qa_id  # yêu cầu trong TH cập nhật
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+        r = requests.post(url + 'campaign/ussd-config', data=data, headers=headers)
+        return r.json()
+    else:
+        return False
+
+# print campaign_ussd_config('Nextifyquestion', 'day la dau?','1216')
+
+def campaign_remove_ussd_content(ads_ussd_qa_id):
+    accesstoken = validate_token()
+    # Xóa cấu hình nội dung kênh ussd
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'ads_ussd_qa_id': ads_ussd_qa_id
+        }
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.post(url + 'campaign/remove-ussd-content', data=data, headers=headers)
+    return r.json()
+
+
+# print campaign_remove_ussd_content('245')
+
+def campaign_ussd_list_question(campaign_id):
+    accesstoken = validate_token()
+    # Danh sách câu hỏi kênh ussd
+    if accesstoken and len(accesstoken) > 0:
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.post(url + 'campaign/ussd-list-question?campaign_id=' + campaign_id, headers=headers)
+    return r.json()
+
+
+# print campaign_ussd_list_question('1216')
+
+def campaign_ussd_config_keyboard(campaign_id, ads_ussd_qa_id, ussd_key=None, ussd_qnext=None
+                                  , sms_mt=None, alias_id=None, reward_data=None, reward_topup=None):
+    accesstoken = validate_token()
+    # Cấu hình phím bấm phản hồi
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'campaign_id': campaign_id,
+            'ads_ussd_qa_id': ads_ussd_qa_id
+        }
+        if ussd_key:
+            data['ussd_key'] = ussd_key  # yêu cầu trong TH cập nhật
+        if ussd_qnext:
+            data['ussd_qnext'] = ussd_qnext
+        if sms_mt:
+            data['sms_mt'] = sms_mt
+        elif alias_id:
+            data['alias_id'] = alias_id
+        elif reward_data:
+            data['reward_data'] = reward_data
+        if reward_topup:
+            data['reward_topup'] = reward_topup
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.post(url + 'campaign/ussd-config-keyboard', data=data, headers=headers)
+    return r.json()
+
+
+# print campaign_ussd_config_keyboard(1216, 251)
+
+def campaign_list_config_reward(channel, content_id):
+    accesstoken = validate_token()
+    # Danh sách các cấu hình phản hồi cho kênh sms,sms_flash,ussd
+    if accesstoken and len(accesstoken) > 0:
+        # data = {
+        #     'channel': channel,
+        #     'content_id': content_id
+        # }
+        headers = {
+            'accesstoken': accesstoken
+        }
+    r = requests.get(url + 'campaign/list-config-reward?channel=' + channel + '&content_id=' + content_id,
+                     headers=headers)
+    return r.json()
+
+
+# print campaign_list_config_reward('sms', '991')
+
+def campaign_upload_audience(campaign_id, filex):
+    accesstoken = validate_token()
+    # Upload tập đối tượng
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'campaign_id': campaign_id
+        }
+        files = {'file': open(filex, 'rb')}
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.post(url + 'campaign/upload-audience', data=data, headers=headers, files=files)
+    return r.json()
+
+
+# print campaign_upload_audience('1216', '/home/kien/Downloads/customers_sample_crmx_test.xlsx')
+
+def campaign_estimate(campaign_id, include_location=None, exclude_location=None, age=None, gender=None,
+                      include_other_audience=None, exclude_other_audience=None,
+                      include_advance_filter=None, exclude_advance_filter=None):
+    # Ước lượng quy mô khi sử dụng hình thức filter
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'campaign_id': campaign_id
+        }
+        headers = {
+            'accesstoken': accesstoken
+        }
+        if age:
+            data['age[]'] = age
+        if gender:
+            data['gender[]'] = gender
+        if include_location:
+            data['include_location[]'] = include_location
+        if exclude_location:
+            data['exclude_location[]'] = exclude_location
+        if include_other_audience:
+            data['include_other_audience[]'] = include_other_audience
+        if exclude_other_audience:
+            data['exclude_other_audience[]'] = exclude_other_audience
+        if include_advance_filter:
+            data['include_advance_filter[]'] = include_advance_filter
+        if exclude_advance_filter:
+            data['exclude_advance_filter[]'] = exclude_advance_filter
+
+    r = requests.post(url + 'campaign/estimate', data=data, headers=headers)
+    return r.json()
+
+
+# print campaign_estimate('1216')
+
+def campaign_detail(campaign_id):
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        campaign_id = str(campaign_id)
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.get(url + 'campaign/detail?campaign_id=' + campaign_id, headers=headers)
+    return r.json()
+
+
+# print campaign_detail(1216)
+
+def campaign_list(limit=None, page=None):
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        headers = {
+            'accesstoken': accesstoken
+        }
+        if limit:
+            l = limit
+        if page:
+            p = page
+    r = requests.get(url + 'campaign/list?limit=' + l + '&page=' + p, headers=headers)
+    return r.json()
+
+
+# print campaign_list('10','2')
+
+def campaign_list_filter_target():
+    accesstoken = validate_token()
+    # Lấy danh sách filter target cho việc filter tập đối tượng
+    if accesstoken and len(accesstoken) > 0:
+        headers = {
+            'accesstoken': accesstoken
+        }
+    r = requests.get(url + 'campaign/list-filter-target', headers=headers)
+    return r.json()
+
+
+# print campaign_list_filter_target()
+
+
+def campaign_action_campaign(campaign_id, Type):  # cái này e chưa test lại đc
+    accesstoken = validate_token()
+    # Các thao tác với CTQC: gửi yêu cầu phê duyệt, phê duyệt, test, tạm dừng,tiếp tục, buộc dừng
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'campaign_id': campaign_id,
+            'type': Type,
+        }
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.post(url + 'campaign/action-campaign', data=data, headers=headers)
+    return r.json()
+
+
+# headers = {'accesstoken': accesstoken}
+# r = requests.post(url + 'campaign/action-campaign', data={'campaign_id': 1216, 'type': 'resume'}, headers=headers)
+# print r.json()
+# print campaign_action_campaign('1216', 'request_approved')
+
+def campaign_get_short_link(campaign_id, long_link):  # cái này e chưa test lại đc
+    accesstoken = validate_token()
+    # Tạo short link
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'campaign_id': campaign_id,
+            'long_link': long_link  # url hợp lệ
+        }
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.post(url + 'campaign/get-short-link', data=data, headers=headers)
+    return r.json()
+
+
+# headers = {'accesstoken': accesstoken}
+# r = requests.post(url + 'campaign/get-short-link', data={'campaign_id': 1216, 'long-link': 'blog.nextify.vn'}, headers=headers)
+# print r.json()
+# print campaign_get_short_link('809', 'blog.nextify.vn')
+
+def campaign_using_old_audience(campaign_id, Type, include_audience=None, exclude_audience=None):
+    accesstoken = validate_token()
+    # Upload tập đối tượng
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'campaign_id': campaign_id,
+            'type': Type
+        }
+        if include_audience:
+            data['include_audience[]'] = include_audience
+        if exclude_audience:
+            data['exclude_audience[]'] = exclude_audience
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.post(url + 'campaign/using-old-audience', data=data, headers=headers)
+    return r.json()
+
+
+# headers = {'accesstoken': accesstoken}
+# r = requests.post(url + 'campaign/using-old-audience', data={'campaign_id': 1216, 'type': 'filter','include_audience[]': '[145]'}, headers=headers)
+# print r.json()
+# print campaign_using_old_audience('1216','filter', include_audience= '[657,658]')
+
+def campaign_save_filter_audience(campaign_id, age=None, gender=None, include_location=None, exclude_location=None,
+                                  include_other_audience=None, exclude_other_audience=None,
+                                  include_advance_filter=None, exclude_advance_filter=None):
+    accesstoken = validate_token()
+    # Tạo CTQC sử dụng hình thức filter tập đối tượng
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'campaign_id': campaign_id,
+        }
+        if age:
+            data['age[]'] = age
+        if gender:
+            data['gender[]'] = gender
+        if include_location:
+            data['include_location[]'] = include_location
+        if exclude_location:
+            data['exclude_location[]'] = exclude_location
+        if include_other_audience:
+            data['include_other_audience[]'] = include_other_audience
+        if exclude_other_audience:
+            data['exclude_other_audience[]'] = exclude_other_audience
+        if include_advance_filter:
+            data['include_advance_filter[]'] = include_advance_filter
+        if exclude_advance_filter:
+            data['exclude_advance_filter[]'] = exclude_advance_filter
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.post(url + 'campaign/save-filter-audience', data=data, headers=headers)
+    return r.json()
+
+
+# print campaign_save_filter_audience('1216', age='19-25',gender='M', include_advance_filter='category###14###v_t2_ct_p###[1]')
+
+def promotion_program_list():
+    # Lấy danh sách các chương trình khuyến mãi mà NQC đã tạo
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.post(url + 'promotion-program/list', headers=headers)
+    return r.json()
+
+
+# print promotion_program_list()
+
+def promotion_program_create(name, Type, total_code=None, length_code=None, description=None, rule=None):
+    # Tạo chương trình khuyến mãi mới
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        data = {
+            'name': name,
+            'type': Type
+        }
+
+        if total_code:
+            data['total_code'] = total_code
+        if length_code:
+            data['length_code'] = length_code
+        if description:
+            data['description'] = description
+        if rule:
+            data['rule'] = json.dumps(rule)
+        headers = {
+            'Content-type': 'application/json',
+            'accesstoken': accesstoken
+        }
+        # print data
+
+    r = requests.post(url + 'promotion-program/create', json=data, headers=headers)
+    return r.json()
+
+
+# print promotion_program_create('NextifyProgram', 'gen', total_code=10, length_code=15, rule={'is_letter':1,'is_number':1,'is_special_char':1})
+
+def common_get_list_audience(Type):
+    # Lấy danh sách tập đối tượng NQC đã đẩy lên hoặc filter BI
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        headers = {
+            'accesstoken': accesstoken
+        }
+        data = {
+            'type': Type
+        }
+    r = requests.get(url + 'common/get-list-audience?type=' + Type, headers=headers)
+    return r.json()
+
+
+# print common_get_list_audience('U')
+
+def common_list_shortcode():
+    # Lấy danh sách đầu số phản hồi
+    accesstoken = validate_token()
+    if accesstoken and len(accesstoken) > 0:
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.get(url + 'common/list-shortcode', headers=headers)
+    return r.json()
+
+
+# print common_list_shortcode()
+
+def common_list_data_reward():
+    accesstoken = validate_token()
+    # Lấy danh sách mức thưởng tặng data
+    if accesstoken and len(accesstoken) > 0:
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.get(url + 'common/list-data-reward', headers=headers)
+    return r.json()
+
+
+# print common_list_data_reward()
+
+def common_list_province():
+    accesstoken = validate_token()
+    # Lấy danh sách tỉnh thành phố
+    if accesstoken and len(accesstoken) > 0:
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.get(url + 'common/list-province', headers=headers)
+    return r.json()
+
+
+# print common_list_province()
+
+def common_list_district():
+    accesstoken = validate_token()
+    # Lấy danh sách quận huyện
+    if accesstoken and len(accesstoken) > 0:
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.get(url + 'common/list-district', headers=headers)
+    return r.json()
+
+
+# print common_list_district()
+
+def common_list_slot_time():
+    accesstoken = validate_token()
+    # Lấy danh sách khung giờ gửi tin
+    if accesstoken and len(accesstoken) > 0:
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.get(url + 'common/list-slottime', headers=headers)
+    return r.json()
+
+
+# print common_list_slot_time()
+
+def common_list_telco():
+    accesstoken = validate_token()
+    print accesstoken
+    # Lấy danh sách nhà mạng
+    if accesstoken and len(accesstoken) > 0:
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.get(url + 'common/list-telco', headers=headers)
+    return r.json()
+
+
+# print common_list_telco()
+
+def common_list_category():
+    accesstoken = validate_token()
+    # Lấy danh sách nhóm
+    if accesstoken and len(accesstoken) > 0:
+        headers = {
+            'accesstoken': accesstoken
+        }
+
+    r = requests.get(url + 'common/list-category', headers=headers)
+    return r.json()
+
+
+# print common_list_category()
+
+def report_budget():
+    accesstoken = validate_token()
+    # Báo cáo ngân quỹ NQC
+    if accesstoken and len(accesstoken) > 0:
+        headers = {'accesstoken': accesstoken}
+    r = requests.get(url + 'report/budget', headers=headers)
+    return r.json()
+
+
+# print report_budget()
+
+def campaign_detail():
+    accesstoken = validate_token()
+    # Báo cáo chi tiết CTQC
+    if accesstoken and len(accesstoken) > 0:
+        headers = {'accesstoken': accesstoken}
+    r = requests.get(url + 'report/campaign-detail', headers=headers)
+    return r.json()
+
+# print campaign_detail()

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Nextify | The Next Generation of Loyalty</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<link rel="stylesheet" href="/static/nextify/css/dash_kit_theme.min.css" />
+<style>
+    body {
+        font-family: 'SoDo', Fallback, sans-serif;
+        }
+</style>
+
+</head>
+<script src="/static/js/jquery-3.2.1.min.js"></script>
+    <script src="/static/v2/assets/js/bootstrap.min.js"></script>
+<body>
+    <style>
+        .terms-use{
+         text-align: initial;
+         border: 1px solid #d2ddec;
+        }
+         .example {
+         padding: 10px;
+         margin: 5px;;
+         background-color: #eee;
+     
+         height: 200px;
+         border: 1px dotted black;
+         overflow-y: scroll; /* Add the ability to scroll */
+         }
+     
+         /* Hide scrollbar for Chrome, Safari and Opera */
+         .example::-webkit-scrollbar {
+             display: none;
+         }
+     
+         /* Hide scrollbar for IE, Edge and Firefox */
+         .example {
+         -ms-overflow-style: none;  /* IE and Edge */
+         scrollbar-width: none;  /* Firefox */
+         }
+     </style>
+
+<div class="main-content" id="main-content">
+    <!-- Button trigger modal -->
+    <div class="container-fluid-portal">
+        <div>
+            {% if lang == "vn" %}
+            <span style="margin-left: 12px;"><span style="font-weight: 9 !important;">Tiếng Việt</span> <span style="margin-left: 2px; opacity: 50%;">English</span></span>
+            {% else %}
+            <span style="margin-left: 12px;"><span style="opacity: 50%;">Tiếng Việt</span> <span style="margin-left: 2px; font-weight: 9 !important;">English</span></span>
+            {% endif %}
+        </div>
+        <div class="row justify-content-center mt-5">
+            <div class="col-12 col-md-8 col-xl-6">
+
+                <!-- Card -->
+                <div class="card mt-5">
+                    <div class="card-body">
+                        <a href="#" class="avatar avatar-xl card-avatar card-avatar-top">
+                            <img src="//files.nextify.vn/{{ shop.logo }}"
+                                 class="avatar-img rounded-circle border border-4 border-card" alt="...">
+                        </a>
+                        <div id="text_welcome"></div>
+
+                        <div class="terms-use mt-3">
+                                <h4 class="m-3" id='lable_tc'></h4>
+                                <div class='example' id="content_tc">
+                                </div>
+                                <div class="m-3">
+                                    <input type="checkbox" id="accept" name="accept">
+                                    <label id="accept_tc"></label>
+                                </div>
+                            </div>
+                        <div class="mt-3" id='btn_continue'>
+        
+                        </div>
+                     
+
+                    </div>
+                   
+                    <!-- Footer -->
+                    <div class="card-footer card-footer-boxed">
+                        <div class="row align-items-center justify-content-between">
+                            <div class="col text-center">
+
+
+                                <small>
+                                    © 2021 Starbucks Coffee Company. All rights reserved.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+    <input type='hidden' name='language' value="{{ lang }}" id='select_language'>
+    <input type='hidden' name='detail' value="{{ detail }}" id='detail'>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var language = $('#select_language').val()
+        if (language == 'vn'){
+                var text_welcome = '{{ detail.welcome_text_vn|safe }}';
+                var lable_tc = 'Điều khoản Sử dụng';
+                var content_tc = '{{ detail.tcs_vn|safe }}';
+                var accept_tc = 'Tôi đồng ý với T&Cs của Starbucks.';
+                var btn_continue = '<a href="#"class="btn btn-lg btn-primary btn-block text-uppercase" style="display: block" ><i class="fe fe-wifi"></i>Tiếp tục</a>';
+                $("#text_welcome").html(text_welcome);
+                $("#lable_tc").html(lable_tc);
+                $("#content_tc").html(content_tc);
+                $("#accept_tc").html(accept_tc);
+                $("#btn_continue").html(btn_continue);
+                $("#exampleModal").modal('hide');
+            }
+        else {
+                var text_welcome = '{{ detail.welcome_text_eng|safe }}';
+                var lable_tc = 'Terms of Use';
+                var content_tc = '{{ detail.tcs_eng|safe }}';
+                var accept_tc = 'I agree to the company T&Cs';
+                var btn_continue = '<a href="#"class="btn btn-lg btn-primary btn-block text-uppercase" style="display: block" ><i class="fe fe-wifi"></i>Continue</a>';
+                $("#text_welcome").html(text_welcome);
+                $("#lable_tc").html(lable_tc);
+                $("#content_tc").html(content_tc);
+                $("#accept_tc").html(accept_tc);
+                $("#btn_continue").html(btn_continue);
+                $("#exampleModal").modal('hide');
+            }
+
+       
+        
+     
+        
+    });
+</script>
+
+</body>
+
+</html>

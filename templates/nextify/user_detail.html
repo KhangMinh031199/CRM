@@ -1,0 +1,249 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+    <input type="hidden" id="user_curr" value="{{ user._id }}">
+
+    <div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+              <div class="col">
+
+                <!-- Pretitle -->
+                <h6 class="header-pretitle">
+                  {{ gettext("Khach_hang") }}
+                </h6>
+
+                <!-- Title -->
+                <h1 class="header-title">
+                {{ gettext("Chi_tiet_khach_hang") }}
+                </h1>
+
+              </div>
+              <div class="col-auto">
+
+                <!-- Button -->
+{#                <a href="#!" class="btn btn-primary">#}
+{#                  Create Report#}
+{#                </a>#}
+
+              </div>
+            </div> <!-- / .row -->
+          </div>
+    </div>
+      </div>
+  <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-7">
+                <ul class="nav nav-tabs mb-4" id="myTab"
+                    role="tablist">
+                    <li class="nav-item"><a class="nav-link active"
+                           id="nav-home-tab" data-toggle="tab"
+                           href="#nav-home" role="tab"
+                           aria-controls="nav-home"
+                           aria-selected="true">{{ gettext("Hoat_dong") }}</a></li>
+
+                    <li class="nav-item"><a class="nav-link"
+                           id="nav-profile-tab"
+                           data-toggle="tab" href="#nav-profile"
+                           role="tab"
+                           aria-controls="nav-profile"
+                           aria-selected="false">{{ gettext("Coupons") }}</a></li>
+
+                    <li class="nav-item"><a class="nav-link"
+                           id="nav-contact-tab"
+                           data-toggle="tab" href="#nav-contact"
+                           role="tab"
+                           aria-controls="nav-contact"
+                           aria-selected="false">{{ gettext("Chi_tieu") }}</a></li>
+
+                </ul>
+
+                <div class="c-tabs__content tab-content u-mb-large"
+                     id="nav-tabContent">
+                    <div class="c-tabs__pane active u-pb-medium" id="nav-home"
+                         role="tabpanel" aria-labelledby="nav-home-tab">
+                        <div id="user_activity">
+
+                        </div>
+
+                    </div>
+
+                    <div class="c-tabs__pane u-pb-medium" id="nav-profile"
+                         role="tabpanel" aria-labelledby="nav-profile-tab">
+                        <div id="user_coupons"></div>
+                    </div>
+
+                    <div class="c-tabs__pane u-pb-medium" id="nav-contact"
+                         role="tabpanel" aria-labelledby="nav-contact-tab">
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <div class="col-xl-5">
+                <div class="card u-p-medium u-mb-medium">
+
+                    <div class="u-text-center">
+                        <div class="c-avatar c-avatar--large u-mb-small u-inline-flex">
+                            {% if user.avatar and user.avatar|length > 0 %}
+
+                                <img class="c-avatar__img"
+                                     src="{{ user.avatar }}">
+                            {% else %}
+                                <img class="c-avatar__img"
+                                     src="/static/v2/assets/img/medium-default-avatar.png">
+                            {% endif %}
+                        </div>
+
+                        <h3 class="u-h5">
+                            {% if user.name and user.name|length >0 %}
+                                {{ user.name }}{% else %}
+                                {{ user.phone }}{% endif %}</h3>
+                        <span class="u-text-mute u-text-small">{% if user.address or user
+                                        .address|string !='NONE' or user.address|string !='None' %}
+                            {{ user.address }}{% else %}N/A{% endif %}</span>
+                    </div>
+
+                    <div class="u-flex u-mt-medium u-justify-center">
+                        <a class="c-btn c-btn--info c-btn--fullwidth
+ u-mr-xsmall" aria-haspopup="true" aria-expanded="false"
+                           href="/user/edit/{{ user._id }}">{{ gettext("Cap_nhat") }}</a>
+                        <a class="c-btn c-btn--danger
+                                c-btn--secondary c-btn--fullwidth"
+                           style="color: white"
+                           href="#">{{ gettext("Block") }}</a>
+                    </div>
+
+                    <table class="c-table u-text-center u-pv-small u-mt-medium u-border-right-zero u-border-left-zero">
+                        <thead>
+                        <tr>
+                            <th class="u-pt-small
+                                        u-color-primary">{{ visit_count }}</th>
+                            <th class="u-pt-small
+                                        u-color-primary">{{ last_visit_str }}</th>
+                            <th class="u-pt-small
+                                        u-color-primary">{{ user.client_mac |
+                                      length }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="u-text-mute u-text-xsmall
+                                         u-pb-small u-text-uppercase">{{ gettext("Luot_den") }}
+                            </td>
+                            <td class="u-text-mute u-text-xsmall u-pb-small u-text-uppercase">
+                                {{ gettext("Lan_cuoi") }}
+                            </td>
+                            <td class="u-text-mute u-text-xsmall u-pb-small u-text-uppercase">
+                                {{ gettext("Thiet_bi") }}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="col-md-12">
+                        <dl class="u-flex u-pv-small u-border-bottom">
+                            <dt class="u-width-50">{{ gettext("So_dien_thoai") }}
+                            </dt>
+                            <dd>{{ user.phone }}</dd>
+                        </dl>
+                        <dl class="u-flex u-pv-small u-border-bottom">
+                            <dt class="u-width-50">Email</dt>
+                            <dd>
+                                {% if user.email or user.email|string !='NONE' or user.email|string !='None' %}
+                                    {{ user.email }}{% else %}
+                                    N/A{% endif %}</dd>
+                        </dl>
+                        <dl class="u-flex u-pv-small u-border-bottom">
+                            <dt class="u-width-50">{{ gettext("Sinh_nhat") }}</dt>
+                            <dd>{% if user.birthday and
+                                        user.birthday|length > 0 %}
+                                {{ user.birthday }}{% else %}
+                                N/A{% endif %}</dd>
+                        </dl>
+                        <dl class="u-flex u-pv-small u-border-bottom">
+                            <dt class="u-width-50">{{ gettext("Gioi_tinh") }}</dt>
+                            <dd>{% if user.gender %}{% if user.gender == '2' %}
+                                Nữ {% elif user.gender == '1' %} Nam{% else %}
+                                N/A{% endif %}{% endif %}</dd>
+                        </dl>
+                        <dl class="u-flex u-pv-small u-border-bottom">
+                            <dt class="u-width-50">{{ gettext("Dia_chi") }}</dt>
+                            <dd>{% if user.address or user
+                                        .address|string !='NONE' or user.address|string !='None' %}
+                                {{ user.address }}{% else %}N/A{% endif %}</dd>
+                        </dl>
+                        <dl class="u-flex u-pv-small u-border-bottom">
+                            <dt class="u-width-50">Facebook</dt>
+                            <dd>{% if user.facebook or user
+                                        .facebook|string !='NONE' or user.facebook|string !='None' %}
+                                {{ user.facebook }}{% else %}
+                                N/A{% endif %}</dd>
+                        </dl>
+                        <dl class="u-flex u-pv-small u-border-bottom">
+                            <dt class="u-width-50">Zalo</dt>
+                            <dd>{% if user.zalo %}
+                                <img src="/static/images/logo-zalo.png"
+                                     width="25"
+                                     height="auto"/> {% endif %}</dd>
+                        </dl>
+                        <div class="u-mt-medium u-text-center">
+                            <h3 class="u-h5">Tags</h3>
+
+                            {% if user_tags_details|length > 0 %}
+
+                                {% for tag in user_tags_details %}
+                                    <span class="c-badge
+                                                  c-badge--small c-badge--{{ ['success','warning','info']|random }}">
+
+                                                      {{ tag }}
+                                                  </span>
+                                {% endfor %}
+                            {% else %}
+                                <p>N/A</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+{% block js %}
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+                  $('#gender_selects').select2({
+        dropdownAutoWidth: true
+      });
+            var user_id = $("#user_curr").val();
+            var url_sales = "/user/" + user_id.toString() + "/sales";
+            var url_visits = "/user/" + user_id.toString() + "/visits";
+            var url_credit = "/user/" + user_id.toString() + "/credit";
+            var url_coupons = "/user/" + user_id.toString() + "/coupons";
+
+            $.ajax({
+                url: url_visits,
+                success: function (data) {
+                    $("#user_activity").empty();
+                    $("#user_activity").append(data);
+                }
+            });
+            $.ajax({
+                url: url_coupons,
+                success: function (data) {
+                    $("#user_coupons").empty();
+                    $("#user_coupons").append(data);
+                }
+            });
+
+
+        })
+    </script>
+{% endblock %}

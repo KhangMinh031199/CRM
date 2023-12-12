@@ -1,0 +1,164 @@
+{% extends 'nextify/base.html' %}
+
+
+{% block body %}
+
+
+<div class="container-fluid">
+      <div class="row align-items-center justify-content-center">
+        <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5">
+
+          <!-- Heading -->
+          <h1 class="display-4 text-center mb-3">
+           {{ gettext("Ket_noi_voi_thiet_bi_WIFI") }}
+          </h1>
+
+          <!-- Subheading -->
+          <p class="text-muted text-center mb-5">
+            {{ gettext("De_WIFI_cua_ban_ket_noi_duoc_voi_CRM,_thiet_bi_can_san_sang_cau_hinh_Hotspot._Neu_thiet_bi_chua_san_sang,_hay_lien_he_ky_thuat_tro_giup,_nguoi_lai,_hay_dien_dia_chi_MAC_cua_thiet_bi,_MAC_thuong_duoc_tim_thay_o_mat_sau_cua_thiet_bi") }}.
+          </p>
+
+<form class="form-horizontal m-t-xs"
+                          action="/welcome/init_device/{{ shop_id_select }}"
+                          id="add_device_fr"
+                          enctype="multipart/form-data" method="post">
+                     <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                       
+                                    
+                                    <div class="form-group">
+                                        <label >MAC {{ gettext("thiet_bi") }}: (<span><font color="red">*</font></span> {{ gettext("bat_buoc") }} )</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               style="margin-top:10px;font-size: 16px;"
+                                               name="mac_add"
+                                               rows="2"
+                                               id="mac_add_otp"
+                                               placeholder="77:A3:51:37:18:D8"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label >{{ gettext("Loai_thiet_bị") }}: </label>
+                                        <select name="device_type"
+                                                class="form-control"
+                                                id="device_type">
+                                            {% if 'anphat.vn' in request.url %}
+                                              <option
+                                                    value="draytek">DrayTek
+                                            </option>
+                                            {% else %}
+                                          <option
+                                                    value="nextify">Nextify
+                                            </option>
+                                            <option
+                                                    value="tplink">Tp-Link
+                                            </option>
+                                            <option
+                                                    value="mikrotik">Mikrotik
+                                            </option>
+                                             <option
+                                                    value="extreme">Extreme
+                                            </option>
+                                             <option
+                                                    value="draytek">DrayTek
+                                            </option>
+                                             <option
+                                                    value="unifi">Unifi
+                                            </option>
+                                            <option
+                                                    value="fortinet">Fortinet
+                                            </option>
+                                                  <option
+                                                    value="pfsense">pfSense
+                                            </option>
+                                            <option value="ruijie">Ruijie</option>
+                                            <option value="cisco">Cisco</option>
+                                               <option value="borynet">Borynet
+                                             </option>
+                                                 <option
+                                                    value="grandstream">Grandstream
+                                            </option>
+                                                 <option
+                                                    value="engenius">Engenius
+                                            </option>
+                                                <option
+                                                    value="aruba">Aruba
+                                            </option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                 <div class="form-group">
+                                                        <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input"
+                                                               id="is_radius"
+                                                               name="is_radius">
+                                                        <label class="custom-control-label"
+                                                               for="is_radius">{{ gettext("Su_dung_Radius") }}</label>
+                                                    </div>
+                                                    </div>
+
+                                             </form>
+
+  <a href="#" id="submit_new_device">
+                 <button class="btn btn-lg btn-primary btn-block text-uppercase">{{ gettext("Them_thiet_bi") }}</button>
+            </a>
+ <a href="/welcome/init_default_campaign/{{ shop_id_select }}">
+                 <button class="btn btn-lg btn-light btn-block text-uppercase" style="margin-top: 10px">
+                {{ gettext("De_sau") }}
+            </button>
+            </a>
+{#             <p class="text-center" style="margin-top:20px">#}
+{#              <small class="text-muted text-center">#}
+{#                © 2020 Power by <a href="http://nextify.vn">NEXTIFY SOFTWARE.,JSC.</a>.#}
+{#              </small>#}
+{#            </p>#}
+
+
+
+        </div>
+        <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
+
+          <!-- Image -->
+          <div class="bg-cover vh-100 mt-n1 mr-n3" style="background-image: url(/static/images/onboard/device.jpg);"></div>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+
+{%endblock%}
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+
+        $("#submit_new_device").click(function(e){
+                 var action = $("#add_device_fr").attr('action');
+                 $.ajax({
+                     url: action,
+                     type: 'POST',
+                     data: $("#add_device_fr").serialize(),
+                     success: function (response) {
+                        var resp = JSON.parse(response);
+                        var result = resp['result'];
+                        console.log(resp);
+                        if (result.toString() == 'false'){
+                            if ('msg' in resp){
+                                swal(resp['msg'], " ", "error");
+                            }else{
+                                swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+                            }
+
+                        }else {
+                            var url = resp['url'];
+                            location.href = url;
+                        }
+
+                    },
+                    error: function (e) {
+                        swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+                    }
+                });
+
+                     e.preventDefault();
+             });
+
+    })
+</script>
+{%endblock%}

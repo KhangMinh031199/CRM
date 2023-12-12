@@ -1,0 +1,402 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+                <div class="col">
+
+                    <!-- Pretitle -->
+                    <h6 class="header-pretitle">
+                        {{ gettext("Ung_dung") }}
+                    </h6>
+
+                    <!-- Title -->
+                    <h1 class="header-title">
+                       Khai báo y tế
+                    </h1>
+
+                </div>
+                <div class="col-lg-3">
+                    <select id="shop_select" class="custom-select" name="shop_select">
+                        {% if shop_select._id %}
+                        <option value="{{ shop_select._id }}" disabled selected>{{ shop_select.name }}</option>
+                        {% endif %}
+                        {% for shop in shop_in_mer %}
+                        <option value="{{ shop._id }}">{{ shop.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-4">
+
+                    <!-- Nav -->
+                    <ul class="nav nav-tabs nav-overflow header-tabs">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="setting_config">
+                                {{ gettext('Cau_hinh_chung') }}
+                            </a>
+                        </li>
+                    
+                        <li class="nav-item">
+                                <a href="#" class="nav-link" id="form">
+                                    {{ gettext('Form_khai_bao') }}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link" id="list">
+                                    {{ gettext("Danh_sach_khai_bao") }}
+                                </a>
+                            </li>
+                            
+                    </ul>
+
+                </div>
+               
+            </div>
+          <!-- / .row -->
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row mt-4 mt-md-5">
+        <div class="col-12 col-lg-8">
+            <div id="setting_declaration">
+                <div class="card" >
+                    <div class="card-body">
+                    <form  action="/apps/khai_bao_y_te/{{ shop_id_select }}" method="post" id="setting_declaration_conf"
+                                    enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"/>
+                
+                        <div class="form-group">
+                            <label>Email nhận thông báo:</label>
+                            <input type="text" class="form-control" autofocus
+                                value="{% if medical_declaration and medical_declaration.email_notify %}{{ medical_declaration.email_notify }}{% endif %}"
+                                name="email_notify">
+                        </div>
+                        <div class="form-group">
+                            <label>{{ gettext("Hien_thi") }}: <span class="fe fe-help-circle" data-toggle="tooltip"
+                                title="Hiện form khai báo y tế hàng ngày hoặc 3 ngày một lần đối với mỗi khách hàng"></span></label>
+                            <div class='row ml-2'>
+                                <div class="custom-control custom-radio checklist-control col-3">
+                                    <input class="custom-control-input" id="one_time" type="radio" name="number_time" value="one_time"
+                                    checked      >
+                                    <label class="custom-control-label" for="one_time">
+                                        <span class="custom-control-caption">
+                                            1 {{ gettext("ngay") }}
+                                        </span>
+                                    </label>
+                                    
+                                </div>
+                                <div class="custom-control custom-radio checklist-control col-auto">
+                                    <input class="custom-control-input" id="three_time" type="radio"  name="number_time" value="three_time"
+                                    {% if medical_declaration and medical_declaration.number_time == "three_time" %}checked{% endif %}         >
+                                    <label class="custom-control-label" for="three_time">
+                                        <span class="custom-control-caption">
+                                            3 {{ gettext("ngay") }}
+                                        </span>
+                                    </label>
+                                    
+                                </div>    
+                            </div>       
+                        </div>
+                        <div class="form-group">
+                            <label>Số điện thọai nhận thông báo:</label>
+                            <input type="text" class="form-control"
+                                value="{% if medical_declaration and medical_declaration.phone_notify %}{{ medical_declaration.phone_notify }}{% endif %}"
+                                name="phone_notify">
+                        </div>
+                        <div class="form-group">
+                            <label>Zalo nhận thông báo:</label>
+                            <input type="text" class="form-control"
+                            value="{% if medical_declaration and medical_declaration.zalo_notify %}{{ medical_declaration.zalo_notify }}{% endif %}"
+                                name="zalo_notify">
+                        </div>
+                        <div class="form-group">
+                            <label>Cảnh báo tụ tập đông người: <span class="fe fe-help-circle" data-toggle="tooltip"
+                                title="Số lượng người bằng hoặc lớn hơn bao nhiêu thì sẽ nhắc cảnh báo."></span></label>
+                            <input type="text" class="form-control"
+                                style="width: 100px"
+                                value="{% if medical_declaration and medical_declaration.warning_crowded %}{{ medical_declaration.warning_crowded }}{% endif %}"
+                                name="warning_crowded">
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-2">
+                            <span>{{ gettext('Kich_hoat') }}:</span>
+                            </div>
+                            <div class="col-auto">
+                            <div class="custom-control custom-switch {% if medical_declaration and medical_declaration.status == 'True' %}is-active{% endif %}">
+                                <input class="custom-control-input" name="status" id="status" type="checkbox"
+                                {% if medical_declaration and medical_declaration.status =="True" %}checked="checked" {% endif %}>
+                                <label class="custom-control-label"
+                                for="status"></label>
+                            </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <div class="col-4" style="float:right">
+                        <button class="btn btn-lg btn-block btn-primary float" id="save_setting_conf">
+                        {{ gettext("Luu_thong_tin") }}
+        
+                        </button>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="card" id="choose_question" style="display: none">
+                <div class="card-body">
+                    <form  action="/tokhaiyte/{{ shop_id_select }}" method="post" id="question"
+                                    enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"/>
+                        <div class="form-group">
+                            <label>Chọn câu hỏi:</label>
+                            <div class="custom-control custom-checkbox checklist-control">
+                                <input class="custom-control-input"
+                                        id="question_1"
+                                        name="question_1"
+                                        type="checkbox" {% if medical_declaration and medical_declaration.question_1 or not medical_declaration %}checked{% endif %} >
+                                <label class="custom-control-label" for="question_1">
+                                    <span class="custom-control-caption">Trong vòng 14 ngày qua Anh/Chị có thấy ít nhất 1 trong các dấu hiệu: sốt, ho, đau họng, khó thở, đau người - mệt mỏi - ớn lạnh, giảm hoặc mất vị giác hoặc khứu giác không?</span>                                      
+                               </label>
+                                
+                            </div>
+                            <div class="custom-control custom-checkbox checklist-control">
+                                <input class="custom-control-input"
+                                        id="question_2"
+                                        name="question_2"
+                                        type="checkbox" {% if medical_declaration and medical_declaration.question_2 or not medical_declaration %}checked{% endif %}>
+                                <label class="custom-control-label" for="question_2">
+                                    <span class="custom-control-caption">Trong vòng 14 ngày qua Anh/Chị có tiếp xúc với người bị nhiễm hoặc nghi ngờ nhiễm COVID-19 không?</span>
+                                </label>
+                            </div>
+                            <div class="custom-control custom-checkbox checklist-control">
+                                <input class="custom-control-input"
+                                        id="question_3"
+                                        name="question_3"
+                                        type="checkbox" {% if medical_declaration and medical_declaration.question_3 or not medical_declaration %}checked{% endif %}>
+                                <label class="custom-control-label" for="question_3">
+                                    <span class="custom-control-caption">Trong vòng 14 ngày qua Anh/Chị có di chuyển sang Tỉnh, Thành phố nào ( có thể di chuyển qua nhiều nơi) khác nơi ở hiện tại không?</span>
+                                </label>
+                            </div>
+                            <div class="custom-control custom-checkbox checklist-control">
+                                <input class="custom-control-input"
+                                        id="question_4"
+                                        name="question_4"
+                                        type="checkbox" {% if medical_declaration and medical_declaration.question_4 or not medical_declaration %}checked{% endif %}>
+                                <label class="custom-control-label" for="question_4">
+                                    <span class="custom-control-caption">Anh/Chị có đang ở vùng dịch không?</span>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <div class="col-4" style="float:right">
+                        <button class="btn btn-lg btn-block btn-primary float" id="save_question">
+                        {{ gettext("Luu_thong_tin") }}
+        
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" id="list_declaration" data-toggle="lists" style="display: none">
+                <div class="card-body">
+
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm table-nowrap card-table">
+                            <thead>
+                                <tr>
+                                    
+                                    <th>
+                                        <h3 class="mb-1" style="font-weight: 700;">{{ gettext("Ten") }}  </h3>
+                                    </th>
+                                    <th>
+                                        <h3 class="mb-1" style="font-weight: 700;">{{ gettext("So_dien_thoai") }}</h3>
+                                    </th>
+                                    <th>
+                                        <h3 class="mb-1" style="font-weight: 700;">Email</h3>
+                                    </th>
+                                    <th>
+                                        <h3 class="mb-1" style="font-weight: 700;">{{ gettext("Trang_thai") }}</h3>
+                                    </th>
+                                    <th>
+                                        <h3 class="mb-1" style="font-weight: 700;">{{ gettext("Thoi_gian") }}</h3>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="list">
+                                {% for res in list_declaration %}
+                                <tr>
+
+                                    <td>
+                                         {{ res.name}}
+                                    </td>
+                                    <td >
+                                        {{ res.phone}}
+                                    </td>
+                                    <td>
+                                        {{ res.email}}
+                                    </td>
+                                    <td>
+                                        {% for st in res.status%}
+                                        <div class="name">
+                                            {{ st }}
+
+                                        </div>
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {{ res.time|jinja_get_human_time }}
+                                    </td>
+
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- List group -->
+
+
+                </div>
+                <div class="card-footer">
+
+                    <ul class="pagination justify-content-center">
+                        {% if pagination %}
+                        {{ pagination.links }}
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4">
+            <div class="card card-inactive">
+
+                <div class="card-body text-center">
+                    <div class="row justify-content-center">
+                        <div class="col"
+                            style="justify-content: center; display: flex; align-items: center; height: 100%">
+                            <div id="preview"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id_select">    
+{% endblock %}
+{% block js %}
+
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $("#shop_select").select2();
+        var shop__id_select = $("#shop_id_select").val();
+        $("#shop_select").on('change', function (e){
+            var shop_id = $("#shop_select").val();
+            var url = '/apps/khai_bao_y_te/' + shop_id;
+            location.replace(url);
+        })
+        var url_preiew = '/tokhaiyte/' + shop__id_select;
+        $("#preview").empty();
+        bioMp(document.getElementById('preview'), {
+            url: url_preiew,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+    
+        $("#setting_declaration").show();
+        $("#choose_question").hide();
+        $("#list_declaration").hide();
+        $("#setting_config").addClass('active');
+        $("#form").removeClass('active');
+        $("#list").removeClass('active');
+
+        $("#setting_config").click(function () {
+            $("#setting_declaration").show();
+            $("#choose_question").hide();
+            $("#list_declaration").hide();
+            $("#setting_config").addClass('active');
+            $("#form").removeClass('active');
+            $("#list").removeClass('active');
+        });
+        $("#form").click(function () {
+            $("#setting_declaration").hide();
+            $("#choose_question").show();
+            $("#list_declaration").hide();
+            $("#setting_config").removeClass('active');
+            $("#form").addClass('active');
+            $("#list").removeClass('active');
+        });
+        $("#list").click(function () {
+            $("#setting_declaration").hide();
+            $("#choose_question").hide();
+            $("#list_declaration").show();
+            $("#setting_config").removeClass('active');
+            $("#form").removeClass('active');
+            $("#list").addClass('active');
+        });
+        $("#save_setting_conf").click(function () {
+            $.ajax({
+                url: $("#setting_declaration_conf").attr("action"),
+                type: $("#setting_declaration_conf").attr("method"),
+                data: $("#setting_declaration_conf").serialize(),
+                success: function (response) {
+                var returnedData = JSON.parse(response);
+                if ('error' in returnedData) {
+                    swal(returnedData['error'], " ", "error");
+                    return false;
+                }
+                else {
+                swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+                    location.reload();
+                }
+
+                },
+                error: function (xhr, desc, err) {
+                    swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+
+                }
+
+            })
+        });
+        $("#save_question").click(function () {
+            $.ajax({
+                url: $("#question").attr("action"),
+                type: $("#question").attr("method"),
+                data: $("#question").serialize(),
+                success: function (response) {
+                var returnedData = JSON.parse(response);
+                if ('error' in returnedData) {
+                    swal(returnedData['error'], " ", "error");
+                    return false;
+                }
+                else {
+                swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+                    location.reload();
+                }
+
+                },
+                error: function (xhr, desc, err) {
+                    swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+
+                }
+
+            })
+        });
+    });
+</script>
+{% endblock %}

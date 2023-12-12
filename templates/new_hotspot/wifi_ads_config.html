@@ -1,0 +1,72 @@
+{% extends 'nextify/base.html' %} {% block main_content %}
+
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10 col-xl-8">
+      <div class="header mt-md-5">
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <!-- Pretitle -->
+              <h6 class="header-pretitle">Chiến dịch WIFI</h6>
+
+              <!-- Title -->
+              <h1 class="header-title">Cấu hình thông số quảng cáo</h1>
+            </div>
+          </div>
+          <!-- / .row -->
+        </div>
+      </div>
+      <div class="row align-items-center">
+        <div class="col">
+          <!-- Nav -->
+          <ul class="nav nav-tabs nav-overflow header-tabs">
+       
+            <li class="nav-item">
+              <a href="/wifi_ads_config" class="nav-link active">
+                {{ gettext('Cau_hinh_chung') }}
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/wifi_ads_config/sales" class="nav-link"> Kinh doanh</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row mt-md-5">
+        <div class="card">
+          <div class="card-body">
+              <form>
+            <div class="form-group">
+              <label> Chọn chiến dịch mặc định </label>
+              <select class="form-control" id="campaign_id">
+                <option>Chiến dịch mới nhất của địa điểm</option>
+                <option>Chiến dịch mặc định</option>
+              </select>
+              
+            </div>
+            <div class="form-group">
+                <label> Sắp xếp chiến dịch theo </label>
+                <select class="form-control" id="hotspot_id">
+                    <option>Thời gian mới nhất</option>
+                    <option>Thời gian cũ nhất</option>
+                    <option>Mục tiêu thấp nhất</option>
+                    <option>Mục tiêu cao nhất</option>
+                    <option>Gần đạt mục tiêu nhất</option>
+                    <option>Cách xa mục tiêu nhất</option>
+                </select>
+            </div>
+
+            </form>
+          </div>
+          <div class="card-footer">
+            <button type="button" class="btn btn-primary">Lưu</button>
+            </div>
+       
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%endblock%}

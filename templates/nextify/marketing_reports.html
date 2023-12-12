@@ -1,0 +1,85 @@
+{% extends 'nextify/base.html' %} 
+{% block header_page %}Báo cáo Marketing{% endblock %}
+{% block main_content %}
+
+
+    <div class="container-fluid">
+        <div class="row u-mb-large">
+            <div class="col-lg-12 u-ml-auto u-mb-medium" style="display: inline-block;text-align: right">
+                 <div class="c-field  c-field--inline" style="display: inline-block;margin-right: 10px;">
+          <input id="from_date" class="c-input" type="text" name="from_date" placeholder='{{ gettext("Tu_ngay") }}'>
+        </div>
+        <div class="c-field  c-field--inline"  style="display: inline-block;">
+          <input id="to_date" class="c-input" type="text" name="to_date" placeholder='{{ gettext("Den_ngay") }}'>
+        </div>
+        <button type="button" id="view_data" class="c-btn c-btn--warning"
+                style="display: inline-block;margin-left: 10px; margin-right: 10px;">{{ gettext("Xem") }}
+        </button>
+
+        <input type="hidden" value="" id="minDate"/>
+        <input type="hidden" value="" id="maxDate"/>
+{#        <div class="c-field c-field--inline has-icon-right u-hidden-down@tablet" style="display: inline-block;">#}
+{##}
+{#            <input type="hidden" value="{{ shop_id_select }}"#}
+{#                   id="current_shops"/>#}
+{#            <select class="c-select" style="width: 100%;" id="locations_selects">#}
+{#                            {% if shop_id_select and shop_id_select|string != 'all' %}#}
+{#                          <option value="all">{{ gettext("Bao_cao_chuoi") }}</option>#}
+{#                        {% for shop_mer in shop_in_mer %}#}
+{#                            {% if shop_id_select ==  shop_mer._id %}#}
+{#                            <option value="{{ shop_mer._id }}" selected>{{ shop_mer.name }}</option>#}
+{#                            {% else %}#}
+{#                             <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>#}
+{#                            {% endif %}#}
+{#                        {% endfor %}#}
+{#                    {% else %}#}
+{#                        <option value="all">{{ gettext("Bao_cao_chuoi") }}</option>#}
+{#                        {% for shop_mer in shop_in_mer %}#}
+{#                            <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>#}
+{#                        {% endfor %}#}
+{#                    {% endif %}#}
+{#                    </select>#}
+{#        </div>#}
+            </div>
+        </div>
+
+      <div class="row u-mb-large">
+      {% if shop_id_select  == 'all'%}
+            <div class="col-lg-12 u-ml-auto u-mb-medium">
+               <h3 class="u-mb-small">{{ gettext("Chien_dich") }}
+                        </h3>
+
+                   <div class="card c-overview-card u-p-medium u-mb-medium">
+                        <div id="campaign"></div>
+                    </div>
+            </div>
+          {% else %}
+            <div class="col-lg-12 u-ml-auto u-mb-medium">
+               <h3 class="u-mb-small">{{ gettext("Chien_dich") }}
+                        </h3>
+               <div class="card c-overview-card u-p-medium u-mb-medium">
+                        <div id="shop_campaign"></div>
+                    </div>
+                </div>
+      {% endif %}
+        </div>
+
+
+        <div class="row u-mb-large">
+
+            <div class="col-lg-12 u-ml-auto u-mb-medium">
+               <h3 class="u-mb-small">SMS & Coupons</h3>
+                         <div class="card c-overview-card u-p-medium u-mb-medium">
+                   <div id="sms_coupons_report">
+                   </div>
+                </div>
+
+        </div>
+        </div>
+
+
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{{ url_for('static', filename='v2/assets/js/marketing_reports.js') }}?v=3"></script>
+{% endblock %}

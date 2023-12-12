@@ -1,0 +1,544 @@
+{% extends 'nextify/base.html' %}
+{% block body %}
+    <style>
+
+        .weekDays-selector input {
+            display: none !important;
+        }
+
+        .weekDays-selector input[type=checkbox]+label {
+            display: inline-block;
+            border-radius: 30px;
+            background: #dddddd;
+            height: 40px;
+            width: 40px;
+            margin-right: 3px;
+            line-height: 40px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .weekDays-selector input[type=checkbox]:checked+label {
+            background: #fa952e;
+            color: #ffffff;
+        }
+
+        .method-form-control {
+            height: calc(1.5em + 1rem + 2px);
+        }
+
+        .active-step {
+            color: #53535399 !important;
+        }
+
+        .unactive-step {
+            color: #e5e5e5 !important;
+        }
+    </style>
+
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col-2">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            {{ gettext("Dia_diem") }}
+                        </h6>
+
+                        <!-- Title -->
+                        <h3 class="header-title">
+                            {{ shop_select.name }}
+                        </h3>
+
+
+                    </div>
+                    <div class="col-4">
+                        <input id="name_camp" type="text" class="form-control form-control-flush form-control-auto text-uppercase" placeholder='{{ gettext("Nhap_ten_chien_dich_...") }}'style="font-weight: bold; text-align: center; background-color: #f9fbfd;"
+                        {% if campaign_details %}
+                            {% if campaign_details.name %}
+                                value="{{ campaign_details.name }}"
+                            {% endif %}
+                        {% endif %}
+                        {% if campaign_details.init %}
+                            disabled
+                        {% endif %}
+                        />
+                    </div>
+                    <div class="col-6">
+                        <button class="btn" style="float: right; border: 1px solid #edf2f9" id="close">
+                            {{ gettext("Dong_lai") }}
+                        </button>
+                     {% if not campaign_details or campaign_details.campaign_type != 'register' and merchant._id|package_merchant != "Brand" %}
+
+
+                        <button class="btn btn-outline-primary"
+                                style="float: right; margin-right: 20px"
+                                data-toggle="modal"
+                                data-target="#configure_camp">
+                            {{ gettext("Nhom_khach_hang") }}
+                        </button>
+                            {% endif %}
+                    </div>
+
+                </div> <!-- / .row -->
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+    <div class="card">
+
+        <div class="card-header">
+
+            <!-- Title -->
+            <div class="row">
+                <div class="col-4">
+                    <button class="btn btn-danger" style="display: none" id="btn_prev">
+                        <i class="fa fa-caret-left"></i> {{ gettext("Quay_lai") }}
+                    </button>
+                </div>
+                <div class="col-4" style="text-align: center">
+                    <h4 class="card-header-title" id="name-step" style="margin-top: 0.7rem">{{ gettext("Buoc_1") }}</h4>
+                </div>
+                <div class="col-4">
+
+                    <button class="btn btn-danger" style="float: right;" id="btn_next">
+                        {{ gettext("Tiep_tuc") }} <i class="fa fa-caret-right"></i>
+                    </button>
+
+                    <button id="save_campaign_hotspot" class="btn btn-danger"
+                            style="border: 1px solid #edf2f9; float: right; display: none">
+                        <i class="far fa-save"></i> {{ gettext("Luu_lai") }}
+                    </button>
+
+                    <select class="form-control" style="margin-right: 10px; width: auto;float: right; display: none"
+                            id="status_campaign"
+                            {% if campaign_details.status and campaign_details.status|lower == "true" and campaign_details.campaign_type == 'default' %}disabled{% endif %}>
+                        <option value="unactive"
+                                {% if campaign_details.status and campaign_details.status|lower == "false" %}selected{% endif %}>
+                            {{ gettext("Khong_kich_hoat") }}
+                        </option>
+                        <option value="active"
+                                {% if campaign_details.status and campaign_details.status|lower == "true" %}selected{% endif %}>
+                            {{ gettext("Kich_hoat") }}
+                        </option>
+                    </select>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-body">
+            <div class="row justify-content-center">
+                <div class="config-splash col-12 col-md-5">
+                    <form method="POST">
+                        <input type="hidden" name="_csrf_token" id="_csrf_token" value="{{ csrf_token() }}">
+
+                    </form>
+                </div>
+                <div class="col-12 col-md-7"
+                     style="justify-content: center; display: flex; align-items: center; height: 100%">
+                    <a class="unactive-step btn" style="margin-right: 30px;" id="prev-step">
+                        <i class="fa fa-caret-left fa-5x"></i>
+                    </a>
+
+                    <div id="preview"></div>
+
+                    <a class="active-step btn" style="margin-left: 30px;" id="next-step">
+                        <i class="fa fa-caret-right fa-5x"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Configuration Modal -->
+    <div class="modal fade" id="configure_camp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">{{ gettext("Cau_hinh_nhom_khach_hang") }}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xl-4 col-md-4">
+                            <span>{{ gettext("Luot_den") }}</span>
+                        </div>
+                        <div class="col-xl-4 col-md-4">
+                            {% if campaign_details._id and campaign_details.min_visit != None %}
+                                <input type="text"
+                                       class="form-control onlyNumber"
+                                       placeholder="{{ gettext('Tu') }} .."id="min_visit"
+                                       value="{{ campaign_details.min_visit }}">
+                            {% else %}
+                                <input type="text"
+                                       class="form-control onlyNumber"
+                                       placeholder="{{ gettext('Tu') }} .."id="min_visit"
+                                       value="">
+                            {% endif %}
+                        </div>
+                        <div class="col-xl-4 col-md-4">
+                            <input type="hidden" value="" id="ex_max_visit"/>
+                            {% if campaign_details._id and campaign_details.max_visit != None %}
+                                <input type="text"
+                                       class="form-control onlyNumber"
+                                       placeholder="{{ gettext('Den') }} .."
+                                       id="max_visit"
+                                       value="{{ campaign_details.max_visit }}">
+                            {% else %}
+                                <input type="text"
+                                       class="form-control onlyNumber"
+                                       placeholder="{{ gettext('Den') }} .."
+                                       id="max_visit"
+                                       value="">
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-xl-4 col-md-4">
+                            <span>Tag</span>
+                        </div>
+                        <div class="col-xl-8 col-md-8">
+                            <input type="hidden" name="source_tags" id="tags_filter"
+                                   value="{{ campaign_details.camp_tags_selects }}"/>
+                            <input type="hidden" id="new_select_tags_filter"
+                                   name="real_tags_filter"/>
+                            <select class="custom-select" name="tags"
+                                    style="width: 100%;" id="camp_tags_selects" multiple="multiple">
+                                {% for tag in tags %}
+                                    <option value="{{ tag._id }}">{{ tag.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="hidden" id="select_tags_filter"
+                                   name="real_tags_filter"/>
+                        </div>
+                        
+
+
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-danger" style="float: right;" data-dismiss="modal">
+                            Đóng lại
+                          </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+    <input type="hidden" id="campaign_type" {% if campaign_details %}value={{ campaign_details.campaign_type }}{% else %}value='' {% endif %}>
+{% endblock %}
+
+{% block js %}
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            var shop_id_select = $("#shop_id_select").val();
+            var step = 1;
+            var status_campaign;
+            var arr_splash = ['0', 'default', 'survey', 'birthday', 'hour', 'promotion', 'tags', 'loyal', 'weekday', 'register', 'plus_register', 'spin', 'youtube', 'woay'];
+
+            $.ajax({
+                headers: {"X-CSRFToken": "{{ csrf_token() }}"},
+                url: "/hotspot_details",
+                type: 'POST',
+                data: {
+                    'arr_splash': JSON.stringify(arr_splash),
+                    'step': step,
+                    'shop_id': shop_id_select
+                },
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    document.getElementById("name-step").innerHTML = '{{ gettext("Buoc") }} ' + step;
+                    $(".config-splash").empty();
+                    $(".config-splash").append(data);
+                }
+            });
+
+            $("#save_campaign_hotspot").click(function () {
+                var name_camp = $('#name_camp').val();
+                var min_visit = ($('#min_visit').val());
+                var max_visit = ($('#max_visit').val());
+                // Check min, max visit
+                var campaign_type = ($('#campaign_type').val());
+                if(campaign_type !="register"){
+                    if(parseInt(min_visit) < 1 || parseInt(max_visit) < 1){
+                        swal({
+                            title: '{{ gettext("Luot_den_phai_lon_hon_0") }}',
+                            text: " ",
+                            type: "error",
+                            timer: 2000
+                        });
+                        return 0;
+                    }
+                    if (min_visit == "" || max_visit == ""){
+                        min_visit = "";
+                        max_visit = "";
+                    }
+
+                    if (parseInt(min_visit) > parseInt(max_visit) && min_visit != "" && max_visit != ""){
+                        swal({
+                            title: '{{ gettext("Luot_den_dau_phai_nho_hon_luot_den_sau") }}',
+                            text: " ",
+                            type: "error",
+                            timer: 2000
+                        });
+                        return 0;
+                    }
+                }
+                var camp_tags_selects = $('#camp_tags_selects').val();
+                if (name_camp.length == 0) {
+                    swal('{{ gettext("Ban_phai_nhap_ten_chien_dich") }}', '', 'error');
+                    return false;
+                }
+
+                var status = $("#status_campaign").val();
+
+                if (status == 'unactive') {
+                    // false
+                    Swal.fire({
+                        title: '{{ gettext("Ban_chua_kich_hoat_chien_dich,_ban_co_muon_kich_hoat_chien_dich_khong?") }}',
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+focusCancel: true,
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '{{ gettext("Co!") }}',
+                        cancelButtonText: '{{ gettext("Khong!") }}'
+                    }).then((result)=>{
+                        if(result.value){
+                            status_campaign = true;
+                            Swal.fire({
+                                title: '{{ gettext("Ban_co_chac_chan_muon_luu_khong?") }}',
+                                type: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+focusCancel: true,
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: '{{ gettext("Co")}}!',
+                                cancelButtonText: '{{ gettext("Khong")}}!'
+                            }).then((result)=> {
+                                if(result.value ){
+                                    $.ajax({
+                                        headers: {"X-CSRFToken": "{{ csrf_token() }}"},
+                                        type: 'POST',
+                                        url: '/wifi',
+                                        data: {
+                                            'shop_id_select': shop_id_select,
+                                            'name_camp': name_camp,
+                                            'campaign_id': '{{ campaign_id }}',
+                                            'status_campaign': status_campaign,
+                                            'min_visit': min_visit,
+                                            'max_visit': max_visit,
+                                            'camp_tags_selects': JSON.stringify(camp_tags_selects),
+                                        },
+                                        success: function (response) {
+                                            {#if (JSON.parse(response).exist == 1){#}
+                                            {#    swal({#}
+                                            {#        title: '{{ gettext("Luot_den_trung_voi ") }}' + " " + JSON.parse(response).exist_camp_name,#}
+                                            {#        text: " ",#}
+                                            {#        type: "error",#}
+                                            {#        timer: 4000#}
+                                            {#    });#}
+                                            {#    return 0;#}
+                                            {#}#}
+
+                                            if (response.includes('error')) {
+                                                swal(' {{ gettext("Ban_phai_kich_hoat_it_nhat_1_chien_dich") }}', " ", "error");
+
+                                            } else {
+                                                swal({
+                                                    title: '{{ gettext("Thanh_cong!") }}',
+                                                    text: " ",
+                                                    type: "success",
+                                                    timer: 2000
+                                                }).then(function () {
+                                                    location.href = '/wifi?shop_id_select=' + shop_id_select;
+                                                })
+
+                                            }
+                                        }
+                                    });
+                                }
+                            })
+                        }
+                        else {
+                            // false
+                            status_campaign = false;
+                            Swal.fire({
+                                title: '{{ gettext("Ban_co_chac_chan_muon_luu_khong?") }}',
+                                type: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+focusCancel: true,
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: '{{ gettext("Co!") }}',
+                                cancelButtonText: '{{ gettext("Khong!") }}'
+                            }).then((result) => {
+                                if (result.value) {
+                                    $.ajax({
+                                        headers: {"X-CSRFToken": "{{ csrf_token() }}"},
+                                        type: 'POST',
+                                        url: '/wifi',
+                                        data: {
+                                            'shop_id_select': shop_id_select,
+                                            'name_camp': name_camp,
+                                            'campaign_id': '{{ campaign_id }}',
+                                            'status_campaign': status_campaign,
+                                            'min_visit': min_visit,
+                                            'max_visit': max_visit,
+                                            'camp_tags_selects': JSON.stringify(camp_tags_selects),
+                                        },
+                                        success: function (response) {
+                                            {#if (JSON.parse(response).exist  == 1){#}
+                                            {#    swal({#}
+                                            {#        title: '{{ gettext("Luot_den_trung_voi") }}' + JSON.parse(response).exist_camp_name,#}
+                                            {#        text: " ",#}
+                                            {#        type: "error",#}
+                                            {#        timer: 4000#}
+                                            {#    });#}
+                                            {#    return 0;#}
+                                            {#}#}
+                                            if (response.includes('error')) {
+                                                swal('{{ gettext("Ban_phai_kich_hoat_it_nhat_1_chien_dich") }}', '', 'error');
+
+                                            } else {
+                                                swal({
+                                                title: '{{ gettext("Thanh_cong!") }}',
+                                                text: " ",
+                                                type: "success",
+                                                timer: 2000
+                                                }).then(function() {
+                                                   location.href = '/wifi?shop_id_select=' + shop_id_select;
+                                                })
+                                            }
+                                        }
+                                    });
+                                }
+                            })
+                        }
+                    })
+                } else {
+                    // true
+                    status_campaign = true;
+                    Swal.fire({
+                        title: '{{ gettext("Ban_co_chac_chan_muon_luu_khong?") }}',
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+focusCancel: true,
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '{{ gettext("Co!") }}',
+                        cancelButtonText: '{{ gettext("Khong!") }}'
+                    }).then((result) => {
+                        if(result.value){
+                            $.ajax({
+                                headers: {"X-CSRFToken": "{{ csrf_token() }}"},
+                                type: 'POST',
+                                url: '/wifi',
+                                data: {
+                                    'shop_id_select': shop_id_select,
+                                    'name_camp': name_camp,
+                                    'campaign_id': '{{ campaign_id }}',
+                                    'status_campaign': status_campaign,
+                                    'min_visit': min_visit,
+                                    'max_visit': max_visit,
+                                    'camp_tags_selects': JSON.stringify(camp_tags_selects),
+                                },
+                                success: function (response) {
+                                    {#if (JSON.parse(response).exist  == 1){#}
+                                    {#    swal({#}
+                                    {#        title: "{{ gettext('Luot_den_trung_voi') }} " + JSON.parse(response).exist_camp_name,#}
+                                    {#        text: " ",#}
+                                    {#        type: "error",#}
+                                    {#        timer: 4000#}
+                                    {#    });#}
+                                    {#    return 0;#}
+                                    {#}#}
+                                    if (response.includes('error')) {
+                                        swal('{{ gettext("Ban_phai_kich_hoat_it_nhat_1_chien_dich") }}', " ", "error");
+                                        location.reload();
+
+                                    } else {
+
+                                        swal({
+                                            title: '{{ gettext("Thanh_cong") }}!',
+                                            text: " ",
+                                            type: "success",
+                                            timer: 2000
+                                        }).then(function () {
+                                            location.href = '/wifi?shop_id_select=' + shop_id_select;
+                                        })
+
+                                    }
+                                }
+                            });
+                        }
+                    })
+                }
+            });
+
+            $("#close").click(function () {
+                Swal.fire({
+                    title: '{{ gettext("Ban_co_chac_chan_muon_dong_khong?") }} ',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+focusCancel: true,
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '{{ gettext("Co!") }}',
+                    cancelButtonText: '{{ gettext("Khong!") }}'
+                }).then((result) => {
+                    if (result.value) {
+                            location.href = '/wifi?shop_id_select=' + shop_id_select;
+                }
+            })
+            });
+
+            var url_preview = '/hotspot_type/0?shop_id_select=' + shop_id_select;
+            $("#preview").empty();
+            bioMp(document.getElementById('preview'), {
+                url: url_preview,
+                view: 'front',
+                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                height: 618,
+                width: 308
+            });
+
+            var source_tags = $("#tags_filter").val();
+            if (source_tags && source_tags.length > 0 && source_tags.toString() != 'None') {
+                var source_tags = source_tags.replace(/\u'/g, "'");
+                var source_tags = source_tags.replace(/\'/g, '"');
+                var data_soure_tags = JSON.parse(source_tags);
+                $("#camp_tags_selects").val(data_soure_tags);
+                $('#camp_tags_selects').trigger('change');
+            }
+
+            $('#camp_tags_selects').on("change", function (e) {
+                if ($('#camp_tags_selects').val()) {
+                    $('#tags_filter').val($('#camp_tags_selects').val().toString());
+                } else {
+                    $('#tags_filter').val("");
+                }
+            });
+
+            // only number input
+            $(".onlyNumber").on("keypress keyup blur", function (event) {
+                $(this).val($(this).val().replace(/[^\d].+/, ""));
+                if ((event.which < 48 || event.which > 57)) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+{% endblock %}

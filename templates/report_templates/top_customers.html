@@ -1,0 +1,12 @@
+<table class="table table-responsive">
+  <tbody>
+  {% for cus in customers %}
+  <tr>
+    <th scope="row">{{ cus.phone }}</th>
+    <td>{{ cus.name }}</td>
+    <td>{{ cus.birthday }}</td>
+    <td class="text-success"><b>{{ cus.visit_count }}</b></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>

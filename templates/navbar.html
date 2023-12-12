@@ -1,0 +1,52 @@
+<header class="navbar navbar-inverse navbar-fixed-top" id="top" role="banner">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="bs-navbar" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/customers" class="navbar-brand">
+               {{ shop.name }}
+            </a>
+        </div>
+        <nav id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-left">
+                <!-- <li class="active"> <a href="#">Thống kê</a> </li> -->
+                <!--<li class="{% if request.path.startswith('/shop') or request.path.startswith('/shop/') %}active{% endif %}">
+                    <a href="/shop">Truy cập</a>
+                </li>-->
+                <li class="{% if request.path.startswith('/customers') or request.path.startswith('/customers/') %}active{% endif %}"><a href="/customers">Khách hàng</a></li>
+                <li class="{% if request.path.startswith('/settings') or request.path.startswith('/settings/') %}active{% endif %}"><a href="/settings">Cài đặt</a></li>
+                <!--<li class="{% if request.path.startswith('/sms_log') or request.path.startswith('/sms_log/') %}active{% endif %}"><a href="/sms_log">SMS Log</a></li>-->
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tài khoản <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        {% if g.shops and g.shops | length > 1 %}
+                        <li class="dropdown-header">Danh sách quán:</li>
+                        {% for i in g.shops %}
+                        <li class="{% if i._id == shop._id %}disabled{% endif %}">
+                            <a href="/shop/{{ i._id }}">{{ i.name }}</a>
+                        </li>
+                        {% endfor %} {% endif %}
+
+                        <li><a href="/login">Đăng xuất</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+
+            <form role="search" method="POST" action="/search" class="navbar-form navbar-right sidebar-form">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                <div class="input-group">
+                    <input type="search" class="form-control" placeholder="Số điện thoại" name="keyword" value="{% if keyword %}{{ keyword }}{% endif %}">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </nav>
+    </div>
+</header>

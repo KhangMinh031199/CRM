@@ -1,0 +1,454 @@
+{% extends 'nextify/base.html' %}
+
+{% block main_content %}
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            {{ gettext('Thiet_bb') }}
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                            {{ gettext('Quan_ly_thiet_bi_WIFI') }}
+                        </h1>
+
+                    </div>
+                    {% if dealers_slug != 'an-phat' %}
+                    <div class="col-auto">
+                                <a href="/hardware" target="_blank" class="btn btn-flat d-block d-md-inline-block mb-4">
+                                    <i class="fe fe-book-open"></i> {{ gettext('Huong_dan') }}
+                                </a>
+                                <a data-target="#add_devices" aria-haspopup="true"
+                       aria-expanded="false"
+                       data-toggle="modal" class="btn btn-flat d-block d-md-inline-block mb-4">
+                                    <i class="fe fe-plus-circle"></i> {{ gettext('Them_moi') }}
+                                </a>
+
+                            </div>
+                      {% else %}
+                      <div class="col-auto">
+                                <a data-target="#add_devices" aria-haspopup="true"
+                       aria-expanded="false"
+                       data-toggle="modal" class="btn btn-flat d-block d-md-inline-block mb-4">
+                                    <i class="fa fa-close"></i> {{ gettext('Them_moi') }}
+                                </a>
+
+                            </div>
+                      {% endif %}
+
+                </div> <!-- / .row -->
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+
+            <div class="row">
+                {% for device in devices %}
+                <div class="col-12 col-md-6 col-xl-3">
+
+                    <!-- Card -->
+                    <div class="card">
+        
+                   
+                      <div class="card-body text-center">
+        
+                    
+                        <h2 class="card-title">
+                          <a href="#">{{ device.gateway_mac }}</a>
+                        </h2>
+        
+                        <p class="small text-muted mb-3">
+                            {{ device.device_type|get_device_name }}
+                        </p>
+        
+                       <p class="small text-muted mb-3">
+                            {{ device.shop_device }}
+                        </p>
+        
+                      </div>
+        
+                      <!-- Footer -->
+                      <div class="card-footer card-footer-boxed">
+                        <div class="row align-items-center justify-content-between">
+                          <div class="col-auto">
+        
+                            <!-- Status -->
+                            <small>
+
+                              <span class="text-{{ device.state }}">●</span> {%if device.state == 'success' %}Online {%else%}Offline{%endif%}
+                            </small>
+        
+                          </div>
+                          <div class="col-auto">
+        
+                            <a data-toggle="modal" href="#update_device_{{ device._id }}"  class="btn btn-flat d-block d-md-inline-block"><i class="fa fa-edit"></i> </a>
+        
+                          </div>
+                        </div>
+        
+                      </div>
+        
+                    </div>
+        
+                  </div>
+                  <div class="modal fade"
+                  id="update_device_{{ device._id }}"
+                  tabindex="-1" role="dialog"
+                  aria-labelledby="userDetailModal"
+                  data-backdrop="static">
+                 <div class="modal-dialog"
+                      role="document">
+                     <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                         <form class="form-horizontal m-t-xs"
+                               action="/devices_shop/{{ device._id }}"
+                               id="add_device_fr_{{device._id}}"
+                               enctype="multipart/form-data" method="post">
+                          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                             <div class="modal-body">
+     
+                                 <div class="row u-justify-center">
+                                     <div class="col-md-7">
+                                         <div class="u-mt-medium
+                                                         u-text-center"></div>
+     
+                                         <div class="form-group">
+                                             <label class="">{{ gettext('MAC_thiet_bi:') }} (<span><font color="red">*</font></span> {{ gettext('bat_buoc)') }}</label>
+                                             <input type="text"
+                                                    class="form-control"
+                                                    readonly="readonly"
+                                                    name="mac_add"
+                                                    id="mac_up_otp_{{device._id}}"
+                                                   value="{{ device.gateway_mac }}"/>
+                                         </div>
+                                          <div class="form-group">
+                                             <label class="">{{ gettext('Loai_thiet_bi:') }} (<span><font color="red">*</font></span> {{ gettext('bat_buoc)') }}</label>
+                                             <select name="device_type"
+                                                class="form-control"
+                                                     class="select2-selection select2-selection--single"
+                                                     role="combobox"
+                                                     id="device_type_{{ device._id }}">
+                                                    {% if device.device_type %}
+                                                    <option
+                                                         value="{{ device.device_type }}">{{ device.device_type|get_device_name }}
+                                                    </option>
+                                                    {% endif %}
+                                                 {% if 'anphat.vn' in request.url %}
+                                                   <option
+                                                         value="draytek">DrayTek
+                                                 </option>
+                                                 {% else %}
+                                               <option
+                                                         value="nextify">Nextify
+                                                 </option>
+                                                 <option
+                                                         value="tplink">Tp-Link
+                                                 </option>
+                                                 <option
+                                                         value="mikrotik">Mikrotik
+                                                 </option>
+                                                  <option
+                                                         value="extreme">Extreme
+                                                 </option>
+                                                  <option
+                                                         value="draytek">DrayTek
+                                                 </option>
+                                                  <option
+                                                         value="unifi">Unifi
+                                                 </option>
+                                                 <option
+                                                         value="fortinet">Fortinet
+                                                 </option>
+                                                       <option
+                                                         value="pfsense">pfSense
+                                                 </option>
+                                                 <option value="ruijie">Ruijie</option>
+                                                 <option value="cisco">Cisco</option>
+                                                    <option value="borynet">Borynet
+                                                  </option>
+                                                     <option
+                                                         value="grandstream">Grandstream
+                                                 </option>
+                                                       <option
+                                                         value="engenius">Engenius
+                                                 </option>
+                                                     <option
+                                                         value="aruba">Aruba
+                                                 </option>
+                                                        <option
+                                                         value="wifidog">WifiDog
+                                                 </option>
+                                                       <option
+                                                    value="meraki">Meraki
+                                            </option>
+
+                                                       <option
+                                                    value="omada">Tplink Omada
+                                            </option>
+                                                 {% endif %}
+                                             </select>
+                                         </div>
+                                      <div class="form-group">
+                                                             <div class="custom-control custom-switch">
+                                                             <input type="checkbox" class="custom-control-input"
+                                                                    id="is_radius_{{ device._id }}"
+                                                                    name="is_radius" {% if device.is_radius %}checked{% endif %}>
+                                                             <label class="custom-control-label {% if device.is_radius %}is-active{% endif %}"
+                                                                    for="is_radius_{{ device._id }}">{{ gettext('Su_dung_Radius') }}</label>
+                                                         </div>
+                                                         </div>
+     
+     
+                                     </div>
+                                 </div>
+                             </div>
+                             
+                         </form>
+                         <footer class="modal-footer u-justify-center">
+                             <a class="btn btn-primary" id="update_device_btn_{{device._id}}">
+                                 {{ gettext('Cap_nhat') }}
+                             </a>
+                         </footer>
+                     </div>
+                 </div>
+             </div>
+                          <!-- <input type="hidden" value="{{ device.device_type}}" id="ex_device_type_{{ device._id }}" /> -->
+                                      
+             <script nonce="{{ csp_nonce() }}">
+                 $(document).ready(function () {
+                        $('#device_type_{{ device._id }}').select2({
+                        dropdownParent: $("#update_device_{{ device._id }}")
+                    }); 
+                     $("#update_device_btn_{{device._id}}").click(function () {  // id button
+                         var device_type = $("#device_type_{{ device._id }}").val(); // id
+                         var mac_up_otp = $("#mac_up_otp_{{device._id}}").val(); // id 
+     
+                         if (device_type.length == 0){
+                             swal("{{ gettext('Loai_thiet_khong_duoc_de_trong') }}", " ", "error");
+                                 return false;
+                         }
+                   
+                         if (mac_up_otp.length == 0){
+                             swal("{{ gettext('Ma_thiet_khong_duoc_de_trong') }}", " ", "error");
+                                 return false;
+                         }
+                   
+                         $.ajax({
+                             url:  $("#add_device_fr_{{device._id}}").attr("action"),  // id form
+                             type: $("#add_device_fr_{{device._id}}").attr("method"),
+                             data: $("#add_device_fr_{{device._id}}").serialize(),
+                             success: function (response) {
+                                 var returnedData = JSON.parse(response);
+                                 if ('error' in returnedData){
+                                         swal(returnedData['error'], " ", "error");}
+                                              
+                                 else{
+                                         swal('{{ gettext("Cap_nhat_thiet_bi_thanh_cong") }}', '', 'success');
+                                         location.reload();}},
+                                              
+                             error: function (xhr, desc, err)
+                                         {swal("{{ gettext('Co_loi_xay_ra,_thu lai_sau') }}", " ", "error");
+                                        }
+                                     });
+                                     return false;
+                                     });
+                     });
+             </script>
+                  {%endfor%}
+
+            </div>
+
+
+        
+      
+
+        <div class="modal fade"
+             id="add_devices"
+             tabindex="-1" role="dialog"
+             aria-labelledby="userDetailModal"
+             data-backdrop="static">
+            <div class="modal-dialog"
+                 role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                    <form class="form-horizontal m-t-xs"
+                          action="/devices_shop"
+                          id="add_device_fr"
+                          enctype="multipart/form-data" method="post">
+                     <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        <div class="modal-body">
+
+                            <div class="row u-justify-center">
+                                <div class="col-md-7">
+                                    <div class="u-mt-medium u-text-center"></div>
+
+                                    <div class="form-group">
+                                        <label class="" for="select_shop">{{ gettext('Chon_dia_diem') }} (<span><font color="red">*</font></span> {{ gettext('bat_buoc)') }}</label>
+                                        <select name="shop_mac"
+                                                class="form-control"
+                                                id="select_shop">
+                                            {% for shop in shops_select %}
+                                                <option value="{{ shop._id }}">{{ shop.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="">{{ gettext('MAC_thiet_bi:') }} (<span><font color="red">*</font></span> {{ gettext('bat_buoc)') }}</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               style="margin-top:10px;font-size: 16px;"
+                                               name="mac_add"
+                                               rows="2"
+                                               id="mac_add_otp"
+                                               placeholder="77:A3:51:37:18:D8"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="">{{ gettext('Loai_thiet_bi:)') }} </label>
+                                        <select name="device_type"
+                                                class="form-control"
+                                                id="device_type">
+                                            {% if 'anphat.vn' in request.url %}
+                                              <option
+                                                    value="draytek">DrayTek
+                                            </option>
+                                            {% else %}
+                                          <option
+                                                    value="nextify">Nextify
+                                            </option>
+                                            <option
+                                                    value="tplink">Tp-Link
+                                            </option>
+                                            <option
+                                                    value="mikrotik">Mikrotik
+                                            </option>
+                                             <option
+                                                    value="extreme">Extreme
+                                            </option>
+                                             <option
+                                                    value="draytek">DrayTek
+                                            </option>
+                                             <option
+                                                    value="unifi">Unifi
+                                            </option>
+                                            <option
+                                                    value="fortinet">Fortinet
+                                            </option>
+                                                  <option
+                                                    value="pfsense">pfSense
+                                            </option>
+                                            <option value="ruijie">Ruijie</option>
+                                            <option value="cisco">Cisco</option>
+                                               <option value="borynet">Borynet
+                                             </option>
+                                                 <option
+                                                    value="grandstream">Grandstream
+                                            </option>
+                                                 <option
+                                                    value="engenius">Engenius
+                                            </option>
+                                                <option
+                                                    value="aruba">Aruba
+                                            </option>
+                                                 </option>
+                                                <option
+                                                    value="wifidog">WifiDog
+                                            </option>
+                                                 <option
+                                                    value="meraki">Meraki
+                                            </option>
+                                                <option
+                                                    value="omada">Tplink Omada
+                                            </option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                 <div class="form-group">
+                                                        <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input"
+                                                               id="is_radius"
+                                                               name="is_radius">
+                                                        <label class="custom-control-label"
+                                                               for="is_radius">{{ gettext('Su_dung_Radius') }}</label>
+                                                    </div>
+                                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </form>
+                    <div class="row row-centered">
+                        <div class="col-12" style="text-align: center;">
+                            <div class="form-group">
+                                <button class="btn btn-primary" id="add_device_btn">{{ gettext('Them_thiet_bi') }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+  
+    </div>
+    <script nonce="{{ csp_nonce() }}">
+            $(document).ready(function () {
+                $('#select_shop').select2({
+                    dropdownParent: $("#add_devices")
+                });   
+                $('#device_type').select2({
+                    dropdownParent: $("#add_devices")
+                });                     
+                $("#add_device_btn").click(function () {  // id button
+                    var shop_mac = $("#select_shop").val(); // id
+                    var mac_add = $("#mac_add_otp").val(); // id 
+
+                    if (shop_mac.length == 0){
+                        swal("{{ gettext('Dia_diem_khong_duoc_de_trong') }}", " ", "error");
+                            return false;
+                    }
+              
+                    if (mac_add.length == 0){
+                        swal("{{ gettext('Ma_thiet_bi_khong_duoc_de_trong') }}", " ", "error");
+                            return false;
+                    }
+              
+                    $.ajax({
+                        url: $("#add_device_fr").attr("action"),  // id form
+                        type: $("#add_device_fr").attr("method"),
+                        data: $("#add_device_fr").serialize(),
+                        success: function (response) {
+                            var returnedData = JSON.parse(response);
+                            if ('error' in returnedData){
+                                    swal(returnedData['error'], " ", "error");}
+                                         
+                            else{
+                                    swal('{{ gettext("Them_moi_thiet_bi_thanh_cong") }}', '', 'success');
+                                    location.reload();}},
+                                         
+                        error: function (xhr, desc, err)
+                                    {swal("{{ gettext('Co_loi_xay_ra,_thu_lai_sau') }}", " ", "error");
+                                   }
+                                });
+                                return false;
+                                });
+
+
+                        });
+
+
+    </script>
+
+{% endblock %}

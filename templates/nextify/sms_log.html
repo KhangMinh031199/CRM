@@ -1,0 +1,52 @@
+{% extends 'nextify/base.html' %} {% block main_content %}
+
+    <div class="c-toolbar u-mb-medium">
+    <h3 class="c-toolbar__title has-divider">{{ gettext("SMS_Log") }}</h3>
+    <h5 class="c-toolbar__meta u-mr-auto">{{ gettext("Thong_ke_SMS") }}</h5>
+    </div>
+
+    <div class="container">
+        <div class="row u-mb-large">
+            <div class="col-lg-12">
+                <div class="card u-p-medium">
+                    <div class="c-table-responsive">
+                        <table class="c-table">
+                            <caption class="c-table__title">
+                               {{ total }} {{ gettext("tin") }}
+                            </caption>
+                            <thead class="c-table__head c-table__head--slim">
+                                <tr class="c-table__row">
+                                    <th class="c-table__cell
+                                        c-table__cell--head">Phone
+                                    </th>
+                                     <th class="c-table__cell
+                                        c-table__cell--head">{{ gettext("Noi_dung") }}
+                                    </th>
+                                     <th class="c-table__cell
+                                        c-table__cell--head">{{ gettext("Thoi_diem_gui") }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for record in sms_log %}
+         <tr class="c-table__row">
+            <td class="c-table__cell">{{ record.phone_number }}</td>
+             <td class="c-table__cell">{{ record.message }}</td>
+             <td class="c-table__cell">{{ record.timestamp|human_time }}</td>
+          </tr>
+        {% endfor %}
+
+                            </tbody>
+                        </table>
+                     <nav class="c-pagination u-justify-center">
+                    {% if pagination %}
+                        {{ pagination.links }}
+                    {% endif %}
+                </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

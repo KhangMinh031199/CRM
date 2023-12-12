@@ -1,0 +1,240 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-8">
+
+            <!-- Header -->
+            <div class="header mt-md-5">
+                <div class="header-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Pretitle -->
+                            <h6 class="header-pretitle">
+                                {{ gettext("Tai_khoan") }}
+                            </h6>
+
+                            <!-- Title -->
+                            <h1 class="header-title">
+                                {{ gettext("Cau_hinh_tai_khoan") }}
+                            </h1>
+
+                        </div>
+                    </div> <!-- / .row -->
+                    <div class="row align-items-center">
+                        <div class="col">
+
+                            <!-- Nav -->
+                            <ul class="nav nav-tabs nav-overflow header-tabs">
+
+                                <li class="nav-item">
+                                    <a href="/settings" class="nav-link">
+                                        {{ gettext("Cau_hinh_chung") }}
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/accounts" class="nav-link">
+                                        {{ gettext("Tai_khoan_truy_cap") }}
+                                    </a>
+                                </li>
+                                <!-- <li class="nav-item">
+                                    <a href="/payment" class="nav-link">
+                                        {{ gettext("Thanh_toan") }}
+                                    </a>
+                                </li> -->
+                                <!-- <li class="nav-item">
+                                    <a href="/setting_integration" class="nav-link">
+                                        {{ gettext("Tich_hop") }}
+                                    </a>
+                                </li> -->
+                                <li class="nav-item">
+                                    <a href="#!" class="nav-link active">
+                                        {{ gettext("Nhan_dien_nhan_vien") }}
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                            <a href="/create_QR_code" class="nav-link">
+                                                {{ gettext("Tao_ma_QR") }}
+                                            </a>
+                                        </li>
+                                      
+                                        <li class="nav-item">
+                                            <a href="/logout" class="nav-link" style="color:#3232c8">
+                                                {{ gettext("Dang_xuat") }}
+                                            </a>
+                                        </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <form action="/setting_detection_employee" method="POST" id="setting_detection">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                <div class="header mt-md-2">
+                    <!-- Title -->
+                    <div class="header-body">
+                        <div class="row align-items-center">
+                            <h1 class="col-11 header-title">
+                                {{ gettext("Nhan_dien_nhan_vien_thu_cong") }}
+                            </h1>
+                            <div
+                                class="custom-control custom-switch {% if active_detection =='True' %}is-active{% endif %} align-items-end">
+                                <input class="custom-control-input" name="active_detection" id="active_detection"
+                                    type="checkbox" {% if active_detection == "True" %}checked="checked" {% endif %}>
+                                    <label class="custom-control-label"
+                                      for="active_detection"></label>
+                            </div>
+                        </div>
+
+                        <!-- Subtitle -->
+                        <p class="header-subtitle">
+                            {{ gettext("Phat_hien_nhan_vien_va_gan_tag_cho_nhan_vien_thong_qua_chinh_sua_profile_khach_hang_va_import_file_danh_sach_khach_hang._Viec_nay_giup_tang_su_chinh_xac_cac_chi_so_bao_cao_va_danh_gia_chat_luong_khach_hang.") }}
+                        </p>
+                    </div>
+
+
+                </div>
+
+                <div class="header mt-md-2">
+                    <!-- Title -->
+                    <div class="header-body">
+                        <div class="row align-items-center">
+                            <h1 class="col-11 header-title">
+                                Top 5%
+                            </h1>
+                            <div class="custom-control custom-switch  {% if top5_detection =='True' %}is-active{% endif %} align-items-end">
+                                <input class="custom-control-input" name="top5_detection" id="top5_detection" type="checkbox"
+                                    {% if top5_detection=="True" %}checked="checked" {% endif %}>
+                                    <label class="custom-control-label"
+                                      for="top5_detection"></label>
+                            </div>
+
+                        </div>
+                        <!-- Subtitle -->
+                        <p class="header-subtitle">
+                            Top 5% {{gettext("nguoi_dung_co_luot_truy_cap_nhieu_nhat_trong_30_ngay_gan_day_se_tu_dong_gan_tag_nhan_vien.") }}
+                        </p>
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="header mt-md-2">
+                    <!-- Title -->
+                    <div class="header-body">
+                        <div class="row align-items-center">
+                            <h1 class="col-11 header-title">
+                                {{ gettext("Thoi_gian_truy_cap") }}
+                            </h1>
+                            <div class="custom-control custom-switch {% if timing_detection =='True' %}is-active{% endif %} align-items-end"
+                            id="time_check">
+                                <input class="custom-control-input" name="timing_detection" id="timing_detection" type="checkbox"
+                                    {% if timing_detection=="True" %}checked="checked" {% endif %}>
+                                    <label class="custom-control-label"
+                                    for="timing_detection"></label>
+                            </div>
+                        </div>
+
+
+                        <!-- Subtitle -->
+                        <p class="header-subtitle">
+                            {{ gettext("Cai_dat_thoi_gian_truy_cap_(/ngay)._Nguoi_dung_co_thoi_gian_truy_cap_trung_binh_lon_hon_trong_30_ngay_se_tu_dong_duoc_gan_tag_nhan_vien.") }}
+
+                        </p>
+                    </div>
+                </div>
+                    <div class="col-4" {% if timing_detection == 'True' %}style="float:left" {% else %} style="float:left; display: none;"
+                    {% endif %} style="float:left" id="div_time" >
+                        <label class="c-field__label" for="time_">{{ gettext("Thoi_gian_truy_cap") }}:</label>
+                        <input type="text" class="c-input" id="time_" name="time_" {% if merchant.hour_detection %}
+                        value="{{ merchant.hour_detection }}" {% endif %} />
+                    </div>
+                
+            </form>
+            <div class="col-2" style="float:right">
+                <button class="btn btn-lg btn-block btn-primary" id="save_setting">
+                    {{ gettext("Luu_lai") }}
+                </button>
+            </div>
+        </div>
+
+
+    </div> <!-- / .row -->
+
+
+
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $('#time_check').mouseup(function () {
+            if (!$("#timing_detection").is(":checked")) {
+                $("#div_time").show();
+            }else{
+                $("#div_time").hide();
+            }
+        });
+
+
+        $("#save_setting").click(function () {
+            var active_detection = $("#active_detection").is(":checked");
+            var top5_detection = $("#top5_detection").is(":checked");
+            var timing_detection = $("#timing_detection").is(":checked");
+
+            var time_ = $("#time_").val();
+            var data = {
+                'active_detection': active_detection,
+                'top5_detection': top5_detection,
+                'timing_detection': timing_detection,
+                'time_': time_,
+            };
+            $.ajax({
+                type: 'POST',
+                url: $("#setting_detection").attr("action"),
+                data: data,
+                success: function (response) {
+                    var returnedData = JSON.parse(response);
+                    if ('error' in returnedData) {
+                        swal(returnedData['error'], " ", "error");
+                        return false;
+                    }
+                    else {
+                        swal('{{ gettext("Thao_tac_thanh_cong") }}', ' ', 'success');
+                        location.reload();
+                    }
+
+                },
+                error: function (xhr, desc, err) {
+                    swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+                    return false;
+                }
+            });
+        });
+
+        flatpickr("#time_", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            inline: true,
+            time_24hr: true
+
+        });
+
+
+    });
+</script>
+
+{% endblock %}

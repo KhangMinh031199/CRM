@@ -1,0 +1,152 @@
+{% extends 'nextify/base.html' %} {% block main_content %}
+    <div class="container u-mb-medium">
+        <div class="row">
+            <div class="col-12">
+                <div class="card u-p-medium">
+                    <div class="row">
+                        <div class="c-field" style="padding:20px">
+                            <button class="c-btn c-btn--info
+                                        u-float-right" data-toggle="modal"
+                                    data-target="#new_location">
+                                Thêm địa điểm
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        {% for shop in shop_in_mer %}
+                          <div class="col-sm-6 col-lg-3">
+                             <a href="/locations/{{ shop._id }}">
+                               <div class="c-project">
+                        <div class="c-project__img">
+                            {% if shop.background and shop.background|string != 'None' %}
+                                        <img src="https://files.nextify.vn/{{ shop.background }}"
+                                             style="height:250px; width:100%"
+                                             alt="{{ shop.name }}">
+                               {% else %}
+                                <img src="/static/nextify/img/tile_wifiHotspot.jpg"/>
+                            {% endif %}
+                                    </div>
+                                   <h3 class="c-project__title">{{ shop.name }}
+                            <span class="c-project__status"><span class="u-text-bold">{{ shop.address }}</span></span>
+                        </h3>
+
+                            </div>
+                             </a>
+                          </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="c-modal c-modal--small modal fade" id="new_location"
+         tabindex="-1"
+         role="dialog" aria-labelledby="new_image" data-backdrop="static"
+         style="display: none;" aria-hidden="true">
+        <div class="c-modal__dialog modal-dialog" role="document">
+            <div class="c-modal__content">
+                <div class="c-modal__header">
+                    <h3 class="c-modal__title">Thêm địa điểm</h3>
+
+                    <span class="c-modal__close" data-dismiss="modal"
+                          aria-label="Close">
+                                        <i class="fa fa-close"></i>
+                                    </span>
+                </div>
+
+                 <div class="c-modal__body">
+                     <form method="POST" action="/create_locations"
+                            enctype="multipart/form-data" id="create_locations_form">
+                        <input type="hidden" value="{{ merchant._id }}"
+                               name="merchant_id" />
+                      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                        {% for err in error %}
+                          <div class="alert alert-danger">* {{ err }}</div>
+                              {% endfor %}
+                        <div class="c-field u-mb-small">
+                          <label class="c-field__label" for="name">Tên địa
+                              điểm:</label>
+                          <input type="text" maxlength="50" class="c-input" id="name"
+                                 name="name"/>
+                        </div>
+                        <div class="c-field u-mb-small">
+                            <label class="c-field__label" for="name">Địa chỉ lắp đặt:</label>
+                            <input type="text" maxlength="50" class="c-input" id="address"
+                                   name="address"/>
+                        </div>
+                        <div class="c-field u-mb-small">
+                          <label class="c-field__label" for="name">Số điện
+                              thoại quản lý</label>
+                          <input type="text" maxlength="50" class="c-input" id="phone"
+                                 name="phone" placeholder="Không bắt buộc"/>
+                        </div>
+                        <div class="c-field u-mb-small">
+                          <label class="c-field__label" for="name">Email
+                              quản lý</label>
+                          <input type="text" class="c-input" id="email"
+                                 name="email"  placeholder="Không bắt buộc"/>
+                        </div>
+                        <div class="c-field u-mb-small">
+                          <label class="c-field__label" for="name">Mật khẩu
+                              quản lý</label>
+                          <input type="text" maxlength="50" class="c-input"
+                                 id="password" name="password"  placeholder="Không bắt buộc"/>
+                        </div>
+                        <div class="c-field u-mb-small">
+                          <label class="c-field__label" for="name">Nhập lại
+                              mật khẩu</label>
+                          <input type="text" maxlength="50" class="c-input"
+                                 id="re_password" name="re_password"  placeholder="Không bắt buộc"/>
+                        </div>
+                        <div class="c-field u-mb-small">
+                          <label class="c-field__label"
+                                 for="logo">Logo:</label>
+                          <input type="file" class="c-input" id="logo"
+                                 name="logo">
+                        </div>
+                        <div class="c-field u-mb-small">
+                          <label class="c-field__label"
+                                 for="background">Hình nền:</label>
+
+                          <input type="file" class="c-input" id="background"
+                                 name="background">
+                        </div>
+                        <div class="c-field u-mb-small">
+                          <label class="c-field__label"
+                                 for="facebook-page">Link Facebook Page:</label>
+                          <input type="text"
+                                 class="c-input"
+                                 id="facebook-page"
+                                 name="facebook_page"
+                                 placeholder="//www.facebook.com/nextify/">
+                        </div>
+                       </form>
+                 </div>
+                 <div class="c-modal__footer u-justify-center">
+                    <div class="btn-toolbar pull-right">
+                        <div class="btn-group">
+                            <button id="new_location_submit"
+                                    class="c-btn c-btn--info u-float-right">
+                                Lưu thông tin
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $("#new_location_submit").click(function () {
+         $("#create_locations_form").submit();
+
+        })
+    });
+        </script>
+{% endblock %}

@@ -1,0 +1,9 @@
+version: '2'
+services:
+  # The "rails" attribute is the service name in docker-compose.yml
+  rails:
+    volumes:
+      - app-code-sync:/app:nocopy
+volumes:
+  app-code-sync:
+    external: true

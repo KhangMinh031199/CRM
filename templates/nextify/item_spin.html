@@ -1,0 +1,682 @@
+{% extends 'nextify/base.html' %}
+
+
+{% block main_content %}
+    <script nonce="{{ csp_nonce() }}">
+
+       function CalculateGravity(e, t) {
+    console.log('cal gravity');
+    console.log(e);
+    console.log(t);
+                var n = [];
+                $("#gifts_detail .card .card-body .row").each(function(e, t) {
+                    console.log('loop');
+                    console.log($(t).find(".gravityclass").val());
+                    n.push($(t).find(".gravityclass").val())
+                });
+                for (var a = 0, d = 0; d < n.length; d++)
+                    a += n[d] << 0;
+                var o = [];
+                for (d = 0; d < n.length; d++) {
+                    var i, l = n[d];
+                    i = 0 == a ? 0 : l / a,
+                    i = Math.round(100 * i),
+                    o.push(i)
+                }
+                e = 0;
+                $("#gifts_detail .card .card-body .row").each(function(t, n) {
+                    $(n).find(".gravityperclass").text(o[e] + "%"),
+                    $(n).find(".hdnGravity").val(o[e]),
+                    e++
+                })
+            }
+    </script>
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-end">
+                    <div class="col">
+
+                        <!-- Pretitle -->
+                        <h6 class="header-pretitle">
+                            Mini Game
+                        </h6>
+
+                        <!-- Title -->
+                        <h1 class="header-title">
+                            {{ item.info.name }}
+                        </h1>
+
+                    </div>
+
+                    <div class="col-auto">
+                        <a href="/mini_game/{{ item.shop_id }}"
+                           class="btn btn-flat btn-block btn-dark">
+                            <i class="fa fa-close"></i> {{ gettext("Dong_lai") }}
+                        </a>
+
+                    </div>
+                </div> <!-- / .row -->
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+
+
+        <div class="row mt-4 mt-md-5">
+            <div class="col-12 col-md-12 col-xl-12 ">
+            <div class="card">
+            <form method="POST" enctype="multipart/form-data" id="form_config_spin">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"/>
+                <div class="card-body">
+                    <div class="row mt-4 mt-md-5">
+                        <div class="col-12 col-md-8 col-xl-8 ">
+                            <div class="row">
+                                <div class="col-4">
+                                    <h3 class="header-title">{{ gettext("Ten_chien_dich") }} <font color="red">*</font></h3>
+                                </div>
+                                <div class="col-8">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="name" value="{{ item.info.name }}" autofocus
+                                               id="name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+
+                                    <h3 class="header-title">{{ gettext("Hinh_anh") }}</h3>
+                                </div>
+                                <div class="col-8">
+                                    <div class="row">
+
+                                        <div class="form-group col-6">
+
+                                            <label for="photo">{{ gettext("Hinh_nen") }}</label>
+                                            
+
+                                            <p class="help-block">
+                                                <img class="avatar-img" id="img_new_photo" {% if item.info.background %} src="{% if item.info.background|length == 12 %}//files.nextify.vn/{{ item.info.background }} {% else %}//files.nextify.vn/{{ item.info.background }}{% endif %}"{% endif %}>
+                                            </p>
+                                            <p class="text-muted mb-4">{{ gettext("Kich_thuoc_goi_y_1280_px_×_720_px") }}</p>
+                                            <!-- <input class='form-control imgInp' type="file" id="new_photo" name="photo"> -->
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input"  name="photo" id="new_photo">
+                                                <label class="custom-file-label">{{ gettext("Tai_anh_nen") }}</label>
+                                              </div>
+                                        </div>
+                                        <div class="form-group col-6">
+
+
+                                            <label for="photo">{{ gettext("Anh_trung_tam_vong_quay") }}</label>
+                                            <p class="text-muted mb-4"></p>
+
+                                            <p class="help-block">
+                                                
+                                                <img id="img_new_photo_center"
+                                                     {% if item.info.center %} src="{% if item.info.center|length == 12 %}//files.nextify.vn/{{ item.info.center }} {% else %}//files.nextify.vn/{{ item.info.center }}{% endif %}"{% endif %}
+                                                     class="avatar-img"/>
+                                            </p>
+
+
+                                            <!-- <input class='form-control imgInp' type="file" id="new_photo_center"
+                                                   name="photo"> -->
+                                            <div class="custom-file">
+                                            <input type="file" class="custom-file-input"  name="photo" id="new_photo_center">
+                                            <label class="custom-file-label">{{ gettext("Tai_anh_nen") }}</label>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+                            <hr/>
+
+                            <div class="row">
+                                <div class="col-4">
+                                    <h3 class="header-title">{{ gettext("Tuy_chinh") }}</h3>
+                                </div>
+                                <div class="col-8">
+
+                                    <div class="form-group">
+                                        <label for="content">{{ gettext("Noi_dung_chao_mung") }}</label>
+                                        <textarea class="form-control" id="content" name="content" rows="2"
+                                                  maxlength="1000"
+                                                  placeholder='{{ gettext("Chao_mung_ban_da_den_voi_vong_quay_may_man.") }}'>{{ item.info.content }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="content">{{ gettext("Mau_chu_chao_mung") }}</label>
+                                        <input class="jscolor form-control" id="content_color"
+                                               value="{{ item.info.content_color }}">
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label>{{ gettext("So_luot_quay") }} <font color="red">*</font></label>
+                                        <input type="text" class="form-control" value="{{ item.info.turns }}"
+                                               id="turns" name="turns"/>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label>{{ gettext("Ten_nut_quay_thuong") }}</label>
+                                        <input type="text" class="form-control"
+                                               placeholder='{{ gettext("Quay_ngay") }}' id="name_btn_win"
+                                               value="{{ item.info.name_btn_win }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="content">{{ gettext("Thong_bao_trung_thuong") }}</label>
+                                        <textarea class="form-control" id="content_win" name="content_win" rows="2"
+                                                  maxlength="1000"
+                                                  placeholder='{{ gettext("Xin_chuc_mung,_phan_thuong_cua_ban_la") }}'>{{ item.info.content_win }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="content">{{ gettext("Thong_bao_khong_trung_thuong") }}</label>
+                                        <textarea class="form-control" id="content_not_win" name="content_not_win"
+                                                  rows="2"
+                                                  maxlength="1000"
+                                                  placeholder='{{ gettext("Rat_tiec_ban_da_khong_trung_thuong,_hay_thu_lai_van_may_cua_minh") }}'>{{ item.info.content_not_win }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="hidden" id="ex_win_rate" value="{{ item.info.win_rate }}"/>
+                                        <label>Tỷ lệ trúng thưởng (%) <font color="red">*</font>
+                                            <span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                                  aria-label='{{ gettext("Ty_le_trung_thuong_cua_moi_khach_hang") }}'>
+                                            <i class="fa fa-question"></i>
+                                        </span>
+                                        </label>
+                                        <select class="form-control" id="win_rate" name="win_rate">
+                                            <option value="10">
+                                                10
+                                            </option>
+                                            <option value="20">
+                                                20
+                                            </option>
+                                            <option value="30">
+                                                30
+                                            </option>
+                                            <option value="40">
+                                                40
+                                            </option>
+                                            <option value="50">
+                                                50
+                                            </option>
+                                            <option value="60">
+                                                60
+                                            </option>
+                                            <option value="70">
+                                                70
+                                            </option>
+                                            <option value="80">
+                                                80
+                                            </option>
+                                            <option value="90">
+                                                90
+                                            </option>
+                                            <option value="100">
+                                                100
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>{{ gettext("Thoi_gian_hien_lai_vong_quay_theo_gio") }}</label>
+                                        <input type="text" class="form-control" value="{{ item.info.time_reset }}"
+                                               id="time_reset" name="time_reset"/>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                             <hr/>
+                            <div class="row">
+                                 <div class="col-4">
+                                    <h3 class="header-title">{{ gettext("So_phan_thuong") }}</h3>
+                                </div>
+                                <div class="col-8">
+                                         <input type="hidden" id="ex_gifts" value="{{ item.info.gifts|length }}"/>
+
+
+                    <select class="form-control" id="gifts" name="gifts">
+
+                                <option value="2">
+                                    2
+                                </option>
+                                <option value="3">
+                                    3
+                                </option>
+                                <option value="4">
+                                    4
+                                </option>
+                                <option value="5">
+                                    5
+                                </option>
+                                <option value="6">
+                                    6
+                                </option>
+                                <option value="7">
+                                    7
+                                </option>
+                                <option value="8">
+                                    8
+                                </option>
+                                <option value="9">
+                                    9
+                                </option>
+                                <option value="10">
+                                    10
+                                </option>
+                            </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 col-lg-4 col-xl-4 px-lg-6 my-9">
+
+                            <div id="preview"></div>
+
+                        </div>
+                    </div>
+
+
+                    <div id="gifts_detail" class="col mt-4 mt-md-5">
+                        {% for i in range(0, item.info.gifts|length ) %}
+                            <div class="card bg-light border">
+                                <div class="card-body">
+                                    <div class='row'>
+                                        <div class='col-2'>
+                                             <h4 class="title text-center">{{ gettext("Loai") }}</h4>
+                                            <select class='form-control' id='gift_select_{{ i + 1 }}'>
+                                                <option value='0' {% if item.info.gifts[i].is_reward|string == 'False' %}selected{% endif %}>{{ gettext("Khong_trung_thuong") }}</option>
+                                                <option value='gift' {% if item.info.gifts[i].is_reward == 'gift' %}selected{% endif %}>{{ gettext("Qua_hien_vat") }}</option>
+                                                <option value='code' {% if item.info.gifts[i].is_reward == 'code' %}selected{% endif %}>{{ gettext("Ma_trung_thuong") }}</option>
+
+                                            </select>
+                                        </div>
+
+                                        <div class='col-3'>
+                                              <h4 class="title text-center">{{ gettext("Ten") }}</h4>
+                                            <input type='text' id='gift_text_{{ i + 1}}'
+                                                                  class='form-control  mb-2'
+                                                                  value="{{ item.info.gifts[i].title }}">
+                                            <h4 class="title text-center">{{ gettext("Mo_ta") }}</h4>
+                                            <input type='text'
+                                                   id='gift_detail_{{ i + 1 }}'
+                                                   class='form-control'
+                                                   value="{{ item.info.gifts[i].detail }}"></div>
+                                        <div class='col-2'>
+                                               <h4 class="title text-center">{{ gettext("So_luong") }}</h4>
+
+                                            <input min='0' type='number'
+                                                   id='gift_count_{{ i + 1 }}'
+                                                   class='form-control mb-2'
+                                                   value="{{ item.info.gifts[i].amount }}">
+                                            <h4 class="title text-center">{{ gettext("Con") }}</h4>
+                                            <input
+                                                    class='form-control'
+                                                    value="{{ item.info.gifts[i].remaining_amount }}" disabled></div>
+
+
+                                        <div class='col-2'>
+                                        <h4 class="title text-center">{{ gettext("Mau") }}</h4>
+                                            <input
+                                                    class='jscolor form-control mb-2'
+                                                    id='gift_color_{{ i + 1}}'
+                                                    value='{{ item.info.gifts[i].color }}'>
+
+                                           <h4 class="title text-center">{{ gettext("Ty_le:") }} <span class="gravityperclass">{{item.info.gifts[i].rate_reward  }}%</span></h4><input type="hidden" id="hdnGravity_win_rate_gift_{{ i+ 1}}"  class="hdnGravity" value="{{item.info.gifts[i].rate_reward  }}">
+                                        <select class='form-control gravityclass' id='win_rate_gift_{{ i + 1 }}' onchange='CalculateGravity({{ i +  1 }}, {{ i + 1 }})'>
+                                            <option value='0'
+                                                    {% if item.info.gifts[i].rate_gravity == '0' %}selected{% endif %}>0
+                                            </option>
+                                            <option value='10'
+                                                    {% if item.info.gifts[i].rate_gravity == '10' %}selected{% endif %}>
+                                                10
+                                            </option>
+                                            <option value='20'
+                                                    {% if item.info.gifts[i].rate_gravity == '20' %}selected{% endif %}>
+                                                20
+                                            </option>
+                                            <option value='30'
+                                                    {% if item.info.gifts[i].rate_gravity == '30' %}selected{% endif %}>
+                                                30
+                                            </option>
+                                            <option value='40'
+                                                    {% if item.info.gifts[i].rate_gravity == '40' %}selected{% endif %}>
+                                                40
+                                            </option>
+                                            <option value='50'
+                                                    {% if item.info.gifts[i].rate_gravity == '50' %}selected{% endif %}>
+                                                50
+                                            </option>
+                                            <option value='60'
+                                                    {% if item.info.gifts[i].rate_gravity == '60' %}selected{% endif %}>
+                                                60
+                                            </option>
+                                            <option value='70'
+                                                    {% if item.info.gifts[i].rate_gravity == '70' %}selected{% endif %}>
+                                                70
+                                            </option>
+                                            <option value='80'
+                                                    {% if item.info.gifts[i].rate_gravity == '80' %}selected{% endif %}>
+                                                80
+                                            </option>
+                                            <option value='90'
+                                                    {% if item.info.gifts[i].rate_gravity == '90' %}selected{% endif %}>
+                                                90
+                                            </option>
+                                            <option value='100'
+                                                    {% if item.info.gifts[i].rate_gravity == '100' %}selected{% endif %}>
+                                                100
+                                            </option>
+                                        </select></div>
+
+                                        <div class='col-2'><p class="text-center"><img id='gift_preview_{{ i + 1 }}'
+                                                                                       width='100%'
+                                                                                       
+                                                                                       {% if item.info.gifts[i].images %} src="{% if item.info.gifts[i].images|length == 12 %}//files.nextify.vn/{{ item.info.gifts[i].images }} {% else %}//files.nextify.vn/{{ item.info.gifts[i].images }}{% endif %}"{% endif %}
+                                                                                       style='max-height: 30px; max-width: 30px'>
+                                        {% if item.info.gifts[i].images %}
+                                            <input type="hidden" value="{{item.info.gifts[i].images  }}" id='gift_ex_photo_{{ i + 1 }}'/>
+
+                                        {% endif %}
+                                        </p>
+                                        <!-- <input type='file' class='form-control'
+                                                   id='gift_input_{{ i + 1 }}'> -->
+                                            <div class="custom-file">
+                                            <input type="file" class="custom-file-input"  id="gift_input_{{ i + 1 }}">
+                                            <label class="custom-file-label">{{ gettext("Tai_anh_nen") }}</label>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+                    </div>
+
+
+                </div>
+                <div class="card-footer text-center" >
+                        <button class="btn btn-primary">
+                            {{ gettext("Cap_nhat") }}
+                        </button>
+                    </div>
+            </form>
+            </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <input id="game_id" value="{{ item._id }}" type="hidden"/>
+    <input id="shop_id_select" value="{{ shop_id_select }}" type="hidden"/>
+
+{% endblock %}
+{% block js %}
+
+    <script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            var game_id = $("#game_id").val();
+
+            function isNormalInteger(str) {
+                var n = Math.floor(Number(str));
+                return n !== Infinity && String(n) === str && n >= 0;
+            }
+
+            $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            var config_spin = $('#config_spin').val();
+            var shop_id_select = $('#shop_id_select').val();
+
+             $('#gifts').val( $('#ex_gifts').val());
+             $('#win_rate').val( $('#ex_win_rate').val());
+
+            $('#gifts').on('change', function (e) {
+
+                var current_length = $('#gifts_detail')[0].childElementCount;
+
+                var gifts = parseInt($(this).val());
+
+                $("input[type='file']").off('change');
+                if (gifts > current_length) {
+                    var diff = gifts - current_length;
+                    for (i = current_length+1; i < gifts+1; i++) {
+                        $('#gifts_detail').append(
+                            "<div class='card bg-light border'><div class='card-body'><div class='row'><div class='col-2'> <h4 class='title text-center'>{{ gettext('Loai') }}</h4><select class='form-control' id='gift_select_" + i + "'> <option value='0'>{{ gettext('Khong_trung_thuong') }}</option> <option value='gift'>{{ gettext('Qua_hien_vat') }}</option> <option value='code'>{{ gettext('Ma_trung_thuong') }}</option></select> </div> <div class='col-3'><h4 class='title text-center'>{{ gettext('Ten') }}</h4><input type='text' id='gift_text_" + i + "' class='form-control mb-2'> <h4 class='title text-center'>{{ gettext('Mo_ta') }}</h4> <input type='text' id='gift_detail_" + i + "' class='form-control'></div> <div class='col-2'><h4 class='title text-center'>{{ gettext('So_luong') }}</h4><input min='0' type='number' id='gift_count_" + i + "' class='form-control mb-2'> <h4 class='title text-center'>{{ gettext('Con') }}</h4> <input class='form-control' disabled></div> <div class='col-2'><h4 class='title text-center'>{{ gettext('Mau') }}</h4> <input class='jscolor form-control mb-2' id='gift_color_" + i + "'> <h4 class='title text-center'>{{ gettext('Ty_le') }}: <span class='gravityperclass'>0%</span></h4><input type='hidden' id='hdnGravity_win_rate_gift_" + i + "'  class='hdnGravity' value=''> <select class='form-control  gravityclass' id='win_rate_gift_" + i + "' onchange='CalculateGravity(" + i + ", " + i + ")'> <option value='0'>0</option><option value='10'>10</option> <option value='20'> 20</option> <option value='30'> 30 </option> <option value='40'> 40 </option> <option value='50'> 50 </option> <option value='60'> 60 </option> <option value='70'> 70 </option> <option value='80'> 80 </option> <option value='90'> 90 </option> <option value='100'> 100 </option> </select></div> <div class='col-2'><p class='text-center'><img id='gift_preview_" + i + "' width='100%' style='display: none; max-height: 30px; max-width: 30px'> </p><div class='custom-file'><input type='file' class='custom-file-input' id='gift_input_" + i + "'><label class='custom-file-label'>{{ gettext('Tai_anh_nen') }}</label></div></div> </div> </div></div>\n")
+
+                    }
+                    jscolor.installByClassName("jscolor");
+                } else if (gifts < current_length) {
+                    for (i = current_length; i >= gifts; i--) {
+
+                        $('#gifts_detail').children().eq(i).remove();
+
+                    }
+                }
+                upload_image();
+            });
+
+            upload_image();
+
+            function upload_image() {
+                $("#new_photo_center").change(function () {
+                    var validate_photo = validate(this);
+                    if (validate_photo == true) {
+                        swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                        $('#img_new_photo_center').show();
+                        readURL(this, 'img_new_photo_center');
+                    } else {
+                        if (validate_photo == "big_file") {
+                            swal('{{ gettext("File_co_kich_thuoc_qua_lon!") }}', '', 'error');
+                            return false;
+                        }
+                        swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                        $('#new_photo_center').val('');
+                        $('#img_new_photo_center').hide();
+                    }
+                });
+                $("input[type='file']").change(function () {
+                    var id = $(this)[0].id;
+
+                    if (id == 'new_photo') {
+                        var validate_photo = validate(this);
+                        if (validate_photo == true) {
+                            swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                            $('#img_new_photo').show();
+                            readURL(this, 'img_new_photo');
+                        } else {
+                            if (validate_photo == "big_file") {
+                                swal('{{ gettext("File_co_kich_thuoc_qua_lon!") }}', '', 'error');
+                                return false;
+                            }
+                            swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                            $('#new_photo').val('');
+                            $('#img_new_photo').hide();
+                        }
+                    } else if (id != 'new_photo' && id != 'new_photo_center') {
+                        var index = $(this)[0].id[$(this)[0].id.length - 1]
+                        var validate_photo = validate(this);
+                        if (validate_photo == true) {
+                            swal('{{ gettext("Upload_thanh_cong") }}', '', 'success');
+                            $('#gift_preview_' + index).show();
+                            readURL(this, 'gift_preview_' + index);
+                        } else {
+                            if (validate_photo == "big_file") {
+                                swal('{{ gettext("File_co_kich_thuoc_qua_lon!") }}', '', 'error');
+                                return false;
+                            }
+                            swal('{{ gettext("File_khong_dung_dinh_dang") }}', '', 'error');
+                        }
+                    }
+
+                });
+            }
+
+            function readURL(input, input_view) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    var view_id = '#' + input_view;
+                    reader.onload = function (e) {
+                        $(view_id).attr('src', e.target.result);
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            function validate(photo) {
+                var file_size = $(photo)[0].files[0].size;
+                var file = $(photo).val();
+                var exts = ['jpg', 'png', 'jpeg'];
+                if (file) {
+                    var get_ext = file.split('.');
+                    get_ext = get_ext.reverse();
+                    if ($.inArray(get_ext[0].toLowerCase(), exts) > -1) {
+                        if (file_size > 1048576) {
+                            return "big_file";
+                        } else {
+                            return true;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+
+            }
+
+            $("#form_config_spin").on('submit', (function (e) {
+
+                var form_data = new FormData();
+                var name = $('#name').val();
+                if (name.length == 0) {
+                    swal('{{ gettext("Ban_phai_nhap_ten_chien_dich") }}', " ", 'error');
+                    return false;
+                }
+
+
+                var win_rate = $('#win_rate').val(); // ty le trung thuong
+                if (win_rate == 0) {
+                    swal('{{ gettext("Ban_phai_chon_ty_le_trung_thuong") }}', " ", 'error');
+                    return false;
+                }
+
+                   if ($('#new_photo').val() != ''){
+                      form_data.append('background', $('#new_photo')[0].files[0]);
+                }
+
+                 if ($('#new_photo_center').val() != ''){
+                     form_data.append('center', $('#new_photo_center')[0].files[0]);
+
+                 }
+                form_data.append('shop_id_select', shop_id_select);
+                var content = $('#content').val(); // noi dung
+                var content_color = $("#content_color").val();
+                var turns = $('#turns').val(); // so luot quay
+                if (turns.length == 0) {
+                    swal('{{ gettext("Ban_phai_chon_so_luot_quay") }}', " ", 'error');
+                    return false;
+                }
+                if (!isNormalInteger(turns)) {
+                    swal('{{ gettext("So_luot_quay_phai_kieu_so") }}', " ", 'error');
+                    return false;
+                }
+                var gifts = parseInt($('#gifts').val());
+                for (var i = 1; i <= gifts; i++) {
+                    var gift_text = $('#gift_text_' + i).val();
+                    var gift_input = '';
+                    if( $('#gift_input_' + i).val() != ''){
+
+                        gift_input = $('#gift_input_' + i)[0].files[0];
+                    }
+                    var gift_ex_photo = '';
+                    if( $('#gift_ex_photo_' + i).length > 0){
+
+                        gift_ex_photo = $('#gift_ex_photo_' + i).val();
+                    }
+
+                    var gift_select = $('#gift_select_' + i).val();
+                    var gift_detail = $('#gift_detail_' + i).val();
+                    var gift_color = $('#gift_color_' + i).val();
+
+                    var gift_count = $('#gift_count_' + i).val();
+                    var win_rate_gift = $('#hdnGravity_win_rate_gift_' + i).val();
+                    var win_rate_gravity = $('#win_rate_gift_' + i).val();
+
+                    if (gift_select == 2) {
+                        swal('{{ gettext("Ban_phai_chon_hinh_thuc_phan_thuong") }}', " ", 'error');
+                        return false;
+                    }
+                    if (gift_text.length == 0) {
+                        swal('{{ gettext("Ban_phai_nhap_ten_phan_thuong") }}', " ", 'error');
+                        return false;
+                    }
+
+
+
+                    form_data.append('gift_input_' + i, gift_input);
+                    form_data.append('gift_ex_photo_' + i, gift_ex_photo);
+                    form_data.append('gift_text_' + i, gift_text);
+                    form_data.append('gift_select_' + i, gift_select);
+                    form_data.append('gift_detail_' + i, gift_detail);
+                    form_data.append('gift_color_' + i, gift_color);
+                    form_data.append('gift_count_' + i, gift_count);
+                    form_data.append('win_rate_gift_' + i, win_rate_gift);
+                    form_data.append('win_rate_gravity_' + i, win_rate_gravity);
+                }
+                var name_btn_win = $('#name_btn_win').val(); // ten nut quay thuong
+                var content_not_win = $('#content_not_win').val(); // noi dung thong bao khong trung thuong
+                var content_win = $('#content_win').val(); // noi dung thong bao trung thuong
+                form_data.append('content', content);
+                form_data.append('content_color', content_color);
+                form_data.append('turns', turns);
+                form_data.append('gifts', gifts);
+                form_data.append('win_rate', win_rate);
+                form_data.append('name_btn_win', name_btn_win);
+                form_data.append('content_not_win', content_not_win);
+                form_data.append('content_win', content_win);
+                form_data.append('reset', 'true');
+                form_data.append('shop_id_select', shop_id_select);
+                form_data.append('time_reset', $('#time_reset').val());
+                form_data.append('name', $('#name').val());
+
+                 $.ajax({
+                    type: 'POST',
+                    headers: {"X-CSRFToken": "{{ csrf_token() }}"},
+                    url: '/mini_game/' + shop_id_select + '/results/' + game_id,
+                    data: form_data,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        swal('{{ gettext("Cap_nhat_mini_game_thanh_cong") }}', '', 'success');
+                        location.reload();
+                    },
+                    error: function (xhr, desc, err) {
+                        swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+                    }
+                });
+                e.preventDefault();
+            }));
+
+            $("#preview").empty();
+            bioMp(document.getElementById('preview'), {
+                url: '/game/' + game_id,
+                view: 'front',
+                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                width: 300
+            });
+
+        });
+    </script>
+{% endblock %}

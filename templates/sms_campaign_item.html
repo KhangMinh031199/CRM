@@ -1,0 +1,473 @@
+{% extends "v2/base.html" %} {% block styles %}
+  <style>
+    .highlight {
+      padding: 9px 14px;
+      margin-bottom: 14px;
+      background-color: #f7f7f9;
+      border: 1px solid #e1e1e8;
+      border-radius: 4px;
+    }
+  </style>
+{% endblock %} {% block right_content %}
+
+  <div class="row">
+    <!--<div class="card">
+
+            <div class="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul class="nav nav-pills nav-justified">
+                            <li
+
+
+      {% if request.path.startswith('/auto_marketing') or request.path.startswith('/auto_marketing/') %}
+                    class="active"{% endif %}>
+                                <a href="/auto_marketing">Chăm sóc</a></li>
+                            <li
+
+
+      {% if request.path.startswith('/sms_marketing') or request.path.startswith('/sms_marketing/') %}
+                    class="active"{% endif %}>
+                                <a href="/sms_marketing">SMS Marketing</a></li>
+                            <li
+
+
+      {% if request.path.startswith('/social_marketing') or request.path.startswith('/social_marketing/') %}
+                    class="active"{% endif %}>
+                                <a href="/social_marketing">Social</a></li>
+                            {% if shop.merchant_id == 'DINGTEA' %}
+                                <li
+
+      {% if request.path.startswith('/loyalty') or request.path.startswith('/loyalty/') %}
+            class="active"{% endif %}>
+                                    <a href="/loyalty">Loyalty</a></li>
+                            {% endif %}
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>-->
+    <div class="col-md-6">
+
+
+      <div class="panel panel-white">
+        <div class="panel-heading clearfix">
+          <div class="row">
+            <div class="col-md-12">
+              <h4>Thêm chiến dịch</h4>
+            </div>
+
+          </div>
+
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-12 col-xs-12">
+              {% if error %}
+                <div class="alert alert-danger">
+                  {{ error | safe }}
+                </div>
+              {% endif %} {% if message %}
+              <div class="alert alert-success">
+                {{ message | safe }}
+              </div>
+            {% endif %}
+              <form method="POST" id="sms_campaign_item" action="
+                {% if camp %}{% if merchant_id and merchant_id!='0' %}/sms_marketing_hq/{% else %}/sms_marketing/{% endif %}{{ camp._id }}{% else %}add{% endif %}">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                <div class="form-group">
+                  <label for="name">Mã chiến dịch:</label>
+                  <input type="text" class="form-control form-input"
+                         id="code_camp" name="code_camp"
+                         value="{% if camp %} {{ camp.code }}{% endif %}">
+                </div>
+                {% if camp %}
+                  <input type="hidden" name="camp_id" value="{{ camp._id }}"/>
+                  <input type="hidden" id="ex_type_coupon"
+                         value="{{ camp.type_coupon }}"/>
+                  <input type="hidden" id="current_target"
+                         value="{{ camp.target }}"/> {% endif %}
+
+
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Loại chiến dịch</label>
+                      <input type="hidden" id="ex_is_spam" value="
+
+                        {% if camp.is_spam and camp.is_spam!='None' %}{{ camp.is_spam }}{% endif %}"/>
+                      <select name="is_spam" id="is_spam" class="form-control">
+                        <option value="care">Chăm sóc</option>
+                        <option value="spam">Quảng cáo</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="from-group">
+                      <label for="announcement">Loại Coupon:</label>
+                      <select name="type_coupon"
+                              class="form-control form-input"
+                              style="width: auto" id="type_coupon">
+                        <option value="no">Không</option>
+                        {% for coup in coupons_type_select %}
+                          <option
+                            value="{{ coup._id }}">{{ coup.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Hạn dùng Coupon: </label>
+                      <input type="text" class="form-control form-input"
+                             id="ex_manual" name="ex_manual"
+                             value="{% if camp %} {{ camp.expire_coupon }}{% endif %}">
+                    </div>
+
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Giới tính: </label>
+                      <input type="hidden" value="{{ camp.gender }}"
+                             id="ex_gender"/>
+                      <select name="gender" class="form-control form-input"
+                              style="width: auto" id="gender">
+                        <option value="all">Tất cả</option>
+                        <option value="0">Chưa xác định</option>
+                        <option value="1">Nam</option>
+                        <option value="2">Nữ</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Sinh nhật: </label>
+                      <input id="from_date" name="from_date" type="text"
+                             placeholder="Từ ngày.."
+                             class="form-control form-input">
+
+                      <label>&nbsp;</label>
+                      <input id="to_date" name="to_date" type="text"
+                             placeholder="Đến ngày.."
+                             class="form-control form-input">
+                    </div>
+
+
+                  </div>
+                  <div class="col-md-4">
+
+                    <div class="form-group">
+
+
+                      <label>Thời gian đến: </label>
+                      <input id="visit_from_date" name="visit_from_date"
+                             type="text" placeholder="Từ ngày.."
+                             class="form-control form-input">
+
+                      <label>&nbsp;</label>
+                      <input id="visit_to_date" name="visit_to_date"
+                             type="text" placeholder="Đến ngày.."
+                             class="form-control form-input">
+
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Lượt đến từ: </label>
+                      <input type="text" name="min_visit" placeholder="Lớn hơn"
+                             class="form-control form-input" value="
+
+
+
+
+                        {% if camp.min_visit and camp.min_visit!='None' %}{{ camp.min_visit }}{% endif %}">
+
+                      <label>&nbsp;</label>
+                      <input type="text" name="max_visit" placeholder="Nhỏ hơn"
+                             class="form-control form-input" value="
+
+
+
+
+                        {% if camp.max_visit and camp.max_visit!='None' %}{{ camp.max_visit }}{% endif %}">
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Phân loại</label>
+
+                      <select class="form-control form-input"
+                              name="tags" id="select_tags_input"
+                              multiple="multiple">
+                        {% for tag in tags %}
+                          <option value="{{ tag._id }}">{{ tag.name }}</option>
+                        {% endfor %}
+
+                      </select>
+                      <input type="hidden" id="select_tags_filter"
+                             name="real_tags_filter"/>
+                      {% if camp %}
+                        <input type="hidden" name="source_tags"
+                               id="source_tags_filter"
+                               value="{{ camp.tags }}"/>
+
+                      {% endif %}
+                    </div>
+                  </div>
+                  {% if loyal_settings and loyal_rank|length > 0 %}
+                    <div class="col-md-4">
+
+                      <input type="hidden" value="
+                        {% if camp.ranks %}{{ camp.ranks }}{% endif %}"
+                             id="ex_ranks"/>
+                      <div class="form-group">
+                        <label>Hạng thẻ </label>
+                        <select name="ranks" class="form-control form-input"
+                                style="width: auto" id="ranks">
+                          <option value="all">Tất cả</option>
+                          {% for rank in loyal_rank %}
+                            <option
+                              value="{{ rank.customer_point }}">{{ rank.customer_type }}</option>
+                          {% endfor %}
+                        </select>
+
+                      </div>
+
+                    </div>
+                  {% endif %}
+                  {% if merchant.sms_provider == 'FPT' %}
+                    <div class="col-md-4">
+
+                      <div class="form-group">
+                        {% if  camp %}
+                          {% if camp.date_send %}
+
+                            <input type="hidden" value="{{ camp.date_send }}"
+                                   id="ex_date_send"/>
+                          {% endif %}
+                        {% endif %}
+                        <div class="form-group">
+                          <label for="date_send">Thời gian gửi:</label>
+                          <input type="text" class="form-control form-input"
+                                 id="date_send" name="date_send"/>
+                        </div>
+
+                      </div>
+
+
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="form-group">
+                  <label for="name">Mô tả:</label>
+                  <input type="text" class="form-control form-input"
+                         id="desc_camp" name="desc_camp"
+                         value="{% if camp %} {{ camp.desc }}{% endif %}">
+                </div>
+
+                <div class="form-group">
+                  <label for="announcement">Thông điệp:</label>
+                  <textarea class="form-control form-input" id="announcement"
+                            name="announcement" rows="4">{% if camp %}
+                    {{ camp.message }} {% endif %}</textarea>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>SMS</label><input type="checkbox" name="is_sms"
+                                               style="margin-left: 5px;margin-top:10px"
+                                               {% if camp %}{% if camp.is_sms %}checked
+                                               {% endif %}{% endif %}>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Push Notification</label><input type="checkbox"
+                                                             name="is_push_app"
+                                                             style="margin-left: 5px;margin-top:10px"
+                                                             {% if camp %}{% if camp.is_push_app %}checked
+                                                             {% endif %}{% endif %}>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Zalo</label><input type="checkbox"
+                                                name="is_zalo" style="margin-left: 5px;margin-top:10px"
+                                                             {% if camp %}{% if camp.is_push_app %}checked
+                                                             {% endif %}{% endif %}>
+                    </div>
+                  </div>
+
+
+                </div>
+
+                <hr>
+                <input type="hidden" id="ex_from_date"
+                       value="{{ camp.b_day_from_date }}">
+                <input type="hidden" id="ex_to_date"
+                       value="{{ camp.b_day_to_date }}">
+                <input type="hidden" id="ex_visit_from_date"
+                       value="{{ camp.visit_from_date }}">
+                <input type="hidden" id="ex_visit_to_date"
+                       value="{{ camp.visit_to_date }}">
+
+                <div class="btn-toolbar pull-right">
+                  <div class="btn-group">
+                    <a href="#" id="clear_data" class="btn btn-demo
+                                btn-fill pull-right">Làm mới</a>
+                    <button type="submit"
+                            class="btn btn-info btn-fill pull-right">Lưu thông
+                      tin
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %} {% block js %}
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('textarea').each(function () {
+          $(this).val($(this).val().trim());
+        }
+      );
+      $('input').each(function () {
+          $(this).val($(this).val().trim());
+        }
+      );
+      if ($("#ex_ranks").length > 0) {
+        $("#ranks").val($("#ex_ranks").val());
+      }
+      if ($("#ex_gender").length > 0) {
+        $("#gender").val($("#ex_gender").val());
+      }
+      if ($("#ex_is_spam").length > 0) {
+        $("#is_spam").val($("#ex_is_spam").val());
+      }
+
+      if ($("#ex_type_coupon").length > 0) {
+        $("#type_coupon").val($("#ex_type_coupon").val());
+      }
+
+      if ($("#current_target").length > 0) {
+        $("#target").val($("#current_target").val());
+      }
+      if ($("#ex_from_date").length > 0 && $("#ex_from_date").val().length > 0 && $("#ex_from_date").val() != 'None') {
+        flatpickr("#from_date", {
+          enableTime: false,
+          defaultDate: $("#ex_from_date").val(),
+          dateFormat: "d-m-Y"
+        });
+      } else {
+        flatpickr("#from_date", {
+          enableTime: false,
+          dateFormat: "d-m-Y"
+
+        });
+      }
+      if ($("#ex_to_date").length > 0 && $("#ex_to_date").val().length > 0 && $("#ex_to_date").val() != 'None') {
+        flatpickr("#to_date", {
+          enableTime: false,
+          defaultDate: $("#ex_to_date").val(),
+          dateFormat: "d-m-Y"
+        });
+      } else {
+        flatpickr("#to_date", {
+          enableTime: false,
+          dateFormat: "d-m-Y"
+        });
+      }
+  if ($("#ex_date_send").length > 0 && $("#ex_date_send").val().length > 0 && $("#ex_date_send").val() != 'None') {
+        flatpickr("#date_send", {
+          enableTime: true,
+          defaultDate: $("#ex_date_send").val(),
+          dateFormat: "Y-m-d H:i",
+        });
+      } else {
+        flatpickr("#date_send", {
+          enableTime: true,
+          dateFormat: "Y-m-d H:i",
+
+        });
+      }
+
+      if ($("#ex_visit_from_date").length > 0 && $("#ex_visit_from_date").val().length > 0 &&
+        $("#ex_visit_from_date").val() != 'None') {
+        flatpickr("#visit_from_date", {
+          enableTime: false,
+          defaultDate: $("#ex_visit_from_date").val(),
+          dateFormat: "d-m-Y"
+        });
+      } else {
+        flatpickr("#visit_from_date", {
+          enableTime: false,
+          dateFormat: "d-m-Y"
+
+        });
+      }
+      if ($("#ex_visit_to_date").length > 0 && $("#ex_visit_to_date").val().length > 0 && $("#ex_visit_to_date").val() != 'None') {
+        flatpickr("#visit_to_date", {
+          enableTime: false,
+          defaultDate: $("#ex_visit_to_date").val(),
+          dateFormat: "d-m-Y"
+        });
+      } else {
+        flatpickr("#visit_to_date", {
+          enableTime: false,
+          dateFormat: "d-m-Y"
+        });
+      }
+      $('#select_tags_input').select2({});
+      $('#select_tags_input').on("change", function (e) {
+        if ($('#select_tags_input').val()) {
+          $('#select_tags_filter').val($('#select_tags_input').val().toString());
+        } else {
+          $('#select_tags_filter').val("");
+        }
+      });
+
+
+      var source_tags = $("#source_tags_filter").val();
+      if (source_tags && source_tags.length > 0 && source_tags.toString() != 'None') {
+        var source_tags = source_tags.replace(/\u'/g, "'");
+        var source_tags = source_tags.replace(/\'/g, '"');
+        var data_soure_tags = JSON.parse(source_tags);
+        $("#select_tags_input").val(data_soure_tags);
+        $('#select_tags_input').trigger('change');
+      }
+
+      $("#clear_data").click(function () {
+
+        $("#sms_campaign_item input[type='text']").val("");
+
+      })
+
+    });
+  </script>
+   <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+      $('#marketing').click();
+
+    });
+  </script>
+{% endblock %}

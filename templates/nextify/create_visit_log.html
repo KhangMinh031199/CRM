@@ -1,0 +1,76 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="container-fluid">
+    <div class="row mt-4 mt-md-5">
+        <div class="col-12 col-lg-8 center">
+            <div class="card">
+                <div class="card-body">
+                    <form  action="/create_visit_log" method="post" id="question"
+                                    enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"/>
+                        <div class="form-group">
+                            <label>Địa điểm:</label>
+                            <select id="shop_select" class="custom-select" name="shop_select">
+                                {% for shop in shop_in_mer %}
+                                <option value="{{ shop._id }}">{{ shop.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Client mac:</label>
+                            <input type="text" class="form-control"
+                                name="client_mac">
+                        </div>
+                        <div class="form-group">
+                            <label>Số lượt đến:</label>
+                            <input type="text" class="form-control"
+                                name="visits">
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <div class="col-4" style="float:right">
+                        <button class="btn btn-lg btn-block btn-primary float" id="save_setting_conf">
+                        {{ gettext("Luu_thong_tin") }}
+        
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+        $("#shop_select").select2();
+        $("#save_setting_conf").click(function () {
+            $.ajax({
+                url: $("#question").attr("action"),
+                type: $("#question").attr("method"),
+                data: $("#question").serialize(),
+                success: function (response) {
+                var returnedData = JSON.parse(response);
+                if ('error' in returnedData) {
+                    swal(returnedData['error'], " ", "error");
+                    return false;
+                }
+                else {
+                swal('{{ gettext("Thao_tac_thanh_cong") }}', '', 'success');
+                    location.reload();
+                }
+
+                },
+                error: function (xhr, desc, err) {
+                    swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', '', 'error');
+
+                }
+
+            })
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge"> {% if 'viettel.vn' in request.url %}
+    <title>Viettel | vmarketing</title>
+    {% include 'nextify/viettel_meta_tags.html' %} {% elif 'crmx' in request.url %}
+    <title>CRMX | Better eXperience fo Wi-Fi</title>
+    {% include 'nextify/crmx_meta_tags.html' %} {% else %}
+    <title>Nextify | The Next Generation of Loyalty</title>
+    {% include 'nextify/nextify_meta_tags.html' %} {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='stylesheet' id='google-fonts-roboto-css' href='//fonts.googleapis.com/css?family=Roboto+Slab%3A400%2C300%2C100%2C700&#038;subset=latin%2Cgreek%2Cvietnamese%2Ccyrillic-ext%2Clatin-ext%2Ccyrillic' type='text/css' media='all' />
+    <link rel="stylesheet" type="text/css" href="/static/wifi_portal/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/nextify/css/dash_kit_theme.min.css" />
+</head>
+
+<body>
+    <div class="main-content" id="main-content">
+        <div class="container-fluid">
+            <div class="row justify-content-center mt-5">
+                <div class="col-12 col-md-8 col-xl-6">
+                    <!-- Card -->
+                    <div class="card">
+                        {% if survey_item.photo %}
+                        <img src="//files.nextify.vn/{{ survey_item.photo }}" alt="" class="card-img-top" style="height: 250px">
+                        {% endif %}
+                        <!-- Body -->
+                        <div class="card-body">
+                            <!-- Image -->
+                            <a href="#" class="avatar avatar-xl card-avatar card-avatar-top">
+                                <img src="//files.nextify.vn/{{ shop.logo }}" class="avatar-img rounded-circle border border-4 border-card" alt="...">
+                            </a>
+                            <h3 class="card-title mb-3">
+                                <a href="#">{{ survey_item.question }}</a>
+                            </h3>
+                            <form style="margin-top: 0em;" method="post" action="/save_survey" enctype="multipart/form-data">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                                {% if error %}
+                                   <p style="font-weight: 300;color: red;font-weight: bold; margin-bottom: 20px;text-align: center">*{{ error }}</p>
+                                {% endif %}
+                                <input type="hidden" value="{{ shop_id }}" name="shop_id"/>
+                                <input type="hidden" value="{{ survey_id }}" name="survey_id"/>
+                                <div class="form-group mb-3">
+                                    {% for ans in survey_item.answers %}
+                                    <div class="custom-control custom-radio" tabindex="0">
+                                        <input class="custom-control-input" value="{{ ans.id }}" name="answers" id="{{ ans.id }}" type="radio">
+                                        <label class="custom-control-label" for="{{ ans.id }}">{{ ans.value }}</label>
+{#                                         <span class="custom-control-caption">
+                                            {{ ans.value}}
+                                        </span> #}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label>Đừng quên để lại góp ý cho chúng tôi:</label>
+                                    <textarea id="comment" name="comment" class="form-control"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-lg btn-primary btn-block text-uppercase">
+                                    <i class="fe fe-wifi"></i>
+                                    {% if survey_item.connect_button %}
+                                    {{ survey_item.connect_button }}
+                                    {% else %}
+                                    Kết nối Wi-Fi/Go Online
+                                    {% endif %}
+                                </button>
+                            </form>
+                        </div>
+                        <!-- Footer -->
+                        <div class="card-footer card-footer-boxed">
+                            <div class="row align-items-center justify-content-between">
+                                <div class="col text-center">
+                                    <!-- Status -->
+                                    <small>
+
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/jquery-3.2.1.min.js"></script>
+    <script src="/static/v2/assets/js/bootstrap.min.js"></script>
+</body>
+
+</html>

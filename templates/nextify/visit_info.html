@@ -1,0 +1,120 @@
+<a href="#" class="avatar avatar-xl card-avatar">
+
+    {% if user.user.avatar and user.user.avatar|length > 0 %}
+    <img class="avatar-img rounded-circle border border-4 border-card"
+        src="{{ user.user.avatar.replace('http:', 'https:') }}" />
+    {% else %}
+    {% set avatar = user.user|human_avatar %}
+    <img class="avatar-img rounded-circle border border-4 border-card" src="{{ avatar }}" />
+
+    {% endif %}
+</a>
+
+<!-- Heading -->
+<h2 class="card-title text-center">
+    <a href="#">
+        {% if user.user.phone and user.user.phone|string != 'None' and user.user.phone|length != 0 %}
+
+        {{ user.user.phone }}
+
+        {% else %}
+        {% if user.user.email | string != 'None' %}
+        {{ user.user.email }}{% endif %}
+        {% endif %}
+        {% if (not user.user.name and not user.user.phone and not user.user.email) or (user.user.phone | string ==
+        'None' and user.user.name|string == 'None' and user.user.phone|length == 0 and user.user.email | string ==
+        'None' and user.user.client_mac|string != 'None') and user.user.client_mac | length > 0 %}
+
+        {{ user.user.client_mac[0] if user.user.client_mac[0] |string != 'None' else '' }}
+
+
+        {% endif %}
+
+    </a>
+</h2>
+<div class="row align-items-center justify-content-center log_modal_loading">
+    <div class="spinner-border text-danger" role="status"">
+    <span class=" sr-only">Loading...</span>
+    </div>
+</div>
+<div class="list-group list-group-flush list-group-activity mt-3" id="visit_log_paging">
+    {%for log in log_visit%}
+
+    <div class="list-group-item">
+        <div class="row">
+            <div class="col-auto">
+
+                <!-- Avatar -->
+                <div class="avatar avatar-sm">
+                    <div class="avatar-title fs-lg bg-primary-soft rounded-circle text-primary">
+                        <i class="fe fe-mail"></i>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col ms-n2">
+
+                <!-- Heading -->
+                <h5 class="mb-1">
+                    {{ log.shop_name }}
+                </h5>
+
+                <!-- Text -->
+                <p class="small text-gray-700 mb-0">
+                    {{ log.timestamp|human_time }}
+                </p>
+
+                <!-- Time -->
+                <small class="text-muted">
+                    <strong>{{ log.time_hour }}</strong> {{ gettext("ngay") }}
+                    <strong>{{ log.time_day }}</strong>
+                </small>
+
+            </div>
+        </div> <!-- / .row -->
+    </div>
+    {%endfor%}
+</div>
+
+{% if pagination %}
+<div class="row justify-content-center">
+
+    <ul class="list-pagination-prev pagination pagination-tabs card-pagination text-center mt-3">
+
+        {{ pagination.links }}
+    
+    </ul>
+
+</div>
+
+{% endif %}
+<input type="hidden" value="{{cus_id}}" id="visit_cus_id"/>
+<input type="hidden" value="{{merchant_id}}" id="merchant_id"/>
+<script>
+
+
+    $(document).ready(function () {
+        $('.log_modal_loading').hide();
+
+        function load_data(page){
+            var cus_id =  $("#visit_cus_id").val();
+            var merchant_id =  $("#merchant_id").val();
+            $('#visit_log_paging').empty();
+            $('.log_modal_loading').show();
+            $.ajax({
+                type: 'GET',
+                url: '/' + merchant_id + '/visit_log/' + cus_id +"/" + page,
+                success: function (response) {
+                    $('.log_modal_loading').hide();
+                    $('#visit_log_paging').html(response);
+                }
+            })
+        }
+
+        $(document).on("click", ".pagination li a", function (e) {
+            e.preventDefault();
+            var pageId = $(this).text();
+            load_data(pageId);
+        });
+    });
+</script>

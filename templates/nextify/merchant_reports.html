@@ -1,0 +1,515 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+      <div class="header">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-end">
+              <div class="col">
+
+                <!-- Pretitle -->
+                <h6 class="header-pretitle">
+                  {{ gettext("Tong_quan") }}
+                </h6>
+
+                <!-- Title -->
+                <h1 class="header-title">
+                  {{ merchant.name }}
+                </h1>
+
+              </div>
+              <div class="col-auto">
+                     <select class="form-control" id="shop_in_mer">
+                        <option value="all">{{ gettext("Tat_ca_dia_diem") }}</option>
+                        {% for shop_mer in shop_in_mer %}
+                            <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+                        {% endfor %}
+
+                    </select>
+              </div>
+            </div> <!-- / .row -->
+          </div>
+    </div>
+      </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 u-ml-auto u-mb-medium">
+                <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__content">
+                        <h3 class="c-graph-card__title">{{ gettext("Tong_luot_den") }}</h3>
+                        <h2 class="c-graph-card__number">{{ total_visit }}</h2>
+                        <p class="c-graph-card__status">{{ gettext("Trung_binh") }} <b style="color: #f57a33; font-size: 18px">{{ visit_avg }}</b> {{ gettext("luot_den/ngay") }}</p>
+                    </div>
+
+                    <div class="c-graph-card__chart">
+                        <div class="chartjs-size-monitor"
+                             style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                            <div class="chartjs-size-monitor-expand"
+                                 style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink"
+                                 style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                            </div>
+                        </div>
+                        <canvas id="js-chart-earnings" width="730" height="180" class="chartjs-render-monitor"
+                                style="display: block; height: 90px; width: 365px;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 u-mr-auto u-mb-medium">
+                  <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__content">
+                        <h3 class="c-graph-card__title">{{ gettext("Tong_khach_hang") }}</h3>
+                        <h2 class="c-graph-card__number">{{ total_customers }}</h2>
+                        <p class="c-graph-card__status">{{ gettext("Trung_binh") }} <b style="color: #f57a33; font-size: 18px">{{ customers_avg }}</b> {{ gettext("khach/ngay") }}</p>
+                    </div>
+
+                    <div class="c-graph-card__chart">
+                        <div class="chartjs-size-monitor"
+                             style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                            <div class="chartjs-size-monitor-expand"
+                                 style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink"
+                                 style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                            </div>
+                        </div>
+                        <canvas id='js-chart-total-customers' width="730" height="180" class="chartjs-render-monitor"
+                                style="display: block; height: 90px; width: 365px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% if shop_in_mer|length and min_location and max_location > 0%}
+
+        <div class="row">
+         <div class="col-lg-4 u-ml-auto u-mb-medium">
+                <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__content">
+                        <h3 class="c-graph-card__title">{{ gettext("Diem_dong_nhat") }}</h3>
+                        <h2 class="c-graph-card__number">{{ max_location.total_visit }}</h2>
+                                 {% set max_loc = max_location.shop_id|shop_info %}
+                        <p class="c-graph-card__status">{{ max_loc.name }}</p>
+                    </div>
+                     <div class="c-graph-card__content">
+                         <h3 class="c-graph-card__title">{{ gettext("Diem_thap_nhat") }}</h3>
+                        <h2 class="c-graph-card__number">{{ min_location.total_visit }}</h2>
+                        {% set min_loc = min_location.shop_id|shop_info %}
+                        <p class="c-graph-card__status">{{ min_loc.name }}</p>
+                    </div>
+                    <div class="c-graph-card__chart"></div>
+
+
+                </div>
+            </div>
+            <div class="col-xl-8">
+                <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__content">
+{#                        <h3 class="c-graph-card__title"></h3>#}
+                        <div class="c-graph-card__chart">
+                            <div class="chartjs-size-monitor"
+                                 style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                <div class="chartjs-size-monitor-expand"
+                                     style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                    <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                                </div>
+                                <div class="chartjs-size-monitor-shrink"
+                                     style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                    <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                                </div>
+                            </div>
+                            <canvas id="locations_pie" style="position: relative; height:40vh;"></canvas>
+                             <input type="hidden" value="{{ locations_pie }}" id="visit_locations_pie"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    {% endif %}
+        <div class="row">
+
+            <div class="col-lg-6 u-mr-auto u-mb-medium">
+                  <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__content">
+                        <h3 class="c-graph-card__title">{{ gettext("SMS_da_gui") }}</h3>
+                        <h2 class="c-graph-card__number">{{ sms_count }}</h2>
+                        <p class="c-graph-card__status">
+                            {%if sms_count|int > days_diff|int %}
+                           {{ gettext("Trung_binh") }} <b style="color: #f57a33; font-size: 18px">{{ sms_avg }}</b> {{ gettext("SMS/ngay") }}
+                            {% else %}
+                             {{ gettext("Trung_binh") }}  <b style="color: #f57a33; font-size: 18px">{{ sms_avg }}</b> {{ gettext("ngay_gui_1_SMS") }}
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="c-graph-card__chart">
+                        <div class="chartjs-size-monitor"
+                             style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                            <div class="chartjs-size-monitor-expand"
+                                 style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink"
+                                 style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                            </div>
+                        </div>
+                        <canvas id="js_chart_sms" width="730" height="180" class="chartjs-render-monitor"
+                                style="display: block; height: 90px; width: 365px;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 u-mr-auto u-mb-medium">
+                  <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__content">
+                        <h3 class="c-graph-card__title">{{ gettext("Email_da_gui") }}</h3>
+                        <h2 class="c-graph-card__number">{{ email_count }}</h2>
+                       <p class="c-graph-card__status">
+                            {%if email_count==0%}
+                               {{ gettext("Ban_chua_gui_Email_nao") }}
+                            {%elif email_count > days_diff %}
+                             {{ gettext("Trung_binh") }} <b style="color: #f57a33; font-size: 18px">{{ email_avg }}</b> {{ gettext("Email/ngay") }}
+                            {% else %}
+                            {{ gettext("Trung_binh") }} <b style="color: #f57a33; font-size: 18px">{{ email_avg }}</b>{{ gettext("ngay_gui_1_Email") }}
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="c-graph-card__chart">
+                        <div class="chartjs-size-monitor"
+                             style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                            <div class="chartjs-size-monitor-expand"
+                                 style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink"
+                                 style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                            </div>
+                        </div>
+                        <canvas id="js_chart_email" width="730" height="180" class="chartjs-render-monitor"
+                                style="display: block; height: 90px; width: 365px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="row">
+
+
+            <div class="col-lg-6 u-mr-auto u-mb-medium">
+                  <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__content">
+                        <h3 class="c-graph-card__title">{{ gettext("Coupons_da_tao") }}</h3>
+                        <h2 class="c-graph-card__number">{{ total_coupons }}</h2>
+                             <p class="c-graph-card__status">
+                             {%if total_coupons==0%}
+                                {{ gettext("Ban_chua_gui_tao_coupons_nao") }}
+                            {%elif total_coupons > days_diff %}
+                           {{ gettext("Trung_binh") }} <b style="color: #f57a33; font-size: 18px">{{ total_coupons_avg }}</b>{{ gettext("Coupons/ngay") }}
+                            {% else %}
+                           {{ gettext("Trung_binh") }} <b style="color: #f57a33; font-size: 18px">{{ total_coupons_avg }}</b>{{ gettext("ngay_tao_1_Coupons") }}
+                            {% endif %}
+                        </p>
+
+                    </div>
+
+                    <div class="c-graph-card__chart">
+                        <div class="chartjs-size-monitor"
+                             style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                            <div class="chartjs-size-monitor-expand"
+                                 style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink"
+                                 style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                            </div>
+                        </div>
+                        <canvas id="js_chart_coupons" width="730" height="180" class="chartjs-render-monitor"
+                                style="display: block; height: 90px; width: 365px;"></canvas>
+                    </div>
+                </div>
+            </div>
+         <div class="col-lg-6 u-mr-auto u-mb-medium">
+                  <div class="c-graph-card" data-mh="graph-cards">
+                    <div class="c-graph-card__content">
+                        <h3 class="c-graph-card__title">{{ gettext("Coupons_da_doi") }}</h3>
+                        <h2 class="c-graph-card__number">{{ redeem_coupons }}</h2>
+
+                                <p class="c-graph-card__status">
+                                {%if redeem_coupons==0%}
+                                {{ gettext("Chua_co_khach_hang_nao_doi_Coupons") }}
+                            {%elif total_coupons_redeem_avg > days_diff %}
+                           {{ gettext("Trung_binh") }} <b style="color: #f57a33; font-size: 18px">{{ total_coupons_redeem_avg }}</b> {{ gettext("Coupons/ngay") }}
+                            {% else %}
+                            {{ gettext("Trung_binh") }} <b style="color: #f57a33; font-size: 18px">{{ total_coupons_redeem_avg }}</b> {{ gettext("ngay_doi_1_Coupons") }}
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="c-graph-card__chart">
+                        <div class="chartjs-size-monitor"
+                             style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                            <div class="chartjs-size-monitor-expand"
+                                 style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink"
+                                 style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                            </div>
+                        </div>
+                        <canvas id="js-chart-payout" width="730" height="180" class="chartjs-render-monitor"
+                                style="display: block; height: 90px; width: 365px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+     <input type="hidden" value="all" id="shop_id_select"/>
+{% endblock %}
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+
+   $(document).ready(function () {
+
+       var shop_id_select = $('#shop_id_select').val();
+           $('#shop_in_mer').val(shop_id_select).trigger('change');
+            $('#shop_in_mer').on("change", function(e) {
+                     var shop_id = $('#shop_in_mer').val();
+                       var url = "/customers_reports/"+shop_id;
+                          $(location).attr('href', url);
+                    });
+       var js_chart_customers = document.getElementById("js-chart-total-customers");
+       new Chart(js_chart_customers, {
+           type: "line",
+           data: {
+               labels: ["January 1", "January 5", "January 10", "January 15", "January 20", "January 25"],
+               datasets: [{
+                   label: "Sold",
+                   fill: !0,
+                   lineTension: 0,
+                   backgroundColor: "rgba(0,172,255, 0.1)",
+                   borderWidth: 2,
+                   borderColor: "#00AAFF",
+                   borderCapStyle: "butt",
+                   borderDash: [],
+                   borderDashOffset: 0,
+                   borderJoinStyle: "miter",
+                   pointRadius: 0,
+                   pointBorderColor: "#fff",
+                   pointBackgroundColor: "#2a2f37",
+                   pointBorderWidth: 2,
+                   pointHoverRadius: 6,
+                   pointHoverBackgroundColor: "#FC2055",
+                   pointHoverBorderColor: "#fff",
+                   pointHoverBorderWidth: 2,
+                   data: [25, 45, 25, 32, 15, 28],
+                   spanGaps: !1
+               }]
+           },
+           options: {
+               legend: {display: !1},
+               scales: {
+                   xAxes: [{
+                       display: !1,
+                       ticks: {fontSize: "11", fontColor: "#969da5"},
+                       gridLines: {
+                           color: "rgba(0,0,0,0.0)",
+                           zeroLineColor: "rgba(0,0,0,0.0)"
+                       }
+                   }], yAxes: [{display: !1, ticks: {beginAtZero: !0, max: 55}}]
+               }
+           }
+       });
+
+       var js_chart_coupons = document.getElementById("js_chart_coupons");
+       new Chart(js_chart_coupons, {
+           type: "line",
+           data: {
+               labels: ["January 1", "January 5", "January 10", "January 15", "January 20", "January 25"],
+               datasets: [{
+                   label: "Sold",
+                   fill: !0,
+                   lineTension: 0,
+                   backgroundColor: "rgba(163,136,227, 0.1)",
+                   borderWidth: 2,
+                   borderColor: "#886CE6",
+                   borderCapStyle: "butt",
+                   borderDash: [],
+                   borderDashOffset: 0,
+                   borderJoinStyle: "miter",
+                   pointRadius: 0,
+                   pointBorderColor: "#fff",
+                   pointBackgroundColor: "#2a2f37",
+                   pointBorderWidth: 2,
+                   pointHoverRadius: 6,
+                   pointHoverBackgroundColor: "#FC2055",
+                   pointHoverBorderColor: "#fff",
+                   pointHoverBorderWidth: 2,
+                   data: [40, 32, 42, 28, 53, 34],
+                   spanGaps: !1
+               }]
+           },
+           options: {
+               legend: {display: !1},
+               scales: {
+                   xAxes: [{
+                       display: !1,
+                       ticks: {fontSize: "11", fontColor: "#969da5"},
+                       gridLines: {
+                           color: "rgba(0,0,0,0.0)",
+                           zeroLineColor: "rgba(0,0,0,0.0)"
+                       }
+                   }], yAxes: [{display: !1, ticks: {beginAtZero: !0, max: 55}}]
+               }
+           }
+       });
+
+       var js_chart_sms = document.getElementById("js_chart_sms");
+       new Chart(js_chart_sms, {
+           type: "line",
+           data: {
+               labels: ["January 1", "January 5", "January 10", "January 15", "January 20", "January 25"],
+               datasets: [{
+                   label: "Sold",
+                   fill: !0,
+                   lineTension: 0,
+                   backgroundColor: "#f57a33",
+                   borderWidth: 2,
+                   borderColor: "#f57a33",
+                   borderCapStyle: "butt",
+                   borderDash: [],
+                   borderDashOffset: 0,
+                   borderJoinStyle: "miter",
+                   pointRadius: 0,
+                   pointBorderColor: "#fff",
+                   pointBackgroundColor: "#f57a33",
+                   pointBorderWidth: 2,
+                   pointHoverRadius: 6,
+                   pointHoverBackgroundColor: "#f57a33",
+                   pointHoverBorderColor: "#fff",
+                   pointHoverBorderWidth: 2,
+                   data: [40, 32, 42, 28, 53, 34],
+                   spanGaps: !1
+               }]
+           },
+           options: {
+               legend: {display: !1},
+               scales: {
+                   xAxes: [{
+                       display: !1,
+                       ticks: {fontSize: "11", fontColor: "#969da5"},
+                       gridLines: {
+                           color: "rgba(0,0,0,0.0)",
+                           zeroLineColor: "rgba(0,0,0,0.0)"
+                       }
+                   }], yAxes: [{display: !1, ticks: {beginAtZero: !0, max: 55}}]
+               }
+           }
+       });
+       var js_chart_email = document.getElementById("js_chart_email");
+       new Chart(js_chart_email, {
+           type: "line",
+           data: {
+               labels: ["January 1", "January 5", "January 10", "January 15", "January 20", "January 25"],
+               datasets: [{
+                   label: "Sold",
+                   fill: !0,
+                   lineTension: 0,
+                   backgroundColor: "#f57a33",
+                   borderWidth: 2,
+                   borderColor: "#f57a33",
+                   borderCapStyle: "butt",
+                   borderDash: [],
+                   borderDashOffset: 0,
+                   borderJoinStyle: "miter",
+                   pointRadius: 0,
+                   pointBorderColor: "#fff",
+                   pointBackgroundColor: "#f57a33",
+                   pointBorderWidth: 2,
+                   pointHoverRadius: 6,
+                   pointHoverBackgroundColor: "#f57a33",
+                   pointHoverBorderColor: "#fff",
+                   pointHoverBorderWidth: 2,
+                   data: [40, 32, 42, 28, 53, 34],
+                   spanGaps: !1
+               }]
+           },
+           options: {
+               legend: {display: !1},
+               scales: {
+                   xAxes: [{
+                       display: !1,
+                       ticks: {fontSize: "11", fontColor: "#969da5"},
+                       gridLines: {
+                           color: "rgba(0,0,0,0.0)",
+                           zeroLineColor: "rgba(0,0,0,0.0)"
+                       }
+                   }], yAxes: [{display: !1, ticks: {beginAtZero: !0, max: 55}}]
+               }
+           }
+       });
+
+       if ($("#visit_locations_pie").length > 0) {
+
+           var visit_locations_pie_data = eval($('#visit_locations_pie').val());
+           var visit_location_labels = [];
+           var visit_location_value = [];
+
+
+           for (i = 0; i < visit_locations_pie_data.length; i++) {
+               var range_item = visit_locations_pie_data[i];
+               visit_location_labels.push(range_item[0]);
+               visit_location_value.push(range_item[1]);
+           }
+
+
+           var visit_by_locations_chart = {
+               labels: visit_location_labels,
+               datasets: [{
+                   data: visit_location_value,
+                   backgroundColor: [
+                       '#FF6384',
+                       '#36A2EB',
+                       '#FFCE56'
+                   ]
+               }]
+           };
+
+
+           var ctx3 = document.getElementById('locations_pie').getContext('2d');
+           new Chart(ctx3, {
+               type: 'pie',
+               data: {
+                      labels: visit_location_labels,
+                      datasets: [{
+                        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+                        data: visit_location_value
+                      }]
+                    },
+                    options: {
+                   legend: {
+        display: false
+    },
+                      title: {
+                        display: true,
+                        text: '{{ gettext("Thong_ke_luot_den_theo_dia_diem") }}'
+                      }
+                    }
+           });
+
+
+       }
+   });
+
+
+</script>
+{% endblock %}

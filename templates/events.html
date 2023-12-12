@@ -1,0 +1,28 @@
+{% extends "cards.html" %} {%block cards_content%} {% for event in events %}
+<div class="project-entry col-lg-4 col-md-4 col-sm-6 col-xs-12">
+    <a class="thumbnail" href="/events/{{ event._id }}">
+        <img class="img-responsive" src="//files.nextify.vn/{{ event.photo }}" />
+        <br/>
+        <p><strong>{{ event.name}}</strong></p>
+        <br/>
+    </a>
+    <div class="form-group">
+        <label for="announcement">{{ gettext("Trang_thai:") }}</label>
+        <select class="form-control" event_id={{event._id}}>
+        <option value="1" {%if event.active == "1"%}selected{%endif%}>{{ gettext("Su_dung") }}</option>
+        <option value="0" {%if event.active == "0"%}selected{%endif%}>{{ gettext("Dang_tat") }}</option>
+    </select>
+    </div>
+
+</div>
+{% endfor %} {%endblock%} {%block child_card_js%}
+ <script nonce="{{ csp_nonce() }}">
+    $(document).ready(function() {
+        $('select').on('change', function() {
+            var event_id = $(this).attr("event_id");
+            var url = '/events/' + event_id + '/' + $(this).val();
+            $(location).attr('href', url);
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,1004 @@
+<style>
+    input[type='file'] {
+        color: transparent;
+    }
+
+    .modal-dialog {
+        max-width: 1500px;
+    }
+</style>
+<script src="{{ url_for('static', filename='js/jscolor.js') }}"></script>
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-12 col-xl-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-end">
+                    <div class="col">
+                        <h6 class="header-pretitle">
+                            Vòng quay may mắn
+                        </h6>
+                    </div>
+                    <div class="col-auto">
+                        <a href="/result_spin_splash" class="btn btn-flat d-block d-md-inline-block">
+                            <i class="fa fa-list"></i> Kết quả</a>
+                        <a data-toggle="modal" href="#config_spin" class="btn btn-flat d-block d-md-inline-block">
+                            <i class="fe fe-settings"></i> Cấu hình</a>
+                    </div>
+                </div>
+            </div>
+            {% if not config_spin or config_spin|string == 'None' %}
+                <div class="card-body">
+                    <div class="col-12 col-md-10 col-xl-8 justify-content-center"
+                         style="text-align: center; margin: auto;">
+                        <!-- Title -->
+                        <h2>
+                            Bạn chưa cấu hình vòng quay may mắn. Vui lòng cấu hình.
+                        </h2>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="modal hide fade" id="config_spin" tabindex="-1" role="dialog" aria-labelledby="new_image"
+                 data-backdrop="static" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Cấu hình vòng quay</h3>
+                            <a class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </a>
+                        </div>
+                        <form method="POST" enctype="multipart/form-data" id="form_config_spin">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"/>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-4">
+
+                                        <h3 class="header-title">Hình ảnh</h3>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="row">
+
+                                             <div class="form-group col-6">
+
+                                            <label for="photo">Hình nền</label>
+                                            <span>Kích thước gợi ý 1280 px × 720 px</span>
+                                            {% if config_spin and config_spin.background %}
+                                                <p class="help-block">
+                                                    <img id="img_new_photo"
+                                                         src="//files.nextify.vn/{{ config_spin.background }}"
+                                                         width="200"/>
+                                                </p>
+
+                                            {% else %}
+                                                <p class="help-block">
+                                                    <img id="img_new_photo" width="200">
+                                                </p>
+                                            {% endif %}
+                                            <input class='form-control imgInp' type="file" id="new_photo" name="photo">
+                                        </div>
+                                        <div class="form-group col-6">
+
+                                            <!-- <h5>Kích thước gợi ý 750 px × 1330 px</h5> -->
+                                            {% if config_spin and config_spin.center %}
+                                                  <p class="help-block">
+
+                                                <img id="img_new_photo_center"
+                                                     src="//files.nextify.vn/{{ config_spin.center }}"
+                                                     class="preview" />
+                                                  </p>
+
+                                            {% else %}
+                                             <p class="help-block">
+                                                <img id="img_new_photo_center" class="preview"
+                                                     style="width: auto;height: 200px">
+                                            </p>
+                                            {% endif %}
+                                            <label for="photo">Ảnh trung tâm vòng quay</label>
+                                            <input class='form-control imgInp' type="file" id="new_photo_center" name="photo">
+
+                                        </div>
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+                                <hr/>
+
+                                <div class="row">
+                                      <div class="col-4">
+                                        <h3 class="header-title">Tùy chỉnh</h3>
+                                    </div>
+                                    <div class="col-8">
+
+                                        <div class="form-group">
+                                            <label for="content">Nội dung chào mừng</label>
+                                    <textarea class="form-control" id="content" name="content" rows="2"
+                                                      maxlength="1000"
+                                                      placeholder="Chào mừng bạn đã đến với vòng quay may mắn.">{% if config_spin %}{{ config_spin.content }}{% endif %}</textarea>
+                                        </div>
+                                     <div class="form-group">
+                                            <label for="content">Màu chữ chào mừng</label>
+                                            <input class="jscolor form-control" id="content_color" value="{% if config_spin.content_color %}{{ config_spin.content_color }}{% endif %}" >
+
+                                     </div>
+                                        <div class="form-group">
+                                            <label>Số lượt quay</label>
+                                            <input type="text" class="form-control" value="{% if config_spin and config_spin.turns %}{{ config_spin.turns }}{% else %}10{% endif %}" id="turns" name="turns"/>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tên nút quay thưởng</label>
+                                            <input type="text" class="form-control"
+                                                   placeholder="Quay ngay" id="name_btn_win"
+                                                   value="{% if config_spin %}{{ config_spin.name_btn_win }}{% endif %}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="content">Thông báo trúng thưởng</label>
+                                            <textarea class="form-control" id="content_win" name="content_win" rows="2"
+                                                      maxlength="1000"
+                                                      placeholder="Xin chúc mừng, phần thưởng của bạn là">{% if config_spin %}{{ config_spin.content_win }}{% endif %}</textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="content">Thông báo không trúng thưởng</label>
+                                            <textarea class="form-control" id="content_not_win" name="content_not_win"
+                                                      rows="2"
+                                                      maxlength="1000"
+                                                      placeholder="Rất tiếc bạn đã không trúng thưởng, hãy thử lại vận may của mình">{% if config_spin %}{{ config_spin.content_not_win }}{% endif %}</textarea>
+                                        </div>
+                                    <div class="form-group">
+                                            <label>Tỷ lệ trúng thưởng (%)
+                                                <span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                                      aria-label="Tỷ lệ trúng thưởng của mỗi khách hàng">
+                                            <i class="fa fa-question"></i>
+                                        </span>
+                                            </label>
+                                            <select class="form-control" id="win_rate" name="win_rate">
+                                                <option value="0"
+                                                        {% if config_spin and config_spin.win_rate == '0' %}selected{% endif %}>
+                                                    Chọn
+                                                    tỷ lệ trúng thưởng (%)
+                                                </option>
+                                                <option value="10"
+                                                        {% if config_spin and config_spin.win_rate == '10' %}selected{% endif %}>
+                                                    10
+                                                </option>
+                                                <option value="20"
+                                                        {% if config_spin and config_spin.win_rate == '20' %}selected{% endif %}>
+                                                    20
+                                                </option>
+                                                <option value="30"
+                                                        {% if config_spin and config_spin.win_rate == '30' %}selected{% endif %}>
+                                                    30
+                                                </option>
+                                                <option value="40"
+                                                        {% if config_spin and config_spin.win_rate == '40' %}selected{% endif %}>
+                                                    40
+                                                </option>
+                                                <option value="50"
+                                                        {% if config_spin and config_spin.win_rate == '50' %}selected{% endif %}>
+                                                    50
+                                                </option>
+                                                <option value="60"
+                                                        {% if config_spin and config_spin.win_rate == '60' %}selected{% endif %}>
+                                                    60
+                                                </option>
+                                                <option value="70"
+                                                        {% if config_spin and config_spin.win_rate == '70' %}selected{% endif %}>
+                                                    70
+                                                </option>
+                                                <option value="80"
+                                                        {% if config_spin and config_spin.win_rate == '80' %}selected{% endif %}>
+                                                    80
+                                                </option>
+                                                <option value="90"
+                                                        {% if config_spin and config_spin.win_rate == '90' %}selected{% endif %}>
+                                                    90
+                                                </option>
+                                                <option value="100"
+                                                        {% if config_spin and config_spin.win_rate == '100' %}selected{% endif %}>
+                                                    100
+                                                </option>
+                                            </select>
+                                        </div>
+                                     <div class="form-group">
+                                            <label>Thời gian hiện lại vòng quay theo giờ</label>
+                                            <input type="text" class="form-control" value="{% if config_spin and config_spin.time_reset %}{{ config_spin.time_reset }}{% else %}24{% endif %}" id="time_reset" name="time_reset"/>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h3 class="header-title">Phần thưởng</h3>
+
+
+                                            </div>
+                                            <div class="col-auto">
+                                                 <select class="form-control" id="gifts" name="gifts">
+
+                                                <option value="2"
+                                                        {% if config_spin and config_spin.gifts and config_spin.gifts|length == 2 %}selected{% endif %}>
+                                                    2
+                                                </option>
+                                                <option value="3"
+                                                        {% if config_spin and config_spin.gifts and config_spin.gifts|length == 3 %}selected{% endif %}>
+                                                    3
+                                                </option>
+                                                <option value="4"
+                                                        {% if config_spin and config_spin.gifts and config_spin.gifts|length == 4 %}selected{% endif %}>
+                                                    4
+                                                </option>
+                                                <option value="5"
+                                                        {% if config_spin and config_spin.gifts and config_spin.gifts|length == 5 %}selected{% endif %}>
+                                                    5
+                                                </option>
+                                                <option value="6"
+                                                        {% if config_spin and config_spin.gifts and config_spin.gifts|length == 6 %}selected{% endif %}>
+                                                    6
+                                                </option>
+                                                <option value="7"
+                                                        {% if config_spin and config_spin.gifts and config_spin.gifts|length == 7 %}selected{% endif %}>
+                                                    7
+                                                </option>
+                                                <option value="8"
+                                                        {% if config_spin and config_spin.gifts and config_spin.gifts|length == 8 %}selected{% endif %}>
+                                                    8
+                                                </option>
+                                                <option value="9"
+                                                        {% if config_spin and config_spin.gifts and config_spin.gifts|length == 9 %}selected{% endif %}>
+                                                    9
+                                                </option>
+                                                <option value="10"
+                                                        {% if config_spin and config_spin.gifts and config_spin.gifts|length == 10 %}selected{% endif %}>
+                                                    10
+                                                </option>
+                                            </select>
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+                                    <div class="card-body">
+
+                                        <div class="row" id="gifts_label">
+                                            <div class="col-2 col-xl-2 col-md-2">
+                                                <label>Hình thức quà</label>
+                                            </div>
+                                            <div class="col-1 col-xl-1 col-md-1">
+                                                <label>Mã màu</label>
+                                            </div>
+                                            <div class="col-1 col-xl-1 col-md-1">
+                                                <label>Tên phần quà</label>
+                                            </div>
+                                            <div class="col-2 col-xl-2 col-md-2">
+                                                <label>Mô tả</label>
+                                            </div>
+                                            <div class="col-1 col-xl-1 col-md-1">
+                                                <label>Số lượng</label>
+                                            </div>
+                                            <div class="col-1 col-xl-1 col-md-1">
+                                                <label>Số lượng còn lại</label>
+                                            </div>
+                                            <div class="col-1 col-xl-1 col-md-1">
+                                                <label>Tỷ lệ trúng</label>
+                                            </div>
+                                            <div class="col-2 col-xl-2 col-md-2">
+                                                <label>Ảnh</label>
+                                            </div>
+                                            <div class="col-1 col-xl-1 col-md-1">
+                                                <label>Xem trước</label>
+                                            </div>
+                                        </div>
+
+                                        <div id="gifts_detail">
+                                            {% if config_spin and config_spin.gifts %}
+                                                {% if config_spin.gifts|length == 0 %}
+                                                    <div class='row' style='margin-bottom: 0.75rem;'><div class='col-2 col-xl-2 col-md-2'><select class='form-control' style='height: 100%' id='gift_select_" + i + "'><option value='2'>Hình thức</option><option value='0'>Không trúng thưởng</option><option value='gift'>Quà hiện vật</option><option value='code'>Mã trúng thưởng</option></select></div><div class='col-1 col-xl-1 col-md-1'><input style='height: 100%' class='jscolor form-control' id='gift_color_" + i + "'value='FFC521'></div><div class='col-1 col-xl-1 col-md-1'><input type='text' id='gift_text_" + i + "' style='height: 100%' class='form-control method-form-control' placeholder='Tên phần quà...'></div><div class='col-2 col-xl-2 col-md-2'><input type='text' id='gift_detail_" + i + "' style='height: 100%' class='form-control method-form-control' placeholder='Mô tả...'></div><div class='col-1 col-xl-1 col-md-1'><input min='0' type='number' id='gift_count_" + i + "' style='height: 100%' class='form-control method-form-control' placeholder='Số lượng phần quà...'></div><div class='col-1 col-xl-1 col-md-1'><input style='height: 100%' class='form-control method-form-control' disabled></div><div class='col-1 col-xl-1 col-md-1'><select class='form-control' style='height: 100%' id='win_rate_gift_" + i + "'><option value='5' selected>5%</option><option value='10'>10%</option><option value='20'>20%</option><option value='30'>30%</option><option value='40'>40%</option><option value='50'>50%</option><option value='60'>60%</option><option value='70'>70%</option><option value='80'>80%</option><option value='90'>90%</option><option value='100'>100%</option></select></div><div class='col-2 col-xl-2 col-md-2'><input type='file' class='form-control' id='gift_input_" + i + "'></div><div class='col-1 col-xl-1 col-md-1'><img id='gift_preview_" + i + "' width='100%' style='display: none; max-height: 50px'></div></div>
+                                                    <div class='row' style='margin-bottom: 0.75rem;'><div class='col-2 col-xl-2 col-md-2'><select class='form-control' style='height: 100%' id='gift_select_" + i + "'><option value='2'>Hình thức</option><option value='0'>Không trúng thưởng</option><option value='gift'>Quà hiện vật</option><option value='code'>Mã trúng thưởng</option></select></div><div class='col-1 col-xl-1 col-md-1'><input style='height: 100%' class='jscolor form-control' id='gift_color_" + i + "'value='FFC521'></div><div class='col-1 col-xl-1 col-md-1'><input type='text' id='gift_text_" + i + "' style='height: 100%' class='form-control method-form-control' placeholder='Tên phần quà...'></div><div class='col-2 col-xl-2 col-md-2'><input type='text' id='gift_detail_" + i + "' style='height: 100%' class='form-control method-form-control' placeholder='Mô tả...'></div><div class='col-1 col-xl-1 col-md-1'><input min='0' type='number' id='gift_count_" + i + "' style='height: 100%' class='form-control method-form-control' placeholder='Số lượng phần quà...'></div><div class='col-1 col-xl-1 col-md-1'><input style='height: 100%' class='form-control method-form-control' disabled></div><div class='col-1 col-xl-1 col-md-1'><select class='form-control' style='height: 100%' id='win_rate_gift_" + i + "'><option value='5' selected>5%</option><option value='10'>10%</option><option value='20'>20%</option><option value='30'>30%</option><option value='40'>40%</option><option value='50'>50%</option><option value='60'>60%</option><option value='70'>70%</option><option value='80'>80%</option><option value='90'>90%</option><option value='100'>100%</option></select></div><div class='col-2 col-xl-2 col-md-2'><input type='file' class='form-control' id='gift_input_" + i + "'></div><div class='col-1 col-xl-1 col-md-1'><img id='gift_preview_" + i + "' width='100%' style='display: none; max-height: 50px'></div></div>
+
+                                                    {% else %}
+                                                {% for i in range(config_spin.gifts|length) %}
+                                                    <div class="row" style="margin-bottom: 0.75rem;">
+                                                        <div class="col-2 col-xl-2 col-md-2">
+                                                            <select class="form-control" style="height: 100%"
+                                                                    id="gift_select_{{ i }}">
+                                                                <option value="2">Hình thức</option>
+                                                                <option value="gift"
+                                                                        {% if config_spin.gifts[i].is_reward and config_spin.gifts[i].is_reward=='gift' %}selected{% endif %}>
+                                                                    Quà hiện vật
+                                                                </option>
+                                                                <option value="code"
+                                                                        {% if config_spin.gifts[i].is_reward and config_spin.gifts[i].is_reward=='code' %}selected{% endif %}>
+                                                                    Mã trúng thưởng
+                                                                </option>
+                                                                <option value="0"
+                                                                        {% if not config_spin.gifts[i].is_reward %}selected{% endif %}>
+                                                                    Không
+                                                                    trúng thưởng
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-1 col-xl-1 col-md-1">
+                                                            <input style='height: 100%' class="jscolor form-control"
+                                                                   id="gift_color_{{ i }}"
+                                                                    {% if config_spin.gifts[i].color %}
+                                                                   value="{{ config_spin.gifts[i].color }}" {% endif %}>
+                                                        </div>
+                                                        <div class="col-1 col-xl-1 col-md-1">
+                                                            <input type="text" id="gift_text_{{ i }}"
+                                                                   style="height: 100%"
+                                                                   class="form-control method-form-control"
+                                                                   placeholder="Tên phần quà..."
+                                                                    {% if config_spin.gifts[i].title %}
+                                                                   value="{{ config_spin.gifts[i].title }}" {% endif %}>
+                                                        </div>
+                                                        <div class="col-2 col-xl-2 col-md-2">
+                                                            <input type="text" id="gift_detail_{{ i }}"
+                                                                   style="height: 100%"
+                                                                   class="form-control method-form-control"
+                                                                   placeholder="Mô tả..."
+                                                                    {% if config_spin.gifts[i].detail %}
+                                                                   value="{{ config_spin.gifts[i].detail }}" {% endif %}>
+                                                        </div>
+
+                                                        <div class='col-1 col-xl-1 col-md-1'>
+                                                            <input type='number' min='0' id='gift_count_{{ i }}'
+                                                                   style='height: 100%'
+                                                                   class='form-control method-form-control'
+                                                                   placeholder='Số lượng phần quà...'
+                                                                    {% if config_spin.gifts[i].amount %}
+                                                                   value="{{ config_spin.gifts[i].amount }}" {% endif %}>
+                                                        </div>
+
+                                                        <div class='col-1 col-xl-1 col-md-1'>
+                                                            <input style='height: 100%'
+                                                                   class='form-control method-form-control'
+                                                                    {% if config_spin.gifts[i].remaining_amount %}
+                                                                   value="{{ config_spin.gifts[i].remaining_amount }}" {% endif %}
+                                                                   disabled>
+                                                        </div>
+
+                                                        <div class='col-1 col-xl-1 col-md-1'>
+                                                            <select class='form-control' style='height: 100%'
+                                                                    id='win_rate_gift_{{ i }}'>
+                                                                <option value='5' selected>5%</option>
+                                                                <option value='10'
+                                                                        {% if config_spin.gifts[i].rate_reward == '10' %}selected{% endif %}>
+                                                                    10%
+                                                                </option>
+                                                                <option value='20'
+                                                                        {% if config_spin.gifts[i].rate_reward == '20' %}selected{% endif %}>
+                                                                    20%
+                                                                </option>
+                                                                <option value='30'
+                                                                        {% if config_spin.gifts[i].rate_reward == '30' %}selected{% endif %}>
+                                                                    30%
+                                                                </option>
+                                                                <option value='40'
+                                                                        {% if config_spin.gifts[i].rate_reward == '40' %}selected{% endif %}>
+                                                                    40%
+                                                                </option>
+                                                                <option value='50'
+                                                                        {% if config_spin.gifts[i].rate_reward == '50' %}selected{% endif %}>
+                                                                    50%
+                                                                </option>
+                                                                <option value='60'
+                                                                        {% if config_spin.gifts[i].rate_reward == '60' %}selected{% endif %}>
+                                                                    60%
+                                                                </option>
+                                                                <option value='70'
+                                                                        {% if config_spin.gifts[i].rate_reward == '70' %}selected{% endif %}>
+                                                                    70%
+                                                                </option>
+                                                                <option value='80'
+                                                                        {% if config_spin.gifts[i].rate_reward == '80' %}selected{% endif %}>
+                                                                    80%
+                                                                </option>
+                                                                <option value='90'
+                                                                        {% if config_spin.gifts[i].rate_reward == '90' %}selected{% endif %}>
+                                                                    90%
+                                                                </option>
+                                                                <option value='100'
+                                                                        {% if config_spin.gifts[i].rate_reward == '100' %}selected{% endif %}>
+                                                                    100%
+                                                                </option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-2 col-xl-2 col-md-2">
+                                                            <input type="file" class="form-control"
+                                                                   id="gift_input_{{ i }}">
+                                                        </div>
+                                                        <div class="col-1 col-xl-1 col-md-1">
+                                                            <img id="gift_preview_{{ i }}" width="100%"
+                                                                 style="display: none; max-height: 50px">
+                                                            <input type="hidden"
+                                                                   value="{{ config_spin.gifts[i].images }}"
+                                                                   id="gift_image_{{ i }}"/>
+                                                            {% if config_spin.gifts[i].images %}
+                                                                <img src="//files.nextify.vn/{{ config_spin.gifts[i].images }}"
+                                                                     style="max-height: 50px"/>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                                     {% endif %}
+                                                {% else %}
+                                                   <div class='row' style='margin-bottom: 0.75rem;'><div class='col-2 col-xl-2 col-md-2'><select class='form-control' style='height: 100%' id='gift_select_" + i + "'><option value='2'>Hình thức</option><option value='0'>Không trúng thưởng</option><option value='gift'>Quà hiện vật</option><option value='code'>Mã trúng thưởng</option></select></div><div class='col-1 col-xl-1 col-md-1'><input style='height: 100%' class='jscolor form-control' id='gift_color_" + i + "'value='FFC521'></div><div class='col-1 col-xl-1 col-md-1'><input type='text' id='gift_text_" + i + "' style='height: 100%' class='form-control method-form-control' placeholder='Tên phần quà...'></div><div class='col-2 col-xl-2 col-md-2'><input type='text' id='gift_detail_" + i + "' style='height: 100%' class='form-control method-form-control' placeholder='Mô tả...'></div><div class='col-1 col-xl-1 col-md-1'><input min='0' type='number' id='gift_count_" + i + "' style='height: 100%' class='form-control method-form-control' placeholder='Số lượng phần quà...'></div><div class='col-1 col-xl-1 col-md-1'><input style='height: 100%' class='form-control method-form-control' disabled></div><div class='col-1 col-xl-1 col-md-1'><select class='form-control' style='height: 100%' id='win_rate_gift_" + i + "'><option value='5' selected>5%</option><option value='10'>10%</option><option value='20'>20%</option><option value='30'>30%</option><option value='40'>40%</option><option value='50'>50%</option><option value='60'>60%</option><option value='70'>70%</option><option value='80'>80%</option><option value='90'>90%</option><option value='100'>100%</option></select></div><div class='col-2 col-xl-2 col-md-2'><input type='file' class='form-control' id='gift_input_" + i + "'></div><div class='col-1 col-xl-1 col-md-1'><img id='gift_preview_" + i + "' width='100%' style='display: none; max-height: 50px'></div></div>
+                                                    <div class='row' style='margin-bottom: 0.75rem;'><div class='col-2 col-xl-2 col-md-2'><select class='form-control' style='height: 100%' id='gift_select_" + i + "'><option value='2'>Hình thức</option><option value='0'>Không trúng thưởng</option><option value='gift'>Quà hiện vật</option><option value='code'>Mã trúng thưởng</option></select></div><div class='col-1 col-xl-1 col-md-1'><input style='height: 100%' class='jscolor form-control' id='gift_color_" + i + "'value='FFC521'></div><div class='col-1 col-xl-1 col-md-1'><input type='text' id='gift_text_" + i + "' style='height: 100%' class='form-control method-form-control' placeholder='Tên phần quà...'></div><div class='col-2 col-xl-2 col-md-2'><input type='text' id='gift_detail_" + i + "' style='height: 100%' class='form-control method-form-control' placeholder='Mô tả...'></div><div class='col-1 col-xl-1 col-md-1'><input min='0' type='number' id='gift_count_" + i + "' style='height: 100%' class='form-control method-form-control' placeholder='Số lượng phần quà...'></div><div class='col-1 col-xl-1 col-md-1'><input style='height: 100%' class='form-control method-form-control' disabled></div><div class='col-1 col-xl-1 col-md-1'><select class='form-control' style='height: 100%' id='win_rate_gift_" + i + "'><option value='5' selected>5%</option><option value='10'>10%</option><option value='20'>20%</option><option value='30'>30%</option><option value='40'>40%</option><option value='50'>50%</option><option value='60'>60%</option><option value='70'>70%</option><option value='80'>80%</option><option value='90'>90%</option><option value='100'>100%</option></select></div><div class='col-2 col-xl-2 col-md-2'><input type='file' class='form-control' id='gift_input_" + i + "'></div><div class='col-1 col-xl-1 col-md-1'><img id='gift_preview_" + i + "' width='100%' style='display: none; max-height: 50px'></div></div>
+
+
+                                            {% endif %}
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button class="c-btn c-btn--info u-float-right">
+                                    Cập nhật
+                                </button>
+                            </div>
+                        </form>
+                    </div><!-- // .c-modal__content -->
+                </div><!-- // .c-modal__dialog -->
+            </div>
+        </div>
+    </div>
+</div>
+<script nonce="{{ csp_nonce() }}">
+    $(document).ready(function () {
+          $('textarea').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+        var config_spin =  $('#config_spin').val();
+        var shop_id_select =  $('#shop_id_select').val();
+        var gifts_val = $('#gifts').val();
+        if (gifts_val == 0) {
+            $('#gifts_label').hide();
+        } ;
+
+        $("#form_config_spin").on('submit', (function (e) {
+            e.preventDefault();
+
+            if (config_spin == 'None') {
+
+                var form_data = new FormData();
+                if (typeof $('#new_photo')[0].files[0] == 'undefined' && !'{{ config_spin.background }}') {
+                    swal('Bạn phải tải lên ảnh nền', " ", 'error');
+                    return false;
+                };
+                if (typeof $('#new_photo_center')[0].files[0] == 'undefined' && !'{{ config_spin.center }}') {
+                    swal('Bạn phải tải lên ảnh trung tâm vòng quay lên', " ", 'error');
+                    return false;
+                };
+
+                function check_num(string) {
+                    var c = string[i].substr(commapos + 2, 1);
+                    if (c >= '0' && c <= '9') {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+
+                var gifts = $('#gifts').val(); // so luong phan thuong
+                if (gifts == 0) {
+                    swal('Bạn phải chọn số lượng phần thưởng', " ", 'error');
+                    return false;
+                };
+                 if (typeof gifts != 'number') {
+                    swal('Số lượng phần thưởng phải là dạng số', " ", 'error');
+                    return false;
+                };
+                for (i = 0; i < gifts; i++) {
+                    var gift_text = $('#gift_text_' + i).val();
+                    var gift_input = $('#gift_input_' + i)[0].files[0];
+                    var gift_select = $('#gift_select_' + i).val();
+                    var gift_detail = $('#gift_detail_' + i).val();
+                    var gift_color = $('#gift_color_' + i).val();
+
+                    var gift_count = $('#gift_count_' + i).val();
+                    var win_rate_gift = $('#win_rate_gift_' + i).val();
+
+                    if (gift_select == 2) {
+                        swal('Bạn phải chọn hình thức phần thưởng', " ", 'error');
+                        return false;
+                    };
+                    if (gift_text.length == 0) {
+                        swal('Bạn phải nhập tên phần thưởng', " ", 'error');
+                        return false;
+                    };
+                    if (gift_select != 0) {
+                        if (gift_detail.length == 0) {
+                            swal('Bạn phải nhập mô tả phần thưởng', " ", 'error');
+                            return false;
+                        };
+                        if (typeof gift_input == 'undefined' && !($('#gift_image_' + i).val())) {
+                            swal('Bạn phải tải lên ảnh phần thưởng', " ", 'error');
+                            return false;
+                        };
+                    };
+                    if (gift_select == 0) {
+                        gift_count = '';
+                        win_rate_gift = '0'
+                    };
+
+                    form_data.append('gift_input_' + i, gift_input);
+                    form_data.append('gift_text_' + i, gift_text);
+                    form_data.append('gift_select_' + i, gift_select);
+                    form_data.append('gift_detail_' + i, gift_detail);
+                    form_data.append('gift_color_' + i, gift_color);
+                    form_data.append('gift_count_' + i, gift_count);
+                    form_data.append('win_rate_gift_' + i, win_rate_gift);
+                }
+                var win_rate = $('#win_rate').val(); // ty le trung thuong
+                if (win_rate == 0) {
+                    swal('Bạn phải chọn tỷ lệ trúng thưởng', " ", 'error');
+                    return false;
+                };
+
+                form_data.append('background', $('#new_photo')[0].files[0]);
+                form_data.append('center', $('#new_photo_center')[0].files[0]);
+                form_data.append('shop_id_select', shop_id_select);
+                var content = $('#content').val(); // noi dung
+                var content_color = $("#content_color").val();
+                var turns = $('#turns').val(); // so luot quay
+                var name_btn_win = $('#name_btn_win').val(); // ten nut quay thuong
+                var content_not_win = $('#content_not_win').val(); // noi dung thong bao khong trung thuong
+                var content_win = $('#content_win').val(); // noi dung thong bao trung thuong
+                form_data.append('content', content);
+                form_data.append('content_color', content_color);
+                form_data.append('turns', turns);
+                form_data.append('gifts', gifts);
+                form_data.append('win_rate', win_rate);
+                form_data.append('name_btn_win', name_btn_win);
+                form_data.append('content_not_win', content_not_win);
+                form_data.append('content_win', content_win);
+                form_data.append('reset', 'true');
+                form_data.append('shop_id_select', shop_id_select);
+
+                $.ajax({
+                    type: 'POST',
+                    headers: {"X-CSRFToken": "{{ csrf_token() }}"},
+                    url: '/config_spin',
+                    data: form_data,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        $.ajax({
+                            url: "/hotspot_type/spin",
+                            type: 'GET',
+                            data: {
+                                'shop_id_select': shop_id_select
+                            },
+                            beforeSend: function () {
+                                $(".detail-splash").empty();
+                            },
+                            success: function (data) {
+                                $('#config_spin').modal('hide');
+                                $('body').removeClass('modal-open');
+                                $('.modal-backdrop').remove();
+                                $(".detail-splash").append(data);
+                            }
+                        });
+                    },
+                    error: function (xhr, desc, err) {
+                        swal("Có lỗi xảy ra, thử lại sau", " ", "error");
+                    }
+                });
+
+            } else {
+                Swal.fire({
+                    title: 'Bạn có muốn đặt thiết lập này là thiết lập mới không?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+focusCancel: true,
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có!',
+                    cancelButtonText: 'Không!'
+                }).then((result) => {
+
+                    if (result.value){
+
+                    var form_data = new FormData();
+                    if (typeof $('#new_photo')[0].files[0] == 'undefined' && !'{{ config_spin.background }}') {
+                        swal('Bạn phải tải lên ảnh nền', " ", 'error');
+                        return false;
+                    }
+                    ;
+                    if (typeof $('#new_photo_center')[0].files[0] == 'undefined' && !'{{ config_spin.center }}') {
+                        swal('Bạn phải tải lên ảnh trung tâm vòng quay lên', " ", 'error');
+                        return false;
+                    }
+                    ;
+
+                    function check_num(string) {
+                        var c = string[i].substr(commapos + 2, 1);
+                        if (c >= '0' && c <= '9') {
+                            return true
+                        } else {
+                            return false
+                        }
+                    }
+
+                    var gifts = $('#gifts').val(); // so luong phan thuong
+                    if (gifts == 0) {
+                        swal('Bạn phải chọn số lượng phần thưởng', " ", 'error');
+                        return false;
+                    }
+                    for (i = 0; i < gifts; i++) {
+                        var gift_text = $('#gift_text_' + i).val();
+                        var gift_input = $('#gift_input_' + i)[0].files[0];
+                        var gift_select = $('#gift_select_' + i).val();
+                        var gift_detail = $('#gift_detail_' + i).val();
+                        var gift_color = $('#gift_color_' + i).val();
+
+                        var gift_count = $('#gift_count_' + i).val();
+                        var win_rate_gift = $('#win_rate_gift_' + i).val();
+
+                        if (gift_select == 2) {
+                            swal('Bạn phải chọn hình thức phần thưởng', " ", 'error');
+                            return false;
+                        }
+                        if (gift_text.length == 0) {
+                            swal('Bạn phải nhập tên phần thưởng', " ", 'error');
+                            return false;
+                        }
+                        if (gift_select != 0) {
+                            if (gift_detail.length == 0) {
+                                swal('Bạn phải nhập mô tả phần thưởng', " ", 'error');
+                                return false;
+                            }
+                            if (typeof gift_input == 'undefined' && !($('#gift_image_' + i).val())) {
+                                swal('Bạn phải tải lên ảnh phần thưởng', " ", 'error');
+                                return false;
+                            }
+                        }
+                        if (gift_select == 0) {
+                            gift_count = '';
+                            win_rate_gift = '0'
+                        }
+
+                        form_data.append('gift_input_' + i, gift_input);
+                        form_data.append('gift_text_' + i, gift_text);
+                        form_data.append('gift_select_' + i, gift_select);
+                        form_data.append('gift_detail_' + i, gift_detail);
+                        form_data.append('gift_color_' + i, gift_color);
+                        form_data.append('gift_count_' + i, gift_count);
+                        form_data.append('win_rate_gift_' + i, win_rate_gift);
+                    }
+                    var win_rate = $('#win_rate').val(); // ty le trung thuong
+                    if (win_rate == 0) {
+                        swal('Bạn phải chọn tỷ lệ trúng thưởng', " ", 'error');
+                        return false;
+                    }
+
+                    form_data.append('background', $('#new_photo')[0].files[0]);
+                    form_data.append('center', $('#new_photo_center')[0].files[0]);
+                    form_data.append('shop_id_select', shop_id_select);
+                    var content = $('#content').val(); // noi dung
+                    var content_color = $("#content_color").val();
+                    var turns = $('#turns').val(); // so luot quay
+                    var name_btn_win = $('#name_btn_win').val(); // ten nut quay thuong
+                    var content_not_win = $('#content_not_win').val(); // noi dung thong bao khong trung thuong
+                    var content_win = $('#content_win').val(); // noi dung thong bao trung thuong
+                    form_data.append('content', content);
+                    form_data.append('content_color', content_color);
+                    form_data.append('turns', turns);
+                    form_data.append('gifts', gifts);
+                    form_data.append('win_rate', win_rate);
+                    form_data.append('name_btn_win', name_btn_win);
+                    form_data.append('content_not_win', content_not_win);
+                    form_data.append('content_win', content_win);
+                    form_data.append('reset', 'true');
+                    form_data.append('shop_id_select', shop_id_select);
+                    form_data.append('time_reset', $('#time_reset').val());
+
+                    $.ajax({
+                        type: 'POST',
+                        headers: {"X-CSRFToken": "{{ csrf_token() }}"},
+                        url: '/config_spin',
+                        data: form_data,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            $.ajax({
+                                url: "/hotspot_type/spin",
+                                type: 'GET',
+                                data: {
+                                    'shop_id_select': shop_id_select
+                                },
+                                beforeSend: function () {
+                                    $(".detail-splash").empty();
+                                },
+                                success: function (data) {
+                                    $('#config_spin').modal('hide');
+                                    $('body').removeClass('modal-open');
+                                    $('.modal-backdrop').remove();
+                                    $(".detail-splash").append(data);
+                                }
+                            });
+                        },
+                        error: function (xhr, desc, err) {
+                            swal("Có lỗi xảy ra, thử lại sau", " ", "error");
+                        }
+                    });
+
+                }
+                else
+                {
+
+                    var form_data = new FormData();
+                    if (typeof $('#new_photo')[0].files[0] == 'undefined' && !'{{ config_spin.background }}') {
+                        swal('Bạn phải tải lên ảnh nền', " ", 'error');
+                        return false;
+                    };
+                    if (typeof $('#new_photo_center')[0].files[0] == 'undefined' && !'{{ config_spin.center }}') {
+                        swal('Bạn phải tải lên ảnh trung tâm vòng quay lên', " ", 'error');
+                        return false;
+                    };
+
+                    function check_num(string) {
+                        var c = string[i].substr(commapos + 2, 1);
+                        if (c >= '0' && c <= '9') {
+                            return true
+                        } else {
+                            return false
+                        }
+                    }
+
+                    var gifts = $('#gifts').val(); // so luong phan thuong
+                    if (gifts == 0) {
+                        swal('Bạn phải chọn số lượng phần thưởng', " ", 'error');
+                        return false;
+                    };
+                    for (i = 0; i < gifts; i++) {
+                        var gift_text = $('#gift_text_' + i).val();
+                        var gift_input = $('#gift_input_' + i)[0].files[0];
+                        var gift_select = $('#gift_select_' + i).val();
+                        var gift_detail = $('#gift_detail_' + i).val();
+                        var gift_color = $('#gift_color_' + i).val();
+
+                        var gift_count = $('#gift_count_' + i).val();
+                        var win_rate_gift = $('#win_rate_gift_' + i).val();
+
+                        if (gift_select == 2) {
+                            swal('Bạn phải chọn hình thức phần thưởng', " ", 'error');
+                            return false;
+                        };
+                        if (gift_text.length == 0) {
+                            swal('Bạn phải nhập tên phần thưởng', " ", 'error');
+                            return false;
+                        } ;
+                        if (gift_select != 0) {
+                            if (gift_detail.length == 0) {
+                                swal('Bạn phải nhập mô tả phần thưởng', " ", 'error');
+                                return false;
+                            };
+                            if (typeof gift_input == 'undefined' && !($('#gift_image_' + i).val())) {
+                                swal('Bạn phải tải lên ảnh phần thưởng', " ", 'error');
+                                return false;
+                            };
+                        };
+                        if (gift_select == 0) {
+                            gift_count = '';
+                            win_rate_gift = '0'
+                        };
+
+                        form_data.append('gift_input_' + i, gift_input);
+                        form_data.append('gift_text_' + i, gift_text);
+                        form_data.append('gift_select_' + i, gift_select);
+                        form_data.append('gift_detail_' + i, gift_detail);
+                        form_data.append('gift_color_' + i, gift_color);
+                        form_data.append('gift_count_' + i, gift_count);
+                        form_data.append('win_rate_gift_' + i, win_rate_gift);
+                    }
+                    var win_rate = $('#win_rate').val(); // ty le trung thuong
+                    if (win_rate == 0) {
+                        swal('Bạn phải chọn tỷ lệ trúng thưởng', " ", 'error');
+                        return false;
+                    };
+
+                    form_data.append('background', $('#new_photo')[0].files[0]);
+                    form_data.append('center', $('#new_photo_center')[0].files[0]);
+                    form_data.append('shop_id_select', shop_id_select);
+                    var content = $('#content').val(); // noi dung
+                    var content_color = $("#content_color").val();
+                    var turns = $('#turns').val(); // so luot quay
+                    var name_btn_win = $('#name_btn_win').val(); // ten nut quay thuong
+                    var content_not_win = $('#content_not_win').val(); // noi dung thong bao khong trung thuong
+                    var content_win = $('#content_win').val(); // noi dung thong bao trung thuong
+                    form_data.append('content', content);
+                    form_data.append('content_color', content_color);
+                    form_data.append('turns', turns);
+                    form_data.append('gifts', gifts);
+                    form_data.append('win_rate', win_rate);
+                    form_data.append('name_btn_win', name_btn_win);
+                    form_data.append('content_not_win', content_not_win);
+                    form_data.append('content_win', content_win);
+                    form_data.append('reset', 'false');
+                    form_data.append('shop_id_select', shop_id_select);
+
+                    $.ajax({
+                        type: 'POST',
+                        headers: {"X-CSRFToken": "{{ csrf_token() }}"},
+                        url: '/config_spin',
+                        data: form_data,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            $.ajax({
+                                url: "/hotspot_type/spin",
+                                type: 'GET',
+                                data: {
+                                    'shop_id_select': shop_id_select
+                                },
+                                beforeSend: function () {
+                                    $(".detail-splash").empty();
+                                },
+                                success: function (data) {
+                                    $('#config_spin').modal('hide');
+                                    $('body').removeClass('modal-open');
+                                    $('.modal-backdrop').remove();
+                                    $(".detail-splash").append(data);
+                                }
+                            });
+                        },
+                        error: function (xhr, desc, err) {
+                            swal("Có lỗi xảy ra, thử lại sau", " ", "error");
+                        }
+                    });
+
+                }
+            });
+
+            }
+
+        }));
+
+
+
+        $('#gifts').on('change', function (e) {
+
+            var current_length = $('#gifts_detail')[0].childElementCount;
+
+            var gifts = parseInt($(this).val());
+            if (gifts == '0') {
+                $('#gifts_label').hide();
+            } else {
+                $('#gifts_label').show();
+            } ;
+            $("input[type='file']").off('change');
+            if (gifts > current_length) {
+                var diff = gifts - current_length;
+                     for (i = 0; i < diff; i++) {
+                $('#gifts_detail').append(
+                        "<div class='row' style='margin-bottom: 0.75rem;'><div class='col-2 col-xl-2 col-md-2'><select class='form-control' style='height: 100%' id='gift_select_" + i + "'><option value='2'>Hình thức</option><option value='0'>Không trúng thưởng</option><option value='gift'>Quà hiện vật</option><option value='code'>Mã trúng thưởng</option></select></div><div class='col-1 col-xl-1 col-md-1'><input style='height: 100%' class='jscolor form-control' id='gift_color_" + i + "'value='FFC521'></div><div class='col-1 col-xl-1 col-md-1'><input type='text' id='gift_text_" + i + "' style='height: 100%' class='form-control method-form-control' placeholder='Tên phần quà...'></div><div class='col-2 col-xl-2 col-md-2'><input type='text' id='gift_detail_" + i + "' style='height: 100%' class='form-control method-form-control' placeholder='Mô tả...'></div><div class='col-1 col-xl-1 col-md-1'><input min='0' type='number' id='gift_count_" + i + "' style='height: 100%' class='form-control method-form-control' placeholder='Số lượng phần quà...'></div><div class='col-1 col-xl-1 col-md-1'><input style='height: 100%' class='form-control method-form-control' disabled></div><div class='col-1 col-xl-1 col-md-1'><select class='form-control' style='height: 100%' id='win_rate_gift_" + i + "'><option value='5' selected>5%</option><option value='10'>10%</option><option value='20'>20%</option><option value='30'>30%</option><option value='40'>40%</option><option value='50'>50%</option><option value='60'>60%</option><option value='70'>70%</option><option value='80'>80%</option><option value='90'>90%</option><option value='100'>100%</option></select></div><div class='col-2 col-xl-2 col-md-2'><input type='file' class='form-control' id='gift_input_" + i + "'></div><div class='col-1 col-xl-1 col-md-1'><img id='gift_preview_" + i + "' width='100%' style='display: none; max-height: 50px'></div></div>"
+                    );
+                 }
+            } else if  (gifts < current_length) {
+                for (i = current_length; i >= gifts; i--) {
+
+                      $('#gifts_detail').children().eq(i).remove();
+
+                }
+            }
+            upload_image();
+        });
+
+        upload_image();
+
+        function upload_image() {
+            $("#new_photo_center").change(function () {
+                var validate_photo = validate(this);
+                if (validate_photo == true) {
+                    swal('Upload thành công', '', 'success');
+                    $('#img_new_photo_center').show();
+                    readURL(this, 'img_new_photo_center');
+                } else {
+                    if (validate_photo == "big_file") {
+                        swal('File có kích thước quá lớn!', '', 'error');
+                        return false;
+                    } ;
+                    swal('File không đúng định dạng', '', 'error');
+                    $('#new_photo_center').val('');
+                    $('#img_new_photo_center').hide();
+                }
+            });
+            $("input[type='file']").change(function () {
+                var id = $(this)[0].id;
+
+                if (id == 'new_photo') {
+                    var validate_photo = validate(this);
+                    if (validate_photo == true) {
+                        swal('Upload thành công', '', 'success');
+                        $('#img_new_photo').show();
+                        readURL(this, 'img_new_photo');
+                    } else {
+                        if (validate_photo == "big_file") {
+                            swal('File có kích thước quá lớn!', '', 'error');
+                            return false;
+                        };
+                        swal('File không đúng định dạng', '', 'error');
+                        $('#new_photo').val('');
+                        $('#img_new_photo').hide();
+                    }
+                } else if (id != 'new_photo' && id != 'new_photo_center') {
+                    var index = $(this)[0].id[$(this)[0].id.length - 1]
+                    var validate_photo = validate(this);
+                    if (validate_photo == true) {
+                        swal('Upload thành công', '', 'success');
+                        $('#gift_preview_' + index).show();
+                        readURL(this, 'gift_preview_' + index);
+                    } else {
+                        if (validate_photo == "big_file") {
+                            swal('File có kích thước quá lớn!', '', 'error');
+                            return false;
+                        };
+                        swal('File không đúng định dạng', '', 'error');
+                    }
+                }
+
+            });
+        }
+
+        function readURL(input, input_view) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                var view_id = '#' + input_view;
+                reader.onload = function (e) {
+                    $(view_id).attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function validate(photo) {
+            var file_size = $(photo)[0].files[0].size;
+            var file = $(photo).val();
+            var exts = ['jpg', 'png', 'jpeg'];
+            if (file) {
+                var get_ext = file.split('.');
+                get_ext = get_ext.reverse();
+                if ($.inArray(get_ext[0].toLowerCase(), exts) > -1) {
+                    if (file_size > 3670016) {
+                        return "big_file";
+                    } else {
+                        return true;
+                    }
+                } else {
+                    return false;
+                }
+            }
+
+        }
+
+        var url_preview = '/splash_page/'+ shop_id_select + '/preview/spin';
+        $("#preview").empty();
+        bioMp(document.getElementById('preview'), {
+            url: url_preview,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+    });
+</script>

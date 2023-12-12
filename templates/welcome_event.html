@@ -1,0 +1,140 @@
+{% extends "welcome.html" %} { {%block background%}
+<style>
+    #background-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: -1;
+        width: 100%;
+        background: -moz-linear-gradient(top, rgba(29, 29, 29, 0.0) 0, rgba(29, 29, 29, 0.7) 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(29, 29, 29, 0.0)), color-stop(100%, rgba(29, 29, 29, 0.7)));
+        background: -webkit-linear-gradient(top, rgba(29, 29, 29, 0.0) 0, rgba(29, 29, 29, 0.7) 100%);
+        background: -o-linear-gradient(top, rgba(29, 29, 29, 0.0) 0, rgba(29, 29, 29, 0.7) 100%);
+        background: -ms-linear-gradient(top, rgba(29, 29, 29, 0.0) 0, rgba(29, 29, 29, 0.7) 100%);
+        background: linear-gradient(to bottom, rgba(29, 29, 29, 0.0) 0, rgba(29, 29, 29, 0.7) 100%);
+        filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#801d1d1d', endColorstr='#1d1d1d', GradientType=0)
+    }
+</style>
+<div id="background-image" style="background: url('{%if not card%}/static/images/highland_demo.png{%else%}//files.nextify.vn/{{card.photo}}{%endif%}') no-repeat bottom center; background-size: cover; -webkit-background-size: cover;-moz-background-size: cover; -o-background-size: cover;"></div>
+<div id="background-overlay"></div>
+{%endblock%} {% block container %}
+<div style="position:absolute;bottom:0;left:0; right:0">
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-8 col-xs-12 col-centered">
+            <img class="img-responsive center-block centered-and-cropped" style="width:80px;height: 80px" src="//files.nextify.vn/{{ shop.logo }}"
+                alt="" />
+        </div>
+    </div>
+    <div class="row signin-agile row-centered" style=" margin-right: 0px; margin-left: 0px;">
+        <div class="col-lg-5 col-md-7 col-sm-8 col-xs-12 col-centered">
+            {% if user %} {% if content %}
+             <h4 style="line-height: 24px;margin: 15px 0;">
+                {{ content|safe }}
+            </h4>
+            {% else %}
+             <h4 style="line-height: 24px;margin: 15px 0;">
+                Chào <strong>{{ user.name }}</strong>,<br> cảm ơn bạn đã ghé thăm.
+            </h4>
+            {% endif %} {% else %}
+                {% if content %}
+             <h4 style="line-height: 24px;margin: 15px 0;">
+                {{ content|safe }}
+            </h4>
+            {% else %}
+            <h4 style="line-height: 28px;text-align: center;margin: 25px 0;">
+                Đăng ký <strong>khách hàng thân thiết</strong> để nhận các ưu đãi hấp dẫn
+                <br/>
+                Get connected with FREE WIFI</h4>
+                    {% endif %}
+            {% endif %}
+            <input type="hidden" id="redirect_page" value="{{redirect_page}}" />
+        </div>
+    </div>
+    <div class="row signin-agile row-centered" style=" margin-right: 0px; margin-left: 0px;">
+        <div class="col-lg-5 col-md-7 col-sm-8 col-xs-12 col-centered">
+            <input type="hidden" id="redirect_page" value="{{redirect_page}}" />
+        {% if user %} {% if auth_target %}
+              <a href="{{ auth_target }}">
+                  <button class="btn btn-md btn-success col-xs-12">
+                      <i class="fe fe-wifi fa-lg" aria-hidden="true" ></i>
+                      {% if redirect_uri %}
+                      Tiếp tục đến {{ redirect_uri | truncate(50) }}
+                      {% else %}
+                      Kết nối Wi-Fi/Go Online
+                      {% endif %}
+                  </button>
+              </a>
+              {% else %}
+              {% if shop.social=="share_fb" %}
+                {% include 'share_fb_box.html' %}
+                {% elif shop.social == "check_in_fb" %}
+                {% include 'check_in_fb.html' %}
+                {% elif shop.social== "connect_fb" %}
+                {% include 'event_connect_fb.html' %}
+                {% else %}
+              <h3 style="color: #2ecc71; margin: 10px 0;"><i class="fe fe-wifi fa-lg" aria-hidden="true"></i> Kết nối thành công</h3>
+             {% if shop.facebook_page %}
+      <div class="row">
+          <div class="col-lg-5 col-md-7 col-sm-8 col-xs-12 col-centered">
+              <div id="fb-root"></div>
+               <script nonce="{{ csp_nonce() }}">
+                  (function(d, s, id) {
+                      var js, fjs = d.getElementsByTagName(s)[0];
+                      if (d.getElementById(id)) return;
+                      js = d.createElement(s);
+                      js.id = id;
+                      js.async = true;
+                      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=999289033481098";
+                      fjs.parentNode.insertBefore(js, fjs);
+                  }(document, 'script', 'facebook-jssdk'));
+              </script>
+              <div class="fb-like" data-href="{{ shop.facebook_page }}" data-layout="button_count" data-action="like" data-size="large" data-show-faces="true" data-share="true"></div>
+              <div class="clearfix"></div>
+          </div>
+      </div>
+      {% endif %}
+              {%endif%}
+
+              {% endif %} {% else %}
+            <form method="POST" action="/quick_register?gateway_mac={{gateway_mac}}&client_mac={{client_mac}}" style="margin-top: 0em;">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                <div class="form-group">
+                    {% if error %}
+                    <h4 style="line-height: 24px;margin: 15px 0;">
+                        {{ error }}
+                    </h4>{%endif%}
+                    <input type="tel" class="form-control" placeholder="Số điện thoại/Phone number" id="phone" name="phone" required>
+                    <input type="submit" class="form-control" value="Kết Nối/Go Online">
+                </div>
+            </form>
+        {% endif %}
+        </div>
+    </div>
+
+    {% include "footer_welcome.html" %}
+
+</div>
+<!--<input type="hidden" id="title" value="{{ card.title }}" />
+<input type="hidden" id="content" value="{{ card.content }}" />-->
+<input type="hidden" id="facebook_page" value="{{ shop.facebook_page }}" /> {% if card.link_share|length > 0 %}
+<input type="hidden" id="link_share" value="{{ card.link_share }}" /> {% endif %}
+<input type="hidden" id="facebook_page_id" value="{{ shop.page_id }}" />
+<input type="hidden" id="redirect_page" value="{{redirect_page}}" />
+
+{%if not event_type%}
+<div id="fb-root"></div>
+ <script nonce="{{ csp_nonce() }}">
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.async = true;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=999289033481098";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>{%else%}
+<input type="hidden" id="facebook_page" value="{{shop.facebook_page}}" />
+{%endif%}
+{% endblock %}

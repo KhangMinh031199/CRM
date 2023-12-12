@@ -1,0 +1,65 @@
+<table class="table v2">
+    <thead>
+      <tr>
+        <th data-field="campaignName"><span class="th-contents"><span class="text">Chiến
+              dịch</span></span></th>
+        <th data-field="estWalk"><span class="th-contents"><span class="text">Trạng thái</span></span></th>
+
+
+        <th data-field="impressions"><span class="th-contents"><span class="text">Lượt hiển thị</span></span>
+        </th>
+        <th data-field="clicks">
+          <span class="text">Số địa điểm</span>
+
+        </th>
+        <th data-field="estWalk"><span class="th-contents"><span class="text">Kết quả</span></span></th>
+        <th data-field="actionIcons"><span class="th-contents"><span class="text"></span></span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for camp in campaigns %}
+      <tr>
+        <td data-field="campaignName"><span class="th-contents"><span class="text">Campaign</span></span>
+          <div class="campaign-name-row">
+            <div class="campaign-thumb is-clickable">
+              <i class="fe fe-wifi fa-lg" style="display:inline-block;text-align: center;
+                             vertical-align: bottom;"></i>
+            </div>
+            <div class="campaign-name">{{ camp.name }}</div>
+            <div class="campaign-dates">Cập nhật
+              lúc {{ camp.update_at|get_human_time }}</div>
+          </div>
+        </td>
+        <td data-field="status">
+          <div class="custom-control custom-switch">
+            <input camp_id="{{ camp._id }}" class="custom-control-input" id="active_status_{{ camp._id }}"
+              status_id="active_status_{{ camp._id }}" type="checkbox" {% if camp.status and
+              camp.status|lower=="true" %}checked{% endif %}>
+            <label class="custom-control-label" for="active_status_{{ camp._id }}"></label>
+          </div>
+        </td>
+
+        <td data-field="impressions"><span class="th-contents"><span class="text">Lượt hiển thị</span></span>
+
+          <div class="campaign-metric"><span>{{ camp.total_access }}</span></div>
+        </td>
+        <td data-field="impressions"><span class="th-contents"><span class="text">Số địa điểm</span></span>
+
+          <div class="campaign-metric"><span>{{ camp.total_shops }}</span></div>
+        </td>
+        <td data-field="impressions"><span class="th-contents"><span class="text">Kết quả</span></span>
+
+          <div class="campaign-metric"><span class="badge badge-soft-{{ ['success','warning','info']|random }}">
+            {% if camp.result and
+              camp.result|string=="true" %} Hoàn thành
+              {% else %} Chưa hoàn thành
+              {% endif %}
+          </span></div>
+        </td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>

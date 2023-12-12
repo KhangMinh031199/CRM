@@ -1,0 +1,8 @@
+#! /bin/bash
+
+ssh -p 2212 root@172.16.88.21 'cd /root/code/nextifycrm && git checkout v2 && git stash && git pull --rebase'
+ssh -p 2212 root@172.16.88.21 'sudo supervisorctl restart cms'
+
+
+ssh root@172.16.88.24 'cd /root/code/crm && git checkout v2 && git stash && git pull --rebase'
+ssh root@172.16.88.24 'sudo supervisorctl restart celery_cms celery_cms_1 celery_cms_2'

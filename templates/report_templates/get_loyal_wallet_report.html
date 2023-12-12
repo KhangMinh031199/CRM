@@ -1,0 +1,20 @@
+<div class="panel-header-stats">
+  <div class="row">
+    <div class="col-md-4 col-xs-12" style="text-align: center">
+      <p class="lead">{{ gettext('Tich_tien') }}</p>
+      <p style="font-size: 25px;"><b>{{ total_add_wallet|format_price }}</b></p>
+    </div>
+    <div class="col-md-4 col-xs-12" style="text-align: center">
+      <p class="lead">{{ gettext('Tieu_dung') }}</p>
+      <p style="font-size: 25px;"><b>{{ total_redeem_wallet|format_price }}</b></p>
+    </div>
+    <div class="col-md-4 col-xs-12" style="text-align: center">
+      <p class="lead">{{ gettext('Hoa_don') }}</p>
+      <p style="font-size: 25px;"><b>{{ total_bills|format_price }}</b></p>
+    </div>
+  </div>
+</div>
+<div>
+  {% line_chart wallet_serrie_data with
+    id='chart-wallet_serrie_data' %}
+</div>

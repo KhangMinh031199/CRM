@@ -1,0 +1,510 @@
+{% extends 'nextify/manage_hotspot.html' %}
+
+{% block hotspot_item %}
+
+     <input type="hidden" value="{{ shop_id_select }}" id="shop_id_select"/>
+<div class="row justify-content-center">
+        <div class="col-12 col-lg-12 col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                  <div class="row align-items-center">
+                      <div class="col">
+                          <!-- Nav -->
+                          <ul class="nav nav-tabs nav-overflow header-tabs">
+                              <li class="nav-item">
+                                  <a href="/splash_page/{{shop_id_select}}/hotspot/register" class="nav-link active">
+                                      {{ gettext('Trang_dang_ky') }}
+                                  </a>
+                              </li>
+                              <li class="nav-item">
+                                  <a href="/splash_page/{{shop_id_select}}/hotspot/plus_register" class="nav-link">
+                                    {{ gettext('Trang_cap_nhat_thong_tin') }}
+                                  </a>
+                              </li>
+                          </ul>
+                      </div>
+                    </div>
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <h6 class="header-pretitle">
+                            </h6>
+                        </div>
+                        <div class="col-auto" style="float: right">
+                            <a data-toggle="modal" href="#config_register"
+                               class="btn btn-flat d-block d-md-inline-block">
+                                <i class="fa fa-gear"></i> {{  gettext('HotspotHappyBirthdayScreenSettingText')}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <center>
+
+                        <div id="preview"></div>
+                    </center>
+
+                </div>
+            </div>
+        </div>
+</div>
+
+    <div class="modal hide fade" id="config_register" tabindex="-1"
+         role="dialog" aria-labelledby="config_register" data-backdrop="static"
+         style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{  gettext('HotspotRegisterScreenSettingText')}}</h3>
+
+                    <a class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </a>
+                </div>
+
+                    <div class="modal-body">
+                     <form method="POST" id="login_form_settings" action="/login_form_settings/{{ shop_id_select }}"
+                                    enctype="multipart/form-data">
+             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+                          <div class="row">
+                              <div class="col-sm-12 col-md-6 u-mb-medium">
+                                  <div class="form-group">
+                                      <label for="hotspot_method">{{ gettext('Hinh_thuc_hotspot') }}</label>
+                                      <select class="form-control" id="hotspot_method"
+                                          name="hotspot_method">
+                                          <option value="default" {% if login_form.hotspot_method == 'default' %}selected{% endif %}>{{ gettext('Mac_đinh') }}</option>
+                                          <option value="profile_code" {% if login_form.hotspot_method == 'profile_code' %}selected{% endif %}>{{ gettext('Profile_code') }}Profile code</option>
+                                      </select>
+                                  </div>
+                              </div>
+                              <input type="hidden" id="ex_hotspot_method" name="ex_hotspot_method" value="{{ login_form.hotspot_method }}" />
+                              <div id="default_code_div" class="col-sm-12 col-md-6 u-mb-medium">
+                                  <div class="form-group">
+                                      <label>{{ gettext('Ma_mac_đinh') }}</label><span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                       aria-label="{{ gettext('Ma_truy_cap_Wifi_mac_dinh') }}">
+                                     <i class="fa fa-question"></i>
+                                 </span>
+                                      <input type="text" class="form-control method-form-control" id="default_code" name="default_code"
+                                      {% if login_form.default_code %}
+                                        value="{{ login_form.default_code }}"
+                                      {% endif %}
+                                      >
+                                  </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                                    <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox1"
+                                                   name="phone_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.phone  and login_form.phone|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox1">{{  gettext('HotspotRegisterScreenPhoneText')}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch {% if login_form.phone_require and
+                                            login_form.phone_require|lower
+                                            == "true" %}is-active{% endif %}">
+                                                <label class="c-choice__label"
+                                                       for="switch1" style="padding-left: 10px; font-size: 15px;">{{ gettext('bat_buoc')}}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch1"
+                                                       type="checkbox"
+                                                       name="phone_require"
+                                                       {% if login_form.phone_require and
+                                            login_form.phone_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox2"
+                                                   name="email_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.email  and login_form.email|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox2">{{  gettext('HotspotRegisterScreenEmailText')}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch {% if
+                                        login_form.email_require and
+                                        login_form.email_require|lower ==
+                                        "true" %}is-active{% endif %}">
+                                                <label class="c-choice__label"
+                                                       for="switch2" style="padding-left: 10px; font-size: 15px;">{{ gettext('bat_buoc') }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch2"
+                                                       type="checkbox"
+                                                       name="email_require"
+                                                       {% if login_form.email_require and login_form.email_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox3"
+                                                   name="name_visible"
+                                                   type="checkbox" {% if login_form
+                                           .name and login_form.name|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox3">{{  gettext('HotspotRegisterScreenNameText')}}</label>
+                                        </div>
+                                    </div>
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch{% if login_form
+                                        .name_require and login_form
+                                        .name_require|lower == "true" %}
+                                        is-active{% endif %}">
+                                                <label class="c-choice__label"
+                                                       for="switch3" style="padding-left: 10px; font-size: 15px;">{{ gettext('bat_buoc') }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch3"
+                                                       type="checkbox"
+                                                       name="name_require"
+                                                       {% if login_form.name_require and login_form.name_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox4"
+                                                   name="birthday_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.birthday  and login_form.birthday|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox4">{{  gettext('HotspotRegisterScreendayofbirthText')}}</label>
+                                        </div>
+                                    </div>
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch{% if login_form
+                                        .birthday_require and login_form.birthday_require|lower == "true" %} is-active{% endif %}">
+                                                <label class="c-choice__label"
+                                                       for="switch4" style="padding-left: 10px; font-size: 15px;">{{ gettext('bat_buoc') }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch4"
+                                                       type="checkbox"
+                                                       name="birthday_require"
+                                                       {% if login_form.birthday_require and login_form.birthday_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox5"
+                                                   name="year_birthday_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.year_birthday  and login_form.year_birthday|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox5">{{  gettext('HotspotRegisterScreenYearofbirthText')}}</label>
+                                        </div>
+                                    </div>
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch{% if login_form
+                                        .year_birthday_require and
+                                        login_form
+                                        .year_birthday_require|lower == "true" %} is-active{% endif %}">
+                                                <label class="c-choice__label"
+                                                       for="switch5" style="padding-left: 10px; font-size: 15px;">{{ gettext('bat_buoc') }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch5"
+                                                       type="checkbox"
+                                                       name="year_birthday_require"
+                                                       {% if login_form.year_birthday_require and login_form.year_birthday_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox6"
+                                                   name="gender_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.gender  and login_form.gender|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox6">{{  gettext('HotspotRegisterScreenGenderText')}}</label>
+                                        </div>
+                                    </div>
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch {% if
+                                            login_form
+                                        .gender_require and login_form
+                                        .gender_require|lower == "true" %}
+                                         is-active{% endif %}">
+                                                <label class="c-choice__label"
+                                                       for="switch6" style="padding-left: 10px; font-size: 15px;">{{ gettext('bat_buoc') }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch6"
+                                                       type="checkbox"
+                                                       name="gender_require"
+                                                       {% if login_form.gender_require and login_form.gender_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            <div class="row">
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox7"
+                                                   name="company_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.company  and login_form.company|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox7">Công ty</label>
+                                        </div>
+                                    </div>
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch {% if login_form.company_require and login_form.company_require|lower == "true" %}
+                                         is-active{% endif %}">
+                                                <label class="c-choice__label"
+                                                       for="switch7" style="padding-left: 10px; font-size: 15px;">{{ gettext('bat_buoc') }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch7"
+                                                       type="checkbox"
+                                                       name="company_require"
+                                                       {% if login_form.company_require and login_form.company_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                    <div class="row">
+                                    <div class="col-sm-12 col-md-6 u-mb-medium">
+                                       <div class="c-choice c-choice--checkbox">
+                                           <input class="c-choice__input"
+                                                  id="checkbox9"
+                                                  name="vocation_visible"
+                                                  type="checkbox"
+                                                  {% if login_form.vocation  and login_form.vocation|lower == "true" %}checked{% endif %}>
+                                           <label class="c-choice__label"
+                                                  for="checkbox9">{{ gettext('Nghe_nghiep') }}</label>
+                                       </div>
+                                   </div>
+                                    <div class="col-sm-12 col-md-6 u-mb-medium">
+                                       <div class="u-block">
+                                           <div class="c-switch {% if login_form.vocation_require and login_form.vocation_require|lower == "true" %}
+                                        is-active{% endif %}">
+                                               <label class="c-choice__label"
+                                                      for="switch7" style="padding-left: 10px; font-size: 15px;">{{ gettext('bat_buoc') }}</label>
+                                               <input class="c-switch__input"
+                                                      id="switch9"
+                                                      type="checkbox"
+                                                      name="vocation_require"
+                                                      {% if login_form.vocation_require and login_form.vocation_require|lower == "true" %}checked{% endif %}>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+                    <div class="row">
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="c-choice c-choice--checkbox">
+                                            <input class="c-choice__input"
+                                                   id="checkbox8"
+                                                   name="company_role_visible"
+                                                   type="checkbox"
+                                                   {% if login_form.company_role  and login_form.company_role|lower == "true" %}checked{% endif %}>
+                                            <label class="c-choice__label"
+                                                   for="checkbox8">{{ gettext('Chuc_vu') }}</label>
+                                        </div>
+                                    </div>
+                                     <div class="col-sm-12 col-md-6 u-mb-medium">
+                                        <div class="u-block">
+                                            <div class="c-switch {% if login_form.company_role_require and login_form.company_role_require|lower == "true" %}
+                                         is-active{% endif %}">
+                                                <label class="c-choice__label"
+                                                       for="switch8" style="padding-left: 10px; font-size: 15px;">{{ gettext('bat_buoc') }}</label>
+                                                <input class="c-switch__input"
+                                                       id="switch8"
+                                                       type="checkbox"
+                                                       name="company_role_require"
+                                                       {% if login_form.company_role_require and login_form.company_role_require|lower == "true" %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                  </div>
+
+                    <div class="row">
+                                  <div class="col-sm-12 col-md-6 u-mb-medium">
+                                      <div class="c-choice c-choice--checkbox">
+                                          <input class="c-choice__input"
+                                                 id="checkbox10"
+                                                 name="connect_with_facebook"
+                                                 type="checkbox"
+                                                 {% if login_form.connect_with_facebook and login_form.connect_with_facebook|lower== "true" %}checked{% endif %}>
+                                          <label class="c-choice__label"
+                                                 for="checkbox10">{{ gettext('Ket_noi_qua_Facebook') }}</label>
+                                      </div>
+                                  </div>
+                                </div>
+
+                                <div class="row">
+                                  <div class="col-sm-12 col-md-6 u-mb-medium">
+                                      <div class="c-choice c-choice--checkbox">
+                                          <input class="c-choice__input"
+                                                 id="checkbox11"
+                                                 name="connect_with_messenger"
+                                                 type="checkbox"
+                                                 {% if login_form.connect_with_messenger and login_form.connect_with_messenger|lower== "true" %}checked{% endif %}>
+                                          <label class="c-choice__label"
+                                                 for="checkbox11">{{ gettext('Ket_noi_qua_Messenger') }}</label>
+                                      </div>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="u-text-mute u-text-uppercase
+                                                        u-mb-small">{{  gettext('HotspotRegisterScreenWelcomemessageText')}}</label>
+                                    <textarea class="form-control"
+                                              id="welcome_text"
+                                              name="welcome_text"
+                                              rows="6">
+                                                              {% if login_form.welcome_text|length > 1 %}
+                                                                  {{ login_form.welcome_text }}
+                                                              {% else %}
+                                                                  {{ gettext('Dang_ky_khach_hang_than_thiet de_nhan_cac_uu_dai_hap_dan') }}<br/>
+                                                                  {{ gettext('Get_connected_with_FREE_WIFI') }}
+                                                              {% endif %}
+                                                        </textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="u-text-mute u-text-uppercase
+                                                        u-mb-small">{{ gettext('HotspotRegisterScreenBirthdaymessageText') }}</label>
+                                   <textarea class="form-control"
+                                              id="birthday_text"
+                                              name="birthday_text"
+                                              rows="6">
+                                                              {% if login_form.birthday_text|length > 1 %}
+                                                                  {{ login_form.birthday_text }}
+                                                              {% else %}
+                                                                  {{ gettext('Dung_quen_nhap_ngay_sinh_đe_nhan_qua_tu_chung_toi_nhe') }}
+                                                              {% endif %}
+                                                        </textarea>
+                                </div>
+                                 <div class="form-group">
+                                    <label class="u-text-mute u-text-uppercase
+                                                u-mb-small">{{  gettext('HotspotRegisterScreenConnectbuttonText')}}</label>
+                                    <textarea class="form-control"
+                                              id="welcome_button"
+                                              name="welcome_button"
+                                              rows="2">
+                                                      {% if login_form.welcome_button and login_form.welcome_button|length > 1 %}
+                                                          {{ login_form.welcome_button }}
+                                                      {% else %}
+                                                          {{ gettext('Đang_ky_&_Ket_noi') }}
+                                                      {% endif %}
+                                                </textarea>
+                                </div>
+
+                     <div class="c-choice c-choice--checkbox">
+                                        <input class="c-choice__input"
+                                               type="checkbox"
+                                               id="otp"
+                                               {% if login_form %}{% if login_form.otp %}checked
+                                               {% endif %}{% endif %}>
+                                        <label class="c-choice__label" for="otp">{{ gettext('Su_dung_OTP') }} </label>
+
+                      <span class="c-badge c-badge--info c-tooltip c-tooltip--top"
+                                       aria-label="{{ gettext('Can_dang_ky_hoac_kich_hoat_SMS_Brandname_cho_tinh_nang_nay.') }}">
+                                     <i class="fa fa-question"></i>
+                                 </span>
+                                    </div>
+                                 <input type="hidden" value="" name="otp" id="otp_val" />
+                     </form>
+
+                    </div>
+                    <div class="modal-footer">
+                         <div class="c-field" style="padding:20px">
+                                    <button class="c-btn c-btn--info
+                                        u-float-right" id="login_setting_btn">{{  gettext('HotspotRegisterScreenUpdateText')}}
+                                    </button>
+                                </div>
+                    </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+        $(document).ready(function () {
+            ex_hotspot_method = $('#ex_hotspot_method').val();
+            if (ex_hotspot_method === 'profile_code') {
+                $("#default_code_div").hide();
+            } else {
+                $("#default_code_div").show();
+            };
+            $('#hotspot_method').select2();
+            $('#hotspot_method').on('change.select2', function (e) {
+                method = $(this).val();
+                if (method === 'profile_code') {
+                    $("#default_code_div").hide();
+                } else {
+                    $("#default_code_div").show();
+                }
+            });
+            $('textarea').each(function () {
+                $(this).val($(this).val().trim());
+                }
+            );
+            $('input').each(function () {
+                    $(this).val($(this).val().trim());
+                }
+            );
+            var shop_id_select = $("#shop_id_select").val();
+            var url_preview = '/preview/' + shop_id_select + '/register';
+
+            $("#preview").empty();
+            bioMp(document.getElementById('preview'), {
+                url: url_preview,
+                view: 'front',
+                image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+                     height:618,
+                    width: 308
+            });
+              $("#login_setting_btn").click(function (e) {
+            var action = $('#login_form_settings').attr('action');
+            $("#otp_val").val($("#otp").is(":checked"));
+            $.ajax({
+                type: "POST",
+                url: action,
+                data: $("#login_form_settings").serialize(), // serializes the form's elements.
+                success: function (data) {
+                    swal("{{ gettext('Cap_nhat_thanh_cong') }}", " ", "success");
+                    var url_redirect = "/splash_page/"+ shop_id_select +"/hotspot/register";
+                    window.location.href = url_redirect;
+                }
+            });
+            e.preventDefault();
+        });
+
+
+        });
+
+        </script>
+{% endblock %}

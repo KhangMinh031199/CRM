@@ -1,0 +1,427 @@
+<link rel="stylesheet" href="/static/nextify/css/bs-pagination.min.css">
+<style>
+  .card {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    padding: 32px 36px;
+    border-radius: 4px;
+    background-color:
+      #fff;
+    -webkit-box-shadow: 0 8px 10px 0 rgba(0, 0, 0, .05);
+    box-shadow: 0 8px 10px 0 rgba(0, 0, 0, .05);
+    position: relative;
+    margin-bottom: 40px;
+  }
+
+  .rating-container {
+    display: inline-block;
+    padding-right: 36px;
+    width: 65%;
+    border-right: 1px solid #f7f7f7;
+  }
+
+  .rating-container .header {
+    position: relative;
+    margin-bottom: 24px;
+  }
+
+  .rating-container .review-content {
+    margin-bottom: 24px;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  .rating-container .footer {
+    color:
+      #999;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+  }
+
+  .customer-review .rating-container .header .rating .fa-star {
+    margin-right: 4px;
+    color:
+      #fd9c00;
+  }
+
+  .user-and-time .user {
+    color:
+      #000;
+    font-size: 20px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 20px;
+  }
+
+  .user-and-time .review-time {
+    color:
+      #8a8383;
+    font-size: 13px;
+    line-height: 20px;
+  }
+
+  .user-and-time {
+    display: inline-block;
+    position: absolute;
+    margin-top: 2px;
+  }
+
+  .avatar {
+    display: inline-block;
+    height: 44px;
+    width: 44px;
+    margin-right: 12px;
+  }
+
+  .rating {
+    display: inline-block;
+    position: absolute;
+    right: 0;
+  }
+
+  .customer-container {
+    padding-left: 36px;
+    display: inline-block;
+    position: absolute;
+    width: 25%;
+  }
+
+  .customer-stats {
+    position: absolute;
+    top: 0;
+  }
+
+  .customer-stat {
+    display: block;
+    margin-bottom: 8px;
+    color:
+      #777;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .loader_avg_100 {
+    border: 2px solid #f3f3f3;
+    border-top-color: rgb(243, 243, 243);
+    border-top-style: solid;
+    border-top-width: 2px;
+    border-radius: 60%;
+    border-top: 2px solid orange;
+    width: 100px;
+    height: 100px;
+    -webkit-animation: spin 1s linear infinite;
+    animation: spin 0.7s linear infinite;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    display: inline-block;
+
+  }
+
+  .box,
+  .show {
+    margin: 20px auto;
+    text-align: center;
+  }
+
+  .pagination>.active>a,
+  .pagination>.active>a:focus,
+  .pagination>.active>a:hover,
+  .pagination>.active>span,
+  .pagination>.active>span:focus,
+  .pagination>.active>span:hover {
+    z-index: 3;
+    color: #fff;
+    cursor: default;
+    background-color: #77afe0;
+    border-color: #77afe0;
+  }
+</style>
+
+{% extends 'nextify/base.html' %}
+{% block main_content_header %}
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+          <h6 class="header-pretitle">
+            Đánh giá của khách hàng
+          </h6>
+          <h1 class="header-title">
+            Tổng quát
+          </h1>
+        </div>
+        <div class="col-xl-3">
+          <select class="form-control" style="width: 100%;" id="shop_in_mer">
+            {% if shop_id %}
+            <option value="all">Tất cả địa điểm</option>
+            {% for shop_mer in shop_in_mer %}
+            <option value="{{ shop_mer._id }}" {% if shop_id == shop_mer._id %}selected{% endif %}>{{ shop_mer.name }}
+            </option>
+            {% endfor %}
+            {% else %}
+            <option value="all">Tất cả địa điểm</option>
+            {% for shop_mer in shop_in_mer %}
+            <option value="{{ shop_mer._id }}">{{ shop_mer.name }}</option>
+            {% endfor %}
+            {% endif %}
+          </select>
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block main_content %}
+
+{% if not total_reviews %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert" style="font-size: 20;">
+  KHÔNG CÓ ĐÁNH GIÁ NÀO!
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">×</span>
+  </button>
+</div>
+{% endif %}
+
+<div class="container-fluid">
+  <div class="row listAlias">
+    <div class="col-12 col-md-6 col-xl-6">
+      <!-- Card -->
+      <div class="card align-items-center">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <h5 class="card-title text-uppercase text-muted mb-0">Tổng số đánh giá</h5>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="col-auto">
+            <div id="customers_load_total" class="loader_avg_100" style="display: none;"></div>
+            <span id="total_rating" class="total" style="font-size: 80px">{{ total_reviews }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-xl-6">
+      <input type="hidden" value="{{ rating }}" id="average_earnings_inp">
+      <div class="card align-items-center">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <h5 class="card-title text-uppercase text-muted mb-0">Đánh giá trung bình</h5>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="col">
+            <div id="customers_load_avg" class="loader_avg_100" style="display: none;"></div>
+            <span id="average_rating" class="total" style="font-size: 80px">{{ avg_reviews }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="table-responsive">
+    <table class="table align-items-center table-flush">
+      <tbody>
+      {% for rew in reviews %}
+      <tr>      
+        <td style="vertical-align: middle;text-align:center">
+            <div class="avatar avatar-lg">
+                <!-- {% if rew.profile_photo_url and rew.profile_photo_url|length > 0 %}
+                <img class="avatar-img rounded-circle"
+                    src="{{ rew.profile_photo_url }}" />
+                {% else %} -->
+                <img class="avatar-img rounded-circle"
+                    src="/static/v2/assets/img/medium-default-avatar.png">
+                 <!-- {% endif %} -->
+            </div>
+        </td>
+        <td style="vertical-align: middle;">
+            <!-- <div class="contact">
+                {% if rew.author_name and rew.author_name|string != 'None' and rew.author_name|length != 0 %}
+                {{ rew.author_name }}
+                {% else %}
+      
+                {% endif %}             
+            </div> -->
+            <div class="name">
+              {% if rew.created_time and rew.created_time|string != 'None' and rew.created_time|length != 0 %}
+                {{ rew.created_time }}
+                {% else %}
+      
+                {% endif %}              
+            </div>
+            <div class="name">
+            {% if rew.review_text and rew.review_text|string != 'None' and rew.review_text|length != 0 %}
+                {{ rew.review_text }}
+                {% else %}
+      
+                {% endif %}    
+          </div>                 
+        </td>
+        <td style="vertical-align: top;width: 150px">
+          <div class="row"  >
+            {% if  rew.recommendation_type  == "negative" %}
+            <i class='fa fa-star'></i>
+            <i class='fa fa-star'></i>
+            <i class='fa fa-star'></i>
+            <i class='fa fa-star'></i>
+            <i class='fa fa-star'></i>
+            {% else %}
+            <i class='fa fa-star' style="color:#FFCC33"></i>
+            <i class='fa fa-star' style="color:#FFCC33"></i>
+            <i class='fa fa-star' style="color:#FFCC33"></i>
+            <i class='fa fa-star' style="color:#FFCC33"></i>  
+            <i class='fa fa-star' style="color:#FFCC33"></i>
+            {% endif %}
+          </div>
+        </td>
+      </tr>    
+    {% endfor %}
+    </tbody>
+    
+  </table>
+
+  </div>
+</div>
+
+<div class="c-pagination u-justify-center">
+  <ul id="example_pagination" class="pagination"></ul>
+</div>
+{% endblock %}
+{% block js %}
+<script src="/static/nextify/js/pagination.min.js"></script>
+<script nonce="{{ csp_nonce() }}">
+  $(document).ready(function () {
+     function start() {$('#example_pagination').pagination({
+      total: parseInt($("#total").val()),
+      current: parseInt($("#current_page").val()),
+      length: 10,
+      size: 10,
+      prev: "&lt;",
+      next: "&gt;",
+      isResetPage: true,
+      click: function (options, refresh, $target) {
+        var is_merchant = $("#select_merchant").val();
+        var shop_id_python = $("#shop_id").val();
+        var is_shop = $("#select_shop").val();
+
+        $("#customers_load_total").show();
+        $("#customers_load_avg").show();
+        $("#average_rating").hide();
+        $("#total_rating").hide();
+
+        $("#address_123").hide();
+        $.ajax({
+          url: '/rating',
+          data: {
+            'is_merchant': is_merchant,
+            'is_shop': is_shop,
+            "current_page": options.current,
+            'shop_id': shop_id_python
+          },
+          type: "POST"
+        }).done(function (response) {
+          $("#address_123").empty();
+          $("#customers_load_total").hide();
+          $("#customers_load_avg").hide();
+          $("#average_rating").show();
+          $("#total_rating").show();
+          $("#address_123").append(response.data);
+          $("#address_123").show();
+          document.getElementById("total_rating").innerHTML = response.total;
+          document.getElementById("average_rating").innerHTML = response.avg_rating;
+
+        }).fail(function (error) {
+        });
+
+      }
+    });
+     };
+     start()
+    $('#shop_in_mer').select2();
+    $('#shop_in_mer').on('change.select2', function (e) {
+      $("#customers_load_total").show();
+      $("#customers_load_avg").show();
+      $("#average_rating").hide();
+      $("#total_rating").hide();
+      $("#address_123").hide();
+
+      var shop_id = $(this).val();
+      var url = "/rating";
+
+      if (shop_id != 'all') {
+        $.ajax({
+          url: url,
+          type: 'POST',
+          data: {
+            'is_merchant': "False",
+            'is_shop': "True",
+            'shop_id': shop_id
+          },
+          success: function (response) {
+            $("#address_123").empty();
+            $("#customers_load_total").hide();
+            $("#customers_load_avg").hide();
+            $("#average_rating").show();
+            $("#total_rating").show();
+            $("#address_123").append(response.data);
+            $("#address_123").show();
+            document.getElementById("total_rating").innerHTML = response.total;
+            document.getElementById("average_rating").innerHTML = response.avg_rating;
+            start()
+          },
+          error: function (xhr, desc, err) {
+            swal("Có lỗi xảy ra, thử lại sau", " ", "error");
+
+          }
+        });
+      }
+      else {
+        $.ajax({
+          url: url,
+          type: 'POST',
+          data: {
+            'is_merchant': "True",
+            'is_shop': "False",
+            'shop_id': shop_id
+          },
+          success: function (response) {
+            $("#address_123").empty();
+            $("#customers_load_total").hide();
+            $("#customers_load_avg").hide();
+            $("#average_rating").show();
+            $("#total_rating").show();
+            $("#address_123").append(response.data);
+            $("#address_123").show();
+            document.getElementById("total_rating").innerHTML = response.total;
+            document.getElementById("average_rating").innerHTML = response.avg_rating;
+            start()
+          },
+          error: function (xhr, desc, err) {
+            swal("Có lỗi xảy ra, thử lại sau", " ", "error");
+
+
+
+          }
+        });
+      };
+
+
+    });
+
+  })
+</script>
+{% endblock %}

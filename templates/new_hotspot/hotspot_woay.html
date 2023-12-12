@@ -1,0 +1,44 @@
+<input type="hidden" value="{{ page_id }}" id="page_id" />
+<input type="hidden" value="{{ shop_id_select }}" id="shop_id_select" />
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-12 col-xl-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-end">
+                    <div class="col">
+                        <h6 class="header-pretitle">
+                            {{ gettext("Vong_quay_Woay") }}
+                        </h6>
+                    </div>
+
+                </div>
+            </div>
+
+         <div class="card-body">
+              
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block js %}
+<script nonce="{{ csp_nonce() }}">
+$(document).ready(function() {
+
+    
+        var url_preview = '{{ link_woay }}' + '?shop_id=' + {{ shop_id_woay }};
+        $("#preview").empty();
+        bioMp(document.getElementById('preview'), {
+            url: url_preview,
+            view: 'front',
+            image: '/static/images/iphone_simulator/img_preview_mobile.svg',
+            height: 618,
+            width: 308
+        });
+   
+
+
+    
+});
+</script>
+{% endblock %}

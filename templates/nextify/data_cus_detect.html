@@ -1,0 +1,123 @@
+{# <div class="content-section content-pane no-divider">
+    <div class="contacts-to-reach-content">
+        <span>{{ gettext("Dua_vao_so_lieu_co_duoc,_chung_toi_uoc_tinh_se_gui") }}
+            <b>{{ real_send }}</b> {{ gettext("tren_tong_so") }} {{ total }} {{ gettext("phu_hop_voi_cac_dieu_kien") }}.</span>
+        <div class="fill-bar-graph">
+            <input type="hidden" value="{{ real_send }}" id="predict_message" />
+            <hr>
+            <div class="fill-bar">
+                <div class="bar-content text-right" {% if total != 0 %}
+                    style="color: black; background-color: rgb(193, 193, 238); flex: {{ sub / total }} 1 0%; opacity: 1;"
+                    {% else %} style="color: black; background-color: rgb(193, 193, 238); flex: 0 1 0%; opacity: 1;"
+                    {% endif %}>
+                    <span class="hidden-content">{{ sub }}</span>
+                </div>
+                <div class="bar-content text-right" {% if total != 0 %}
+                    style="color: white; background-color: rgb(50, 50, 200); flex: {{ real_send / total }} 1 0%; opacity: 1;"
+                    {% else %} style="color: white; background-color: rgb(50, 50, 200); flex: 0 1 0%; opacity: 1;"
+                    {% endif %}>
+                    <span class="hidden-content">{{ real_send }}</span>
+                </div>
+            </div>
+            <div class="fill-bar-graph-legend" style="margin: 20px;">
+                <span>
+                    <div class="fill-bar-graph-circle" style="background-color: rgb(193, 193, 238); opacity: 1;">
+                    </div>
+                    <span class="fill-bar-graph-category" style="opacity: 1;">{{ gettext("Nguoi_dung_khong_phu_hop") }}</span>
+                </span>
+                <span>
+                    <div class="fill-bar-graph-circle" style="background-color: rgb(50, 50, 200); opacity: 1;">
+                    </div><span class="fill-bar-graph-category" style="opacity: 1;">{{ gettext("Thuc_gui") }}</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div> #}
+<div class="table-responsive">
+    <table class="table table-hover table-sm table-nowrap card-table" id="list_customers">
+        <tbody class="list">
+            {% for cus in customers %}
+            <tr>
+                <td style="width: 50px">
+                    <a href="#" class="avatar">
+                        {% if cus.user.avatar and cus.user.avatar|length > 0 %}
+                        <img class="avatar-img rounded-circle" src="{{ cus.user.avatar.replace('http:', 'https:') }}" />
+                        {% else %}
+                        {%set avatar = cus.user|human_avatar%}
+                        <img class="avatar-img rounded-circle" src="{{ avatar }}" />
+                        {% endif %}
+                    </a>
+                </td>
+                <td class="orders-product">
+                    <div class="contact">
+                        {% if cus.user.name and cus.user.name|string != 'None' and cus.user.name|length != 0 %}
+                            {{ cus.user.name }}
+                        {% elif cus.user.phone and cus.user.phone|string != 'None' and cus.user.phone|length != 0 %}
+                            {{ cus.user.phone }}
+                        {% elif cus.user.email and cus.user.email|string != 'None' and cus.user.email|length != 0 %}
+                            {{ cus.user.email }}
+                        {% elif cus.user.client_mac and cus.user.client_mac|length != 0 and cus.user.client_mac[0] %}
+                            {{ cus.user.client_mac[0] }}
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+    <div class="c-pagination u-justify-center">
+        <ul id="example_pagination" class="pagination-sm"></ul>
+    </div>
+</div>
+
+<input type="hidden" value="{{ real_send }}" id="real_send">
+<input type="hidden" value="{{ current_page }}" id="current_page">
+<input type="hidden" value="{{ total_pages }}" id="total_pages">
+<script src="/static/nextify/js/jquery.bootpag.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var min_visit = $("#min_visit").val();
+        var max_visit = $("#max_visit").val();
+        var customers_sources = $("#all_customers").val();
+        var real_tags_filter = $("#new_tags_selects").val();
+        var shop_id_select = $('#shop_id_select').val();
+        $('#example_pagination').bootpag({
+            total: parseInt($("#total_pages").val()),
+            maxVisible: 4,
+            firstLastUse: true,
+            first: '←',
+            last: '→',
+            nextClass: 'next',
+            prevClass: 'prev',
+            lastClass: 'last',
+            firstClass: 'first'
+        }).on("page", function(event, /* page number here */ num){
+            var data = {
+                'real_tags_filter': real_tags_filter,
+                'min_visit': min_visit, // lươt đến trong khoảng
+                'max_visit': max_visit, // lượt ddeeesn trong khoảng
+                'customers_sources': customers_sources,
+                'current_page': num,
+                'shop_id_select': shop_id_select
+            };
+            $.ajax({
+                url: "/data_cus_pagination_detect",
+                type: 'GET',
+                data: data,
+                beforeSend: function () {
+                    $("#data_cus_select").hide();
+                    $('#real_send_div').hide();
+                    $('#customers_load').show();
+                },
+                success: function (data) {
+                    $('#real_send_div').show();
+                    $("#list_customers").empty();
+                    $("#list_customers").append(data);
+                    $('#customers_load').hide();
+                    $('#list_customers').show();
+                    $("#data_cus_select").show();
+                }
+            });
+        });
+    });
+</script>

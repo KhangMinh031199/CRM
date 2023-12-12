@@ -1,0 +1,151 @@
+{% extends 'nextify/base.html' %}
+{% block main_content %}
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">
+            {{ gettext("Ung_dung") }}
+          </h6>
+
+          <!-- Title -->
+          <h1 class="header-title">
+            {{ gettext("Quan_ly_ung_dung") }}
+          </h1>
+
+        </div>
+      </div> <!-- / .row -->
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row align-items-center">
+    <div class="col-12 col-md-4 offset-xl-1 offset-md-1 order-md-2 mb-5 mb-md-0">
+
+      <!-- Image -->
+      <div class="text-center">
+        <img src="/static/nextify/img/happiness.svg" alt="..." class="img-fluid">
+      </div>
+
+    </div>
+
+    <div class="col-12 col-md-5 col-xl-6 order-md-1 my-5">
+      <div class="card u-p-medium">
+        <div class="row u-justify-center" style="margin-bottom: 20px;">
+          <h1 class="header-title">
+            AHACHAT
+          </h1>
+        </div>
+        <div class="row u-justify-center">
+          <div class="col-12">
+            <!-- Heading -->
+
+            <!-- Form -->
+            <form id="ahachat_connect" method="post" action="/save_chatbot_id_AHACHAT">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+
+              <!-- Email address -->
+              <div class="form-group">
+
+                <!-- Label -->
+                <label>ID chatbot AHACHAT: (<span>
+                    <font color="red">*</font>
+                  </span> {{ gettext("bat_buoc") }})</label>
+
+                <!-- Input -->
+                <input type="text" id="chatbot_id" name="chatbot_id" autofocus class="form-control"
+                  placeholder="1001411" {% if chatbot_id %} value="{{ chatbot_id }}" {% endif %}>
+
+              </div>
+              <div class="form-group">
+
+                <!-- Label -->
+                <label>Broadcasting API Token:</label>
+
+                <!-- Input -->
+                <input type="text" id="ahachat_token" name="ahachat_token" class="form-control"
+                  placeholder="573c0884a4fabc848279eb83435707982b5a6106f390446f29cffcca631b8d02" {% if ahachat_token %}
+                  value="{{ ahachat_token }}" {% endif %}>
+
+              </div>
+
+              <div class="form-group row">
+                <div class="col-3">
+                  <span>{{ gettext("Kich_hoat") }}:</span>
+                </div>
+                <div class="col-auto">
+                  <div class="custom-control custom-switch {% if status == 'True' %}is-active{% endif %}">
+                    <input class="custom-control-input" name="status" id="status" type="checkbox" {% if status=="True"
+                      %}checked="checked" {% endif %}>
+                    <label class="custom-control-label" for="status"></label>
+                  </div>
+                </div>
+
+            </form>
+          </div>
+          <div class="card-footer">
+            <div class="col-6" style="float:right">
+              <button class="btn btn-lg btn-block btn-primary" id="save_info_API">
+                {{ gettext("Luu_thong_tin") }}
+
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div> <!-- / .row -->
+  </div>
+</div>
+</div>
+</div> <!-- / .container -->
+
+<script nonce="{{ csp_nonce() }}">
+
+  $(document).ready(function () {
+
+    $("#save_info_API").click(function () {
+      var chatbot_id = $("#chatbot_id").val();
+      if (chatbot_id.length == 0) {
+        swal('Chatbot ID {{ gettext("khong_duoc_de_trong") }}', " ", "error");
+        return false;
+      }
+      $.ajax({
+        url: $("#ahachat_connect").attr("action"),
+        type: $("#ahachat_connect").attr("method"),
+        data: $("#ahachat_connect").serialize(),
+        success: function (response) {
+          var returnedData = JSON.parse(response);
+          if ('error' in returnedData) {
+            swal(returnedData['error'], " ", "error").then(function () {
+              location.reload();
+            });
+            return false;
+          }
+          else {
+            swal(' {{ gettext("Thao_tac_thanh_cong") }}', " ", "success");
+          }
+
+        },
+        error: function (xhr, desc, err) {
+          swal('{{ gettext("Co_loi_xay_ra,_thu_lai_sau") }}', " ", "error");
+
+
+
+        }
+      });
+
+      return false;
+    })
+
+  });
+</script>
+
+{% endblock %}
+{% block js %}
+{% endblock %}

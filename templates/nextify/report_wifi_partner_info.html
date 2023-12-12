@@ -1,0 +1,458 @@
+{% extends 'nextify/base.html' %} {% block css %}
+<link rel="stylesheet" href="/static/daterangepicker/daterangepicker.css" />
+<style>
+  #convertleadChart {
+    width: 100%;
+    height: 500px;
+  }
+</style>
+{% endblock %} {% block main_content %}
+
+<div class="container-fluid">
+  <div class="header">
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">Báo cáo</h6>
+          <!-- Title -->
+          <h1 class="header-title">{{wifi_partner.name}}</h1>
+        </div>
+        <div class="col-auto">
+          <div
+            id="reportrange"
+            style="
+              background: #fff;
+              cursor: pointer;
+              padding: 0.5rem 0.75rem;
+              border: 1px solid #ccc;
+              width: 100%;
+            "
+          >
+            <i class="fa fa-calendar"></i>&nbsp; <span></span>
+            <i class="fa fa-caret-down"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row align-items-center">
+      <div class="col">
+        <!-- Nav -->
+        <ul class="nav nav-tabs nav-overflow header-tabs">
+          <li class="nav-item">
+            <a
+              href="/{{merchant_id}}/wifi_partners/{{wifi_partner_id}}/reports"
+              class="nav-link active"
+            >
+              Báo cáo
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              href="/{{merchant_id}}/wifi_partners/{{wifi_partner_id}}/bills"
+              class="nav-link"
+            >
+              Hóa đơn
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-lg-12 d-flex flex-column">
+      <div class="row">
+        <div class="chart-container-row col-4">
+          <div class="card">
+            <div class="card-header">
+              <!-- Title -->
+              <h4 class="card-header-title">Loại chiến dịch</h4>
+            </div>
+
+            <div class="card-body">
+              <!-- Chart -->
+              <input
+                type="hidden"
+                name="type_camp_chart"
+                value="{{ type_camp_chart }}"
+                id="type_camp_chart"
+              />
+              <div class="chart chart-appended">
+                <canvas id="campaignChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-container-row col-4">
+          <div class="card">
+            <div class="card-header">
+              <!-- Title -->
+              <input
+                type="hidden"
+                name="result_chart"
+                value="{{ result_chart }}"
+                id="result_chart"
+              />
+              <h4 class="card-header-title">
+                Hoàn thành / Chưa hoàn thành / Tạm dừng
+              </h4>
+            </div>
+
+            <div class="card-body">
+              <!-- Chart -->
+              <div class="chart chart-appended">
+                <canvas id="resultChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-container-row col-4">
+          <div class="card">
+            <div class="card-header">
+              <!-- Title -->
+              <input
+                type="hidden"
+                name="targetChart"
+                value="{{ targetChart }}"
+                id="target_Chart"
+              />
+              <h4 class="card-header-title">Đạt mục tiêu / không đạt</h4>
+            </div>
+
+            <div class="card-body">
+              <!-- Chart -->
+              <div class="chart chart-appended">
+                <canvas id="targetChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-lg-12 d-flex flex-column">
+      <div
+        class="card"
+        data-list='{"valueNames": ["item-name", "item-stage", "item-amount", "item-owner", "item-contacted"], "page": 10, "pagination": {"paginationClass": "list-pagination"}}'
+        id="dealsList"
+      >
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <!-- Form -->
+              <form>
+                <div
+                  class="input-group input-group-flush input-group-merge input-group-reverse"
+                >
+                  <input
+                    class="form-control list-search"
+                    type="search"
+                    placeholder="Search"
+                  />
+                  <span class="input-group-text">
+                    <i class="fe fe-search"></i>
+                  </span>
+                </div>
+              </form>
+            </div>
+            
+          
+          </div>
+          <!-- / .row -->
+        </div>
+        <div class="table-responsive">
+          <table class="table table-sm table-hover table-nowrap card-table">
+            <thead>
+              <tr>
+                <th>
+                  <a class="list-sort text-muted" data-sort="item-name" href="#"
+                    >Chiến dịch</a
+                  >
+                </th>
+                <th>
+                  <a
+                    class="list-sort text-muted"
+                    data-sort="item-stage"
+                    href="#"
+                    >Hiển thị</a
+                  >
+                </th>
+                <th>
+                  <a
+                    class="list-sort text-muted"
+                    data-sort="item-amount"
+                    href="#"
+                    >Truy cập</a
+                  >
+                </th>
+                <th>
+                  <a
+                    class="list-sort text-muted"
+                    data-sort="item-owner"
+                    href="#"
+                    >Đăng ký</a
+                  >
+                </th>
+                <th>
+                  <a
+                    class="list-sort text-muted"
+                    data-sort="item-owner"
+                    href="#"
+                    >Khảo sát</a
+                  >
+                </th>
+                <th>
+                  <a
+                    class="list-sort text-muted"
+                    data-sort="item-owner"
+                    href="#"
+                    >Xem Video</a
+                  >
+                </th>
+                <th>
+                  <a
+                    class="list-sort text-muted"
+                    data-sort="item-owner"
+                    href="#"
+                    >Gửi tin</a
+                  >
+                </th>
+                <th colspan="2">
+                  <a
+                    class="list-sort text-muted"
+                    data-sort="item-contacted"
+                    href="#"
+                    >Tổng tiền</a
+                  >
+                </th>
+              </tr>
+            </thead>
+            <tbody class="list fs-base">
+              <tr>
+                <td>
+                  <h4 class="mb-1">
+                    <a
+                      class="item-name text-reset"
+                      href="/wifi_ads/campaign/report"
+                      >Chiến dịch số 1</a
+                    >
+                  </h4>
+                  <p class="card-text small mb-1">
+                    <span class="badge bg-danger-soft">Chưa đạt mục tiêu</span>
+                  </p>
+
+                  <p class="card-text small mb-1">
+                    <span class="badge bg-success-soft">Đã hoàn thành</span>
+                  </p>
+                  <p class="card-text small mb-1">
+                    <span class="badge bg-info-soft">Đang hoạt động</span>
+                  </p>
+                </td>
+                <td>
+                  <!-- Text -->
+                  <span class="item-stage">10000</span>
+                  <p class="card-text small mb-1">
+                    <span class="badge bg-success-soft mt-n1">
+                      1,000,000 đ
+                    </span>
+                  </p>
+                </td>
+                <td>
+                  <!-- Text -->
+                  <span class="item-amount">5000</span>
+                  <p class="card-text small mb-1">
+                    <span class="badge bg-success-soft mt-n1"> 29,000 đ </span>
+                  </p>
+                </td>
+                <td>
+                  <!-- Text -->
+                  <span class="item-amount">5000</span>
+                  <p class="card-text small mb-1">
+                    <span class="badge bg-success-soft mt-n1"> 29,000 đ </span>
+                  </p>
+                </td>
+                <td>
+                  <!-- Text -->
+                  <span class="item-amount">5000</span>
+                  <p class="card-text small mb-1">
+                    <span class="badge bg-success-soft mt-n1"> 29,000 đ </span>
+                  </p>
+                </td>
+                <td>
+                  <!-- Text -->
+                  <span class="item-amount">5000</span>
+                  <p class="card-text small mb-1">
+                    <span class="badge bg-success-soft mt-n1"> 29,000 đ </span>
+                  </p>
+                </td>
+
+                <td>
+                  <!-- Text -->
+                  <span class="item-amount">5000</span>
+                  <p class="card-text small mb-1">
+                    <span class="badge bg-success-soft mt-n1"> 29,000 đ </span>
+                  </p>
+                </td>
+                <td>
+                  <span class="h2 mb-0"> 3,500,000 đ </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+          <!-- Pagination (prev) -->
+          <ul
+            class="list-pagination-prev pagination pagination-tabs card-pagination"
+          >
+            <li class="page-item">
+              <a class="page-link ps-0 pe-4 border-end" href="#">
+                <i class="fe fe-arrow-left me-1"></i> Trước
+              </a>
+            </li>
+          </ul>
+
+          <!-- Pagination -->
+          <ul
+            class="list-pagination pagination pagination-tabs card-pagination"
+          >
+            <li class="active">
+              <a class="page" href="#" data-i="1" data-page="10">1</a>
+            </li>
+            <li><a class="page" href="#" data-i="2" data-page="10">2</a></li>
+            <li><a class="page" href="#" data-i="3" data-page="10">3</a></li>
+          </ul>
+
+          <!-- Pagination (next) -->
+          <ul
+            class="list-pagination-next pagination pagination-tabs card-pagination"
+          >
+            <li class="page-item">
+              <a class="page-link ps-4 pe-0 border-start" href="#">
+                Sau <i class="fe fe-arrow-right ms-1"></i>
+              </a>
+            </li>
+          </ul>
+
+          <!-- Alert -->
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block js %}
+<script src="{{ url_for('static', filename='daterangepicker/daterangepicker.js') }}"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    var start = moment().subtract(29, "days");
+    var end = moment();
+    function cb(start, end) {
+      $("#reportrange span").html(
+        start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY")
+      );
+    }
+
+    $("#reportrange").daterangepicker(
+      {
+        startDate: start,
+        endDate: end,
+        ranges: {
+          "Hôm nay": [moment(), moment()],
+          "Hôm qua": [
+            moment().subtract(1, "days"),
+            moment().subtract(1, "days"),
+          ],
+          "7 ngày gần nhất": [moment().subtract(6, "days"), moment()],
+          "30 ngày gần nhất": [moment().subtract(29, "days"), moment()],
+          "Tháng này": [moment().startOf("month"), moment().endOf("month")],
+          "Tháng trước": [
+            moment().subtract(1, "month").startOf("month"),
+            moment().subtract(1, "month").endOf("month"),
+          ],
+        },
+      },
+      cb
+    );
+
+    cb(start, end);
+    var result_chart = "[10, 6, 4]";
+    arr_result_chart = JSON.parse(result_chart);
+    var config = {
+      type: "pie",
+      data: {
+        labels: ["Hoàn thành", "Chưa hoàn thành", "Tạm dừng"],
+        datasets: [
+          {
+            label: "My First Dataset",
+            data: arr_result_chart,
+            backgroundColor: [
+              "rgb(255, 99, 132)",
+              "rgb(54, 162, 235)",
+              "rgb(255,127,80)",
+            ],
+            hoverOffset: 2,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+    };
+    var ctx = document.getElementById("resultChart").getContext("2d");
+    new Chart(ctx, config);
+
+    var data_chart_camp = $("#type_camp_chart").val();
+    arr_camp_chart = JSON.parse(data_chart_camp);
+    var config_camp = {
+      type: "pie",
+      data: {
+        labels: ["Độc quyền", "Chia sẻ", "Mặc định", "Đối tác"],
+        datasets: [
+          {
+            data: arr_camp_chart,
+            backgroundColor: [
+              "rgb(255, 99, 132)",
+              "rgb(54, 162, 235)",
+              "rgb(255, 205, 86)",
+              "rgb(86, 255, 125)",
+            ],
+            hoverOffset: 2,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+    };
+    var ctx_camp = document.getElementById("campaignChart").getContext("2d");
+    new Chart(ctx_camp, config_camp);
+
+    var target_chart = "[10, 6]";
+    arr_target_chart = JSON.parse(target_chart);
+    var config_target = {
+      type: "pie",
+      data: {
+        labels: ["Đạt mục tiêu", "Không đạt mục tiêu"],
+        datasets: [
+          {
+            data: arr_target_chart,
+            backgroundColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)"],
+            hoverOffset: 2,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+    };
+    var ctx_target = document.getElementById("targetChart").getContext("2d");
+    new Chart(ctx_target, config_target);
+  });
+</script>
+{% endblock %}

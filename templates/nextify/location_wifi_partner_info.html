@@ -1,0 +1,41 @@
+<input type="hidden" value="{{wifi_partner_id}}" id="edit_wifi_partner_id" />
+
+<div class="row u-mb-medium">
+  <div class="col-12">
+    <div class="form-group">
+      <label> Chọn địa điểm</label>
+      <select class="form-control">
+        <option>Tất cả</option>
+        <option>Địa điểm có gắn Tags</option>
+        <option>Địa điểm cụ thể</option>
+      </select>
+    </div>
+    <div class="form-group">
+        <label> Sắp xếp chiến dịch theo</label>
+        <select class="form-control">
+            <option>Thời gian mới nhất</option>
+            <option>Thời gian cũ nhất</option>
+            <option>Mục tiêu thấp nhất</option>
+            <option>Mục tiêu cao nhất</option>
+            <option>Gần đạt mục tiêu nhất</option>
+            <option>Cách xa mục tiêu nhất</option>
+        </select>
+      </div>
+      <div class="form-group">
+          <label>Cấu hình chia sẻ</label>
+          <select class="form-control">
+                <option>Theo tỷ lệ chia sẻ trong ngày</option>
+                <option>Theo khung giờ nhất định</option>
+          </select>
+      </div>
+  </div>
+  <div class="col-12 text-center">
+     
+         
+    <a href="#"
+      id="update_wifi_partner_{{ wifi_partner._id }}"
+      class="btn btn-primary"
+    >
+      {{ gettext("Cap_nhat") }}
+</a>
+</div>
